@@ -1,0 +1,286 @@
+// ============================================================================
+// Component / Toast
+// Classes: .gds-toast, .gds-toast--{info,success,warning,critical}
+//          .gds-toast__icon, .gds-toast__text, .gds-toast__action,
+//          .gds-toast__timer, .gds-toast-container
+// Lightweight, temporary floating notifications with countdown timer
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// ============================================================================
+// Base toast
+// ============================================================================
+
+.gds-toast {
+  display: flex;
+  align-items: stretch;
+  background: var(--toast-bg);
+  border-radius: var(--toast-radius);
+  box-shadow: var(--toast-shadow);
+  max-width: var(--toast-max-width);
+  width: 100%;
+  overflow: hidden;
+  animation: gds-toast-slide-in $duration-slow $ease-out;
+  transition:
+    opacity $duration-normal $ease-default,
+    transform $duration-normal $ease-default,
+    background $duration-fast $ease-default;
+
+  &:hover {
+    background: var(--toast-hover-bg);
+  }
+}
+
+// ============================================================================
+// Icon block (solid color left accent)
+// ============================================================================
+
+.gds-toast__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--toast-icon-padding);
+  background: var(--toast-info-bg);
+  color: var(--toast-icon-color);
+
+  svg {
+    width: var(--toast-icon-size);
+    height: var(--toast-icon-size);
+  }
+}
+
+// ============================================================================
+// Content area (text + right controls)
+// ============================================================================
+
+.gds-toast__body {
+  display: flex;
+  align-items: center;
+  gap: var(--toast-gap);
+  flex: 1 1 0;
+  min-width: 0;
+  padding-right: var(--toast-padding-right);
+}
+
+.gds-toast__text {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 var(--toast-gap);
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--toast-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ============================================================================
+// Action button (text style, hover bg)
+// ============================================================================
+
+.gds-toast__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--toast-action-padding);
+  border-radius: var(--toast-action-radius);
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  color: var(--toast-action-text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background $duration-fast $ease-default;
+
+  &:hover {
+    background: var(--toast-action-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 $space-2 var(--input-focus-offset, var(--gds-color-bg-primary)), 0 0 0 $space-4 var(--input-focus-ring, var(--gds-color-border-focus));
+  }
+}
+
+// ============================================================================
+// Countdown timer (circular badge with progress ring)
+// ============================================================================
+
+.gds-toast__timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  width: var(--toast-timer-size);
+  height: var(--toast-timer-size);
+  border: var(--toast-timer-border-width) solid var(--toast-timer-border);
+  border-radius: $radius-pill;
+  font-family: inherit;
+  font-size: var(--toast-timer-font-size);
+  font-weight: $font-weight-medium;
+  line-height: 1;
+  color: var(--toast-timer-text);
+  text-align: center;
+
+  span {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// SVG progress ring overlay
+.gds-toast__timer-ring {
+  position: absolute;
+  top: calc(var(--toast-timer-border-width) * -1);
+  left: calc(var(--toast-timer-border-width) * -1);
+  width: calc(var(--toast-timer-size) + var(--toast-timer-border-width) * 2);
+  height: calc(var(--toast-timer-size) + var(--toast-timer-border-width) * 2);
+  transform: rotate(-90deg);
+  pointer-events: none;
+
+  circle {
+    fill: none;
+    stroke-width: var(--toast-timer-border-width);
+    stroke-linecap: round;
+    stroke: var(--toast-timer-info-ring);
+    transition: stroke-dashoffset linear;
+  }
+}
+
+// ============================================================================
+// Semantic variants
+// ============================================================================
+
+// Info is the default — no extra class needed
+.gds-toast--info {
+  .gds-toast__icon {
+    background: var(--toast-info-bg);
+  }
+
+  .gds-toast__timer-ring circle {
+    stroke: var(--toast-timer-info-ring);
+  }
+}
+
+.gds-toast--success {
+  .gds-toast__icon {
+    background: var(--toast-success-bg);
+  }
+
+  .gds-toast__timer-ring circle {
+    stroke: var(--toast-timer-success-ring);
+  }
+}
+
+.gds-toast--warning {
+  .gds-toast__icon {
+    background: var(--toast-warning-bg);
+  }
+
+  .gds-toast__timer-ring circle {
+    stroke: var(--toast-timer-warning-ring);
+  }
+}
+
+.gds-toast--critical {
+  .gds-toast__icon {
+    background: var(--toast-critical-bg);
+  }
+
+  .gds-toast__timer-ring circle {
+    stroke: var(--toast-timer-critical-ring);
+  }
+}
+
+// ============================================================================
+// Toast container (stacks toasts with z-index layering)
+// ============================================================================
+
+.gds-toast-container {
+  display: flex;
+  flex-direction: column;
+  gap: $space-8;
+  position: fixed;
+  z-index: 9999;
+  max-width: var(--toast-max-width);
+  width: 100%;
+  pointer-events: none;
+
+  .gds-toast {
+    pointer-events: auto;
+    position: relative;
+
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        z-index: 10 - $i;
+      }
+    }
+  }
+}
+
+.gds-toast-container--top-right {
+  top: $space-24;
+  right: $space-24;
+}
+
+.gds-toast-container--top-left {
+  top: $space-24;
+  left: $space-24;
+}
+
+.gds-toast-container--bottom-right {
+  bottom: $space-24;
+  right: $space-24;
+}
+
+.gds-toast-container--bottom-left {
+  bottom: $space-24;
+  left: $space-24;
+}
+
+.gds-toast-container--top-center {
+  top: $space-24;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.gds-toast-container--bottom-center {
+  bottom: $space-24;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+// ============================================================================
+// Animations
+// ============================================================================
+
+@keyframes gds-toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-#{$space-8});
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dismissal animation (add via JS)
+.gds-toast--dismissing {
+  opacity: 0;
+  transform: translateX(#{$space-16});
+}

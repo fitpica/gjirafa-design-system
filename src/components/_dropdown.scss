@@ -1,0 +1,454 @@
+// ============================================================================
+// Component / Dropdown
+// Classes: .gds-dropdown, .gds-dropdown__trigger, .gds-dropdown__panel, etc.
+// Select dropdowns, comboboxes, multi-select, searchable lists
+// Builds on .gds-menu for item rendering
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// --- Trigger button ---
+.gds-dropdown__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-6;
+  padding: $space-4 $space-6;
+  border: $border-width-default solid var(--dd-border);
+  border-radius: $radius-m;
+  background: var(--dd-bg);
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--dd-item-text);
+  cursor: pointer;
+  min-width: var(--dd-trigger-min-width);
+  transition:
+    border-color $duration-fast $ease-default,
+    box-shadow $duration-fast $ease-default;
+
+  &:hover {
+    border-color: var(--dd-item-icon);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 $space-2 var(--dd-item-focus-offset), 0 0 0 $space-4 var(--dd-item-focus-ring);
+  }
+}
+
+// --- Trigger: placeholder text ---
+.gds-dropdown__placeholder {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--dd-search-placeholder);
+}
+
+// --- Trigger: selected value ---
+.gds-dropdown__value {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// --- Trigger: chevron icon ---
+.gds-dropdown__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-sm;
+  height: $icon-sm;
+  color: var(--dd-item-icon);
+  margin-left: auto;
+  transition: transform $duration-fast $ease-default;
+}
+
+.gds-dropdown--open .gds-dropdown__arrow {
+  transform: rotate(180deg);
+}
+
+// --- Floating panel (wraps menu + search) ---
+.gds-dropdown__panel {
+  display: none;
+  flex-direction: column;
+  background: var(--dd-bg);
+  border: $border-width-default solid var(--dd-border);
+  border-radius: $radius-m;
+  box-shadow: var(--dd-shadow);
+  min-width: var(--dd-panel-min-width);
+  max-width: var(--dd-panel-max-width);
+  overflow: hidden;
+  animation: gds-dropdown-enter $duration-normal $ease-out;
+}
+
+.gds-dropdown--open .gds-dropdown__panel {
+  display: flex;
+}
+
+// --- Entry animation ---
+@keyframes gds-dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-$space-4);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// --- Search input within dropdown ---
+.gds-dropdown__search {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+  padding: $space-6;
+  border-bottom: $border-width-default solid var(--dd-divider);
+}
+
+.gds-dropdown__search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-sm;
+  height: $icon-sm;
+  color: var(--dd-item-icon);
+}
+
+.gds-dropdown__search-input {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--dd-item-text);
+
+  &::placeholder {
+    color: var(--dd-search-placeholder);
+  }
+}
+
+// --- Scrollable item list ---
+.gds-dropdown__list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-6;
+  max-height: var(--dd-list-max-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  // Subtle scrollbar
+  &::-webkit-scrollbar {
+    width: $space-4;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--dd-border);
+    border-radius: $radius-pill;
+  }
+}
+
+// --- Dropdown item (extends menu item patterns) ---
+.gds-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+  padding: $space-4 $space-6;
+  border-radius: $radius-s;
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--dd-item-text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition:
+    background $duration-fast $ease-default,
+    color $duration-fast $ease-default;
+
+  &:hover {
+    background: var(--dd-item-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 $space-2 var(--dd-item-focus-offset), 0 0 0 $space-4 var(--dd-item-focus-ring);
+  }
+}
+
+// --- Item icon slot ---
+.gds-dropdown__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-sm;
+  height: $icon-sm;
+  color: var(--dd-item-icon);
+}
+
+// --- Item label ---
+.gds-dropdown__label {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// --- Item description (secondary text) ---
+.gds-dropdown__desc {
+  font-size: $font-size-12;
+  color: var(--dd-item-meta);
+  line-height: $line-height-normal;
+}
+
+// --- Checkmark (single-select indicator) ---
+.gds-dropdown__check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-sm;
+  height: $icon-sm;
+  color: var(--dd-item-active-icon);
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity $duration-fast $ease-default;
+}
+
+.gds-dropdown__item--selected .gds-dropdown__check {
+  opacity: 1;
+}
+
+// --- Selected item state ---
+.gds-dropdown__item--selected {
+  background: var(--dd-item-active-bg);
+  color: var(--dd-item-active-text);
+
+  .gds-dropdown__icon {
+    color: var(--dd-item-active-icon);
+  }
+}
+
+// --- Multi-select checkbox — uses .gds-checkbox__control inside dropdown ---
+.gds-dropdown__item .gds-checkbox__control {
+  width: $icon-sm;
+  height: $icon-sm;
+  pointer-events: none;
+}
+
+.gds-dropdown__item--checked .gds-checkbox__control {
+  background: var(--sel-active-bg);
+  border-color: var(--sel-active-bg);
+
+  svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// --- Avatar / thumbnail slot — uses .gds-avatar inside dropdown ---
+.gds-dropdown__item .gds-avatar {
+  width: $icon-md;
+  height: $icon-md;
+  font-size: var(--avatar-font-20);
+}
+
+// --- Badge / tag (status, count, etc.) ---
+.gds-dropdown__badge {
+  flex-shrink: 0;
+  padding: $space-2 $space-6;
+  border-radius: $radius-pill;
+  font-size: $font-size-11;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  background: var(--dd-badge-bg);
+  color: var(--dd-badge-text);
+  margin-left: auto;
+}
+
+// --- Disabled item ---
+.gds-dropdown__item--disabled {
+  opacity: var(--dd-item-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// --- Divider ---
+.gds-dropdown__divider {
+  height: $border-width-default;
+  background: var(--dd-divider);
+  margin: $space-4 0;
+}
+
+// --- Group header ---
+.gds-dropdown__group {
+  padding: $space-4 $space-6 $space-2;
+  font-size: $font-size-11;
+  font-weight: $font-weight-medium;
+  color: var(--dd-group-text);
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+}
+
+// --- Empty state ---
+.gds-dropdown__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-6;
+  padding: $space-16 $space-6;
+  color: var(--dd-empty-text);
+  font-size: $font-size-14;
+  line-height: $line-height-normal;
+  text-align: center;
+}
+
+.gds-dropdown__empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-lg;
+  height: $icon-lg;
+  color: var(--dd-empty-text);
+}
+
+// --- Loading state ---
+.gds-dropdown__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-6;
+  padding: $space-16 $space-6;
+  color: var(--dd-empty-text);
+  font-size: $font-size-14;
+  line-height: $line-height-normal;
+}
+
+.gds-dropdown__spinner {
+  width: $icon-sm;
+  height: $icon-sm;
+  border: $space-2 solid var(--dd-divider);
+  border-top-color: var(--dd-item-active-icon);
+  border-radius: $radius-pill;
+  animation: gds-dropdown-spin $duration-slow linear infinite;
+}
+
+@keyframes gds-dropdown-spin {
+  to { transform: rotate(360deg); }
+}
+
+// --- Create new action ---
+.gds-dropdown__create {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+  padding: $space-6;
+  border-top: $border-width-default solid var(--dd-divider);
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  color: var(--dd-create-text);
+  cursor: pointer;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition: background $duration-fast $ease-default;
+
+  &:hover {
+    background: var(--dd-item-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 $space-2 var(--dd-item-focus-offset), 0 0 0 $space-4 var(--dd-item-focus-ring);
+  }
+}
+
+.gds-dropdown__create-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-sm;
+  height: $icon-sm;
+}
+
+// --- Multi-select: selected chips in trigger ---
+.gds-dropdown__trigger:has(.gds-dropdown__tags) {
+  flex-wrap: wrap;
+  height: auto;
+  min-height: var(--btn-height-md);
+}
+
+.gds-dropdown__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-4;
+  flex: 1 1 0;
+  min-width: 0;
+  align-items: center;
+}
+
+.gds-dropdown__tags .gds-chip {
+  max-width: var(--dd-tag-max-width);
+}
+
+// --- Rich item layout (icon + label + description) ---
+.gds-dropdown__item--rich {
+  align-items: flex-start;
+
+  .gds-avatar,
+  .gds-dropdown__icon {
+    width: $icon-md;
+    height: $icon-md;
+    margin-top: $space-2;
+  }
+
+  .gds-dropdown__content {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+// --- Trigger size variants ---
+.gds-dropdown__trigger--sm {
+  padding: $space-2 $space-6;
+  font-size: $font-size-12;
+  min-width: var(--dd-trigger-min-width-sm);
+}
+
+.gds-dropdown__trigger--lg {
+  padding: $space-6 $space-8;
+  font-size: $font-size-16;
+  min-width: var(--dd-trigger-min-width-lg);
+}

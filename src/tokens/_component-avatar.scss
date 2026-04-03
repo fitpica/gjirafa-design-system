@@ -1,0 +1,74 @@
+// ============================================================================
+// Component Tokens / Avatar
+// Circular/square avatars with photo, icon, letter, initials styles
+// All values reference foundation tokens — zero hardcoded values
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+
+:root {
+  // --- Shared ---
+  --avatar-bg:              #{$color-neutral-25};
+  --avatar-color:           #{$color-neutral-400};
+  --avatar-radius-circle:   #{$radius-pill};
+  --avatar-radius-square:   #{$radius-m};
+  --avatar-font-family:     inherit;
+  --avatar-font-weight:     #{$font-weight-medium};
+
+  // --- Sizes (width & height) ---
+  --avatar-size-16:  #{$space-16};
+  --avatar-size-20:  #{$space-20};
+  --avatar-size-24:  #{$space-24};
+  --avatar-size-32:  #{$space-32};
+  --avatar-size-40:  #{$space-40};
+  --avatar-size-48:  #{$space-48};
+  --avatar-size-64:  #{$space-64};
+
+  // --- Font sizes per avatar size ---
+  --avatar-font-16:  #{$font-size-11};
+  --avatar-font-20:  #{$font-size-11};
+  --avatar-font-24:  #{$font-size-11};
+  --avatar-font-32:  #{$font-size-12};
+  --avatar-font-40:  #{$font-size-14};
+  --avatar-font-48:  #{$font-size-16};
+  --avatar-font-64:  #{$font-size-20};
+
+  // --- Icon sizes per avatar size ---
+  --avatar-icon-16:  #{$icon-sm};
+  --avatar-icon-20:  #{$icon-sm};
+  --avatar-icon-24:  #{$icon-sm};
+  --avatar-icon-32:  #{$icon-md};
+  --avatar-icon-40:  #{$icon-md};
+  --avatar-icon-48:  #{$icon-lg};
+  --avatar-icon-64:  #{$space-32};
+
+  // --- Status indicator ---
+  --avatar-status-bg:       #{$color-green-500};
+  --avatar-status-border:   #{$color-neutral-0};
+  --avatar-status-size-sm:  #{$space-6};
+  --avatar-status-size-md:  #{$space-8};
+  --avatar-status-size-lg:  #{$space-10};
+  --avatar-status-border-width: #{$space-2};
+
+  // --- Avatar group ---
+  --avatar-group-overlap:    -#{$space-8};
+  --avatar-group-border:     #{$color-neutral-0};
+  --avatar-group-border-width: #{$space-2};
+  --avatar-counter-bg:       #{$color-neutral-25};
+  --avatar-counter-color:    #{$color-neutral-400};
+
+  // --- Avatar name ---
+  --avatar-name-gap:         #{$space-8};
+  --avatar-name-label-color: #{$color-neutral-700};
+  --avatar-name-sub-color:   #{$color-neutral-400};
+  --avatar-name-soft-label:  #{$color-neutral-300};
+  --avatar-name-soft-sub:    #{$color-neutral-80};
+  --avatar-name-label-size:  #{$font-size-14};
+  --avatar-name-sub-size:    #{$font-size-12};
+  --avatar-name-sm-label:    #{$font-size-12};
+  --avatar-name-sm-sub:      #{$font-size-11};
+  --avatar-name-xs-label:    #{$font-size-11};
+  --avatar-name-xs-sub:      #{$font-size-11};
+}

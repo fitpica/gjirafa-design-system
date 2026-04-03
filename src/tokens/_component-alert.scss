@@ -1,0 +1,67 @@
+// ============================================================================
+// Component Tokens / Alert
+// Inline alerts, banners, toasts — all 4 semantic variants
+// All values reference foundation tokens — zero hardcoded values
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-shadows' as *;
+
+:root {
+  // --- Shared ---
+  --alert-title:       #{$color-neutral-700};
+  --alert-desc:        #{$color-neutral-400};
+  --alert-link:        var(--gds-color-action-primary);
+  --alert-close:          #{$color-neutral-100};
+  --alert-close-hover:    #{$color-neutral-300};
+  --alert-close-hover-bg: #{$color-neutral-25};
+  --alert-close-active-bg: #{$color-neutral-30};
+  --alert-radius:      var(--gds-radius-lg);
+  --alert-icon-size:   #{$icon-lg};
+
+  // --- Full style ---
+  --alert-padding:     #{$space-16};
+  --alert-gap:         #{$space-8};
+  --alert-content-gap: #{$space-4};
+  --alert-action-gap:  #{$space-12};
+  --alert-desc-max-height: none;
+
+  // --- Minimal style ---
+  --alert-minimal-padding: #{$space-12};
+
+  // --- Info (purple) ---
+  --alert-info-bg:      #{$color-purple-50};
+  --alert-info-border:  #{$color-purple-100};
+  --alert-info-icon:    #{$color-purple-500};
+  --alert-info-accent:  #{$color-purple-500};
+
+  // --- Success (green) ---
+  --alert-success-bg:     #{$color-green-50};
+  --alert-success-border: #{$color-green-100};
+  --alert-success-icon:   #{$color-green-500};
+  --alert-success-accent: #{$color-green-500};
+
+  // --- Warning (orange) ---
+  --alert-warning-bg:     #{$color-orange-50};
+  --alert-warning-border: #{$color-orange-100};
+  --alert-warning-icon:   #{$color-orange-500};
+  --alert-warning-accent: #{$color-orange-500};
+
+  // --- Error (red) ---
+  --alert-error-bg:     #{$color-red-50};
+  --alert-error-border: #{$color-red-100};
+  --alert-error-icon:   #{$color-red-500};
+  --alert-error-accent: #{$color-red-500};
+
+  // --- Toast ---
+  --alert-toast-bg:     #{$color-neutral-0};
+  --alert-toast-border: #{$color-neutral-40};
+  --alert-toast-shadow: #{$shadow-overlay};
+  --alert-toast-radius: var(--gds-radius-lg);
+  --alert-toast-desc-max: calc(#{$space-80} * 1.5);
+  --alert-toast-max-width: calc(#{$space-80} * 5);
+
+  // --- Banner ---
+  --alert-banner-radius: 0px;
+}

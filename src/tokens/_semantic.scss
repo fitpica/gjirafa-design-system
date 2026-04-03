@@ -1,0 +1,49 @@
+// ============================================================================
+// Semantic / Theme Tokens (--gds- prefixed)
+// Source: Figma "Semantic / Theme" collection (22 variables)
+// Default mode = CODEX. VP Player overrides are in themes/_vpplayer.scss
+// ============================================================================
+
+@use 'foundation-colors' as *;
+
+:root,
+[data-theme="codex"] {
+  // --- Brand ---
+  --gds-color-brand-primary: #{$color-blue-500};
+
+  // --- Action ---
+  --gds-color-action-primary:        #{$color-blue-500};
+  --gds-color-action-primary-hover:  #{$color-blue-600};
+  --gds-color-action-primary-active: #{$color-blue-700};
+  --gds-color-action-on-primary:     #{$color-neutral-0};
+
+  // --- Text ---
+  --gds-color-text-primary:     #{$color-neutral-700};
+  --gds-color-text-secondary:   #{$color-neutral-300};
+  --gds-color-text-tertiary:    #{$color-neutral-80};
+  --gds-color-text-disabled:    #{$color-neutral-60};
+  --gds-color-text-placeholder: #{$color-neutral-80};
+  --gds-color-text-label:       #{$color-neutral-400};
+  --gds-color-text-helper:      #{$color-neutral-90};
+  --gds-color-text-inverse:     #{$color-neutral-0};
+
+  // --- Background ---
+  --gds-color-bg-primary:   #{$color-neutral-0};
+  --gds-color-bg-secondary: #{$color-neutral-20};
+  --gds-color-bg-tertiary:  #{$color-neutral-25};
+  --gds-color-bg-disabled:  #{$color-neutral-30};
+
+  // --- Border ---
+  --gds-color-border-default: #{$color-neutral-40};
+  --gds-color-border-strong:  #{$color-neutral-80};
+  --gds-color-border-focus:   #{$color-blue-500};
+  --gds-color-border-subtle:  #{$color-neutral-30};
+
+  // --- Feedback ---
+  --gds-color-error:        #{$color-red-500};
+  --gds-color-error-text:   #{$color-red-700};
+  --gds-color-success:      #{$color-green-500};
+  --gds-color-success-text: #{$color-green-700};
+  --gds-color-warning:      #{$color-orange-600};
+  --gds-color-warning-text: #{$color-orange-700};
+}

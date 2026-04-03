@@ -1,0 +1,196 @@
+// ============================================================================
+// Component / Checkbox
+// Classes: .gds-checkbox, .gds-checkbox--{size}, .gds-checkbox--{state}
+// Sizes: sm (16px), md (20px), lg (24px)
+// States: checked, mixed, disabled
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// --- Wrapper (label + control) ---
+.gds-checkbox {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: $space-8;
+  cursor: pointer;
+  position: relative;
+}
+
+// --- The visual box ---
+.gds-checkbox__control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-md;
+  height: $icon-md;
+  background: var(--sel-bg);
+  border: 1.5px solid var(--sel-border);
+  border-radius: $radius-s;
+  transition:
+    background $duration-normal $ease-default,
+    border-color $duration-normal $ease-default,
+    box-shadow $duration-normal $ease-default;
+
+  // Checkmark icon (hidden by default)
+  svg {
+    width: 100%;
+    height: 100%;
+    color: var(--sel-active-icon);
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity $duration-normal $ease-default,
+      transform $duration-normal $ease-default;
+  }
+}
+
+// --- Label text ---
+.gds-checkbox__label {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--sel-label);
+  min-height: $icon-md;
+  justify-content: center;
+}
+
+.gds-checkbox__helper {
+  font-size: $font-size-12;
+  color: var(--sel-label-helper);
+}
+
+// --- Hover ---
+.gds-checkbox:hover .gds-checkbox__control {
+  border-color: var(--sel-border-hover);
+}
+
+// --- Focus ---
+.gds-checkbox__input:focus-visible ~ .gds-checkbox__control {
+  border-color: var(--sel-focus-ring);
+  box-shadow: 0 0 0 $space-2 var(--sel-focus-offset), 0 0 0 $space-4 var(--sel-focus-ring);
+}
+
+// --- Hidden native input ---
+.gds-checkbox__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ============================================================================
+// Checked state
+// ============================================================================
+
+.gds-checkbox--checked .gds-checkbox__control,
+.gds-checkbox__input:checked ~ .gds-checkbox__control {
+  background: var(--sel-active-bg);
+  border-color: var(--sel-active-bg);
+
+  svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.gds-checkbox--checked:hover .gds-checkbox__control,
+.gds-checkbox__input:checked:hover ~ .gds-checkbox__control {
+  background: var(--sel-active-hover);
+  border-color: var(--sel-active-hover);
+}
+
+// ============================================================================
+// Mixed / indeterminate state
+// ============================================================================
+
+.gds-checkbox--mixed .gds-checkbox__control {
+  background: var(--sel-mixed-bg);
+  border-color: var(--sel-mixed-bg);
+
+  svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// ============================================================================
+// Disabled state
+// ============================================================================
+
+.gds-checkbox--disabled {
+  cursor: not-allowed;
+
+  .gds-checkbox__control {
+    background: var(--sel-disabled-bg);
+    border-color: var(--sel-disabled-bg);
+  }
+
+  &:hover .gds-checkbox__control {
+    border-color: var(--sel-disabled-bg);
+  }
+
+  .gds-checkbox__label {
+    color: var(--gds-color-text-disabled);
+  }
+}
+
+.gds-checkbox--disabled.gds-checkbox--checked .gds-checkbox__control svg,
+.gds-checkbox--disabled .gds-checkbox__input:checked ~ .gds-checkbox__control svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+// ============================================================================
+// Sizes
+// ============================================================================
+
+// SM — 16px control
+.gds-checkbox--sm {
+  .gds-checkbox__control {
+    width: $icon-sm;
+    height: $icon-sm;
+  }
+
+  .gds-checkbox__label {
+    font-size: $font-size-12;
+    line-height: $line-height-normal;
+    min-height: $icon-sm;
+  }
+
+  .gds-checkbox__helper {
+    font-size: $font-size-11;
+  }
+}
+
+// MD — 20px control (default, no modifier needed but explicit)
+.gds-checkbox--md {
+  .gds-checkbox__control {
+    width: $icon-md;
+    height: $icon-md;
+  }
+}
+
+// LG — 24px control
+.gds-checkbox--lg {
+  .gds-checkbox__control {
+    width: $icon-lg;
+    height: $icon-lg;
+  }
+
+  .gds-checkbox__label {
+    font-size: $font-size-16;
+    min-height: $icon-lg;
+  }
+}

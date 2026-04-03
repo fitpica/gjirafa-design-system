@@ -1,0 +1,182 @@
+// ============================================================================
+// Component / Toggle (Switch)
+// Classes: .gds-toggle, .gds-toggle--{size}, .gds-toggle--{state}
+// Sizes: sm (32x16), md (40x20), lg (48x24) — 2:1 ratio
+// States: on, disabled
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+@use '../tokens/foundation-shadows' as *;
+
+// --- Wrapper (label + track) ---
+.gds-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-8;
+  cursor: pointer;
+  position: relative;
+}
+
+// --- The track ---
+.gds-toggle__track {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: $space-40;
+  height: $icon-md;
+  background: var(--sel-track-off);
+  border-radius: $radius-pill;
+  padding: $space-2;
+  transition:
+    background $duration-normal $ease-default;
+}
+
+// --- The knob ---
+.gds-toggle__knob {
+  width: $icon-sm;
+  height: $icon-sm;
+  border-radius: $radius-pill;
+  background: var(--sel-bg);
+  box-shadow: $shadow-sm;
+  transition:
+    transform $duration-normal $ease-default,
+    box-shadow $duration-normal $ease-default;
+}
+
+// --- Label ---
+.gds-toggle__label {
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--sel-label);
+}
+
+// --- Hover ---
+.gds-toggle:hover .gds-toggle__track {
+  background: var(--sel-track-off-hover);
+}
+
+// --- Focus ---
+.gds-toggle__input:focus-visible ~ .gds-toggle__track {
+  box-shadow: 0 0 0 $space-2 var(--sel-focus-offset), 0 0 0 $space-4 var(--sel-focus-ring);
+}
+
+// --- Hidden native input ---
+.gds-toggle__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ============================================================================
+// On state
+// ============================================================================
+
+.gds-toggle--on .gds-toggle__track,
+.gds-toggle__input:checked ~ .gds-toggle__track {
+  background: var(--sel-active-bg);
+}
+
+.gds-toggle--on:hover .gds-toggle__track,
+.gds-toggle__input:checked:hover ~ .gds-toggle__track {
+  background: var(--sel-active-hover);
+}
+
+// Knob slides right — MD default: track 40px, padding 2px each side, knob 16px → move 20px
+.gds-toggle--on .gds-toggle__knob,
+.gds-toggle__input:checked ~ .gds-toggle__track .gds-toggle__knob {
+  transform: translateX($space-20);
+}
+
+// ============================================================================
+// Disabled state
+// ============================================================================
+
+.gds-toggle--disabled {
+  cursor: not-allowed;
+
+  .gds-toggle__track {
+    background: var(--sel-disabled-bg);
+    opacity: 0.5;
+  }
+
+  &:hover .gds-toggle__track {
+    background: var(--sel-disabled-bg);
+  }
+
+  .gds-toggle__label {
+    color: var(--gds-color-text-disabled);
+  }
+}
+
+// ============================================================================
+// Sizes
+// ============================================================================
+
+// SM — 32x16 track, 12px knob
+.gds-toggle--sm {
+  .gds-toggle__track {
+    width: $space-32;
+    height: $icon-sm;
+  }
+
+  .gds-toggle__knob {
+    width: $space-12;
+    height: $space-12;
+  }
+
+  .gds-toggle__label {
+    font-size: $font-size-12;
+  }
+}
+
+// Knob slide for SM: track 32px - padding 4px - knob 12px = 16px
+.gds-toggle--sm.gds-toggle--on .gds-toggle__knob,
+.gds-toggle--sm .gds-toggle__input:checked ~ .gds-toggle__track .gds-toggle__knob {
+  transform: translateX($space-16);
+}
+
+// MD — 40x20 track, 16px knob (default)
+.gds-toggle--md {
+  .gds-toggle__track {
+    width: $space-40;
+    height: $icon-md;
+  }
+
+  .gds-toggle__knob {
+    width: $icon-sm;
+    height: $icon-sm;
+  }
+}
+
+// LG — 48x24 track, 20px knob
+.gds-toggle--lg {
+  .gds-toggle__track {
+    width: $space-48;
+    height: $icon-lg;
+  }
+
+  .gds-toggle__knob {
+    width: $icon-md;
+    height: $icon-md;
+  }
+
+  .gds-toggle__label {
+    font-size: $font-size-16;
+  }
+}
+
+// Knob slide for LG: track 48px - padding 4px - knob 20px = 24px
+.gds-toggle--lg.gds-toggle--on .gds-toggle__knob,
+.gds-toggle--lg .gds-toggle__input:checked ~ .gds-toggle__track .gds-toggle__knob {
+  transform: translateX($space-24);
+}

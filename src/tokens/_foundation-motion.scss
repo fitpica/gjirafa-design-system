@@ -1,0 +1,24 @@
+// ============================================================================
+// Foundation / Motion
+// Transition durations and easing curves
+// ============================================================================
+
+// --- Durations ---
+$duration-fast:   0.1s;
+$duration-normal: 0.15s;
+$duration-slow:   0.25s;
+
+// --- Easing ---
+$ease-default: cubic-bezier(0.2, 0, 0.38, 0.9);
+$ease-out:     cubic-bezier(0, 0, 0.38, 0.9);
+
+// ============================================================================
+// CSS Custom Properties — Motion
+// ============================================================================
+:root {
+  --gds-duration-fast:   #{$duration-fast};
+  --gds-duration-normal: #{$duration-normal};
+  --gds-duration-slow:   #{$duration-slow};
+  --gds-ease-default:    #{$ease-default};
+  --gds-ease-out:        #{$ease-out};
+}

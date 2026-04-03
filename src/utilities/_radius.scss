@@ -1,0 +1,15 @@
+// ============================================================================
+// Utility Classes / Border Radius
+// .gds-rounded-{size}
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+
+.gds-rounded-none { border-radius: $radius-none; }
+.gds-rounded-sm   { border-radius: $radius-sm; }
+.gds-rounded-s    { border-radius: $radius-s; }
+.gds-rounded-m    { border-radius: $radius-m; }
+.gds-rounded-l    { border-radius: $radius-l; }
+.gds-rounded-xl   { border-radius: $radius-xl; }
+.gds-rounded-pill { border-radius: $radius-pill; }
+.gds-rounded-full { border-radius: 50%; }

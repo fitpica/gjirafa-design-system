@@ -1,0 +1,95 @@
+// ============================================================================
+// Component Tokens / Chip
+// Removable tags, filter pills, selection indicators, toggleable filters
+// All values reference foundation tokens — zero hardcoded values
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+
+:root {
+  // --- Container ---
+  --chip-bg:         #{$color-blue-50};
+  --chip-text:       #{$color-blue-700};
+  --chip-radius:     var(--gds-radius-s);
+  --chip-radius-pill: var(--gds-radius-full);
+
+  // --- Close button ---
+  --chip-close-bg:       #{$color-blue-75};
+  --chip-close-bg-hover: #{$color-blue-100};
+  --chip-close-icon:     #{$color-blue-700};
+
+  // --- Hover ---
+  --chip-hover-bg: #{$color-blue-75};
+
+  // --- Disabled ---
+  --chip-disabled-opacity: 0.4;
+
+  // --- Outline ---
+  --chip-outline-border:    #{$color-blue-100};
+  --chip-outline-bg:        transparent;
+  --chip-outline-hover-bg:  #{$color-blue-50};
+
+  // --- Selectable / toggle ---
+  --chip-selectable-bg:          #{$color-neutral-30};
+  --chip-selectable-text:        var(--gds-color-text-primary);
+  --chip-selectable-border:      #{$color-neutral-40};
+  --chip-selectable-hover-bg:    #{$color-neutral-25};
+  --chip-selectable-active-bg:   var(--gds-color-action-primary);
+  --chip-selectable-active-text: #{$color-neutral-0};
+
+  // --- Avatar (sizing only — colors come from avatar component tokens) ---
+  --chip-avatar-size-sm: #{$space-16};
+  --chip-avatar-size-md: #{$space-20};
+  --chip-avatar-size-lg: #{$space-24};
+
+  // --- Sizes ---
+  --chip-sm-padding:   #{$space-2} #{$space-4};
+  --chip-sm-font-size: #{$font-size-11};
+  --chip-sm-close:     #{$space-12};
+  --chip-sm-icon:      #{$space-12};
+
+  --chip-md-padding:   #{$space-2} #{$space-6};
+  --chip-md-font-size: #{$font-size-12};
+  --chip-md-close:     #{$space-14};
+  --chip-md-icon:      #{$icon-sm};
+
+  --chip-lg-padding:   #{$space-4} #{$space-8};
+  --chip-lg-font-size: #{$font-size-14};
+  --chip-lg-close:     #{$icon-sm};
+  --chip-lg-icon:      #{$icon-sm};
+
+  // --- Counter (overflow) ---
+  --chip-counter-bg:   #{$color-neutral-40};
+  --chip-counter-text: var(--gds-color-text-primary);
+
+  // --- Neutral variant ---
+  --chip-neutral-bg:         #{$color-neutral-30};
+  --chip-neutral-text:       var(--gds-color-text-primary);
+  --chip-neutral-close-bg:       #{$color-neutral-40};
+  --chip-neutral-close-bg-hover: #{$color-neutral-50};
+  --chip-neutral-close-icon:     #{$color-neutral-100};
+  --chip-neutral-outline-border: #{$color-neutral-50};
+
+  // --- Success variant ---
+  --chip-success-bg:   #{$color-green-50};
+  --chip-success-text: #{$color-green-700};
+  --chip-success-close-bg:       #{$color-green-50};
+  --chip-success-close-bg-hover: #{$color-green-100};
+  --chip-success-outline-border: #{$color-green-100};
+
+  // --- Warning variant ---
+  --chip-warning-bg:   #{$color-orange-50};
+  --chip-warning-text: #{$color-orange-700};
+  --chip-warning-close-bg:       #{$color-orange-50};
+  --chip-warning-close-bg-hover: #{$color-orange-100};
+  --chip-warning-outline-border: #{$color-orange-100};
+
+  // --- Error variant ---
+  --chip-error-bg:   #{$color-red-50};
+  --chip-error-text: #{$color-red-700};
+  --chip-error-close-bg:       #{$color-red-50};
+  --chip-error-close-bg-hover: #{$color-red-100};
+  --chip-error-outline-border: #{$color-red-100};
+}

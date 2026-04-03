@@ -1,0 +1,35 @@
+// ============================================================================
+// Component Tokens / Filter Badge
+// Compact pill with filter icon + count indicator
+// 2 states: default, active (with border)
+// All values reference foundation tokens — zero hardcoded values
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+
+:root {
+  // --- Container ---
+  --filter-badge-height:      #{$space-24};
+  --filter-badge-padding:     #{$space-2} #{$space-4} #{$space-2} #{$space-2};
+  --filter-badge-radius:      #{$radius-pill};
+  --filter-badge-bg:          #{$color-blue-50};
+  --filter-badge-gap:         0px;
+
+  // --- Active state ---
+  --filter-badge-active-border:      #{$color-blue-200};
+  --filter-badge-active-border-width: #{$border-width-default};
+
+  // --- Icon button ---
+  --filter-badge-icon-size:    #{$icon-sm};
+  --filter-badge-icon-padding: #{$space-4};
+  --filter-badge-icon-color:   #{$color-blue-500};
+
+  // --- Count pill ---
+  --filter-badge-count-size:        #{$space-20};
+  --filter-badge-count-bg:          #{$color-neutral-0};
+  --filter-badge-count-text:        #{$color-neutral-400};
+  --filter-badge-count-font-size:   #{$font-size-10};
+  --filter-badge-count-font-weight: #{$font-weight-semibold};
+}

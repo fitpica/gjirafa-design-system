@@ -1,0 +1,14 @@
+// ============================================================================
+// Theme: VP Player
+// Orange brand — overrides only the 4 tokens that differ from CODEX
+// ============================================================================
+
+@use '../tokens/foundation-colors' as *;
+
+[data-theme="vpplayer"] {
+  --gds-color-brand-primary:         #{$color-orange-500};
+  --gds-color-action-primary:        #{$color-orange-500};
+  --gds-color-action-primary-hover:  #{$color-orange-600};
+  --gds-color-action-primary-active: #{$color-orange-700};
+  --gds-color-border-focus:          #{$color-orange-500};
+}

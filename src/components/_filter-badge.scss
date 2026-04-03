@@ -1,0 +1,76 @@
+// ============================================================================
+// Component / Filter Badge
+// Classes: .gds-filter-badge, .gds-filter-badge--active
+// Elements: .gds-filter-badge__icon, .gds-filter-badge__count
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-motion' as *;
+
+// ============================================================================
+// Base
+// ============================================================================
+
+.gds-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--filter-badge-gap);
+  height: var(--filter-badge-height);
+  padding: var(--filter-badge-padding);
+  border-radius: var(--filter-badge-radius);
+  background: var(--filter-badge-bg);
+  border: var(--filter-badge-active-border-width) solid transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color $duration-normal ease;
+}
+
+// ============================================================================
+// Active state
+// ============================================================================
+
+.gds-filter-badge--active {
+  border-color: var(--filter-badge-active-border);
+}
+
+// ============================================================================
+// Icon container
+// ============================================================================
+
+.gds-filter-badge__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--filter-badge-icon-padding);
+  border-radius: $radius-pill;
+  background: var(--filter-badge-bg);
+  color: var(--filter-badge-icon-color);
+  flex-shrink: 0;
+
+  svg,
+  i {
+    width: var(--filter-badge-icon-size);
+    height: var(--filter-badge-icon-size);
+    color: inherit;
+  }
+}
+
+// ============================================================================
+// Count (number pill)
+// ============================================================================
+
+.gds-filter-badge__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--filter-badge-count-size);
+  height: var(--filter-badge-count-size);
+  border-radius: $radius-pill;
+  background: var(--filter-badge-count-bg);
+  color: var(--filter-badge-count-text);
+  font-size: var(--filter-badge-count-font-size);
+  font-weight: var(--filter-badge-count-font-weight);
+  line-height: 1;
+  text-align: center;
+  flex-shrink: 0;
+}

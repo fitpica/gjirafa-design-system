@@ -1,0 +1,15 @@
+// ============================================================================
+// Theme: CODEX (default)
+// Blue brand — already set in :root via _semantic.scss
+// This file exists as an explicit theme class for clarity
+// ============================================================================
+
+@use '../tokens/foundation-colors' as *;
+
+[data-theme="codex"] {
+  --gds-color-brand-primary:         #{$color-blue-500};
+  --gds-color-action-primary:        #{$color-blue-500};
+  --gds-color-action-primary-hover:  #{$color-blue-600};
+  --gds-color-action-primary-active: #{$color-blue-700};
+  --gds-color-border-focus:          #{$color-blue-500};
+}

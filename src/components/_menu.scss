@@ -1,0 +1,157 @@
+// ============================================================================
+// Component / Menu
+// Classes: .gds-menu, .gds-menu__item, .gds-menu__divider, .gds-menu__group
+// Context menus, overflow menus, right-click menus
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// --- Container ---
+.gds-menu {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-6;
+  background: var(--dd-bg);
+  border: $border-width-default solid var(--dd-border);
+  border-radius: $radius-m;
+  box-shadow: var(--dd-shadow);
+  min-width: var(--dd-panel-min-width);
+  max-width: var(--dd-panel-max-width);
+}
+
+// --- Menu item ---
+.gds-menu__item {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+  padding: $space-4 $space-6;
+  border-radius: $radius-s;
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--dd-item-text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition:
+    background $duration-fast $ease-default,
+    color $duration-fast $ease-default;
+
+  &:hover {
+    background: var(--dd-item-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 $space-2 var(--dd-item-focus-offset), 0 0 0 $space-4 var(--dd-item-focus-ring);
+  }
+}
+
+// --- Item icon ---
+.gds-menu__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-sm;
+  height: $icon-sm;
+  color: var(--dd-item-icon);
+}
+
+// --- Item label ---
+.gds-menu__label {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// --- Item description (two-line) ---
+.gds-menu__desc {
+  font-size: $font-size-12;
+  color: var(--dd-item-meta);
+  line-height: $line-height-normal;
+}
+
+// --- Shortcut hint ---
+.gds-menu__shortcut {
+  flex-shrink: 0;
+  font-size: $font-size-12;
+  color: var(--dd-item-meta);
+  margin-left: auto;
+}
+
+// --- Right icon (chevron for submenu) ---
+.gds-menu__trailing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-sm;
+  height: $icon-sm;
+  color: var(--dd-item-icon);
+  margin-left: auto;
+}
+
+// --- Danger item ---
+.gds-menu__item--danger {
+  color: var(--dd-item-danger-text);
+
+  .gds-menu__icon {
+    color: var(--dd-item-danger-icon);
+  }
+
+  &:hover {
+    background: var(--dd-item-hover-bg);
+  }
+}
+
+// --- Disabled item ---
+.gds-menu__item--disabled {
+  opacity: var(--dd-item-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// --- Divider ---
+.gds-menu__divider {
+  height: $border-width-default;
+  background: var(--dd-divider);
+  margin: $space-4 0;
+}
+
+// --- Group header ---
+.gds-menu__group {
+  padding: $space-4 $space-6 $space-2;
+  font-size: $font-size-11;
+  font-weight: $font-weight-medium;
+  color: var(--dd-group-text);
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+}
+
+// --- Two-line item layout ---
+.gds-menu__item--rich {
+  align-items: flex-start;
+
+  .gds-menu__icon {
+    width: $icon-md;
+    height: $icon-md;
+    margin-top: $space-2;
+  }
+
+  .gds-menu__content {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}

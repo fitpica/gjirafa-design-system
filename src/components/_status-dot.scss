@@ -1,0 +1,66 @@
+// ============================================================================
+// Component / Status Dot
+// Classes: .gds-status-dot, .gds-status-dot--{state}, .gds-status-dot--{size}
+// States: online, offline, busy, away, info, purple
+// Sizes: sm (6px), md (8px default), lg (10px), xl (12px)
+// Modifier: .gds-status-dot--ring (white border for layering on avatars/images)
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+
+// ============================================================================
+// Base
+// ============================================================================
+
+.gds-status-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: var(--status-dot-md);
+  height: var(--status-dot-md);
+  border-radius: $radius-pill;
+  background: var(--status-dot-offline);
+}
+
+// ============================================================================
+// Sizes
+// ============================================================================
+
+.gds-status-dot--sm {
+  width: var(--status-dot-sm);
+  height: var(--status-dot-sm);
+}
+
+.gds-status-dot--md {
+  width: var(--status-dot-md);
+  height: var(--status-dot-md);
+}
+
+.gds-status-dot--lg {
+  width: var(--status-dot-lg);
+  height: var(--status-dot-lg);
+}
+
+.gds-status-dot--xl {
+  width: var(--status-dot-xl);
+  height: var(--status-dot-xl);
+}
+
+// ============================================================================
+// States
+// ============================================================================
+
+.gds-status-dot--online  { background: var(--status-dot-online); }
+.gds-status-dot--offline { background: var(--status-dot-offline); }
+.gds-status-dot--busy    { background: var(--status-dot-busy); }
+.gds-status-dot--away    { background: var(--status-dot-away); }
+.gds-status-dot--info    { background: var(--status-dot-info); }
+.gds-status-dot--purple  { background: var(--status-dot-purple); }
+
+// ============================================================================
+// Ring modifier (white border for overlaying on avatars/images)
+// ============================================================================
+
+.gds-status-dot--ring {
+  border: var(--status-dot-ring-width) solid var(--status-dot-ring);
+  box-sizing: content-box;
+}

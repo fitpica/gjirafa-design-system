@@ -1,0 +1,366 @@
+// ============================================================================
+// Component / Button
+// Classes: .gds-btn, .gds-btn--{variant}, .gds-btn--{size}
+// Variants: primary, secondary, ghost, critical, positive
+// Sizes: xs (24px), sm (28px), md (36px), lg (44px), xl (52px)
+// Modifiers: --pill, --full, --loading, --icon-left, --icon-right
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// ============================================================================
+// Shared base mixin — used by .gds-btn and .gds-btn-icon
+// ============================================================================
+@mixin _btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: $border-width-default solid;
+  cursor: pointer;
+  transition:
+    background $duration-normal $ease-default,
+    border-color $duration-normal $ease-default,
+    color $duration-normal $ease-default,
+    box-shadow $duration-normal $ease-default,
+    transform $duration-fast $ease-out;
+  box-shadow: var(--btn-shadow);
+  text-decoration: none;
+
+  &:hover:not(:disabled):not(.gds-btn--disabled) {
+    box-shadow: var(--btn-shadow-hover);
+  }
+
+  &:active:not(:disabled):not(.gds-btn--disabled) {
+    transform: scale(0.97);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 $space-2 var(--btn-focus-offset), 0 0 0 $space-4 var(--btn-focus-ring);
+  }
+}
+
+// ============================================================================
+// Text Button — .gds-btn
+// ============================================================================
+
+.gds-btn {
+  @include _btn-base;
+  font-family: inherit;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  line-height: $line-height-tight;
+}
+
+// --- Sizes ---
+.gds-btn--xs {
+  height: var(--btn-height-xs);
+  padding: 0 $space-8;
+  font-size: $font-size-11;
+  gap: $space-4;
+  border-radius: $radius-s;
+}
+
+.gds-btn--sm {
+  height: var(--btn-height-sm);
+  padding: 0 $space-12;
+  font-size: $font-size-12;
+  gap: $space-4;
+  border-radius: $radius-s;
+}
+
+.gds-btn--md {
+  height: var(--btn-height-md);
+  padding: 0 $space-20;
+  font-size: $font-size-14;
+  gap: $space-6;
+  border-radius: $radius-m;
+}
+
+.gds-btn--lg {
+  height: var(--btn-height-lg);
+  padding: 0 $space-24;
+  font-size: $font-size-14;
+  gap: $space-8;
+  border-radius: $radius-l;
+}
+
+.gds-btn--xl {
+  height: var(--btn-height-xl);
+  padding: 0 $space-32;
+  font-size: $font-size-16;
+  gap: $space-8;
+  border-radius: $radius-10;
+}
+
+// --- Variants ---
+.gds-btn--primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-color: var(--btn-primary-border);
+
+  &:hover:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-primary-bg-hover);
+    border-color: var(--btn-primary-bg-hover);
+  }
+
+  &:active:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-primary-bg-active);
+    border-color: var(--btn-primary-bg-active);
+  }
+}
+
+.gds-btn--secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
+
+  &:hover:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-secondary-bg-hover);
+    border-color: var(--btn-secondary-border-hover);
+  }
+
+  &:active:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-secondary-bg-active);
+    border-color: var(--btn-secondary-border-active);
+  }
+}
+
+.gds-btn--ghost {
+  background: var(--btn-ghost-bg);
+  color: var(--btn-ghost-text);
+  border-color: var(--btn-ghost-border);
+  box-shadow: none;
+
+  &:hover:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-ghost-bg-hover);
+    box-shadow: none;
+  }
+
+  &:active:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-ghost-bg-active);
+    color: var(--btn-ghost-text-hover);
+  }
+}
+
+.gds-btn--critical {
+  background: var(--btn-critical-bg);
+  color: var(--btn-critical-text);
+  border-color: var(--btn-critical-border);
+
+  &:hover:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-critical-bg-hover);
+    border-color: var(--btn-critical-bg-hover);
+  }
+
+  &:active:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-critical-bg-active);
+    border-color: var(--btn-critical-bg-active);
+  }
+}
+
+.gds-btn--positive {
+  background: var(--btn-positive-bg);
+  color: var(--btn-positive-text);
+  border-color: var(--btn-positive-border);
+
+  &:hover:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-positive-bg-hover);
+    border-color: var(--btn-positive-bg-hover);
+  }
+
+  &:active:not(:disabled):not(.gds-btn--disabled) {
+    background: var(--btn-positive-bg-active);
+    border-color: var(--btn-positive-bg-active);
+  }
+}
+
+// --- Disabled ---
+.gds-btn:disabled,
+.gds-btn--disabled {
+  background: var(--btn-disabled-bg);
+  color: var(--btn-disabled-text);
+  border-color: var(--btn-disabled-border);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+// --- Pill shape ---
+.gds-btn--pill {
+  border-radius: $radius-pill;
+}
+
+// --- Full width ---
+.gds-btn--full {
+  width: 100%;
+}
+
+// --- Icon slot ---
+.gds-btn__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: $icon-stroke;
+  }
+}
+
+.gds-btn--xs .gds-btn__icon { width: var(--btn-icon-xs); height: var(--btn-icon-xs); }
+.gds-btn--sm .gds-btn__icon { width: var(--btn-icon-sm); height: var(--btn-icon-sm); }
+.gds-btn--md .gds-btn__icon { width: var(--btn-icon-md); height: var(--btn-icon-md); }
+.gds-btn--lg .gds-btn__icon { width: var(--btn-icon-lg); height: var(--btn-icon-lg); }
+.gds-btn--xl .gds-btn__icon { width: var(--btn-icon-xl); height: var(--btn-icon-xl); }
+
+// --- Label ---
+.gds-btn__label {
+  display: inline-flex;
+  align-items: center;
+}
+
+// --- Loading state ---
+.gds-btn--loading {
+  position: relative;
+  cursor: wait;
+}
+
+.gds-btn--loading .gds-btn__label {
+  opacity: 0;
+}
+
+.gds-btn__spinner {
+  position: absolute;
+  animation: gds-spin $duration-slow linear infinite;
+}
+
+.gds-btn--xs .gds-btn__spinner { width: var(--btn-icon-xs); height: var(--btn-icon-xs); }
+.gds-btn--sm .gds-btn__spinner { width: var(--btn-icon-sm); height: var(--btn-icon-sm); }
+.gds-btn--md .gds-btn__spinner { width: var(--btn-icon-md); height: var(--btn-icon-md); }
+.gds-btn--lg .gds-btn__spinner { width: var(--btn-icon-lg); height: var(--btn-icon-lg); }
+.gds-btn--xl .gds-btn__spinner { width: var(--btn-icon-xl); height: var(--btn-icon-xl); }
+
+// Loading text color overrides
+.gds-btn--loading.gds-btn--primary   { color: var(--btn-loading-text-primary); }
+.gds-btn--loading.gds-btn--critical  { color: var(--btn-loading-text-critical); }
+.gds-btn--loading.gds-btn--positive  { color: var(--btn-loading-text-positive); }
+.gds-btn--loading.gds-btn--secondary { color: var(--btn-loading-text-secondary); }
+.gds-btn--loading.gds-btn--ghost     { color: var(--btn-loading-text-secondary); }
+
+@keyframes gds-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+// ============================================================================
+// Icon Button — .gds-btn-icon
+// ============================================================================
+
+.gds-btn-icon {
+  @include _btn-base;
+  padding: 0;
+
+  svg {
+    stroke-width: $icon-stroke;
+  }
+}
+
+// Icon button sizes (square)
+.gds-btn-icon--xs { width: var(--btn-height-xs); height: var(--btn-height-xs); border-radius: $radius-s; }
+.gds-btn-icon--sm { width: var(--btn-height-sm); height: var(--btn-height-sm); border-radius: $radius-s; }
+.gds-btn-icon--md { width: var(--btn-height-md); height: var(--btn-height-md); border-radius: $radius-m; }
+.gds-btn-icon--lg { width: var(--btn-height-lg); height: var(--btn-height-lg); border-radius: $radius-l; }
+.gds-btn-icon--xl { width: var(--btn-height-xl); height: var(--btn-height-xl); border-radius: $radius-10; }
+
+.gds-btn-icon--xs svg { width: var(--btn-icon-xs); height: var(--btn-icon-xs); }
+.gds-btn-icon--sm svg { width: var(--btn-icon-sm); height: var(--btn-icon-sm); }
+.gds-btn-icon--md svg { width: var(--btn-icon-md); height: var(--btn-icon-md); }
+.gds-btn-icon--lg svg { width: var(--btn-icon-lg); height: var(--btn-icon-lg); }
+.gds-btn-icon--xl svg { width: var(--btn-icon-xl); height: var(--btn-icon-xl); }
+
+// Circle modifier
+.gds-btn-icon--circle { border-radius: $radius-pill; }
+
+// Icon button variants
+.gds-btn-icon--primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-color: var(--btn-primary-border);
+  &:hover:not(:disabled) { background: var(--btn-primary-bg-hover); border-color: var(--btn-primary-bg-hover); }
+  &:active:not(:disabled) { background: var(--btn-primary-bg-active); border-color: var(--btn-primary-bg-active); }
+}
+
+.gds-btn-icon--secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
+  &:hover:not(:disabled) { background: var(--btn-secondary-bg-hover); border-color: var(--btn-secondary-border-hover); }
+  &:active:not(:disabled) { background: var(--btn-secondary-bg-active); border-color: var(--btn-secondary-border-active); }
+}
+
+.gds-btn-icon--ghost {
+  background: transparent;
+  color: var(--btn-ghost-text);
+  border-color: transparent;
+  box-shadow: none;
+  &:hover:not(:disabled) { background: var(--btn-ghost-bg-hover); box-shadow: none; }
+  &:active:not(:disabled) { background: var(--btn-ghost-bg-active); }
+}
+
+.gds-btn-icon--critical {
+  background: var(--btn-critical-bg);
+  color: var(--btn-critical-text);
+  border-color: var(--btn-critical-border);
+  &:hover:not(:disabled) { background: var(--btn-critical-bg-hover); border-color: var(--btn-critical-bg-hover); }
+  &:active:not(:disabled) { background: var(--btn-critical-bg-active); border-color: var(--btn-critical-bg-active); }
+}
+
+.gds-btn-icon--positive {
+  background: var(--btn-positive-bg);
+  color: var(--btn-positive-text);
+  border-color: var(--btn-positive-border);
+  &:hover:not(:disabled) { background: var(--btn-positive-bg-hover); border-color: var(--btn-positive-bg-hover); }
+  &:active:not(:disabled) { background: var(--btn-positive-bg-active); border-color: var(--btn-positive-bg-active); }
+}
+
+.gds-btn-icon:disabled {
+  background: var(--btn-disabled-bg);
+  color: var(--btn-disabled-text);
+  border-color: var(--btn-disabled-border);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+// ============================================================================
+// Button Group — .gds-btn-group
+// Joins adjacent buttons with shared borders, radius matches button size
+// ============================================================================
+
+.gds-btn-group {
+  display: inline-flex;
+
+  > .gds-btn {
+    border-radius: 0;
+
+    &:not(:last-child) {
+      border-right-width: 0;
+    }
+  }
+
+  // Size-aware radius for first/last child
+  > .gds-btn--xs:first-child  { border-top-left-radius: $radius-s;  border-bottom-left-radius: $radius-s; }
+  > .gds-btn--sm:first-child  { border-top-left-radius: $radius-s;  border-bottom-left-radius: $radius-s; }
+  > .gds-btn--md:first-child  { border-top-left-radius: $radius-m;  border-bottom-left-radius: $radius-m; }
+  > .gds-btn--lg:first-child  { border-top-left-radius: $radius-l;  border-bottom-left-radius: $radius-l; }
+  > .gds-btn--xl:first-child  { border-top-left-radius: $radius-10; border-bottom-left-radius: $radius-10; }
+
+  > .gds-btn--xs:last-child  { border-top-right-radius: $radius-s;  border-bottom-right-radius: $radius-s; }
+  > .gds-btn--sm:last-child  { border-top-right-radius: $radius-s;  border-bottom-right-radius: $radius-s; }
+  > .gds-btn--md:last-child  { border-top-right-radius: $radius-m;  border-bottom-right-radius: $radius-m; }
+  > .gds-btn--lg:last-child  { border-top-right-radius: $radius-l;  border-bottom-right-radius: $radius-l; }
+  > .gds-btn--xl:last-child  { border-top-right-radius: $radius-10; border-bottom-right-radius: $radius-10; }
+}

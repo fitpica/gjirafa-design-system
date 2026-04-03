@@ -1,0 +1,71 @@
+// ============================================================================
+// Component / Percentage Badge
+// Classes: .gds-pct-badge, .gds-pct-badge--{tone}, .gds-pct-badge--up/--down
+// Tones: critical, warning, neutral (default), positive
+// Direction: --up (arrow up, increase), --down (arrow down, decrease)
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+
+// ============================================================================
+// Base
+// ============================================================================
+
+.gds-pct-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pct-badge-gap);
+  height: var(--pct-badge-height);
+  padding: var(--pct-badge-padding);
+  border-radius: var(--pct-badge-radius);
+  background: var(--pct-badge-neutral-bg);
+  color: var(--pct-badge-neutral-text);
+  font-size: var(--pct-badge-font-size);
+  font-weight: var(--pct-badge-font-weight);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+// ============================================================================
+// Icon
+// ============================================================================
+
+.gds-pct-badge__icon {
+  width: var(--pct-badge-icon-size);
+  height: var(--pct-badge-icon-size);
+  flex-shrink: 0;
+  color: inherit;
+}
+
+// ============================================================================
+// Value
+// ============================================================================
+
+.gds-pct-badge__value {
+  color: inherit;
+}
+
+// ============================================================================
+// Tones
+// ============================================================================
+
+.gds-pct-badge--critical {
+  background: var(--pct-badge-critical-bg);
+  color: var(--pct-badge-critical-text);
+}
+
+.gds-pct-badge--warning {
+  background: var(--pct-badge-warning-bg);
+  color: var(--pct-badge-warning-text);
+}
+
+.gds-pct-badge--neutral {
+  background: var(--pct-badge-neutral-bg);
+  color: var(--pct-badge-neutral-text);
+}
+
+.gds-pct-badge--positive {
+  background: var(--pct-badge-positive-bg);
+  color: var(--pct-badge-positive-text);
+}

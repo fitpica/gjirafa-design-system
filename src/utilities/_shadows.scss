@@ -1,0 +1,15 @@
+// ============================================================================
+// Utility Classes / Shadows
+// .gds-shadow-{level}
+// ============================================================================
+
+@use '../tokens/foundation-shadows' as *;
+
+.gds-shadow-none       { box-shadow: none; }
+.gds-shadow-xs         { box-shadow: $shadow-xs; }
+.gds-shadow-sm         { box-shadow: $shadow-sm; }
+.gds-shadow-sm-hover   { box-shadow: $shadow-sm-hover; }
+.gds-shadow-md         { box-shadow: $shadow-md; }
+.gds-shadow-lg         { box-shadow: $shadow-lg; }
+.gds-shadow-raised     { box-shadow: $shadow-raised; }
+.gds-shadow-side-panel { box-shadow: $shadow-side-panel; }

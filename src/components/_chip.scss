@@ -1,0 +1,413 @@
+// ============================================================================
+// Component / Chip
+// Classes: .gds-chip, .gds-chip--{sm,md,lg}, .gds-chip--rounded,
+//          .gds-chip--outline, .gds-chip--selectable, .gds-chip--avatar,
+//          .gds-chip--{neutral,success,warning,error}
+// Removable tags, filter pills, toggleable filters, avatar chips
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// --- Base chip (md is default) ---
+.gds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-4;
+  padding: var(--chip-md-padding);
+  border-radius: var(--chip-radius);
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-family: inherit;
+  font-size: var(--chip-md-font-size);
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  white-space: nowrap;
+  max-width: 100%;
+  border: $border-width-default solid transparent;
+  transition:
+    background $duration-fast $ease-default,
+    border-color $duration-fast $ease-default,
+    color $duration-fast $ease-default;
+
+  &:hover {
+    background: var(--chip-hover-bg);
+  }
+}
+
+// --- Chip label ---
+.gds-chip__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+// --- Close / remove button ---
+.gds-chip__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--chip-md-close);
+  height: var(--chip-md-close);
+  border-radius: $radius-pill;
+  background: var(--chip-close-bg);
+  color: var(--chip-close-icon);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background $duration-fast $ease-default;
+
+  &:hover {
+    background: var(--chip-close-bg-hover);
+  }
+
+  svg {
+    width: $space-8;
+    height: $space-8;
+  }
+}
+
+// --- Leading icon (optional) ---
+.gds-chip__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--chip-md-icon);
+  height: var(--chip-md-icon);
+}
+
+// ============================================================================
+// Size variants
+// ============================================================================
+
+.gds-chip--sm {
+  padding: var(--chip-sm-padding);
+  font-size: var(--chip-sm-font-size);
+
+  .gds-chip__close {
+    width: var(--chip-sm-close);
+    height: var(--chip-sm-close);
+
+    svg {
+      width: $space-6;
+      height: $space-6;
+    }
+  }
+
+  .gds-chip__icon {
+    width: var(--chip-sm-icon);
+    height: var(--chip-sm-icon);
+  }
+
+  .gds-avatar {
+    width: var(--chip-avatar-size-sm);
+    height: var(--chip-avatar-size-sm);
+    font-size: var(--avatar-font-16);
+  }
+}
+
+.gds-chip--lg {
+  padding: var(--chip-lg-padding);
+  font-size: var(--chip-lg-font-size);
+
+  .gds-chip__close {
+    width: var(--chip-lg-close);
+    height: var(--chip-lg-close);
+
+    svg {
+      width: $space-10;
+      height: $space-10;
+    }
+  }
+
+  .gds-chip__icon {
+    width: var(--chip-lg-icon);
+    height: var(--chip-lg-icon);
+  }
+
+  .gds-avatar {
+    width: var(--chip-avatar-size-lg);
+    height: var(--chip-avatar-size-lg);
+    font-size: var(--avatar-font-24);
+  }
+}
+
+// ============================================================================
+// Shape variants
+// ============================================================================
+
+.gds-chip--rounded {
+  border-radius: var(--chip-radius-pill);
+}
+
+// ============================================================================
+// Outline variant
+// ============================================================================
+
+.gds-chip--outline {
+  background: var(--chip-outline-bg);
+  border-color: var(--chip-outline-border);
+
+  &:hover {
+    background: var(--chip-outline-hover-bg);
+  }
+
+  .gds-chip__close {
+    background: transparent;
+
+    &:hover {
+      background: var(--chip-close-bg);
+    }
+  }
+}
+
+// ============================================================================
+// Selectable / toggle chip
+// ============================================================================
+
+.gds-chip--selectable {
+  background: var(--chip-selectable-bg);
+  color: var(--chip-selectable-text);
+  border-color: var(--chip-selectable-border);
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: var(--chip-selectable-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 $space-2 var(--input-focus-offset, var(--gds-color-bg-primary)), 0 0 0 $space-4 var(--input-focus-ring, var(--gds-color-border-focus));
+  }
+
+  .gds-chip__close {
+    background: transparent;
+  }
+}
+
+.gds-chip--selectable.gds-chip--active {
+  background: var(--chip-selectable-active-bg);
+  color: var(--chip-selectable-active-text);
+  border-color: var(--chip-selectable-active-bg);
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  .gds-chip__icon {
+    color: var(--chip-selectable-active-text);
+  }
+
+  .gds-chip__close {
+    color: var(--chip-selectable-active-text);
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// ============================================================================
+// Avatar chip — uses .gds-avatar inside chip
+// ============================================================================
+
+.gds-chip .gds-avatar {
+  width: var(--chip-avatar-size-md);
+  height: var(--chip-avatar-size-md);
+  font-size: var(--avatar-font-20);
+}
+
+// ============================================================================
+// Chip group container
+// ============================================================================
+
+.gds-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-6;
+  align-items: center;
+}
+
+// --- Overflow counter (+N more) ---
+.gds-chip-group__counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-2 $space-6;
+  border-radius: var(--chip-radius);
+  background: var(--chip-counter-bg);
+  color: var(--chip-counter-text);
+  font-family: inherit;
+  font-size: $font-size-12;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  transition: background $duration-fast $ease-default;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.gds-chip--rounded .gds-chip-group__counter,
+.gds-chip-group--rounded .gds-chip-group__counter {
+  border-radius: var(--chip-radius-pill);
+}
+
+// ============================================================================
+// Chips input (chips inside an input field)
+// ============================================================================
+
+.gds-chip-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-4;
+  align-items: center;
+  padding: $space-4 $space-6;
+  border: $border-width-default solid var(--input-border, var(--gds-color-border-default));
+  border-radius: $radius-m;
+  background: var(--input-bg, var(--gds-color-bg-primary));
+  min-height: $space-40;
+  cursor: text;
+  transition:
+    border-color $duration-fast $ease-default,
+    box-shadow $duration-fast $ease-default;
+
+  &:hover {
+    border-color: var(--input-border-hover, var(--gds-color-border-strong));
+  }
+
+  &:focus-within {
+    border-color: var(--input-border-focus, var(--gds-color-border-focus));
+    box-shadow: 0 0 0 $space-2 var(--input-focus-offset, var(--gds-color-bg-primary)), 0 0 0 $space-4 var(--input-focus-ring, var(--gds-color-border-focus));
+  }
+}
+
+.gds-chip-input__field {
+  flex: 1 1 $space-80;
+  min-width: $space-80;
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--input-text, var(--gds-color-text-primary));
+  padding: 0;
+
+  &::placeholder {
+    color: var(--input-placeholder, var(--gds-color-text-placeholder));
+  }
+}
+
+// ============================================================================
+// Disabled
+// ============================================================================
+
+.gds-chip--disabled {
+  opacity: var(--chip-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// ============================================================================
+// Color variants
+// ============================================================================
+
+.gds-chip--neutral {
+  background: var(--chip-neutral-bg);
+  color: var(--chip-neutral-text);
+
+  .gds-chip__close {
+    background: var(--chip-neutral-close-bg);
+    color: var(--chip-neutral-close-icon);
+
+    &:hover {
+      background: var(--chip-neutral-close-bg-hover);
+    }
+  }
+
+  &.gds-chip--outline {
+    border-color: var(--chip-neutral-outline-border);
+    background: transparent;
+
+    &:hover {
+      background: var(--chip-neutral-bg);
+    }
+  }
+}
+
+.gds-chip--success {
+  background: var(--chip-success-bg);
+  color: var(--chip-success-text);
+
+  .gds-chip__close {
+    background: var(--chip-success-close-bg);
+
+    &:hover {
+      background: var(--chip-success-close-bg-hover);
+    }
+  }
+
+  &.gds-chip--outline {
+    border-color: var(--chip-success-outline-border);
+    background: transparent;
+
+    &:hover {
+      background: var(--chip-success-bg);
+    }
+  }
+}
+
+.gds-chip--warning {
+  background: var(--chip-warning-bg);
+  color: var(--chip-warning-text);
+
+  .gds-chip__close {
+    background: var(--chip-warning-close-bg);
+
+    &:hover {
+      background: var(--chip-warning-close-bg-hover);
+    }
+  }
+
+  &.gds-chip--outline {
+    border-color: var(--chip-warning-outline-border);
+    background: transparent;
+
+    &:hover {
+      background: var(--chip-warning-bg);
+    }
+  }
+}
+
+.gds-chip--error {
+  background: var(--chip-error-bg);
+  color: var(--chip-error-text);
+
+  .gds-chip__close {
+    background: var(--chip-error-close-bg);
+
+    &:hover {
+      background: var(--chip-error-close-bg-hover);
+    }
+  }
+
+  &.gds-chip--outline {
+    border-color: var(--chip-error-outline-border);
+    background: transparent;
+
+    &:hover {
+      background: var(--chip-error-bg);
+    }
+  }
+}

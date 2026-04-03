@@ -1,0 +1,178 @@
+// ============================================================================
+// Utility Classes / Typography
+// .gds-text-{composite}, .gds-font-{weight}, .gds-font-mono
+// ============================================================================
+
+@use '../tokens/foundation-typography' as *;
+
+// --- Title scale ---
+.gds-text-title-xl {
+  font-size: $font-size-24;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+.gds-text-title-lg {
+  font-size: $font-size-20;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+.gds-text-title-md {
+  font-size: $font-size-18;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+.gds-text-title-sm {
+  font-size: $font-size-16;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+// --- Body scale ---
+.gds-text-body-lg {
+  font-size: $font-size-16;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+}
+
+.gds-text-body-base {
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+}
+
+.gds-text-body-sm {
+  font-size: $font-size-12;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+}
+
+.gds-text-body-xs {
+  font-size: $font-size-11;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+}
+
+// --- Caption ---
+.gds-text-caption {
+  font-size: $font-size-11;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+}
+
+// --- Label styles ---
+.gds-text-label-base {
+  font-size: $font-size-14;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+}
+
+.gds-text-label-sm {
+  font-size: $font-size-12;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+}
+
+// --- Button text styles (medium = default, semibold = variant) ---
+.gds-text-button-md {
+  font-size: $font-size-14;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+.gds-text-button-sm {
+  font-size: $font-size-12;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+}
+
+// --- Code styles ---
+.gds-text-code-sm {
+  font-size: $font-size-12;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+}
+
+.gds-text-code-xs {
+  font-size: $font-size-11;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+}
+
+// --- Font weight utilities ---
+.gds-font-regular  { font-weight: $font-weight-regular; }
+.gds-font-medium   { font-weight: $font-weight-medium; }
+.gds-font-semibold { font-weight: $font-weight-semibold; }
+
+// --- Font family utilities ---
+.gds-font-base { font-family: $font-family-base; }
+.gds-font-mono { font-family: $font-family-mono; }
+
+// --- Text alignment ---
+.gds-text-left   { text-align: left; }
+.gds-text-center { text-align: center; }
+.gds-text-right  { text-align: right; }
+
+// --- Text transform ---
+.gds-uppercase  { text-transform: uppercase; }
+.gds-lowercase  { text-transform: lowercase; }
+.gds-capitalize { text-transform: capitalize; }
+
+// --- Line height utilities ---
+.gds-leading-tight   { line-height: $line-height-tight; }
+.gds-leading-normal  { line-height: $line-height-normal; }
+.gds-leading-relaxed { line-height: $line-height-relaxed; }
+
+// --- Letter spacing utilities ---
+.gds-tracking-tight  { letter-spacing: $letter-spacing-tight; }
+.gds-tracking-normal { letter-spacing: $letter-spacing-normal; }
+.gds-tracking-wide   { letter-spacing: $letter-spacing-wide; }
+
+// --- Numeric utilities ---
+.gds-tabular-nums { font-variant-numeric: tabular-nums; }
+
+// --- Truncation ---
+.gds-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ============================================================================
+// Responsive Typography
+// Pattern: .gds-text-{preset}\@{breakpoint}
+// Breakpoints: sm (640px), md (768px), lg (1024px)
+// ============================================================================
+
+// Mixin to generate all text presets for a given suffix
+@mixin _type-presets($suffix: '') {
+  .gds-text-title-xl#{$suffix}     { font-size: $font-size-24; font-weight: $font-weight-medium;  line-height: $line-height-tight; }
+  .gds-text-title-lg#{$suffix}     { font-size: $font-size-20; font-weight: $font-weight-medium;  line-height: $line-height-tight; }
+  .gds-text-title-md#{$suffix}     { font-size: $font-size-18; font-weight: $font-weight-medium;  line-height: $line-height-tight; }
+  .gds-text-title-sm#{$suffix}     { font-size: $font-size-16; font-weight: $font-weight-medium;  line-height: $line-height-tight; }
+  .gds-text-body-lg#{$suffix}      { font-size: $font-size-16; font-weight: $font-weight-regular; line-height: $line-height-normal; }
+  .gds-text-body-base#{$suffix}    { font-size: $font-size-14; font-weight: $font-weight-regular; line-height: $line-height-normal; }
+  .gds-text-body-sm#{$suffix}      { font-size: $font-size-12; font-weight: $font-weight-regular; line-height: $line-height-normal; }
+  .gds-text-body-xs#{$suffix}      { font-size: $font-size-11; font-weight: $font-weight-regular; line-height: $line-height-normal; }
+  .gds-text-caption#{$suffix}      { font-size: $font-size-11; font-weight: $font-weight-regular; line-height: $line-height-normal; }
+  .gds-text-label-base#{$suffix}   { font-size: $font-size-14; font-weight: $font-weight-semibold; line-height: $line-height-tight; }
+  .gds-text-label-sm#{$suffix}     { font-size: $font-size-12; font-weight: $font-weight-semibold; line-height: $line-height-tight; }
+  .gds-text-button-md#{$suffix}    { font-size: $font-size-14; font-weight: $font-weight-medium;  line-height: $line-height-tight; }
+  .gds-text-button-sm#{$suffix}    { font-size: $font-size-12; font-weight: $font-weight-medium;  line-height: $line-height-tight; }
+  .gds-text-code-sm#{$suffix}      { font-size: $font-size-12; font-weight: $font-weight-regular; line-height: $line-height-normal; }
+  .gds-text-code-xs#{$suffix}      { font-size: $font-size-11; font-weight: $font-weight-regular; line-height: $line-height-normal; }
+}
+
+@media (min-width: 640px) {
+  @include _type-presets('\\@sm');
+}
+
+@media (min-width: 768px) {
+  @include _type-presets('\\@md');
+}
+
+@media (min-width: 1024px) {
+  @include _type-presets('\\@lg');
+}

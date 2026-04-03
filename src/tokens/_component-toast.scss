@@ -1,0 +1,53 @@
+// ============================================================================
+// Component Tokens / Toast
+// Lightweight, temporary notifications — matches Figma "Toasts" page
+// All values reference foundation tokens — zero hardcoded values
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-shadows' as *;
+
+:root {
+  // --- Shared ---
+  --toast-bg:           #{$color-neutral-0};
+  --toast-hover-bg:     #{$color-neutral-20};
+  --toast-text:         #{$color-neutral-700};
+  --toast-radius:       #{$radius-l};
+  --toast-shadow:       #{$shadow-md};
+  --toast-padding-right: #{$space-12};
+  --toast-gap:          #{$space-12};
+  --toast-max-width:    calc(#{$space-80} * 6 + #{$space-10});
+
+  // --- Icon block ---
+  --toast-icon-size:    #{$icon-lg};
+  --toast-icon-padding: #{$space-8};
+  --toast-icon-color:   #{$color-neutral-0};
+
+  // --- Icon block colors per variant ---
+  --toast-info-bg:      #{$color-purple-500};
+  --toast-success-bg:   #{$color-green-500};
+  --toast-warning-bg:   #{$color-orange-500};
+  --toast-critical-bg:  #{$color-red-500};
+
+  // --- Action button ---
+  --toast-action-text:     #{$color-neutral-400};
+  --toast-action-font-size: #{$font-size-14};
+  --toast-action-padding:  #{$space-2} #{$space-6};
+  --toast-action-radius:   #{$radius-s};
+  --toast-action-hover-bg: #{$color-neutral-25};
+
+  // --- Countdown timer ---
+  --toast-timer-size:       calc(#{$space-24} + #{$space-2});
+  --toast-timer-border:     #{$color-neutral-30};
+  --toast-timer-border-width: 1.5px;
+  --toast-timer-text:       #{$color-neutral-700};
+  --toast-timer-font-size:  #{$font-size-12};
+
+  // --- Timer ring colors per variant ---
+  --toast-timer-info-ring:     #{$color-purple-500};
+  --toast-timer-success-ring:  #{$color-green-500};
+  --toast-timer-warning-ring:  #{$color-orange-500};
+  --toast-timer-critical-ring: #{$color-red-500};
+}

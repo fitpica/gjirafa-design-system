@@ -1,0 +1,37 @@
+// ============================================================================
+// Component Tokens / Percentage Badge
+// Pill-shaped metric change indicator with arrow + percentage
+// 4 tones (critical, warning, neutral, positive) × 2 directions (up/down)
+// All values reference foundation tokens — zero hardcoded values
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+
+:root {
+  // --- Dimensions ---
+  --pct-badge-height:      calc(#{$space-24} + #{$space-2});
+  --pct-badge-padding:     #{$space-4} #{$space-8};
+  --pct-badge-gap:         #{$space-4};
+  --pct-badge-radius:      #{$radius-pill};
+  --pct-badge-font-size:   #{$font-size-14};
+  --pct-badge-font-weight: #{$font-weight-medium};
+  --pct-badge-icon-size:   #{$icon-sm};
+
+  // --- Critical ---
+  --pct-badge-critical-bg:   #{$color-red-50};
+  --pct-badge-critical-text: #{$color-red-700};
+
+  // --- Warning ---
+  --pct-badge-warning-bg:   #{$color-orange-50};
+  --pct-badge-warning-text: #{$color-orange-700};
+
+  // --- Neutral ---
+  --pct-badge-neutral-bg:   #{$color-neutral-25};
+  --pct-badge-neutral-text: #{$color-neutral-400};
+
+  // --- Positive ---
+  --pct-badge-positive-bg:   #{$color-green-50};
+  --pct-badge-positive-text: #{$color-green-700};
+}

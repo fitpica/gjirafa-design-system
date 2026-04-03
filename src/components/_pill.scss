@@ -1,0 +1,119 @@
+// ============================================================================
+// Component / Pill (Number Count)
+// Classes: .gds-pill, .gds-pill--{tone}, .gds-pill--{size}, .gds-pill--dark
+// Tones: neutral (default), critical, positive, warning, purple, blank
+// Sizes: sm (16px), md (20px default), lg (24px)
+// Styles: light (default), dark (solid)
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+
+// ============================================================================
+// Base (md size, neutral light by default)
+// ============================================================================
+
+.gds-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--pill-md);
+  height: var(--pill-md);
+  border-radius: $radius-pill;
+  background: var(--pill-neutral-light-bg);
+  color: var(--pill-neutral-light-text);
+  font-size: var(--pill-md-font-size);
+  font-weight: var(--pill-md-font-weight);
+  line-height: 1;
+  text-align: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+// ============================================================================
+// Sizes
+// ============================================================================
+
+.gds-pill--sm {
+  width: var(--pill-sm);
+  height: var(--pill-sm);
+  font-size: var(--pill-sm-font-size);
+  font-weight: var(--pill-sm-font-weight);
+}
+
+.gds-pill--md {
+  width: var(--pill-md);
+  height: var(--pill-md);
+  font-size: var(--pill-md-font-size);
+  font-weight: var(--pill-md-font-weight);
+}
+
+.gds-pill--lg {
+  width: var(--pill-lg);
+  height: var(--pill-lg);
+  font-size: var(--pill-lg-font-size);
+  font-weight: var(--pill-lg-font-weight);
+}
+
+// ============================================================================
+// Tones — Light (default)
+// ============================================================================
+
+.gds-pill--critical {
+  background: var(--pill-critical-light-bg);
+  color: var(--pill-critical-light-text);
+}
+
+.gds-pill--positive {
+  background: var(--pill-positive-light-bg);
+  color: var(--pill-positive-light-text);
+}
+
+.gds-pill--warning {
+  background: var(--pill-warning-light-bg);
+  color: var(--pill-warning-light-text);
+}
+
+.gds-pill--purple {
+  background: var(--pill-purple-light-bg);
+  color: var(--pill-purple-light-text);
+}
+
+.gds-pill--neutral {
+  background: var(--pill-neutral-light-bg);
+  color: var(--pill-neutral-light-text);
+}
+
+.gds-pill--blank {
+  background: var(--pill-blank-bg);
+  color: var(--pill-blank-text);
+}
+
+// ============================================================================
+// Style — Dark (solid backgrounds)
+// ============================================================================
+
+.gds-pill--dark {
+  background: var(--pill-neutral-dark-bg);
+  color: var(--pill-neutral-dark-text);
+
+  &.gds-pill--critical {
+    background: var(--pill-critical-dark-bg);
+    color: var(--pill-critical-dark-text);
+  }
+
+  &.gds-pill--positive {
+    background: var(--pill-positive-dark-bg);
+    color: var(--pill-positive-dark-text);
+  }
+
+  &.gds-pill--warning {
+    background: var(--pill-warning-dark-bg);
+    color: var(--pill-warning-dark-text);
+  }
+
+  &.gds-pill--purple {
+    background: var(--pill-purple-dark-bg);
+    color: var(--pill-purple-dark-text);
+  }
+}

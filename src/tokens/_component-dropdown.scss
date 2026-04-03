@@ -1,0 +1,72 @@
+// ============================================================================
+// Component Tokens / Dropdown & Menu
+// Shared tokens for .gds-menu and .gds-dropdown
+// All values reference foundation or semantic tokens — zero hardcoded values
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-shadows' as *;
+
+:root {
+  // --- Dimensions ---
+  --dd-trigger-min-width:    calc(#{$space-80} * 2);
+  --dd-trigger-min-width-sm: calc(#{$space-80} + #{$space-40});
+  --dd-trigger-min-width-lg: calc(#{$space-80} * 2 + #{$space-40});
+  --dd-panel-min-width:      calc(#{$space-80} * 2);
+  --dd-panel-max-width:      calc(#{$space-80} * 4);
+  --dd-list-max-height:      calc(#{$space-80} * 3 + #{$space-40});
+  --dd-tag-max-width:        calc(#{$space-80} + #{$space-40});
+  --dd-tag-remove-size:      #{$space-12};
+
+  // --- Container ---
+  --dd-bg:            var(--gds-color-bg-primary);
+  --dd-border:        #{$color-neutral-40};
+  --dd-radius:        var(--gds-radius-md);
+  --dd-shadow:        #{$shadow-overlay};
+
+  // --- Item ---
+  --dd-item-radius:   var(--gds-radius-s);
+  --dd-item-text:     var(--gds-color-text-primary);
+  --dd-item-icon:     #{$color-neutral-100};
+  --dd-item-meta:     var(--gds-color-text-helper);
+
+  // --- Item: hover ---
+  --dd-item-hover-bg: #{$color-neutral-25};
+
+  // --- Item: active / selected ---
+  --dd-item-active-bg:   #{$color-blue-50};
+  --dd-item-active-text: var(--gds-color-text-primary);
+  --dd-item-active-icon: var(--gds-color-action-primary);
+
+  // --- Item: disabled ---
+  --dd-item-disabled-opacity: 0.4;
+
+  // --- Item: danger ---
+  --dd-item-danger-text: var(--gds-color-error);
+  --dd-item-danger-icon: var(--gds-color-error);
+
+  // --- Item: focus ---
+  --dd-item-focus-ring:   var(--gds-color-border-focus);
+  --dd-item-focus-offset: var(--gds-color-bg-primary);
+
+  // --- Divider ---
+  --dd-divider: var(--gds-color-border-subtle);
+
+  // --- Group header ---
+  --dd-group-text: var(--gds-color-text-helper);
+
+  // --- Search ---
+  --dd-search-border: #{$color-neutral-40};
+  --dd-search-placeholder: var(--gds-color-text-placeholder);
+
+  // --- Empty / Loading ---
+  --dd-empty-text: var(--gds-color-text-helper);
+
+  // --- Create action ---
+  --dd-create-text: var(--gds-color-action-primary);
+
+  // --- Badge/tag ---
+  --dd-badge-bg:   #{$color-blue-50};
+  --dd-badge-text: #{$color-purple-700};
+}

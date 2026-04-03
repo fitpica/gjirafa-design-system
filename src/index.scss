@@ -1,0 +1,58 @@
+// ============================================================================
+// Gjirafa Design System v2.2
+// Main entry point
+// ============================================================================
+
+// --- Foundation tokens (raw values + :root custom properties) ---
+@use 'tokens/foundation-colors';
+@use 'tokens/foundation-spacing';
+@use 'tokens/foundation-typography';
+@use 'tokens/foundation-shadows';
+@use 'tokens/foundation-motion';
+
+// --- Semantic tokens (meaning-based, default = CODEX) ---
+@use 'tokens/semantic';
+
+// --- Theme overrides ---
+@use 'themes/codex';
+@use 'themes/vpplayer';
+
+// --- Component tokens ---
+@use 'tokens/component-button';
+@use 'tokens/component-input';
+@use 'tokens/component-selection';
+@use 'tokens/component-dropdown';
+@use 'tokens/component-chip';
+@use 'tokens/component-alert';
+@use 'tokens/component-toast';
+@use 'tokens/component-avatar';
+@use 'tokens/component-badge';
+@use 'tokens/component-status-dot';
+@use 'tokens/component-pill';
+@use 'tokens/component-pct-badge';
+@use 'tokens/component-filter-badge';
+
+// --- Component styles ---
+@use 'components/button';
+@use 'components/input';
+@use 'components/checkbox';
+@use 'components/radio';
+@use 'components/toggle';
+@use 'components/menu';
+@use 'components/dropdown';
+@use 'components/chip';
+@use 'components/alert';
+@use 'components/toast';
+@use 'components/avatar';
+@use 'components/badge';
+@use 'components/status-dot';
+@use 'components/pill';
+@use 'components/pct-badge';
+@use 'components/filter-badge';
+
+// --- Utility classes ---
+@use 'utilities/colors';
+@use 'utilities/spacing';
+@use 'utilities/typography';
+@use 'utilities/shadows';
+@use 'utilities/radius';

@@ -1,0 +1,27 @@
+// ============================================================================
+// Foundation / Shadows
+// Source: design-system.html shadows section
+// ============================================================================
+
+$shadow-xs:         0 0 2px 0 rgba(235, 235, 237, 1);
+$shadow-sm:         0 1px 2px 0 rgba(235, 235, 237, 1);
+$shadow-sm-hover:   0 2px 3px 0 rgba(222, 222, 226, 1);
+$shadow-md:         0 6px 12px 0 rgba(30, 30, 54, 0.1);
+$shadow-lg:         0 6px 20px 0 rgba(30, 30, 54, 0.2);
+$shadow-raised:     0 13px 24px 0 rgba(30, 30, 54, 0.1);
+$shadow-overlay:    0 4px 20px 0 rgba(30, 30, 54, 0.1);
+$shadow-side-panel: -4px 0 20px 0 rgba(30, 30, 54, 0.05);
+
+// ============================================================================
+// CSS Custom Properties — Shadows
+// ============================================================================
+:root {
+  --gds-shadow-xs:         #{$shadow-xs};
+  --gds-shadow-sm:         #{$shadow-sm};
+  --gds-shadow-sm-hover:   #{$shadow-sm-hover};
+  --gds-shadow-md:         #{$shadow-md};
+  --gds-shadow-lg:         #{$shadow-lg};
+  --gds-shadow-overlay:    #{$shadow-overlay};
+  --gds-shadow-raised:     #{$shadow-raised};
+  --gds-shadow-side-panel: #{$shadow-side-panel};
+}

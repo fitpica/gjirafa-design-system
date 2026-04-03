@@ -1,0 +1,55 @@
+// ============================================================================
+// Utility Classes / Spacing
+// .gds-p-{value}, .gds-px-{value}, .gds-py-{value}, .gds-pt/pr/pb/pl-{value}
+// .gds-m-{value}, .gds-mx-{value}, .gds-my-{value}, .gds-mt/mr/mb/ml-{value}
+// .gds-gap-{value}
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+
+$_space-map: (
+  "0":  $space-0,
+  "2":  $space-2,
+  "4":  $space-4,
+  "6":  $space-6,
+  "8":  $space-8,
+  "10": $space-10,
+  "12": $space-12,
+  "14": $space-14,
+  "16": $space-16,
+  "20": $space-20,
+  "24": $space-24,
+  "32": $space-32,
+  "40": $space-40,
+  "48": $space-48,
+  "64": $space-64,
+  "80": $space-80,
+);
+
+@each $key, $value in $_space-map {
+  // Padding
+  .gds-p-#{$key}  { padding: $value; }
+  .gds-px-#{$key} { padding-left: $value; padding-right: $value; }
+  .gds-py-#{$key} { padding-top: $value; padding-bottom: $value; }
+  .gds-pt-#{$key} { padding-top: $value; }
+  .gds-pr-#{$key} { padding-right: $value; }
+  .gds-pb-#{$key} { padding-bottom: $value; }
+  .gds-pl-#{$key} { padding-left: $value; }
+
+  // Margin
+  .gds-m-#{$key}  { margin: $value; }
+  .gds-mx-#{$key} { margin-left: $value; margin-right: $value; }
+  .gds-my-#{$key} { margin-top: $value; margin-bottom: $value; }
+  .gds-mt-#{$key} { margin-top: $value; }
+  .gds-mr-#{$key} { margin-right: $value; }
+  .gds-mb-#{$key} { margin-bottom: $value; }
+  .gds-ml-#{$key} { margin-left: $value; }
+
+  // Gap
+  .gds-gap-#{$key} { gap: $value; }
+}
+
+// Auto margin utilities
+.gds-mx-auto { margin-left: auto; margin-right: auto; }
+.gds-ml-auto { margin-left: auto; }
+.gds-mr-auto { margin-right: auto; }

@@ -1,0 +1,81 @@
+// ============================================================================
+// Component Tokens / Button (50+ tokens)
+// Maps semantic tokens → component-specific custom properties
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-shadows' as *;
+
+:root {
+  // --- Heights ---
+  --btn-height-xs: #{$space-24};
+  --btn-height-sm: calc(#{$space-24} + #{$space-4});
+  --btn-height-md: calc(#{$space-32} + #{$space-4});
+  --btn-height-lg: calc(#{$space-40} + #{$space-4});
+  --btn-height-xl: calc(#{$space-48} + #{$space-4});
+
+  // --- Icon sizes per button size ---
+  --btn-icon-xs: #{$space-12};
+  --btn-icon-sm: #{$space-14};
+  --btn-icon-md: #{$icon-sm};
+  --btn-icon-lg: calc(#{$space-16} + #{$space-2});
+  --btn-icon-xl: #{$icon-md};
+
+  // --- Primary ---
+  --btn-primary-bg:          var(--gds-color-action-primary);
+  --btn-primary-bg-hover:    var(--gds-color-action-primary-hover);
+  --btn-primary-bg-active:   var(--gds-color-action-primary-active);
+  --btn-primary-text:        var(--gds-color-action-on-primary);
+  --btn-primary-border:      var(--gds-color-action-primary);
+
+  // --- Secondary ---
+  --btn-secondary-bg:            var(--gds-color-bg-primary);
+  --btn-secondary-bg-hover:      var(--gds-color-bg-secondary);
+  --btn-secondary-bg-active:     var(--gds-color-bg-tertiary);
+  --btn-secondary-text:          var(--gds-color-text-primary);
+  --btn-secondary-border:        var(--gds-color-border-default);
+  --btn-secondary-border-hover:  var(--gds-color-border-strong);
+  --btn-secondary-border-active: var(--gds-color-action-primary);
+
+  // --- Ghost ---
+  --btn-ghost-bg:          transparent;
+  --btn-ghost-bg-hover:    var(--gds-color-bg-secondary);
+  --btn-ghost-bg-active:   var(--gds-color-bg-tertiary);
+  --btn-ghost-text:        var(--gds-color-text-primary);
+  --btn-ghost-text-hover:  var(--gds-color-action-primary-hover);
+  --btn-ghost-border:      transparent;
+
+  // --- Critical ---
+  --btn-critical-bg:        #{$color-red-600};
+  --btn-critical-bg-hover:  #{$color-red-700};
+  --btn-critical-bg-active: #{$color-red-900};
+  --btn-critical-text:      var(--gds-color-action-on-primary);
+  --btn-critical-border:    #{$color-red-600};
+
+  // --- Positive ---
+  --btn-positive-bg:        #{$color-green-600};
+  --btn-positive-bg-hover:  #{$color-green-700};
+  --btn-positive-bg-active: #{$color-green-900};
+  --btn-positive-text:      var(--gds-color-action-on-primary);
+  --btn-positive-border:    #{$color-green-600};
+
+  // --- Disabled (shared) ---
+  --btn-disabled-bg:     var(--gds-color-bg-disabled);
+  --btn-disabled-text:   #{$color-neutral-60};
+  --btn-disabled-border: #{$color-neutral-50};
+
+  // --- Loading text colors ---
+  --btn-loading-text-primary:   #{$color-blue-100};
+  --btn-loading-text-critical:  #{$color-red-100};
+  --btn-loading-text-positive:  #{$color-green-100};
+  --btn-loading-text-secondary: #{$color-neutral-60};
+
+  // --- Focus ---
+  --btn-focus-ring:   var(--gds-color-border-focus);
+  --btn-focus-offset: var(--gds-color-bg-primary);
+
+  // --- Shadows ---
+  --btn-shadow:       #{$shadow-sm};
+  --btn-shadow-hover: #{$shadow-sm-hover};
+}

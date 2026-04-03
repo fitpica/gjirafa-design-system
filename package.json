@@ -1,0 +1,31 @@
+{
+  "name": "@gjirafa/design-system",
+  "version": "2.2.0",
+  "description": "Gjirafa Design System — CSS/SCSS tokens, components, and utilities for CODEX and VP Player",
+  "main": "dist/gjirafa-ds.css",
+  "style": "dist/gjirafa-ds.css",
+  "sass": "src/index.scss",
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "figma:sync": "node scripts/figma-sync.mjs",
+    "dev": "sass --watch src/index.scss:dist/gjirafa-ds.css"
+  },
+  "keywords": [
+    "design-system",
+    "css",
+    "scss",
+    "tokens",
+    "gjirafa",
+    "codex",
+    "vpplayer"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "sass": "^1.77.0",
+    "clean-css": "^5.3.0"
+  }
+}

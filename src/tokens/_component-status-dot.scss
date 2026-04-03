@@ -1,0 +1,28 @@
+// ============================================================================
+// Component Tokens / Status Dot
+// Standalone colored dots for online/offline/busy/away states
+// All values reference foundation tokens — zero hardcoded values
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+
+:root {
+  // --- Sizes ---
+  --status-dot-sm:  #{$space-6};
+  --status-dot-md:  #{$space-8};
+  --status-dot-lg:  #{$space-10};
+  --status-dot-xl:  #{$space-12};
+
+  // --- Colors ---
+  --status-dot-online:   #{$color-green-500};
+  --status-dot-offline:  #{$color-neutral-80};
+  --status-dot-busy:     #{$color-red-500};
+  --status-dot-away:     #{$color-orange-500};
+  --status-dot-info:     #{$color-blue-500};
+  --status-dot-purple:   #{$color-purple-500};
+
+  // --- Ring (optional border) ---
+  --status-dot-ring:       #{$color-neutral-0};
+  --status-dot-ring-width: #{$space-2};
+}

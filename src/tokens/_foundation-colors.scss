@@ -1,0 +1,141 @@
+// ============================================================================
+// Foundation / Colors
+// Source: Figma "Foundation / Colors" collection + extended palette steps
+// Tokens marked @figma-sync are managed by scripts/figma-sync.mjs
+// Tokens marked @manual are maintained in code only
+// ============================================================================
+
+// --- Blue ---
+$color-blue-50:  #e9f1fb; // @figma-sync
+$color-blue-75:  #DDE9F9; // @manual
+$color-blue-100: #bad2f2; // @figma-sync
+$color-blue-200: #98bcec; // @manual
+$color-blue-300: #6a9ee3; // @figma-sync
+$color-blue-400: #4d8bdd; // @manual
+$color-blue-500: #206ed5; // @figma-sync
+$color-blue-600: #1d64c2; // @figma-sync
+$color-blue-700: #174e97; // @figma-sync
+$color-blue-800: #123d75; // @manual
+$color-blue-900: #0d2e59; // @figma-sync
+
+// --- Green ---
+$color-green-50:  #e9f4ef; // @manual
+$color-green-100: #baddce; // @manual
+$color-green-300: #69b596; // @manual
+$color-green-500: #1f9162; // @manual
+$color-green-600: #1c8459; // @manual
+$color-green-700: #166746; // @manual
+$color-green-900: #0d3d29; // @manual
+
+// --- Orange ---
+$color-orange-50:  #FDF6EC; // @figma-sync
+$color-orange-100: #fadbb6; // @figma-sync
+$color-orange-300: #f4b261; // @figma-sync
+$color-orange-500: #ef8c13; // @figma-sync
+$color-orange-600: #D97F11; // @figma-sync
+$color-orange-700: #aa630d; // @figma-sync
+$color-orange-900: #643b08; // @manual
+
+// --- Red ---
+$color-red-50:  #fdeeec; // @manual
+$color-red-100: #f8cbc4; // @manual
+$color-red-300: #f08e80; // @manual
+$color-red-500: #e95742; // @figma-sync
+$color-red-600: #d44f3c; // @manual
+$color-red-700: #a53e2f; // @figma-sync
+$color-red-900: #62251c; // @manual
+
+// --- Purple ---
+$color-purple-50:  #f4f2fc; // @manual
+$color-purple-100: #dbd6f7; // @manual
+$color-purple-300: #b2a7ed; // @manual
+$color-purple-500: #8c7be4; // @manual
+$color-purple-600: #7f70cf; // @manual
+$color-purple-700: #6357a2; // @manual
+$color-purple-900: #3b3460; // @manual
+
+// --- Neutral ---
+$color-neutral-0:   #ffffff; // @figma-sync
+$color-neutral-20:  #F7F7F8; // @figma-sync
+$color-neutral-25:  #f1f1f3; // @manual
+$color-neutral-30:  #ebebed; // @figma-sync
+$color-neutral-40:  #dedee2; // @figma-sync
+$color-neutral-50:  #c0c0c7; // @manual
+$color-neutral-60:  #b1b1b9; // @manual
+$color-neutral-80:  #9595a0; // @figma-sync
+$color-neutral-90:  #868693; // @figma-sync
+$color-neutral-100: #767685; // @figma-sync
+$color-neutral-300: #58586a; // @manual
+$color-neutral-400: #4b4b5f; // @figma-sync
+$color-neutral-700: #1e1e36; // @figma-sync
+$color-neutral-900: #02021d; // @manual
+
+// ============================================================================
+// CSS Custom Properties — Foundation Colors (--gds- prefixed)
+// ============================================================================
+:root {
+  // Blue
+  --gds-color-blue-50:  #{$color-blue-50};
+  --gds-color-blue-75:  #{$color-blue-75};
+  --gds-color-blue-100: #{$color-blue-100};
+  --gds-color-blue-200: #{$color-blue-200};
+  --gds-color-blue-300: #{$color-blue-300};
+  --gds-color-blue-400: #{$color-blue-400};
+  --gds-color-blue-500: #{$color-blue-500};
+  --gds-color-blue-600: #{$color-blue-600};
+  --gds-color-blue-700: #{$color-blue-700};
+  --gds-color-blue-800: #{$color-blue-800};
+  --gds-color-blue-900: #{$color-blue-900};
+
+  // Green
+  --gds-color-green-50:  #{$color-green-50};
+  --gds-color-green-100: #{$color-green-100};
+  --gds-color-green-300: #{$color-green-300};
+  --gds-color-green-500: #{$color-green-500};
+  --gds-color-green-600: #{$color-green-600};
+  --gds-color-green-700: #{$color-green-700};
+  --gds-color-green-900: #{$color-green-900};
+
+  // Orange
+  --gds-color-orange-50:  #{$color-orange-50};
+  --gds-color-orange-100: #{$color-orange-100};
+  --gds-color-orange-300: #{$color-orange-300};
+  --gds-color-orange-500: #{$color-orange-500};
+  --gds-color-orange-600: #{$color-orange-600};
+  --gds-color-orange-700: #{$color-orange-700};
+  --gds-color-orange-900: #{$color-orange-900};
+
+  // Red
+  --gds-color-red-50:  #{$color-red-50};
+  --gds-color-red-100: #{$color-red-100};
+  --gds-color-red-300: #{$color-red-300};
+  --gds-color-red-500: #{$color-red-500};
+  --gds-color-red-600: #{$color-red-600};
+  --gds-color-red-700: #{$color-red-700};
+  --gds-color-red-900: #{$color-red-900};
+
+  // Purple
+  --gds-color-purple-50:  #{$color-purple-50};
+  --gds-color-purple-100: #{$color-purple-100};
+  --gds-color-purple-300: #{$color-purple-300};
+  --gds-color-purple-500: #{$color-purple-500};
+  --gds-color-purple-600: #{$color-purple-600};
+  --gds-color-purple-700: #{$color-purple-700};
+  --gds-color-purple-900: #{$color-purple-900};
+
+  // Neutral
+  --gds-color-neutral-0:   #{$color-neutral-0};
+  --gds-color-neutral-20:  #{$color-neutral-20};
+  --gds-color-neutral-25:  #{$color-neutral-25};
+  --gds-color-neutral-30:  #{$color-neutral-30};
+  --gds-color-neutral-40:  #{$color-neutral-40};
+  --gds-color-neutral-50:  #{$color-neutral-50};
+  --gds-color-neutral-60:  #{$color-neutral-60};
+  --gds-color-neutral-80:  #{$color-neutral-80};
+  --gds-color-neutral-90:  #{$color-neutral-90};
+  --gds-color-neutral-100: #{$color-neutral-100};
+  --gds-color-neutral-300: #{$color-neutral-300};
+  --gds-color-neutral-400: #{$color-neutral-400};
+  --gds-color-neutral-700: #{$color-neutral-700};
+  --gds-color-neutral-900: #{$color-neutral-900};
+}

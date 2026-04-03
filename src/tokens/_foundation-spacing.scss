@@ -1,0 +1,85 @@
+// ============================================================================
+// Foundation / Spacing & Border Radius
+// Source: Figma "Foundation / Spacing" collection + extended values
+// ============================================================================
+
+// --- Space scale ---
+$space-0:  0px;
+$space-2:  2px;
+$space-4:  4px;   // @figma-sync
+$space-6:  6px;
+$space-8:  8px;   // @figma-sync
+$space-10: 10px;
+$space-12: 12px;  // @figma-sync
+$space-14: 14px;
+$space-16: 16px;  // @figma-sync
+$space-20: 20px;
+$space-24: 24px;
+$space-32: 32px;
+$space-40: 40px;
+$space-48: 48px;
+$space-64: 64px;
+$space-80: 80px;
+
+// --- Border widths ---
+$border-width-default: 1px;
+$border-width-thick:   2px;
+
+// --- Border radius ---
+$radius-none: 0px;
+$radius-sm:   2px;
+$radius-s:    4px;   // @figma-sync
+$radius-m:    6px;   // @figma-sync
+$radius-l:    8px;   // @figma-sync
+$radius-10:   10px;
+$radius-xl:   12px;
+$radius-pill: 9999px;
+
+// --- Icon sizes ---
+$icon-sm: 16px;
+$icon-md: 20px;
+$icon-lg: 24px;
+
+// --- Icon stroke ---
+$icon-stroke: 1.5;
+
+// ============================================================================
+// CSS Custom Properties — Spacing
+// ============================================================================
+:root {
+  // --- Spacing ---
+  --gds-space-0:  #{$space-0};
+  --gds-space-2:  #{$space-2};
+  --gds-space-4:  #{$space-4};
+  --gds-space-6:  #{$space-6};
+  --gds-space-8:  #{$space-8};
+  --gds-space-10: #{$space-10};
+  --gds-space-12: #{$space-12};
+  --gds-space-14: #{$space-14};
+  --gds-space-16: #{$space-16};
+  --gds-space-20: #{$space-20};
+  --gds-space-24: #{$space-24};
+  --gds-space-32: #{$space-32};
+  --gds-space-40: #{$space-40};
+  --gds-space-48: #{$space-48};
+  --gds-space-64: #{$space-64};
+  --gds-space-80: #{$space-80};
+
+  // --- Radius ---
+  --gds-radius-none: #{$radius-none};
+  --gds-radius-sm:   #{$radius-sm};
+  --gds-radius-s:    #{$radius-s};
+  --gds-radius-md:   #{$radius-m};
+  --gds-radius-lg:   #{$radius-l};
+  --gds-radius-10:   #{$radius-10};
+  --gds-radius-xl:   #{$radius-xl};
+  --gds-radius-full: #{$radius-pill};
+
+  // --- Icon sizes ---
+  --gds-icon-sm: #{$icon-sm};
+  --gds-icon-md: #{$icon-md};
+  --gds-icon-lg: #{$icon-lg};
+
+  // --- Icon stroke ---
+  --gds-icon-stroke: #{$icon-stroke};
+}

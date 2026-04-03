@@ -1,0 +1,46 @@
+// ============================================================================
+// Component Tokens / Input (22 tokens)
+// Maps semantic tokens → component-specific custom properties
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-shadows' as *;
+
+:root {
+  // --- Base ---
+  --input-bg:           var(--gds-color-bg-primary);
+  --input-text:         var(--gds-color-text-primary);
+  --input-placeholder:  var(--gds-color-text-placeholder);
+  --input-border:       var(--gds-color-border-default);
+  --input-border-hover: var(--gds-color-border-strong);
+  --input-border-focus: var(--gds-color-border-focus);
+
+  // --- Label & Helper ---
+  --input-label:  var(--gds-color-text-primary);
+  --input-helper: var(--gds-color-text-helper);
+
+  // --- Error ---
+  --input-error-border: var(--gds-color-error);
+  --input-error-text:   var(--gds-color-error-text);
+
+  // --- Warning ---
+  --input-warning-border: var(--gds-color-warning);
+  --input-warning-text:   var(--gds-color-warning-text);
+
+  // --- Success ---
+  --input-success-border: var(--gds-color-success);
+  --input-success-text:   var(--gds-color-success-text);
+
+  // --- Disabled ---
+  --input-disabled-bg:     var(--gds-color-bg-disabled);
+  --input-disabled-text:   #{$color-neutral-60};
+  --input-disabled-border: #{$color-neutral-50};
+
+  // --- Shadow variant ---
+  --input-shadow:       #{$shadow-sm};
+  --input-shadow-hover: #{$shadow-sm-hover};
+
+  // --- Focus ---
+  --input-focus-ring:   var(--gds-color-border-focus);
+  --input-focus-offset: var(--gds-color-bg-primary);
+}

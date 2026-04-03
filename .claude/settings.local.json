@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(grep -n \"$line-height-tight\\\\|$line-height-normal\\\\|$line-height-loose\\\\|$line-height-compact\\\\|$line-height-relaxed\\\\|$type-title-larger\\\\|$type-title-large\\\\|$type-title-base\\\\|$type-body-headline\\\\|$type-body-small\\\\|$type-body-smaller\\\\|$type-body-smallest\" /Users/fiton/Desktop/design-system/docs/index.html)",
+      "Bash(grep -l \"gds-text-title-larger\\\\|gds-text-title-large\\\\|gds-text-title-base\\\\|gds-text-body-headline\\\\|gds-text-body-small\\\\|gds-text-body-smaller\\\\|gds-text-body-smallest\\\\|$line-height-tight\\\\|$line-height-normal\\\\|$line-height-loose\\\\|$line-height-compact\\\\|$line-height-relaxed\\\\|$type-title-larger\\\\|$type-title-large\\\\|$type-title-base\\\\|$type-body-headline\\\\|$type-body-small\\\\|$type-body-smaller\\\\|$type-body-smallest\" /Users/fiton/Desktop/design-system/src/index.scss /Users/fiton/Desktop/design-system/package.json /Users/fiton/Desktop/design-system/dist/tokens.json /Users/fiton/Desktop/design-system/design-system.html)",
+      "Bash(grep -n \"$line-height-tight\\\\|$line-height-normal\\\\|$line-height-loose\\\\|$line-height-compact\\\\|$line-height-relaxed\" /Users/fiton/Desktop/design-system/dist/gjirafa-ds.css)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Bash(export PATH=/usr/local/bin:/opt/homebrew/bin:$PATH)",
+      "Bash(npx serve:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
+      "Bash(npx vercel:*)",
+      "Bash(node scripts/build.mjs)",
+      "Bash(export PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.nvm/versions/node/*/bin:$PATH)",
+      "Read(//Users/fiton/Library/**)",
+      "Read(//Users/fiton/**)",
+      "Bash(export PATH=\"/usr/local/bin:$PATH\")",
+      "Bash(node /Users/fiton/Desktop/design-system/scripts/build.mjs)",
+      "Bash(command -v npx)",
+      "Bash(/usr/local/bin/node /Users/fiton/Desktop/design-system/scripts/build.mjs)",
+      "Bash(/usr/local/bin/node scripts/build.mjs)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)"
+    ]
+  }
+}

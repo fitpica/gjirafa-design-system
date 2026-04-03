@@ -1,0 +1,319 @@
+// ============================================================================
+// Component / Input
+// Classes: .gds-input, .gds-input--{state}, .gds-input--{size}
+// States: error, warning, success, disabled
+// Sizes: sm (32px), md (40px), lg (48px)
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// --- Wrapper ---
+.gds-input {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  width: 100%;
+}
+
+// --- Label ---
+.gds-input__label {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  font-family: inherit;
+  font-weight: $font-weight-regular;
+  font-size: $font-size-14;
+  line-height: $line-height-normal;
+  color: var(--input-label);
+}
+
+.gds-input__required {
+  color: var(--input-error-text);
+}
+
+// --- Field wrapper (border container) ---
+.gds-input__wrap {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+  width: 100%;
+  background: var(--input-bg);
+  border: $border-width-default solid var(--input-border);
+  border-radius: $radius-m;
+  padding: 0 $space-10;
+  transition:
+    border-color $duration-normal $ease-default,
+    box-shadow $duration-normal $ease-default;
+
+  &:hover {
+    border-color: var(--input-border-hover);
+  }
+
+  &:focus-within {
+    border-color: var(--input-border-focus);
+    box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-focus-ring);
+  }
+}
+
+// --- The actual input element ---
+.gds-input__field {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: $font-size-14;
+  line-height: $line-height-normal;
+  color: var(--input-text);
+  padding: 0;
+
+  &::placeholder {
+    color: var(--input-placeholder);
+  }
+}
+
+// --- Prefix / suffix text slots ---
+.gds-input__prefix,
+.gds-input__suffix {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-family: inherit;
+  font-size: $font-size-14;
+  color: var(--input-placeholder);
+  white-space: nowrap;
+}
+
+// --- Icon slots ---
+.gds-input__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $icon-md;
+  height: $icon-md;
+  color: var(--input-placeholder);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// --- Helper / error / warning / success text ---
+.gds-input__helper {
+  font-family: inherit;
+  font-size: $font-size-12;
+  line-height: $line-height-normal;
+  color: var(--input-helper);
+  margin-top: $space-2;
+}
+
+// --- Character count ---
+.gds-input__count {
+  font-family: inherit;
+  font-size: $font-size-11;
+  line-height: $line-height-normal;
+  color: var(--input-helper);
+  margin-top: $space-2;
+  text-align: right;
+}
+
+// ============================================================================
+// Sizes — SM (32px) / MD (40px) / LG (48px)
+// ============================================================================
+
+.gds-input--sm {
+  .gds-input__wrap {
+    height: $space-32;
+    padding: 0 $space-8;
+    border-radius: $radius-s;
+  }
+
+  .gds-input__field {
+    font-size: $font-size-12;
+  }
+
+  .gds-input__label {
+    font-size: $font-size-12;
+  }
+
+  .gds-input__icon {
+    width: $icon-sm;
+    height: $icon-sm;
+  }
+
+  .gds-input__prefix,
+  .gds-input__suffix {
+    font-size: $font-size-12;
+  }
+
+  .gds-input__helper {
+    font-size: $font-size-11;
+  }
+}
+
+.gds-input--md {
+  .gds-input__wrap {
+    height: $space-40;
+    padding: 0 $space-10;
+    border-radius: $radius-m;
+  }
+}
+
+.gds-input--lg {
+  .gds-input__wrap {
+    height: $space-48;
+    padding: 0 $space-14;
+    border-radius: $radius-l;
+  }
+
+  .gds-input__field {
+    font-size: $font-size-16;
+  }
+
+  .gds-input__icon {
+    width: $icon-md;
+    height: $icon-md;
+  }
+
+  .gds-input__prefix,
+  .gds-input__suffix {
+    font-size: $font-size-16;
+  }
+}
+
+// ============================================================================
+// Textarea variant
+// ============================================================================
+
+.gds-input--textarea {
+  .gds-input__wrap {
+    height: auto;
+    align-items: flex-start;
+    padding: $space-8 $space-10;
+  }
+
+  .gds-input__field {
+    resize: vertical;
+    min-height: $space-80;
+  }
+}
+
+// ============================================================================
+// States
+// ============================================================================
+
+// --- Error ---
+.gds-input--error {
+  .gds-input__wrap {
+    border-color: var(--input-error-border);
+
+    &:focus-within {
+      border-color: var(--input-error-border);
+      box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-error-border);
+    }
+  }
+
+  .gds-input__helper {
+    color: var(--input-error-text);
+  }
+}
+
+// --- Warning ---
+.gds-input--warning {
+  .gds-input__wrap {
+    border-color: var(--input-warning-border);
+
+    &:focus-within {
+      border-color: var(--input-warning-border);
+      box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-warning-border);
+    }
+  }
+
+  .gds-input__helper {
+    color: var(--input-warning-text);
+  }
+}
+
+// --- Success ---
+.gds-input--success {
+  .gds-input__wrap {
+    border-color: var(--input-success-border);
+
+    &:focus-within {
+      border-color: var(--input-success-border);
+      box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-success-border);
+    }
+  }
+
+  .gds-input__helper {
+    color: var(--input-success-text);
+  }
+}
+
+// --- Disabled ---
+.gds-input--disabled {
+  .gds-input__wrap {
+    background: var(--input-disabled-bg);
+    border-color: var(--input-disabled-border);
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: var(--input-disabled-border);
+    }
+
+    &:focus-within {
+      border-color: var(--input-disabled-border);
+      box-shadow: none;
+    }
+  }
+
+  .gds-input__field {
+    color: var(--input-disabled-text);
+    cursor: not-allowed;
+
+    &::placeholder {
+      color: var(--input-disabled-text);
+    }
+  }
+
+  .gds-input__icon {
+    color: var(--input-disabled-text);
+  }
+
+  .gds-input__prefix,
+  .gds-input__suffix {
+    color: var(--input-disabled-text);
+  }
+}
+
+// ============================================================================
+// Modifiers
+// ============================================================================
+
+// --- Shadow variant (use on gray backgrounds) ---
+.gds-input--shadow {
+  .gds-input__wrap {
+    border-color: transparent;
+    box-shadow: var(--input-shadow);
+  }
+
+  .gds-input__wrap:hover {
+    border-color: transparent;
+    box-shadow: var(--input-shadow-hover);
+  }
+
+  .gds-input__wrap:focus-within {
+    border-color: var(--input-border-focus);
+    box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-focus-ring);
+  }
+}
+
+// --- Full width (default, but explicit) ---
+.gds-input--full {
+  width: 100%;
+}

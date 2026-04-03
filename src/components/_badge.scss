@@ -1,0 +1,292 @@
+// ============================================================================
+// Component / Badge (Status Badge)
+// Classes: .gds-badge, .gds-badge--{variant}, .gds-badge--{style}, .gds-badge--{size}
+// Variants: neutral, positive, critical, warning, info, purple
+// Styles: subtle (default), outline, solid, text
+// Sizes: sm (default), md, lg
+// Elements: .gds-badge__dot, .gds-badge__icon, .gds-badge__label, .gds-badge__count
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// ============================================================================
+// Base badge
+// ============================================================================
+
+.gds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--badge-gap);
+  padding: var(--badge-md-padding);
+  border-radius: var(--badge-radius);
+  font-family: inherit;
+  font-size: var(--badge-md-font-size);
+  font-weight: var(--badge-font-weight);
+  line-height: $line-height-tight;
+  white-space: nowrap;
+  border: $border-width-default solid transparent;
+  transition:
+    background $duration-fast $ease-default,
+    color $duration-fast $ease-default,
+    border-color $duration-fast $ease-default;
+}
+
+// ============================================================================
+// Sizes
+// ============================================================================
+
+.gds-badge--sm {
+  padding: var(--badge-sm-padding);
+  font-size: var(--badge-sm-font-size);
+}
+
+.gds-badge--md {
+  padding: var(--badge-md-padding);
+  font-size: var(--badge-md-font-size);
+}
+
+.gds-badge--lg {
+  padding: var(--badge-lg-padding);
+  font-size: var(--badge-lg-font-size);
+
+  .gds-badge__dot {
+    width: $space-8;
+    height: $space-8;
+  }
+
+  .gds-badge__icon svg {
+    width: $icon-sm;
+    height: $icon-sm;
+  }
+}
+
+// ============================================================================
+// Elements
+// ============================================================================
+
+.gds-badge__dot {
+  flex-shrink: 0;
+  width: var(--badge-dot-size);
+  height: var(--badge-dot-size);
+  border-radius: $radius-pill;
+  background: currentColor;
+}
+
+.gds-badge__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--badge-icon-size);
+  height: var(--badge-icon-size);
+
+  svg {
+    width: var(--badge-icon-size);
+    height: var(--badge-icon-size);
+  }
+}
+
+.gds-badge__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gds-badge__count {
+  font-weight: $font-weight-semibold;
+}
+
+// ============================================================================
+// Style: Subtle (default) — light bg, colored text
+// ============================================================================
+
+// (Applied per-variant below as default)
+
+// ============================================================================
+// Style: Outline — border, no bg
+// ============================================================================
+
+.gds-badge--outline {
+  background: transparent;
+}
+
+// ============================================================================
+// Style: Solid — filled bg, white text
+// ============================================================================
+
+// (Applied per-variant below)
+
+// ============================================================================
+// Style: Text — no bg, no border, just colored text
+// ============================================================================
+
+.gds-badge--text {
+  background: transparent;
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+// ============================================================================
+// Variant: Neutral
+// ============================================================================
+
+.gds-badge--neutral {
+  background: var(--badge-neutral-subtle-bg);
+  color: var(--badge-neutral-text);
+
+  .gds-badge__dot { background: var(--badge-neutral-dot); }
+
+  &.gds-badge--outline {
+    border-color: var(--badge-neutral-outline-border);
+    background: transparent;
+  }
+
+  &.gds-badge--solid {
+    background: var(--badge-neutral-solid-bg);
+    color: var(--badge-neutral-solid-text);
+    .gds-badge__dot { background: var(--badge-neutral-solid-text); }
+  }
+
+  &.gds-badge--text {
+    background: transparent;
+    color: var(--badge-neutral-text);
+  }
+}
+
+// ============================================================================
+// Variant: Positive
+// ============================================================================
+
+.gds-badge--positive {
+  background: var(--badge-positive-subtle-bg);
+  color: var(--badge-positive-text);
+
+  .gds-badge__dot { background: var(--badge-positive-dot); }
+
+  &.gds-badge--outline {
+    border-color: var(--badge-positive-outline-border);
+    background: transparent;
+  }
+
+  &.gds-badge--solid {
+    background: var(--badge-positive-solid-bg);
+    color: var(--badge-positive-solid-text);
+    .gds-badge__dot { background: var(--badge-positive-solid-text); }
+  }
+
+  &.gds-badge--text {
+    background: transparent;
+    color: var(--badge-positive-text);
+  }
+}
+
+// ============================================================================
+// Variant: Critical
+// ============================================================================
+
+.gds-badge--critical {
+  background: var(--badge-critical-subtle-bg);
+  color: var(--badge-critical-text);
+
+  .gds-badge__dot { background: var(--badge-critical-dot); }
+
+  &.gds-badge--outline {
+    border-color: var(--badge-critical-outline-border);
+    background: transparent;
+  }
+
+  &.gds-badge--solid {
+    background: var(--badge-critical-solid-bg);
+    color: var(--badge-critical-solid-text);
+    .gds-badge__dot { background: var(--badge-critical-solid-text); }
+  }
+
+  &.gds-badge--text {
+    background: transparent;
+    color: var(--badge-critical-text);
+  }
+}
+
+// ============================================================================
+// Variant: Warning
+// ============================================================================
+
+.gds-badge--warning {
+  background: var(--badge-warning-subtle-bg);
+  color: var(--badge-warning-text);
+
+  .gds-badge__dot { background: var(--badge-warning-dot); }
+
+  &.gds-badge--outline {
+    border-color: var(--badge-warning-outline-border);
+    background: transparent;
+  }
+
+  &.gds-badge--solid {
+    background: var(--badge-warning-solid-bg);
+    color: var(--badge-warning-solid-text);
+    .gds-badge__dot { background: var(--badge-warning-solid-text); }
+  }
+
+  &.gds-badge--text {
+    background: transparent;
+    color: var(--badge-warning-text);
+  }
+}
+
+// ============================================================================
+// Variant: Info (blue / Informative)
+// ============================================================================
+
+.gds-badge--info {
+  background: var(--badge-info-subtle-bg);
+  color: var(--badge-info-text);
+
+  .gds-badge__dot { background: var(--badge-info-dot); }
+
+  &.gds-badge--outline {
+    border-color: var(--badge-info-outline-border);
+    background: transparent;
+  }
+
+  &.gds-badge--solid {
+    background: var(--badge-info-solid-bg);
+    color: var(--badge-info-solid-text);
+    .gds-badge__dot { background: var(--badge-info-solid-text); }
+  }
+
+  &.gds-badge--text {
+    background: transparent;
+    color: var(--badge-info-text);
+  }
+}
+
+// ============================================================================
+// Variant: Purple (Information)
+// ============================================================================
+
+.gds-badge--purple {
+  background: var(--badge-purple-subtle-bg);
+  color: var(--badge-purple-text);
+
+  .gds-badge__dot { background: var(--badge-purple-dot); }
+
+  &.gds-badge--outline {
+    border-color: var(--badge-purple-outline-border);
+    background: transparent;
+  }
+
+  &.gds-badge--solid {
+    background: var(--badge-purple-solid-bg);
+    color: var(--badge-purple-solid-text);
+    .gds-badge__dot { background: var(--badge-purple-solid-text); }
+  }
+
+  &.gds-badge--text {
+    background: transparent;
+    color: var(--badge-purple-text);
+  }
+}

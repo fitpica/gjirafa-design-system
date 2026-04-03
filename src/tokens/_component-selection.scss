@@ -1,0 +1,37 @@
+// ============================================================================
+// Component Tokens / Selection Controls (15 tokens)
+// Shared by Checkbox, Radio, and Toggle
+// ============================================================================
+
+@use 'foundation-colors' as *;
+
+:root {
+  // --- Base ---
+  --sel-bg:             var(--gds-color-bg-primary);
+  --sel-border:         #{$color-neutral-50};
+  --sel-border-hover:   var(--gds-color-border-strong);
+
+  // --- Active ---
+  --sel-active-bg:      var(--gds-color-action-primary);
+  --sel-active-hover:   var(--gds-color-action-primary-hover);
+  --sel-active-icon:    var(--gds-color-action-on-primary);
+
+  // --- Indeterminate (checkbox mixed) ---
+  --sel-mixed-bg:       #{$color-blue-200};
+
+  // --- Disabled ---
+  --sel-disabled-bg:    #{$color-neutral-60};
+  --sel-disabled-icon:  var(--gds-color-bg-primary);
+
+  // --- Label ---
+  --sel-label:          var(--gds-color-text-primary);
+  --sel-label-helper:   var(--gds-color-text-helper);
+
+  // --- Toggle track ---
+  --sel-track-off:      var(--gds-color-bg-tertiary);
+  --sel-track-off-hover: var(--gds-color-border-subtle);
+
+  // --- Focus ---
+  --sel-focus-ring:     var(--gds-color-border-focus);
+  --sel-focus-offset:   var(--gds-color-bg-primary);
+}

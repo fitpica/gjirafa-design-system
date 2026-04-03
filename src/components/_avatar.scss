@@ -1,0 +1,308 @@
+// ============================================================================
+// Component / Avatar
+// Classes: .gds-avatar, .gds-avatar--{circle,square}
+//          .gds-avatar--{16,20,24,32,40,48,64}
+//          .gds-avatar__img, .gds-avatar__icon, .gds-avatar__text
+//          .gds-avatar__status
+//          .gds-avatar-group, .gds-avatar-group__counter
+//          .gds-avatar-name, .gds-avatar-name--{sm,xs,soft}
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+
+// ============================================================================
+// Base avatar
+// ============================================================================
+
+.gds-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--avatar-size-32);
+  height: var(--avatar-size-32);
+  border-radius: var(--avatar-radius-circle);
+  background: var(--avatar-bg);
+  color: var(--avatar-color);
+  font-family: var(--avatar-font-family);
+  font-weight: var(--avatar-font-weight);
+  font-size: var(--avatar-font-32);
+  line-height: 1;
+  overflow: hidden;
+  user-select: none;
+
+  // Allow status dot to overflow
+  &:has(.gds-avatar__status) {
+    overflow: visible;
+  }
+}
+
+// ============================================================================
+// Shape variants
+// ============================================================================
+
+.gds-avatar--circle {
+  border-radius: var(--avatar-radius-circle);
+}
+
+.gds-avatar--square {
+  border-radius: var(--avatar-radius-square);
+}
+
+// ============================================================================
+// Size variants
+// ============================================================================
+
+.gds-avatar--16 {
+  width: var(--avatar-size-16);
+  height: var(--avatar-size-16);
+  font-size: var(--avatar-font-16);
+
+  .gds-avatar__icon svg {
+    width: var(--avatar-icon-16);
+    height: var(--avatar-icon-16);
+  }
+}
+
+.gds-avatar--20 {
+  width: var(--avatar-size-20);
+  height: var(--avatar-size-20);
+  font-size: var(--avatar-font-20);
+
+  .gds-avatar__icon svg {
+    width: var(--avatar-icon-20);
+    height: var(--avatar-icon-20);
+  }
+}
+
+.gds-avatar--24 {
+  width: var(--avatar-size-24);
+  height: var(--avatar-size-24);
+  font-size: var(--avatar-font-24);
+
+  .gds-avatar__icon svg {
+    width: var(--avatar-icon-24);
+    height: var(--avatar-icon-24);
+  }
+}
+
+.gds-avatar--32 {
+  width: var(--avatar-size-32);
+  height: var(--avatar-size-32);
+  font-size: var(--avatar-font-32);
+
+  .gds-avatar__icon svg {
+    width: var(--avatar-icon-32);
+    height: var(--avatar-icon-32);
+  }
+}
+
+.gds-avatar--40 {
+  width: var(--avatar-size-40);
+  height: var(--avatar-size-40);
+  font-size: var(--avatar-font-40);
+
+  .gds-avatar__icon svg {
+    width: var(--avatar-icon-40);
+    height: var(--avatar-icon-40);
+  }
+}
+
+.gds-avatar--48 {
+  width: var(--avatar-size-48);
+  height: var(--avatar-size-48);
+  font-size: var(--avatar-font-48);
+
+  .gds-avatar__icon svg {
+    width: var(--avatar-icon-48);
+    height: var(--avatar-icon-48);
+  }
+}
+
+.gds-avatar--64 {
+  width: var(--avatar-size-64);
+  height: var(--avatar-size-64);
+  font-size: var(--avatar-font-64);
+
+  .gds-avatar__icon svg {
+    width: var(--avatar-icon-64);
+    height: var(--avatar-icon-64);
+  }
+}
+
+// ============================================================================
+// Content: image, icon, text (letter / initials)
+// ============================================================================
+
+.gds-avatar__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.gds-avatar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: var(--avatar-icon-32);
+    height: var(--avatar-icon-32);
+  }
+}
+
+.gds-avatar__text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+}
+
+// ============================================================================
+// Status indicator (green dot)
+// ============================================================================
+
+.gds-avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: var(--avatar-status-size-md);
+  height: var(--avatar-status-size-md);
+  border-radius: $radius-pill;
+  background: var(--avatar-status-bg);
+  border: var(--avatar-status-border-width) solid var(--avatar-status-border);
+  box-sizing: content-box;
+}
+
+// Status size adjustments per avatar size
+.gds-avatar--16,
+.gds-avatar--20,
+.gds-avatar--24 {
+  .gds-avatar__status {
+    width: var(--avatar-status-size-sm);
+    height: var(--avatar-status-size-sm);
+  }
+}
+
+.gds-avatar--48,
+.gds-avatar--64 {
+  .gds-avatar__status {
+    width: var(--avatar-status-size-lg);
+    height: var(--avatar-status-size-lg);
+  }
+}
+
+// ============================================================================
+// Avatar group (overlapping stack)
+// ============================================================================
+
+.gds-avatar-group {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row-reverse;
+
+  .gds-avatar {
+    border: var(--avatar-group-border-width) solid var(--avatar-group-border);
+    box-sizing: content-box;
+
+    &:not(:last-child) {
+      margin-right: var(--avatar-group-overlap);
+    }
+  }
+}
+
+.gds-avatar-group__counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--avatar-radius-circle);
+  background: var(--avatar-counter-bg);
+  color: var(--avatar-counter-color);
+  font-family: var(--avatar-font-family);
+  font-weight: var(--avatar-font-weight);
+  line-height: 1;
+  border: var(--avatar-group-border-width) solid var(--avatar-group-border);
+  box-sizing: content-box;
+  // Size inherits from group context — set width/height same as avatars
+  width: var(--avatar-size-32);
+  height: var(--avatar-size-32);
+  font-size: var(--avatar-font-32);
+  margin-right: var(--avatar-group-overlap);
+}
+
+// ============================================================================
+// Avatar name (avatar + text pair)
+// ============================================================================
+
+.gds-avatar-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--avatar-name-gap);
+}
+
+.gds-avatar-name__info {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  min-width: 0;
+}
+
+.gds-avatar-name__label {
+  font-family: inherit;
+  font-size: var(--avatar-name-label-size);
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  color: var(--avatar-name-label-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gds-avatar-name__subtitle {
+  font-family: inherit;
+  font-size: var(--avatar-name-sub-size);
+  font-weight: $font-weight-regular;
+  line-height: $line-height-tight;
+  color: var(--avatar-name-sub-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// --- Size: small ---
+.gds-avatar-name--sm {
+  .gds-avatar-name__label {
+    font-size: var(--avatar-name-sm-label);
+  }
+
+  .gds-avatar-name__subtitle {
+    font-size: var(--avatar-name-sm-sub);
+  }
+}
+
+// --- Size: extra small ---
+.gds-avatar-name--xs {
+  .gds-avatar-name__label {
+    font-size: var(--avatar-name-xs-label);
+  }
+
+  .gds-avatar-name__subtitle {
+    font-size: var(--avatar-name-xs-sub);
+  }
+}
+
+// --- Style: soft ---
+.gds-avatar-name--soft {
+  .gds-avatar-name__label {
+    color: var(--avatar-name-soft-label);
+  }
+
+  .gds-avatar-name__subtitle {
+    color: var(--avatar-name-soft-sub);
+  }
+}

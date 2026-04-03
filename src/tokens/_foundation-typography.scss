@@ -1,0 +1,82 @@
+// ============================================================================
+// Foundation / Typography
+// Source: design-system.html typography section
+// ============================================================================
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+// --- Font families ---
+$font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+$font-family-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+
+// --- Font weights ---
+$font-weight-regular:  400;
+$font-weight-medium:   500;
+$font-weight-semibold: 600;
+
+// --- Font sizes ---
+$font-size-10: 10px; // pill-sm, micro labels
+$font-size-11: 11px; // body-xs, caption
+$font-size-12: 12px; // body-sm
+$font-size-14: 14px; // body-base
+$font-size-16: 16px; // body-lg, title-sm
+$font-size-18: 18px; // title-md
+$font-size-20: 20px; // title-lg
+$font-size-24: 24px; // title-xl
+
+// --- Line heights (all unitless) ---
+$line-height-tight:   1.25; // titles, labels, buttons
+$line-height-normal:  1.5;  // body, code
+$line-height-relaxed: 1.6;  // long-form
+
+// --- Typography composites ---
+// Maps: name -> (size, weight, line-height)
+$type-title-xl:    ($font-size-24, $font-weight-medium,  $line-height-tight);
+$type-title-lg:    ($font-size-20, $font-weight-medium,  $line-height-tight);
+$type-title-md:    ($font-size-18, $font-weight-medium,  $line-height-tight);
+$type-title-sm:    ($font-size-16, $font-weight-medium,  $line-height-tight);
+$type-body-lg:     ($font-size-16, $font-weight-regular, $line-height-normal);
+$type-body-base:   ($font-size-14, $font-weight-regular, $line-height-normal);
+$type-body-sm:     ($font-size-12, $font-weight-regular, $line-height-normal);
+$type-body-xs:     ($font-size-11, $font-weight-regular, $line-height-normal);
+$type-caption:     ($font-size-11, $font-weight-regular, $line-height-normal);
+
+// --- Letter spacing ---
+$letter-spacing-tight:  -0.02em;
+$letter-spacing-normal: 0;
+$letter-spacing-wide:   0.04em;
+
+// ============================================================================
+// CSS Custom Properties — Typography
+// ============================================================================
+:root {
+  // --- Font family ---
+  --gds-font-family-base: #{$font-family-base};
+  --gds-font-family-mono: #{$font-family-mono};
+
+  // --- Font weight ---
+  --gds-font-weight-regular:  #{$font-weight-regular};
+  --gds-font-weight-medium:   #{$font-weight-medium};
+  --gds-font-weight-semibold: #{$font-weight-semibold};
+
+  // --- Font size (semantic) ---
+  --gds-font-size-title-xl:  #{$font-size-24};
+  --gds-font-size-title-lg:  #{$font-size-20};
+  --gds-font-size-title-md:  #{$font-size-18};
+  --gds-font-size-title-sm:  #{$font-size-16};
+  --gds-font-size-body-lg:   #{$font-size-16};
+  --gds-font-size-body-base: #{$font-size-14};
+  --gds-font-size-body-sm:   #{$font-size-12};
+  --gds-font-size-body-xs:   #{$font-size-11};
+  --gds-font-size-caption:   #{$font-size-11};
+
+  // --- Line height ---
+  --gds-line-height-tight:   #{$line-height-tight};
+  --gds-line-height-normal:  #{$line-height-normal};
+  --gds-line-height-relaxed: #{$line-height-relaxed};
+
+  // --- Letter spacing ---
+  --gds-letter-spacing-tight:  #{$letter-spacing-tight};
+  --gds-letter-spacing-normal: #{$letter-spacing-normal};
+  --gds-letter-spacing-wide:   #{$letter-spacing-wide};
+}

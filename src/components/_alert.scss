@@ -1,0 +1,415 @@
+// ============================================================================
+// Component / Alert
+// Classes: .gds-alert, .gds-alert--{info,success,warning,error}
+//          .gds-alert--minimal, .gds-alert--accent, .gds-alert--banner
+//          .gds-alert--toast, .gds-alert--compact
+// Inline alerts, banners, toasts, system messages
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// ============================================================================
+// Base alert
+// ============================================================================
+
+.gds-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--alert-gap);
+  padding: var(--alert-padding);
+  border: $border-width-default solid var(--alert-info-border);
+  border-radius: var(--alert-radius);
+  background: var(--alert-info-bg);
+  width: 100%;
+  transition:
+    opacity $duration-normal $ease-default,
+    transform $duration-normal $ease-default;
+}
+
+// ============================================================================
+// Icon
+// ============================================================================
+
+.gds-alert__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--alert-icon-size);
+  height: var(--alert-icon-size);
+  color: var(--alert-info-icon);
+}
+
+// ============================================================================
+// Content area
+// ============================================================================
+
+.gds-alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--alert-action-gap);
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.gds-alert__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--alert-content-gap);
+}
+
+.gds-alert__title {
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  color: var(--alert-title);
+  margin: 0;
+}
+
+.gds-alert__desc {
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: var(--alert-desc);
+  margin: 0;
+  max-height: var(--alert-desc-max-height);
+  overflow-y: auto;
+}
+
+// ============================================================================
+// Link
+// ============================================================================
+
+.gds-alert__link {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-4;
+  font-family: inherit;
+  font-size: $font-size-14;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  color: var(--alert-link);
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.gds-alert__link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-md;
+  height: $icon-md;
+}
+
+// ============================================================================
+// Action buttons
+// ============================================================================
+
+.gds-alert__actions {
+  display: flex;
+  align-items: center;
+  gap: $space-8;
+  flex-wrap: wrap;
+}
+
+// ============================================================================
+// Close button
+// ============================================================================
+
+.gds-alert__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $space-32;
+  height: $space-32;
+  color: var(--alert-close);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: $radius-s;
+  transition:
+    color $duration-fast $ease-default,
+    background $duration-fast $ease-default;
+
+  &:hover {
+    color: var(--alert-close-hover);
+    background: var(--alert-close-hover-bg);
+  }
+
+  &:active {
+    background: var(--alert-close-active-bg);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 $space-2 var(--input-focus-offset, var(--gds-color-bg-primary)), 0 0 0 $space-4 var(--input-focus-ring, var(--gds-color-border-focus));
+  }
+}
+
+// ============================================================================
+// Semantic variants
+// ============================================================================
+
+// Info is the default — no extra class needed, but explicit class supported
+.gds-alert--info {
+  background: var(--alert-info-bg);
+  border-color: var(--alert-info-border);
+
+  .gds-alert__icon {
+    color: var(--alert-info-icon);
+  }
+}
+
+.gds-alert--success {
+  background: var(--alert-success-bg);
+  border-color: var(--alert-success-border);
+
+  .gds-alert__icon {
+    color: var(--alert-success-icon);
+  }
+}
+
+.gds-alert--warning {
+  background: var(--alert-warning-bg);
+  border-color: var(--alert-warning-border);
+
+  .gds-alert__icon {
+    color: var(--alert-warning-icon);
+  }
+}
+
+.gds-alert--error {
+  background: var(--alert-error-bg);
+  border-color: var(--alert-error-border);
+
+  .gds-alert__icon {
+    color: var(--alert-error-icon);
+  }
+}
+
+// ============================================================================
+// Minimal style (no title, compact padding)
+// ============================================================================
+
+.gds-alert--minimal {
+  padding: var(--alert-minimal-padding);
+  align-items: center;
+
+  .gds-alert__body {
+    gap: $space-4;
+  }
+}
+
+// ============================================================================
+// Left accent border variant
+// ============================================================================
+
+.gds-alert--accent {
+  border-left-width: $space-4;
+
+  &.gds-alert--info,
+  &:not([class*="gds-alert--success"]):not([class*="gds-alert--warning"]):not([class*="gds-alert--error"]) {
+    border-left-color: var(--alert-info-accent);
+  }
+
+  &.gds-alert--success {
+    border-left-color: var(--alert-success-accent);
+  }
+
+  &.gds-alert--warning {
+    border-left-color: var(--alert-warning-accent);
+  }
+
+  &.gds-alert--error {
+    border-left-color: var(--alert-error-accent);
+  }
+}
+
+// ============================================================================
+// Banner (full-width, no radius)
+// ============================================================================
+
+.gds-alert--banner {
+  border-radius: var(--alert-banner-radius);
+  border-left: none;
+  border-right: none;
+}
+
+// ============================================================================
+// Compact (inline, smaller)
+// ============================================================================
+
+.gds-alert--compact {
+  padding: $space-8 $space-12;
+  gap: $space-6;
+  align-items: center;
+
+  .gds-alert__icon {
+    width: $icon-sm;
+    height: $icon-sm;
+  }
+
+  .gds-alert__title {
+    font-size: $font-size-12;
+  }
+
+  .gds-alert__desc {
+    font-size: $font-size-12;
+  }
+
+  .gds-alert__close {
+    width: $icon-sm;
+    height: $icon-sm;
+  }
+}
+
+// ============================================================================
+// Toast (floating notification)
+// ============================================================================
+
+.gds-alert--toast {
+  background: var(--alert-toast-bg);
+  border-color: var(--alert-toast-border);
+  border-radius: var(--alert-toast-radius);
+  box-shadow: var(--alert-toast-shadow);
+  max-width: var(--alert-toast-max-width);
+  animation: gds-alert-toast-in $duration-slow $ease-out;
+
+  .gds-alert__desc {
+    max-height: var(--alert-toast-desc-max);
+  }
+
+  // Colored left accent on toast
+  &.gds-alert--info {
+    border-left: $space-4 solid var(--alert-info-accent);
+    background: var(--alert-toast-bg);
+  }
+
+  &.gds-alert--success {
+    border-left: $space-4 solid var(--alert-success-accent);
+    background: var(--alert-toast-bg);
+  }
+
+  &.gds-alert--warning {
+    border-left: $space-4 solid var(--alert-warning-accent);
+    background: var(--alert-toast-bg);
+  }
+
+  &.gds-alert--error {
+    border-left: $space-4 solid var(--alert-error-accent);
+    background: var(--alert-toast-bg);
+  }
+}
+
+// --- Toast progress bar ---
+.gds-alert__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: $space-2;
+  border-radius: 0 0 var(--alert-toast-radius) var(--alert-toast-radius);
+  transition: width linear;
+}
+
+.gds-alert--info .gds-alert__progress {
+  background: var(--alert-info-accent);
+}
+
+.gds-alert--success .gds-alert__progress {
+  background: var(--alert-success-accent);
+}
+
+.gds-alert--warning .gds-alert__progress {
+  background: var(--alert-warning-accent);
+}
+
+.gds-alert--error .gds-alert__progress {
+  background: var(--alert-error-accent);
+}
+
+// --- Toast container (stacks toasts with z-index layering) ---
+.gds-toast-container {
+  display: flex;
+  flex-direction: column;
+  gap: $space-8;
+  position: fixed;
+  z-index: 9999;
+  max-width: var(--alert-toast-max-width);
+  width: 100%;
+  pointer-events: none;
+
+  .gds-alert--toast {
+    pointer-events: auto;
+    position: relative;
+
+    // Newest toast on top — later siblings get lower z-index
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        z-index: 10 - $i;
+      }
+    }
+  }
+}
+
+.gds-toast-container--top-right {
+  top: $space-24;
+  right: $space-24;
+}
+
+.gds-toast-container--top-left {
+  top: $space-24;
+  left: $space-24;
+}
+
+.gds-toast-container--bottom-right {
+  bottom: $space-24;
+  right: $space-24;
+}
+
+.gds-toast-container--bottom-left {
+  bottom: $space-24;
+  left: $space-24;
+}
+
+.gds-toast-container--top-center {
+  top: $space-24;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.gds-toast-container--bottom-center {
+  bottom: $space-24;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+// ============================================================================
+// Animations
+// ============================================================================
+
+@keyframes gds-alert-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-$space-8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dismissal animation (add via JS)
+.gds-alert--dismissing {
+  opacity: 0;
+  transform: translateX($space-16);
+}

@@ -1,0 +1,99 @@
+// ============================================================================
+// Utility Classes / Colors
+// .gds-bg-{palette}-{step}, .gds-text-{palette}-{step}, .gds-border-{palette}-{step}
+// .gds-bg-{semantic}, .gds-text-{semantic}
+// ============================================================================
+
+@use '../tokens/foundation-colors' as *;
+
+// --- Foundation color utilities ---
+$_color-map: (
+  "blue-50":  $color-blue-50,
+  "blue-75":  $color-blue-75,
+  "blue-100": $color-blue-100,
+  "blue-200": $color-blue-200,
+  "blue-300": $color-blue-300,
+  "blue-400": $color-blue-400,
+  "blue-500": $color-blue-500,
+  "blue-600": $color-blue-600,
+  "blue-700": $color-blue-700,
+  "blue-800": $color-blue-800,
+  "blue-900": $color-blue-900,
+
+  "green-50":  $color-green-50,
+  "green-100": $color-green-100,
+  "green-300": $color-green-300,
+  "green-500": $color-green-500,
+  "green-600": $color-green-600,
+  "green-700": $color-green-700,
+  "green-900": $color-green-900,
+
+  "orange-50":  $color-orange-50,
+  "orange-100": $color-orange-100,
+  "orange-300": $color-orange-300,
+  "orange-500": $color-orange-500,
+  "orange-600": $color-orange-600,
+  "orange-700": $color-orange-700,
+  "orange-900": $color-orange-900,
+
+  "red-50":  $color-red-50,
+  "red-100": $color-red-100,
+  "red-300": $color-red-300,
+  "red-500": $color-red-500,
+  "red-600": $color-red-600,
+  "red-700": $color-red-700,
+  "red-900": $color-red-900,
+
+  "purple-50":  $color-purple-50,
+  "purple-100": $color-purple-100,
+  "purple-300": $color-purple-300,
+  "purple-500": $color-purple-500,
+  "purple-600": $color-purple-600,
+  "purple-700": $color-purple-700,
+  "purple-900": $color-purple-900,
+
+  "neutral-0":   $color-neutral-0,
+  "neutral-20":  $color-neutral-20,
+  "neutral-25":  $color-neutral-25,
+  "neutral-30":  $color-neutral-30,
+  "neutral-40":  $color-neutral-40,
+  "neutral-50":  $color-neutral-50,
+  "neutral-60":  $color-neutral-60,
+  "neutral-80":  $color-neutral-80,
+  "neutral-90":  $color-neutral-90,
+  "neutral-100": $color-neutral-100,
+  "neutral-300": $color-neutral-300,
+  "neutral-400": $color-neutral-400,
+  "neutral-700": $color-neutral-700,
+  "neutral-900": $color-neutral-900,
+);
+
+@each $name, $value in $_color-map {
+  .gds-bg-#{$name}     { background-color: $value; }
+  .gds-text-#{$name}   { color: $value; }
+  .gds-border-#{$name} { border-color: $value; }
+}
+
+// --- Semantic color utilities (theme-aware, --gds- tokens) ---
+.gds-text-primary     { color: var(--gds-color-text-primary); }
+.gds-text-secondary   { color: var(--gds-color-text-secondary); }
+.gds-text-tertiary    { color: var(--gds-color-text-tertiary); }
+.gds-text-disabled    { color: var(--gds-color-text-disabled); }
+.gds-text-placeholder { color: var(--gds-color-text-placeholder); }
+.gds-text-label       { color: var(--gds-color-text-label); }
+.gds-text-helper      { color: var(--gds-color-text-helper); }
+.gds-text-inverse     { color: var(--gds-color-text-inverse); }
+.gds-text-error       { color: var(--gds-color-error-text); }
+.gds-text-warning     { color: var(--gds-color-warning-text); }
+
+.gds-bg-surface         { background-color: var(--gds-color-bg-primary); }
+.gds-bg-surface-subtle  { background-color: var(--gds-color-bg-secondary); }
+.gds-bg-surface-disabled { background-color: var(--gds-color-bg-disabled); }
+.gds-bg-action-primary  { background-color: var(--gds-color-action-primary); }
+
+.gds-border-default { border-color: var(--gds-color-border-default); }
+.gds-border-hover   { border-color: var(--gds-color-border-strong); }
+.gds-border-focus   { border-color: var(--gds-color-border-focus); }
+.gds-border-subtle  { border-color: var(--gds-color-border-subtle); }
+.gds-border-error   { border-color: var(--gds-color-error); }
+.gds-border-warning { border-color: var(--gds-color-warning); }
