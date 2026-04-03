@@ -53,7 +53,6 @@
 
   &:focus-within {
     border-color: var(--input-border-focus);
-    box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-focus-ring);
   }
 }
 
@@ -214,7 +213,6 @@
 
     &:focus-within {
       border-color: var(--input-error-border);
-      box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-error-border);
     }
   }
 
@@ -230,7 +228,6 @@
 
     &:focus-within {
       border-color: var(--input-warning-border);
-      box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-warning-border);
     }
   }
 
@@ -246,7 +243,6 @@
 
     &:focus-within {
       border-color: var(--input-success-border);
-      box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-success-border);
     }
   }
 
@@ -268,7 +264,6 @@
 
     &:focus-within {
       border-color: var(--input-disabled-border);
-      box-shadow: none;
     }
   }
 
@@ -309,7 +304,6 @@
 
   .gds-input__wrap:focus-within {
     border-color: var(--input-border-focus);
-    box-shadow: 0 0 0 $space-2 var(--input-focus-offset), 0 0 0 $space-4 var(--input-focus-ring);
   }
 }
 

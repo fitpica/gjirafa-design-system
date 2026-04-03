@@ -568,6 +568,8 @@
         <button class="doc-nav-item" data-page="pill">Pill <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
         <button class="doc-nav-item" data-page="pct-badge">Pct Badge <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
         <button class="doc-nav-item" data-page="filter-badge">Filter Badge <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
+        <button class="doc-nav-item" data-page="modal">Modal <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
+        <button class="doc-nav-item" data-page="sidepanel">Side Panel <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
       </div>
       <div class="doc-nav-group">
         <div class="doc-nav-label">Utilities</div>
@@ -4899,6 +4901,649 @@ function startToastTimer(toastEl) {
 </section>
 
 <!-- ============================================================ -->
+<!-- MODAL -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-modal">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Modal <span class="doc-status doc-status--stable">Stable</span></h1>
+    <p class="doc-desc">Overlay dialogs for focused tasks — confirmations, forms, and wizards. 2 sizes (sm, md) with backdrop, animations, and a destructive variant. Reuses <code>.gds-btn</code> and <code>.gds-btn-icon</code>.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-modal-overlay</span><span class="doc-tag">.gds-modal</span><span class="doc-tag">.gds-modal--sm</span><span class="doc-tag">.gds-modal--md</span><span class="doc-tag">.gds-modal--destructive</span></div>
+  </div>
+
+  <!-- Default (Medium) -->
+  <div class="doc-section-label">Default (Medium)</div>
+  <div class="doc-preview">
+    <div class="doc-preview-stage" style="padding:var(--gds-space-24);justify-content:center">
+      <button class="gds-btn gds-btn--primary gds-btn--md" onclick="openOverlay('demo-modal-md')">Open Modal</button>
+    </div>
+    <details class="doc-preview-code-wrap">
+      <summary>Show code</summary>
+      <pre class="doc-preview-code">&lt;div class="gds-modal-overlay gds-modal-overlay--open"&gt;
+  &lt;div class="gds-modal gds-modal--md"&gt;
+    &lt;button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle gds-modal__close"&gt;
+      &lt;i data-lucide="x"&gt;&lt;/i&gt;
+    &lt;/button&gt;
+    &lt;div class="gds-modal__inner"&gt;
+      &lt;div class="gds-modal__header"&gt;
+        &lt;h2 class="gds-modal__title"&gt;Merge Tags&lt;/h2&gt;
+        &lt;p class="gds-modal__desc"&gt;Combine two or more existing tags into one tag.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class="gds-modal__body"&gt;
+        &lt;!-- Your content here --&gt;
+      &lt;/div&gt;
+      &lt;div class="gds-modal__footer"&gt;
+        &lt;button class="gds-btn gds-btn--ghost gds-btn--md"&gt;Cancel&lt;/button&gt;
+        &lt;button class="gds-btn gds-btn--primary gds-btn--md"&gt;Merge Tags&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
+    </details>
+  </div>
+
+  <div class="doc-gap-lg"></div>
+
+  <!-- Small -->
+  <div class="doc-section-label">Small</div>
+  <div class="doc-preview">
+    <div class="doc-preview-stage" style="padding:var(--gds-space-24);justify-content:center">
+      <button class="gds-btn gds-btn--secondary gds-btn--md" onclick="openOverlay('demo-modal-sm')">Open Small Modal</button>
+    </div>
+    <details class="doc-preview-code-wrap">
+      <summary>Show code</summary>
+      <pre class="doc-preview-code">&lt;div class="gds-modal-overlay"&gt;
+  &lt;div class="gds-modal gds-modal--sm"&gt;
+    ...
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
+    </details>
+  </div>
+
+  <div class="doc-gap-lg"></div>
+
+  <!-- Destructive -->
+  <div class="doc-section-label">Destructive</div>
+  <div class="doc-preview">
+    <div class="doc-preview-stage" style="padding:var(--gds-space-24);justify-content:center">
+      <button class="gds-btn gds-btn--critical gds-btn--md" onclick="openOverlay('demo-modal-destructive')">Open Destructive Modal</button>
+    </div>
+    <details class="doc-preview-code-wrap">
+      <summary>Show code</summary>
+      <pre class="doc-preview-code">&lt;div class="gds-modal-overlay"&gt;
+  &lt;div class="gds-modal gds-modal--sm gds-modal--destructive"&gt;
+    ...
+    &lt;div class="gds-modal__footer"&gt;
+      &lt;button class="gds-btn gds-btn--ghost gds-btn--md"&gt;Cancel&lt;/button&gt;
+      &lt;button class="gds-btn gds-btn--primary gds-btn--md"&gt;Delete&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
+    </details>
+  </div>
+
+  <div class="doc-gap-lg"></div>
+
+  <!-- Kitchen Sink -->
+  <div class="doc-section-label">Kitchen Sink (all components)</div>
+  <div class="doc-preview">
+    <div class="doc-preview-stage" style="padding:var(--gds-space-24);justify-content:center">
+      <button class="gds-btn gds-btn--primary gds-btn--md" onclick="openOverlay('demo-modal-kitchen')">Open Kitchen Sink Modal</button>
+    </div>
+    <details class="doc-preview-code-wrap">
+      <summary>Show code</summary>
+      <pre class="doc-preview-code">&lt;!-- Modal with inputs, dropdown, checkbox, radio, toggle --&gt;
+&lt;div class="gds-modal-overlay"&gt;
+  &lt;div class="gds-modal gds-modal--md"&gt;
+    &lt;div class="gds-modal__inner"&gt;
+      &lt;div class="gds-modal__header"&gt;...&lt;/div&gt;
+      &lt;div class="gds-modal__body"&gt;
+        &lt;!-- Use .gds-input, .gds-dropdown, .gds-checkbox,
+             .gds-radio, .gds-toggle inside --&gt;
+      &lt;/div&gt;
+      &lt;div class="gds-modal__footer"&gt;...&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
+    </details>
+  </div>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- SIDE PANEL -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-sidepanel">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Side Panel <span class="doc-status doc-status--stable">Stable</span></h1>
+    <p class="doc-desc">Slide-in panels from the right edge for settings, detail views, and forms. 4 widths (default, normal, lg, xl) with top bar, scroll shadows, and responsive collapse. Reuses <code>.gds-btn</code> and <code>.gds-btn-icon</code>.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-sidepanel-overlay</span><span class="doc-tag">.gds-sidepanel</span><span class="doc-tag">.gds-sidepanel--default</span><span class="doc-tag">.gds-sidepanel--normal</span><span class="doc-tag">.gds-sidepanel--lg</span><span class="doc-tag">.gds-sidepanel--xl</span></div>
+  </div>
+
+  <!-- Normal (default) -->
+  <div class="doc-section-label">Normal (500px)</div>
+  <div class="doc-preview">
+    <div class="doc-preview-stage" style="padding:var(--gds-space-24);justify-content:center">
+      <button class="gds-btn gds-btn--primary gds-btn--md" onclick="openOverlay('demo-sidepanel-normal')">Open Side Panel</button>
+    </div>
+    <details class="doc-preview-code-wrap">
+      <summary>Show code</summary>
+      <pre class="doc-preview-code">&lt;div class="gds-sidepanel-overlay gds-sidepanel-overlay--open"&gt;
+  &lt;div class="gds-sidepanel gds-sidepanel--normal"&gt;
+    &lt;div class="gds-sidepanel__topbar"&gt;
+      &lt;span class="gds-sidepanel__topbar-title"&gt;New Tag&lt;/span&gt;
+      &lt;button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--xs"&gt;
+        &lt;i data-lucide="x"&gt;&lt;/i&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="gds-sidepanel__content"&gt;
+      &lt;div class="gds-sidepanel__header"&gt;
+        &lt;h2 class="gds-sidepanel__title"&gt;Merge Tags&lt;/h2&gt;
+        &lt;p class="gds-sidepanel__desc"&gt;Select the tags you want to merge.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class="gds-sidepanel__body"&gt;
+        &lt;!-- Your content here --&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="gds-sidepanel__footer"&gt;
+      &lt;button class="gds-btn gds-btn--ghost gds-btn--md"&gt;Cancel&lt;/button&gt;
+      &lt;button class="gds-btn gds-btn--primary gds-btn--md"&gt;Save&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
+    </details>
+  </div>
+
+  <div class="doc-gap-lg"></div>
+
+  <!-- All Sizes -->
+  <div class="doc-section-label">All Sizes</div>
+  <div class="doc-preview">
+    <div class="doc-preview-stage" style="padding:var(--gds-space-24);gap:var(--gds-space-12);justify-content:center;flex-wrap:wrap">
+      <button class="gds-btn gds-btn--secondary gds-btn--sm" onclick="openOverlay('demo-sidepanel-default')">Default (300px)</button>
+      <button class="gds-btn gds-btn--secondary gds-btn--sm" onclick="openOverlay('demo-sidepanel-normal')">Normal (500px)</button>
+      <button class="gds-btn gds-btn--secondary gds-btn--sm" onclick="openOverlay('demo-sidepanel-lg')">Large (850px)</button>
+      <button class="gds-btn gds-btn--secondary gds-btn--sm" onclick="openOverlay('demo-sidepanel-xl')">X-Large (1170px)</button>
+    </div>
+    <details class="doc-preview-code-wrap">
+      <summary>Show code</summary>
+      <pre class="doc-preview-code">&lt;!-- Size variants --&gt;
+&lt;div class="gds-sidepanel gds-sidepanel--default"&gt;...&lt;/div&gt;  &lt;!-- 300px --&gt;
+&lt;div class="gds-sidepanel gds-sidepanel--normal"&gt;...&lt;/div&gt;   &lt;!-- 500px --&gt;
+&lt;div class="gds-sidepanel gds-sidepanel--lg"&gt;...&lt;/div&gt;      &lt;!-- 850px --&gt;
+&lt;div class="gds-sidepanel gds-sidepanel--xl"&gt;...&lt;/div&gt;      &lt;!-- 1170px --&gt;</pre>
+      <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
+    </details>
+  </div>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- LIVE MODAL INSTANCES (outside sections, at page level) -->
+<!-- ============================================================ -->
+
+<!-- Medium Modal -->
+<div class="gds-modal-overlay" id="demo-modal-md" role="dialog" aria-modal="true" aria-labelledby="modal-md-title" onclick="if(event.target===this) closeOverlay('demo-modal-md')">
+  <div class="gds-modal gds-modal--md">
+    <button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle gds-modal__close" onclick="closeOverlay('demo-modal-md')">
+      <i data-lucide="x"></i>
+    </button>
+    <div class="gds-modal__inner">
+      <div class="gds-modal__header">
+        <h2 class="gds-modal__title" id="modal-md-title">Merge Tags</h2>
+        <p class="gds-modal__desc">Combine two or more existing tags into one tag. Select the tags you want to merge and choose the target tag to merge into.</p>
+      </div>
+      <div class="gds-modal__body">
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Source Tag</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" placeholder="Select a tag..."/></div>
+        </div>
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Target Tag</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" placeholder="Select target tag..."/></div>
+        </div>
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Confirmation</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" placeholder="Type tag name to confirm..."/></div>
+        </div>
+      </div>
+      <div class="gds-modal__footer">
+        <button class="gds-btn gds-btn--ghost gds-btn--md" onclick="closeOverlay('demo-modal-md')">Cancel</button>
+        <button class="gds-btn gds-btn--primary gds-btn--md">Merge Tags</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Small Modal -->
+<div class="gds-modal-overlay" id="demo-modal-sm" role="dialog" aria-modal="true" aria-labelledby="modal-sm-title" onclick="if(event.target===this) closeOverlay('demo-modal-sm')">
+  <div class="gds-modal gds-modal--sm">
+    <button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle gds-modal__close" onclick="closeOverlay('demo-modal-sm')">
+      <i data-lucide="x"></i>
+    </button>
+    <div class="gds-modal__inner">
+      <div class="gds-modal__header">
+        <h2 class="gds-modal__title" id="modal-sm-title">Edit Label</h2>
+        <p class="gds-modal__desc">Update the label name for this item.</p>
+      </div>
+      <div class="gds-modal__body">
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Label Name</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" placeholder="Enter label name..." value="Marketing"/></div>
+        </div>
+      </div>
+      <div class="gds-modal__footer">
+        <button class="gds-btn gds-btn--ghost gds-btn--md" onclick="closeOverlay('demo-modal-sm')">Cancel</button>
+        <button class="gds-btn gds-btn--primary gds-btn--md">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Destructive Modal -->
+<div class="gds-modal-overlay" id="demo-modal-destructive" role="dialog" aria-modal="true" aria-labelledby="modal-destructive-title" onclick="if(event.target===this) closeOverlay('demo-modal-destructive')">
+  <div class="gds-modal gds-modal--sm gds-modal--destructive">
+    <button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle gds-modal__close" onclick="closeOverlay('demo-modal-destructive')">
+      <i data-lucide="x"></i>
+    </button>
+    <div class="gds-modal__inner">
+      <div class="gds-modal__header">
+        <h2 class="gds-modal__title" id="modal-destructive-title">Delete Campaign</h2>
+        <p class="gds-modal__desc">This action cannot be undone. All data associated with this campaign will be permanently removed.</p>
+      </div>
+      <div class="gds-modal__body">
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Type "DELETE" to confirm</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" placeholder="DELETE"/></div>
+        </div>
+      </div>
+      <div class="gds-modal__footer">
+        <button class="gds-btn gds-btn--ghost gds-btn--md" onclick="closeOverlay('demo-modal-destructive')">Cancel</button>
+        <button class="gds-btn gds-btn--primary gds-btn--md">Delete Campaign</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Kitchen Sink Modal -->
+<div class="gds-modal-overlay" id="demo-modal-kitchen" role="dialog" aria-modal="true" aria-labelledby="modal-kitchen-title" onclick="if(event.target===this) closeOverlay('demo-modal-kitchen')">
+  <div class="gds-modal gds-modal--md">
+    <button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle gds-modal__close" onclick="closeOverlay('demo-modal-kitchen')">
+      <i data-lucide="x"></i>
+    </button>
+    <div class="gds-modal__inner">
+      <div class="gds-modal__header">
+        <h2 class="gds-modal__title" id="modal-kitchen-title">Create Campaign</h2>
+        <p class="gds-modal__desc">Fill in the details below to launch a new campaign. All fields use GDS components.</p>
+      </div>
+      <div class="gds-modal__body">
+
+        <!-- Text Input -->
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Campaign Name</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" placeholder="e.g. Summer Sale 2026"/></div>
+          <span class="gds-input__helper">Choose a descriptive name</span>
+        </div>
+
+        <!-- Input with icon -->
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Budget</label>
+          <div class="gds-input__wrap">
+            <span class="gds-input__prefix">$</span>
+            <input class="gds-input__field" placeholder="0.00"/>
+            <span class="gds-input__suffix">USD</span>
+          </div>
+        </div>
+
+        <!-- Dropdown input -->
+        <div class="gds-input gds-input--md" style="position:relative">
+          <label class="gds-input__label">Region</label>
+          <div class="gds-input__wrap" style="cursor:pointer" onclick="var p=this.parentElement.querySelector('.gds-dropdown__panel');p.style.display=p.style.display==='none'?'block':'none'">
+            <input class="gds-input__field" placeholder="Select a region..." readonly style="cursor:pointer"/>
+            <span class="gds-input__icon"><i data-lucide="chevron-down"></i></span>
+          </div>
+          <div class="gds-dropdown__panel" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:10;margin-top:var(--gds-space-4)">
+            <div class="gds-dropdown__list">
+              <button class="gds-dropdown__item" type="button" onclick="this.closest('.gds-input').querySelector('.gds-input__field').value=this.textContent.trim();this.closest('.gds-dropdown__panel').style.display='none'"><span class="gds-dropdown__label">Europe</span></button>
+              <button class="gds-dropdown__item" type="button" onclick="this.closest('.gds-input').querySelector('.gds-input__field').value=this.textContent.trim();this.closest('.gds-dropdown__panel').style.display='none'"><span class="gds-dropdown__label">North America</span></button>
+              <button class="gds-dropdown__item" type="button" onclick="this.closest('.gds-input').querySelector('.gds-input__field').value=this.textContent.trim();this.closest('.gds-dropdown__panel').style.display='none'"><span class="gds-dropdown__label">Asia Pacific</span></button>
+              <button class="gds-dropdown__item" type="button" onclick="this.closest('.gds-input').querySelector('.gds-input__field').value=this.textContent.trim();this.closest('.gds-dropdown__panel').style.display='none'"><span class="gds-dropdown__label">Middle East</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Textarea -->
+        <div class="gds-input gds-input--md gds-input--textarea">
+          <label class="gds-input__label">Description</label>
+          <div class="gds-input__wrap"><textarea class="gds-input__field" placeholder="Write a short description..." rows="3"></textarea></div>
+          <span class="gds-input__count">0 / 200</span>
+        </div>
+
+        <!-- Checkboxes -->
+        <div style="display:flex;flex-direction:column;gap:var(--gds-space-4)">
+          <label class="gds-input__label">Channels</label>
+          <div style="display:flex;flex-direction:column;gap:var(--gds-space-8)">
+            <label class="gds-checkbox gds-checkbox--md gds-checkbox--checked">
+              <input type="checkbox" class="gds-checkbox__input" checked/>
+              <span class="gds-checkbox__control"><i data-lucide="check"></i></span>
+              <span class="gds-checkbox__label">Search Ads</span>
+            </label>
+            <label class="gds-checkbox gds-checkbox--md gds-checkbox--checked">
+              <input type="checkbox" class="gds-checkbox__input" checked/>
+              <span class="gds-checkbox__control"><i data-lucide="check"></i></span>
+              <span class="gds-checkbox__label">Display Ads</span>
+            </label>
+            <label class="gds-checkbox gds-checkbox--md">
+              <input type="checkbox" class="gds-checkbox__input"/>
+              <span class="gds-checkbox__control"><i data-lucide="check"></i></span>
+              <span class="gds-checkbox__label">Video Ads</span>
+            </label>
+            <label class="gds-checkbox gds-checkbox--md">
+              <input type="checkbox" class="gds-checkbox__input"/>
+              <span class="gds-checkbox__control"><i data-lucide="check"></i></span>
+              <span class="gds-checkbox__label">Native Ads</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Radio Group -->
+        <div style="display:flex;flex-direction:column;gap:var(--gds-space-4)">
+          <label class="gds-input__label">Priority</label>
+          <div style="display:flex;flex-direction:column;gap:var(--gds-space-8)">
+            <label class="gds-radio gds-radio--md">
+              <input type="radio" name="kitchen-priority" class="gds-radio__input"/>
+              <span class="gds-radio__control"><span class="gds-radio__dot"></span></span>
+              <span class="gds-radio__label">Low</span>
+            </label>
+            <label class="gds-radio gds-radio--md gds-radio--checked">
+              <input type="radio" name="kitchen-priority" class="gds-radio__input" checked/>
+              <span class="gds-radio__control"><span class="gds-radio__dot"></span></span>
+              <span class="gds-radio__label">Medium</span>
+            </label>
+            <label class="gds-radio gds-radio--md">
+              <input type="radio" name="kitchen-priority" class="gds-radio__input"/>
+              <span class="gds-radio__control"><span class="gds-radio__dot"></span></span>
+              <span class="gds-radio__label">High</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Toggles -->
+        <div style="display:flex;flex-direction:column;gap:var(--gds-space-8)">
+          <label class="gds-toggle gds-toggle--md gds-toggle--on">
+            <input type="checkbox" class="gds-toggle__input" checked/>
+            <span class="gds-toggle__track"><span class="gds-toggle__knob"></span></span>
+            <span class="gds-toggle__label">Auto-optimize bids</span>
+          </label>
+          <label class="gds-toggle gds-toggle--md">
+            <input type="checkbox" class="gds-toggle__input"/>
+            <span class="gds-toggle__track"><span class="gds-toggle__knob"></span></span>
+            <span class="gds-toggle__label">Send email reports</span>
+          </label>
+        </div>
+
+      </div>
+      <div class="gds-modal__footer">
+        <button class="gds-btn gds-btn--ghost gds-btn--md" onclick="closeOverlay('demo-modal-kitchen')">Cancel</button>
+        <button class="gds-btn gds-btn--primary gds-btn--md">Create Campaign</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Side Panel — Normal -->
+<div class="gds-sidepanel-overlay" id="demo-sidepanel-normal" role="dialog" aria-modal="true" aria-labelledby="sidepanel-normal-title" onclick="if(event.target===this) closeOverlay('demo-sidepanel-normal')">
+  <div class="gds-sidepanel gds-sidepanel--normal">
+    <div class="gds-sidepanel__topbar">
+      <span class="gds-sidepanel__topbar-title">Create Campaign</span>
+      <button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--xs" onclick="closeOverlay('demo-sidepanel-normal')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="gds-sidepanel__content">
+      <div class="gds-sidepanel__header">
+        <h2 class="gds-sidepanel__title" id="sidepanel-normal-title">Campaign Details</h2>
+        <p class="gds-sidepanel__desc">Fill in all the details to launch a new ad campaign. All fields use GDS components.</p>
+      </div>
+      <div class="gds-sidepanel__body">
+
+        <!-- Text input + helper -->
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Campaign Name</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" placeholder="e.g. Summer Sale 2026"/></div>
+          <span class="gds-input__helper">Choose a descriptive name</span>
+        </div>
+
+        <!-- Input with prefix + suffix -->
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Budget</label>
+          <div class="gds-input__wrap">
+            <span class="gds-input__prefix">$</span>
+            <input class="gds-input__field" placeholder="0.00"/>
+            <span class="gds-input__suffix">USD</span>
+          </div>
+        </div>
+
+        <!-- Dropdown input -->
+        <div style="position:relative" id="sp-region-dropdown">
+          <div class="gds-input gds-input--md">
+            <label class="gds-input__label">Region</label>
+            <div class="gds-input__wrap" onclick="var dd=document.getElementById('sp-region-dropdown').querySelector('.gds-dropdown');dd.classList.toggle('gds-dropdown--open');dd.querySelector('.gds-dropdown__panel').style.display=dd.classList.contains('gds-dropdown--open')?'block':'none'" style="cursor:pointer">
+              <input class="gds-input__field" placeholder="Select a region..." readonly style="cursor:pointer"/>
+              <span class="gds-input__icon"><i data-lucide="chevron-down"></i></span>
+            </div>
+          </div>
+          <div class="gds-dropdown" style="position:absolute;left:0;right:0;z-index:10;margin-top:var(--gds-space-4)">
+            <div class="gds-dropdown__panel" style="display:none;width:100%">
+              <div class="gds-dropdown__list">
+                <button class="gds-dropdown__item" type="button">North America</button>
+                <button class="gds-dropdown__item" type="button">Europe</button>
+                <button class="gds-dropdown__item" type="button">Asia Pacific</button>
+                <button class="gds-dropdown__item" type="button">Latin America</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Textarea -->
+        <div class="gds-input gds-input--md gds-input--textarea">
+          <label class="gds-input__label">Description</label>
+          <div class="gds-input__wrap"><textarea class="gds-input__field" placeholder="Write a short description..." rows="3"></textarea></div>
+          <span class="gds-input__count">0 / 200</span>
+        </div>
+
+        <!-- Chips -->
+        <div style="display:flex;flex-direction:column;gap:var(--gds-space-6)">
+          <label class="gds-input__label">Tags</label>
+          <div class="gds-chip-group">
+            <span class="gds-chip gds-chip--sm gds-chip--rounded"><span class="gds-chip__label">Search Ads</span><button class="gds-chip__close"><i data-lucide="x"></i></button></span>
+            <span class="gds-chip gds-chip--sm gds-chip--rounded"><span class="gds-chip__label">Display</span><button class="gds-chip__close"><i data-lucide="x"></i></button></span>
+            <span class="gds-chip gds-chip--sm gds-chip--rounded gds-chip--outline"><span class="gds-chip__label">+ Add tag</span></span>
+          </div>
+        </div>
+
+        <!-- Checkboxes -->
+        <div style="display:flex;flex-direction:column;gap:var(--gds-space-6)">
+          <label class="gds-input__label">Channels</label>
+          <label class="gds-checkbox"><input type="checkbox" class="gds-checkbox__input" checked/><span class="gds-checkbox__control"><i data-lucide="check"></i></span><span class="gds-checkbox__label">Search Ads</span></label>
+          <label class="gds-checkbox"><input type="checkbox" class="gds-checkbox__input" checked/><span class="gds-checkbox__control"><i data-lucide="check"></i></span><span class="gds-checkbox__label">Display Ads</span></label>
+          <label class="gds-checkbox"><input type="checkbox" class="gds-checkbox__input"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span><span class="gds-checkbox__label">Video Ads</span></label>
+          <label class="gds-checkbox"><input type="checkbox" class="gds-checkbox__input"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span><span class="gds-checkbox__label">Native Ads</span></label>
+        </div>
+
+        <!-- Radios -->
+        <div style="display:flex;flex-direction:column;gap:var(--gds-space-6)">
+          <label class="gds-input__label">Priority</label>
+          <label class="gds-radio"><input type="radio" class="gds-radio__input" name="sp-priority"/><span class="gds-radio__control"><span class="gds-radio__dot"></span></span><span class="gds-radio__label">Low</span></label>
+          <label class="gds-radio"><input type="radio" class="gds-radio__input" name="sp-priority" checked/><span class="gds-radio__control"><span class="gds-radio__dot"></span></span><span class="gds-radio__label">Medium</span></label>
+          <label class="gds-radio"><input type="radio" class="gds-radio__input" name="sp-priority"/><span class="gds-radio__control"><span class="gds-radio__dot"></span></span><span class="gds-radio__label">High</span></label>
+        </div>
+
+        <!-- Toggles -->
+        <div style="display:flex;flex-direction:column;gap:var(--gds-space-10)">
+          <label class="gds-input__label">Settings</label>
+          <label class="gds-toggle gds-toggle--md gds-toggle--on"><input type="checkbox" class="gds-toggle__input" checked/><span class="gds-toggle__track"><span class="gds-toggle__knob"></span></span><span class="gds-toggle__label">Auto-optimize bids</span></label>
+          <label class="gds-toggle gds-toggle--md"><input type="checkbox" class="gds-toggle__input"/><span class="gds-toggle__track"><span class="gds-toggle__knob"></span></span><span class="gds-toggle__label">Email notifications</span></label>
+          <label class="gds-toggle gds-toggle--md gds-toggle--on"><input type="checkbox" class="gds-toggle__input" checked/><span class="gds-toggle__track"><span class="gds-toggle__knob"></span></span><span class="gds-toggle__label">Schedule publishing</span></label>
+        </div>
+
+        <!-- Date inputs -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gds-space-16)">
+          <div class="gds-input gds-input--md">
+            <label class="gds-input__label">Start Date</label>
+            <div class="gds-input__wrap">
+              <input class="gds-input__field" placeholder="YYYY-MM-DD"/>
+              <span class="gds-input__icon"><i data-lucide="calendar"></i></span>
+            </div>
+          </div>
+          <div class="gds-input gds-input--md">
+            <label class="gds-input__label">End Date</label>
+            <div class="gds-input__wrap">
+              <input class="gds-input__field" placeholder="YYYY-MM-DD"/>
+              <span class="gds-input__icon"><i data-lucide="calendar"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alert -->
+        <div class="gds-alert gds-alert--info">
+          <i data-lucide="info" class="gds-alert__icon"></i>
+          <div class="gds-alert__content">
+            <span class="gds-alert__title">Tip</span>
+            <span class="gds-alert__desc">Campaigns with descriptions get 20% more engagement.</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="gds-sidepanel__footer">
+        <button class="gds-btn gds-btn--ghost gds-btn--md" onclick="closeOverlay('demo-sidepanel-normal')">Cancel</button>
+        <button class="gds-btn gds-btn--primary gds-btn--md">Create Campaign</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Side Panel — Default (300px) -->
+<div class="gds-sidepanel-overlay" id="demo-sidepanel-default" role="dialog" aria-modal="true" aria-labelledby="sidepanel-default-title" onclick="if(event.target===this) closeOverlay('demo-sidepanel-default')">
+  <div class="gds-sidepanel gds-sidepanel--default">
+    <div class="gds-sidepanel__topbar">
+      <span class="gds-sidepanel__topbar-title">Settings</span>
+      <button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--xs" onclick="closeOverlay('demo-sidepanel-default')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="gds-sidepanel__content">
+      <div class="gds-sidepanel__header">
+        <h2 class="gds-sidepanel__title" id="sidepanel-default-title">Quick Settings</h2>
+        <p class="gds-sidepanel__desc">Adjust your preferences.</p>
+      </div>
+      <div class="gds-sidepanel__body">
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Theme</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" value="CODEX"/></div>
+        </div>
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Language</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" value="English"/></div>
+        </div>
+      </div>
+      <div class="gds-sidepanel__footer">
+        <button class="gds-btn gds-btn--ghost gds-btn--sm" onclick="closeOverlay('demo-sidepanel-default')">Cancel</button>
+        <button class="gds-btn gds-btn--primary gds-btn--sm">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Side Panel — Large (850px) -->
+<div class="gds-sidepanel-overlay" id="demo-sidepanel-lg" role="dialog" aria-modal="true" aria-labelledby="sidepanel-lg-title" onclick="if(event.target===this) closeOverlay('demo-sidepanel-lg')">
+  <div class="gds-sidepanel gds-sidepanel--lg">
+    <div class="gds-sidepanel__topbar">
+      <span class="gds-sidepanel__topbar-title">Campaign Details</span>
+      <button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--xs" onclick="closeOverlay('demo-sidepanel-lg')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="gds-sidepanel__content">
+      <div class="gds-sidepanel__header">
+        <h2 class="gds-sidepanel__title" id="sidepanel-lg-title">Campaign Overview</h2>
+        <p class="gds-sidepanel__desc">View and edit campaign settings, targeting, and performance metrics.</p>
+      </div>
+      <div class="gds-sidepanel__body">
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Campaign Name</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" value="Summer Sale 2026"/></div>
+        </div>
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Budget</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" value="$5,000"/></div>
+        </div>
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">Start Date</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" value="2026-06-01"/></div>
+        </div>
+        <div class="gds-input gds-input--md">
+          <label class="gds-input__label">End Date</label>
+          <div class="gds-input__wrap"><input class="gds-input__field" value="2026-08-31"/></div>
+        </div>
+      </div>
+      <div class="gds-sidepanel__footer">
+        <button class="gds-btn gds-btn--ghost gds-btn--md" onclick="closeOverlay('demo-sidepanel-lg')">Cancel</button>
+        <button class="gds-btn gds-btn--primary gds-btn--md">Update Campaign</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Side Panel — X-Large (1170px) -->
+<div class="gds-sidepanel-overlay" id="demo-sidepanel-xl" role="dialog" aria-modal="true" aria-labelledby="sidepanel-xl-title" onclick="if(event.target===this) closeOverlay('demo-sidepanel-xl')">
+  <div class="gds-sidepanel gds-sidepanel--xl">
+    <div class="gds-sidepanel__topbar">
+      <span class="gds-sidepanel__topbar-title">Data Explorer</span>
+      <button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--xs" onclick="closeOverlay('demo-sidepanel-xl')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="gds-sidepanel__content">
+      <div class="gds-sidepanel__header">
+        <h2 class="gds-sidepanel__title" id="sidepanel-xl-title">Analytics Dashboard</h2>
+        <p class="gds-sidepanel__desc">Explore your data with advanced filtering, sorting, and visualization tools.</p>
+      </div>
+      <div class="gds-sidepanel__body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gds-space-20)">
+          <div class="gds-input gds-input--md">
+            <label class="gds-input__label">Date Range</label>
+            <div class="gds-input__wrap"><input class="gds-input__field" value="Last 30 days"/></div>
+          </div>
+          <div class="gds-input gds-input--md">
+            <label class="gds-input__label">Metric</label>
+            <div class="gds-input__wrap"><input class="gds-input__field" value="Revenue"/></div>
+          </div>
+          <div class="gds-input gds-input--md">
+            <label class="gds-input__label">Region</label>
+            <div class="gds-input__wrap"><input class="gds-input__field" value="All Regions"/></div>
+          </div>
+          <div class="gds-input gds-input--md">
+            <label class="gds-input__label">Channel</label>
+            <div class="gds-input__wrap"><input class="gds-input__field" value="All Channels"/></div>
+          </div>
+        </div>
+      </div>
+      <div class="gds-sidepanel__footer">
+        <button class="gds-btn gds-btn--ghost gds-btn--md" onclick="closeOverlay('demo-sidepanel-xl')">Close</button>
+        <button class="gds-btn gds-btn--primary gds-btn--md">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
 <!-- UTILITIES -->
 <!-- ============================================================ -->
 <section class="doc-section" id="page-utilities">
@@ -4999,6 +5644,8 @@ const CRUMBS = {
   pill: 'Components > Pill',
   'pct-badge': 'Components > Percentage Badge',
   'filter-badge': 'Components > Filter Badge',
+  modal: 'Components > Modal',
+  sidepanel: 'Components > Side Panel',
   utilities: 'Utilities > All Utilities',
 };
 
@@ -5246,6 +5893,96 @@ function initLucideIcons() {
   lucide.createIcons({ attrs: { 'stroke-width': stroke } });
 }
 initLucideIcons();
+
+// === Focus trap for modals & sidepanels ===
+function trapFocus(el) {
+  var focusable = el.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  var first = focusable[0];
+  var last = focusable[focusable.length - 1];
+
+  function handler(e) {
+    if (e.key !== 'Tab') return;
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
+
+  el.addEventListener('keydown', handler);
+  if (first) first.focus();
+  return function() { el.removeEventListener('keydown', handler); };
+}
+
+// === Open / Close overlay helpers ===
+function openOverlay(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add(el.classList.contains('gds-modal-overlay') ? 'gds-modal-overlay--open' : 'gds-sidepanel-overlay--open');
+  document.body.style.overflow = 'hidden';
+  el._cleanup = trapFocus(el);
+  el._trigger = document.activeElement;
+}
+
+function closeOverlay(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var openClass = el.classList.contains('gds-modal-overlay') ? 'gds-modal-overlay--open' : 'gds-sidepanel-overlay--open';
+  el.classList.remove(openClass);
+  if (el._cleanup) { el._cleanup(); el._cleanup = null; }
+  var trigger = el._trigger;
+  setTimeout(function() {
+    document.body.style.overflow = '';
+    if (trigger) trigger.focus();
+  }, 200);
+}
+
+// === Close modals & sidepanels on Escape ===
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  var open = document.querySelector('.gds-modal-overlay--open');
+  if (open) { closeOverlay(open.id); return; }
+  var openSp = document.querySelector('.gds-sidepanel-overlay--open');
+  if (openSp) { closeOverlay(openSp.id); }
+});
+
+// === Scroll divider toggling ===
+function initScrollDividers(container, headerSel, footerSel) {
+  var header = container.querySelector(headerSel);
+  var footer = container.querySelector(footerSel);
+
+  container.addEventListener('scroll', function() {
+    var scrolledClass = headerSel.indexOf('modal') !== -1 ? 'gds-modal__header--scrolled' : 'gds-sidepanel__header--scrolled';
+    var footerScrolledClass = footerSel.indexOf('modal') !== -1 ? 'gds-modal__footer--scrolled' : 'gds-sidepanel__footer--scrolled';
+
+    if (header) header.classList.toggle(scrolledClass, container.scrollTop > 0);
+    if (footer) footer.classList.toggle(footerScrolledClass, container.scrollTop + container.clientHeight < container.scrollHeight - 1);
+  });
+}
+
+// Init scroll dividers for all modals and sidepanels
+document.querySelectorAll('.gds-modal__inner').forEach(function(inner) {
+  initScrollDividers(inner, '.gds-modal__header', '.gds-modal__footer');
+});
+document.querySelectorAll('.gds-sidepanel__content').forEach(function(content) {
+  initScrollDividers(content, '.gds-sidepanel__header', '.gds-sidepanel__footer');
+});
+
+// === Sidepanel dropdown select functionality ===
+(function() {
+  var wrapper = document.getElementById('sp-region-dropdown');
+  if (!wrapper) return;
+  var input = wrapper.querySelector('.gds-input__field');
+  var dd = wrapper.querySelector('.gds-dropdown');
+  var panel = wrapper.querySelector('.gds-dropdown__panel');
+  wrapper.querySelectorAll('.gds-dropdown__item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      input.value = item.textContent.trim();
+      dd.classList.remove('gds-dropdown--open');
+      panel.style.display = 'none';
+    });
+  });
+})();
 
 </script>
 </body>

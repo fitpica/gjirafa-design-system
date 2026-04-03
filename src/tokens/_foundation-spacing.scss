@@ -20,9 +20,11 @@ $space-40: 40px;
 $space-48: 48px;
 $space-64: 64px;
 $space-80: 80px;
+$space-160: 160px;
 
 // --- Border widths ---
 $border-width-default: 1px;
+$border-width-control: 1.5px;  // checkbox, radio control borders
 $border-width-thick:   2px;
 
 // --- Border radius ---
@@ -42,6 +44,9 @@ $icon-lg: 24px;
 
 // --- Icon stroke ---
 $icon-stroke: 1.5;
+
+// --- Opacity ---
+$opacity-disabled: 0.5;
 
 // ============================================================================
 // CSS Custom Properties — Spacing
@@ -63,7 +68,8 @@ $icon-stroke: 1.5;
   --gds-space-40: #{$space-40};
   --gds-space-48: #{$space-48};
   --gds-space-64: #{$space-64};
-  --gds-space-80: #{$space-80};
+  --gds-space-80:  #{$space-80};
+  --gds-space-160: #{$space-160};
 
   // --- Radius ---
   --gds-radius-none: #{$radius-none};
@@ -82,4 +88,7 @@ $icon-stroke: 1.5;
 
   // --- Icon stroke ---
   --gds-icon-stroke: #{$icon-stroke};
+
+  // --- Opacity ---
+  --gds-opacity-disabled: #{$opacity-disabled};
 }

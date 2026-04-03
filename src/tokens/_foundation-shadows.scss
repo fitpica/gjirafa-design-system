@@ -12,6 +12,11 @@ $shadow-raised:     0 13px 24px 0 rgba(30, 30, 54, 0.1);
 $shadow-overlay:    0 4px 20px 0 rgba(30, 30, 54, 0.1);
 $shadow-side-panel: -4px 0 20px 0 rgba(30, 30, 54, 0.05);
 
+// --- Overlay ---
+$overlay-bg:        rgba(30, 30, 54, 0.5);   // $color-neutral-700 @ 50%
+$scroll-shadow-rgb: 0, 0, 0;                  // neutral black for scroll indicators
+$scroll-shadow-opacity: 0.08;
+
 // ============================================================================
 // CSS Custom Properties — Shadows
 // ============================================================================
@@ -24,4 +29,7 @@ $shadow-side-panel: -4px 0 20px 0 rgba(30, 30, 54, 0.05);
   --gds-shadow-overlay:    #{$shadow-overlay};
   --gds-shadow-raised:     #{$shadow-raised};
   --gds-shadow-side-panel: #{$shadow-side-panel};
+  --gds-overlay-bg:        #{$overlay-bg};
+  --gds-scroll-shadow-rgb: #{$scroll-shadow-rgb};
+  --gds-scroll-shadow-opacity: #{$scroll-shadow-opacity};
 }

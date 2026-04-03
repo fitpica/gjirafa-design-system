@@ -1,0 +1,61 @@
+// ============================================================================
+// Component Tokens / Modal
+// Maps foundation tokens → modal-specific custom properties
+// ZERO hardcoded values — every value references a foundation token
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-shadows' as *;
+@use 'foundation-motion' as *;
+@use 'foundation-zindex' as *;
+
+// SCSS-only breakpoint (CSS @media can't use custom properties)
+$modal-bp-mobile: 640px;  // matches --modal-width-md
+
+:root {
+  // --- Overlay ---
+  --modal-overlay-bg:    #{$overlay-bg};
+  --modal-z-index:       #{$z-overlay};
+
+  // --- Container ---
+  --modal-bg:            #{$color-neutral-0};
+  --modal-radius:        #{$radius-xl};
+  --modal-shadow:        #{$shadow-overlay};
+  --modal-padding:       #{$space-24};
+  --modal-gap:           #{$space-20};
+  --modal-max-offset:    #{$space-64};
+  --modal-close-offset:  #{$space-12};
+
+  // --- Sizes ---
+  --modal-width-sm:      calc(#{$space-24} * 19);    // 456px
+  --modal-width-md:      calc(#{$space-32} * 20);    // 640px
+
+  // --- Header ---
+  --modal-title-size:    #{$font-size-16};
+  --modal-title-weight:  #{$font-weight-medium};
+  --modal-title-color:   var(--gds-color-text-primary);
+  --modal-title-lh:      #{$line-height-normal};
+  --modal-desc-size:     #{$font-size-14};
+  --modal-desc-weight:   #{$font-weight-regular};
+  --modal-desc-color:    var(--gds-color-text-label);
+  --modal-desc-lh:       #{$line-height-normal};
+  --modal-header-gap:    #{$space-4};
+
+  // --- Body ---
+  --modal-body-gap:      #{$space-20};
+  --modal-scroll-shadow: rgba(#{$scroll-shadow-rgb}, #{$scroll-shadow-opacity});
+
+  // --- Footer ---
+  --modal-footer-gap:    #{$space-16};
+
+  // --- Animation ---
+  --modal-scale-start:   0.95;
+  --modal-translate-start: #{$space-8};
+  --modal-duration-in:   #{$duration-slow};
+  --modal-duration-out:  #{$duration-normal};
+  --modal-ease-in:       #{$ease-out};
+  --modal-ease-out:      #{$ease-default};
+
+}

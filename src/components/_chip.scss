@@ -287,7 +287,6 @@
 
   &:focus-within {
     border-color: var(--input-border-focus, var(--gds-color-border-focus));
-    box-shadow: 0 0 0 $space-2 var(--input-focus-offset, var(--gds-color-bg-primary)), 0 0 0 $space-4 var(--input-focus-ring, var(--gds-color-border-focus));
   }
 }
 

@@ -106,7 +106,7 @@
 
   .gds-toggle__track {
     background: var(--sel-disabled-bg);
-    opacity: 0.5;
+    opacity: $opacity-disabled;
   }
 
   &:hover .gds-toggle__track {

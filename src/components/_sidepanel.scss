@@ -1,0 +1,204 @@
+// ============================================================================
+// Component / Side Panel
+// 4 sizes: default (300px), normal (500px), lg (850px), xl (1170px)
+// Slides in from right, full-height
+// Reuses: .gds-btn, .gds-btn-icon
+// ZERO hardcoded values — references component tokens + foundation tokens only
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/component-sidepanel' as *;
+
+// --- Overlay ---
+.gds-sidepanel-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--sidepanel-z-index);
+  display: flex;
+  justify-content: flex-end;
+  background: var(--sidepanel-overlay-bg);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--sidepanel-duration-out) var(--sidepanel-ease-out),
+    visibility var(--sidepanel-duration-out) var(--sidepanel-ease-out);
+
+  &--open {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--sidepanel-duration-in) var(--sidepanel-ease-in),
+      visibility var(--sidepanel-duration-in) var(--sidepanel-ease-in);
+
+    .gds-sidepanel {
+      transform: translateX(0);
+    }
+  }
+}
+
+// --- Side panel container ---
+.gds-sidepanel {
+  display: flex;
+  flex-direction: column;
+  width: var(--sidepanel-width-normal);
+  height: 100vh;
+  background: var(--sidepanel-bg);
+  border-radius: var(--sidepanel-radius) $radius-none $radius-none var(--sidepanel-radius);
+  box-shadow: var(--sidepanel-shadow);
+  overflow: hidden;
+  transform: translateX(100%);
+  transition: transform var(--sidepanel-duration-out) var(--sidepanel-ease-out);
+
+  .gds-sidepanel-overlay--open & {
+    transition: transform var(--sidepanel-duration-in) var(--sidepanel-ease-in);
+  }
+}
+
+// --- Sizes ---
+.gds-sidepanel--default { width: var(--sidepanel-width-default); }
+.gds-sidepanel--normal  { width: var(--sidepanel-width-normal); }
+.gds-sidepanel--lg      { width: var(--sidepanel-width-lg); }
+.gds-sidepanel--xl      { width: var(--sidepanel-width-xl); }
+
+// --- Top bar ---
+.gds-sidepanel__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--sidepanel-topbar-height);
+  padding-left: var(--sidepanel-topbar-padding-left);
+  padding-right: var(--sidepanel-topbar-padding-right);
+  border-bottom: var(--sidepanel-topbar-border-width) solid var(--sidepanel-topbar-border-color);
+  flex-shrink: 0;
+}
+
+.gds-sidepanel__topbar-title {
+  font-size: var(--sidepanel-topbar-title-size);
+  font-weight: var(--sidepanel-topbar-title-weight);
+  color: var(--sidepanel-topbar-title-color);
+  line-height: var(--sidepanel-topbar-title-lh);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// --- Content area (scroll container) ---
+.gds-sidepanel__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sidepanel-content-gap);
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+  padding-left: var(--sidepanel-content-padding);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gds-color-border-subtle) transparent;
+
+  &::-webkit-scrollbar { width: $space-6; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: var(--gds-color-border-subtle);
+    border-radius: $radius-pill;
+  }
+}
+
+// --- Header (sticky top) ---
+.gds-sidepanel__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sidepanel-header-gap);
+  flex-shrink: 0;
+  background: var(--sidepanel-bg);
+  padding-top: var(--sidepanel-content-padding);
+  padding-right: var(--sidepanel-content-padding);
+  padding-bottom: $space-12;
+  box-shadow: 0 #{$border-width-default} 0 0 transparent;
+  transition: box-shadow var(--sidepanel-duration-out) var(--sidepanel-ease-out);
+}
+
+// Scroll divider — toggled via JS when content scrolls behind header
+.gds-sidepanel__header--scrolled {
+  box-shadow: 0 #{$border-width-default} 0 0 var(--gds-color-border-subtle);
+}
+
+.gds-sidepanel__title {
+  font-size: var(--sidepanel-title-size);
+  font-weight: var(--sidepanel-title-weight);
+  color: var(--sidepanel-title-color);
+  line-height: var(--sidepanel-title-lh);
+  margin: 0;
+}
+
+.gds-sidepanel__desc {
+  font-size: var(--sidepanel-desc-size);
+  font-weight: var(--sidepanel-desc-weight);
+  color: var(--sidepanel-desc-color);
+  line-height: var(--sidepanel-desc-lh);
+  margin: 0;
+}
+
+// --- Body ---
+.gds-sidepanel__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sidepanel-body-gap);
+  padding-right: var(--sidepanel-content-padding);
+}
+
+// --- Footer (sticky bottom, inside scroll container) ---
+.gds-sidepanel__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sidepanel-footer-gap);
+  flex-shrink: 0;
+  padding-top: $space-12;
+  padding-bottom: var(--sidepanel-content-padding);
+  padding-right: var(--sidepanel-content-padding);
+  background: var(--sidepanel-bg);
+  box-shadow: 0 (-#{$border-width-default}) 0 0 transparent;
+  transition: box-shadow var(--sidepanel-duration-out) var(--sidepanel-ease-out);
+}
+
+// Scroll divider — toggled via JS when content scrolls behind footer
+.gds-sidepanel__footer--scrolled {
+  box-shadow: 0 (-#{$border-width-default}) 0 0 var(--gds-color-border-subtle);
+}
+
+// Split variant — pushes first action to the left, rest to the right
+.gds-sidepanel__footer--split {
+  justify-content: space-between;
+}
+
+// ============================================================================
+// Responsive — full-width when viewport < panel width
+// Breakpoints match component token widths
+// ============================================================================
+
+@media (max-width: $sidepanel-bp-mobile) {
+  .gds-sidepanel {
+    width: 100% !important;
+    border-radius: $radius-none;
+  }
+}
+
+@media (max-width: $sidepanel-bp-lg) {
+  .gds-sidepanel--lg {
+    width: 100%;
+    border-radius: $radius-none;
+  }
+}
+
+@media (max-width: $sidepanel-bp-xl) {
+  .gds-sidepanel--xl {
+    width: 100%;
+    border-radius: $radius-none;
+  }
+}

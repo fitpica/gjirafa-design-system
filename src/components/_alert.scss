@@ -9,6 +9,7 @@
 @use '../tokens/foundation-spacing' as *;
 @use '../tokens/foundation-typography' as *;
 @use '../tokens/foundation-motion' as *;
+@use '../tokens/foundation-zindex' as *;
 
 // ============================================================================
 // Base alert
@@ -343,7 +344,7 @@
   flex-direction: column;
   gap: $space-8;
   position: fixed;
-  z-index: 9999;
+  z-index: $z-toast;
   max-width: var(--alert-toast-max-width);
   width: 100%;
   pointer-events: none;

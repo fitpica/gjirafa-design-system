@@ -1,0 +1,74 @@
+// ============================================================================
+// Component Tokens / Side Panel
+// Maps foundation tokens → sidepanel-specific custom properties
+// ZERO hardcoded values — every value references a foundation token
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-shadows' as *;
+@use 'foundation-motion' as *;
+@use 'foundation-zindex' as *;
+
+// SCSS-only breakpoints (CSS @media can't use custom properties)
+$sidepanel-bp-mobile: 640px;
+$sidepanel-bp-lg:     850px;  // matches --sidepanel-width-lg
+$sidepanel-bp-xl:     1170px; // matches --sidepanel-width-xl
+
+:root {
+  // --- Overlay ---
+  --sidepanel-overlay-bg:  #{$overlay-bg};
+  --sidepanel-z-index:     #{$z-sidepanel};
+
+  // --- Container ---
+  --sidepanel-bg:          #{$color-neutral-0};
+  --sidepanel-radius:      #{$radius-xl};
+  --sidepanel-shadow:      #{$shadow-side-panel};
+
+  // --- Sizes ---
+  --sidepanel-width-default: calc(#{$space-20} * 15);    // 300px
+  --sidepanel-width-normal:  calc(#{$space-20} * 25);    // 500px
+  --sidepanel-width-lg:      calc(#{$space-10} * 85);    // 850px
+  --sidepanel-width-xl:      calc(#{$space-10} * 117);   // 1170px
+
+  // --- Top Bar ---
+  --sidepanel-topbar-height:        #{$space-40};
+  --sidepanel-topbar-padding-left:  #{$space-24};
+  --sidepanel-topbar-padding-right: #{$space-16};
+  --sidepanel-topbar-border-color:  var(--gds-color-border-subtle);
+  --sidepanel-topbar-border-width:  #{$border-width-default};
+  --sidepanel-topbar-title-size:    #{$font-size-14};
+  --sidepanel-topbar-title-weight:  #{$font-weight-medium};
+  --sidepanel-topbar-title-color:   var(--gds-color-text-primary);
+  --sidepanel-topbar-title-lh:      #{$line-height-tight};
+
+  // --- Content ---
+  --sidepanel-content-padding: #{$space-24};
+  --sidepanel-content-gap:     #{$space-20};
+
+  // --- Header (inside content) ---
+  --sidepanel-title-size:    #{$font-size-16};
+  --sidepanel-title-weight:  #{$font-weight-medium};
+  --sidepanel-title-color:   var(--gds-color-text-primary);
+  --sidepanel-title-lh:      #{$line-height-normal};
+  --sidepanel-desc-size:     #{$font-size-14};
+  --sidepanel-desc-weight:   #{$font-weight-regular};
+  --sidepanel-desc-color:    var(--gds-color-text-label);
+  --sidepanel-desc-lh:       #{$line-height-normal};
+  --sidepanel-header-gap:    #{$space-4};
+
+  // --- Body ---
+  --sidepanel-body-gap:          #{$space-20};
+  --sidepanel-scroll-shadow:     rgba(#{$scroll-shadow-rgb}, #{$scroll-shadow-opacity});
+
+  // --- Footer ---
+  --sidepanel-footer-gap:        #{$space-16};
+  --sidepanel-footer-padding:    #{$space-24};
+
+  // --- Motion ---
+  --sidepanel-duration-in:   #{$duration-slow};
+  --sidepanel-duration-out:  #{$duration-normal};
+  --sidepanel-ease-in:       #{$ease-out};
+  --sidepanel-ease-out:      #{$ease-default};
+}

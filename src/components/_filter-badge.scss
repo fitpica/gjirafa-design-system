@@ -22,7 +22,7 @@
   border: var(--filter-badge-active-border-width) solid transparent;
   cursor: pointer;
   user-select: none;
-  transition: border-color $duration-normal ease;
+  transition: border-color $duration-normal $ease-default;
 }
 
 // ============================================================================

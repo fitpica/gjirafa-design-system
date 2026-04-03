@@ -27,7 +27,7 @@
   width: $icon-md;
   height: $icon-md;
   background: var(--sel-bg);
-  border: 1.5px solid var(--sel-border);
+  border: $border-width-control solid var(--sel-border);
   border-radius: $radius-pill;
   transition:
     background $duration-normal $ease-default,

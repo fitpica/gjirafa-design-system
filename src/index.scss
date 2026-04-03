@@ -9,6 +9,7 @@
 @use 'tokens/foundation-typography';
 @use 'tokens/foundation-shadows';
 @use 'tokens/foundation-motion';
+@use 'tokens/foundation-zindex';
 
 // --- Semantic tokens (meaning-based, default = CODEX) ---
 @use 'tokens/semantic';
@@ -31,6 +32,8 @@
 @use 'tokens/component-pill';
 @use 'tokens/component-pct-badge';
 @use 'tokens/component-filter-badge';
+@use 'tokens/component-modal';
+@use 'tokens/component-sidepanel';
 
 // --- Component styles ---
 @use 'components/button';
@@ -49,6 +52,8 @@
 @use 'components/pill';
 @use 'components/pct-badge';
 @use 'components/filter-badge';
+@use 'components/modal';
+@use 'components/sidepanel';
 
 // --- Utility classes ---
 @use 'utilities/colors';

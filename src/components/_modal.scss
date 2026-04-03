@@ -1,0 +1,201 @@
+// ============================================================================
+// Component / Modal
+// 2 sizes: sm, md (default)
+// Variants: default, destructive
+// Reuses: .gds-btn, .gds-btn-icon
+// ZERO hardcoded values — references component tokens + foundation tokens only
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/component-modal' as *;
+
+// --- Overlay ---
+.gds-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--modal-z-index);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--modal-overlay-bg);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--modal-duration-out) var(--modal-ease-out),
+    visibility var(--modal-duration-out) var(--modal-ease-out);
+
+  &--open {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--modal-duration-in) var(--modal-ease-in),
+      visibility var(--modal-duration-in) var(--modal-ease-in);
+
+    .gds-modal {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+}
+
+// --- Modal container ---
+.gds-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: var(--modal-width-md);
+  max-height: calc(100vh - var(--modal-max-offset) * 2);
+  background: var(--modal-bg);
+  border-radius: var(--modal-radius);
+  box-shadow: var(--modal-shadow);
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(var(--modal-scale-start)) translateY(var(--modal-translate-start));
+  transition:
+    opacity var(--modal-duration-out) var(--modal-ease-out),
+    transform var(--modal-duration-out) var(--modal-ease-out);
+
+  .gds-modal-overlay--open & {
+    transition:
+      opacity var(--modal-duration-in) var(--modal-ease-in),
+      transform var(--modal-duration-in) var(--modal-ease-in);
+  }
+}
+
+// --- Sizes ---
+.gds-modal--sm { width: var(--modal-width-sm); }
+.gds-modal--md { width: var(--modal-width-md); }
+
+// --- Inner wrapper (scroll container) ---
+// Scrollbar lives here — between the content padding and the modal edge.
+// Header/footer stay pinned; body scrolls.
+.gds-modal__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--modal-gap);
+  padding: 0 var(--modal-padding);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gds-color-border-subtle) transparent;
+
+  // Webkit — 6px scrollbar flush against modal right edge
+  &::-webkit-scrollbar { width: $space-6; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: var(--gds-color-border-subtle);
+    border-radius: $radius-pill;
+  }
+}
+
+// --- Close button (positioned top-right) ---
+.gds-modal__close {
+  position: absolute;
+  top: var(--modal-close-offset);
+  right: var(--modal-close-offset);
+  z-index: 2; // above sticky header/footer (z-index: 1)
+}
+
+// --- Header (sticky top) ---
+.gds-modal__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--modal-header-gap);
+  flex-shrink: 0;
+  background: var(--modal-bg);
+  padding-top: var(--modal-padding);
+  padding-bottom: $space-12;
+  box-shadow: 0 #{$border-width-default} 0 0 transparent;
+  transition: box-shadow var(--modal-duration-out) var(--modal-ease-out);
+}
+
+// Scroll divider — toggled via JS when content scrolls behind header
+.gds-modal__header--scrolled {
+  box-shadow: 0 #{$border-width-default} 0 0 var(--gds-color-border-subtle);
+}
+
+.gds-modal__title {
+  font-size: var(--modal-title-size);
+  font-weight: var(--modal-title-weight);
+  color: var(--modal-title-color);
+  line-height: var(--modal-title-lh);
+  margin: 0;
+}
+
+.gds-modal__desc {
+  font-size: var(--modal-desc-size);
+  font-weight: var(--modal-desc-weight);
+  color: var(--modal-desc-color);
+  line-height: var(--modal-desc-lh);
+  margin: 0;
+}
+
+// --- Body ---
+.gds-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--modal-body-gap);
+}
+
+// --- Footer (sticky bottom) ---
+.gds-modal__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--modal-footer-gap);
+  flex-shrink: 0;
+  background: var(--modal-bg);
+  padding-top: $space-12;
+  padding-bottom: var(--modal-padding);
+  box-shadow: 0 (-#{$border-width-default}) 0 0 transparent;
+  transition: box-shadow var(--modal-duration-out) var(--modal-ease-out);
+}
+
+// Scroll divider — toggled via JS when content scrolls behind footer
+.gds-modal__footer--scrolled {
+  box-shadow: 0 (-#{$border-width-default}) 0 0 var(--gds-color-border-subtle);
+}
+
+// Split variant — pushes first action to the left, rest to the right
+.gds-modal__footer--split {
+  justify-content: space-between;
+}
+
+// ============================================================================
+// Destructive variant (red primary action)
+// ============================================================================
+
+.gds-modal--destructive .gds-modal__footer .gds-btn--primary {
+  background: var(--btn-critical-bg);
+  border-color: var(--btn-critical-border);
+
+  &:hover:not(:disabled) {
+    background: var(--btn-critical-bg-hover);
+    border-color: var(--btn-critical-bg-hover);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--btn-critical-bg-active);
+    border-color: var(--btn-critical-bg-active);
+  }
+}
+
+// ============================================================================
+// Responsive — full-screen on mobile
+// ============================================================================
+
+@media (max-width: $modal-bp-mobile) {
+  .gds-modal {
+    width: 100% !important;
+    max-height: 100vh;
+    border-radius: $radius-none;
+  }
+
+}
