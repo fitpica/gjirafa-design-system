@@ -71,6 +71,11 @@ $opacity-disabled: 0.5;
   --gds-space-80:  #{$space-80};
   --gds-space-160: #{$space-160};
 
+  // --- Border widths ---
+  --gds-border-width-default: #{$border-width-default};
+  --gds-border-width-control: #{$border-width-control};
+  --gds-border-width-thick:   #{$border-width-thick};
+
   // --- Radius ---
   --gds-radius-none: #{$radius-none};
   --gds-radius-sm:   #{$radius-sm};

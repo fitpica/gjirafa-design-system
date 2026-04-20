@@ -1,0 +1,365 @@
+// ============================================================================
+// Component / Pagination
+// Classes:
+//   .gds-pagination                       — core numbered nav (button row)
+//   .gds-pagination--sm / --lg            — size modifiers (default = md)
+//   .gds-pagination__item                 — page number / chevron
+//   .gds-pagination__item--current        — active page
+//   .gds-pagination__item--disabled       — disabled prev/next
+//   .gds-pagination__item--icon-only      — ‹ › « » chevrons
+//   .gds-pagination__ellipsis             — truncated "…"
+//   .gds-pagination__nav                  — "‹ Prev" / "Next ›" labeled buttons
+//
+//   .gds-pagination-bar                   — compact bar (size-select + nav + numbers)
+//   .gds-pagination-bar--sm / --lg        — size modifiers
+//   .gds-pagination-bar--on-surface       — white pill bar
+//   .gds-pagination-bar--full             — full-width summary bar
+//   .gds-pagination-bar--no-border        — drops border on the full bar
+//   .gds-pagination-bar__summary          — "Viewing X to Y of Z items"
+//   .gds-pagination-bar__select           — "10 items per page ▾" trigger
+//   .gds-pagination-bar__divider          — vertical separator
+//
+// Rule: ZERO hardcoded values — all references to component / foundation tokens
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+
+// ============================================================================
+// Base pagination row
+// ============================================================================
+
+.gds-pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pagination-item-gap);
+  font-family: var(--gds-font-family-base);
+  font-size: var(--pagination-font-size);
+  line-height: var(--pagination-line-height);
+  color: var(--pagination-color);
+}
+
+// ============================================================================
+// Item — page number, chevron, ellipsis, prev/next (shared base)
+// ============================================================================
+
+.gds-pagination__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--pagination-item-min-width);
+  height: var(--pagination-item-size);
+  padding: $space-0 var(--pagination-item-padding-x);
+  border: $space-0 solid transparent;
+  border-radius: var(--pagination-item-radius);
+  background: transparent;
+  color: var(--pagination-color);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: var(--pagination-font-weight);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--pagination-duration) var(--pagination-ease),
+    color var(--pagination-duration) var(--pagination-ease);
+
+  &:hover:not(.gds-pagination__item--current):not(.gds-pagination__item--disabled) {
+    background: var(--pagination-hover-bg);
+    color: var(--pagination-hover-color);
+  }
+
+  &:focus-visible {
+    outline: var(--pagination-focus-ring-width) solid var(--pagination-focus-ring);
+    outline-offset: var(--pagination-focus-ring-offset);
+  }
+}
+
+// --- Current page (filled pill) ---
+.gds-pagination__item--current {
+  background: var(--pagination-current-bg);
+  color: var(--pagination-current-color);
+  font-weight: var(--pagination-current-weight);
+  cursor: default;
+}
+
+// --- Disabled (prev/next when at boundary) ---
+.gds-pagination__item--disabled {
+  color: var(--pagination-disabled-color);
+  opacity: var(--pagination-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// --- Icon-only chevron variant (« ») ---
+.gds-pagination__item--icon-only {
+  min-width: var(--pagination-item-size);
+  padding: $space-0;
+  color: var(--pagination-icon-color);
+}
+
+// ============================================================================
+// Ellipsis "…" (truncated)
+// ============================================================================
+
+.gds-pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--pagination-item-min-width);
+  height: var(--pagination-item-size);
+  color: var(--pagination-icon-color);
+  user-select: none;
+  pointer-events: none;
+}
+
+// ============================================================================
+// Nav button with label ("« Prev", "Next »")
+// ============================================================================
+
+.gds-pagination__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pagination-nav-gap);
+  height: var(--pagination-item-size);
+  padding: var(--pagination-nav-padding-y) var(--pagination-nav-padding-x);
+  border: $space-0 solid transparent;
+  border-radius: var(--pagination-nav-radius);
+  background: transparent;
+  color: var(--pagination-color);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: var(--pagination-font-weight);
+  cursor: pointer;
+  transition:
+    background-color var(--pagination-duration) var(--pagination-ease),
+    color var(--pagination-duration) var(--pagination-ease);
+
+  &:hover:not(.gds-pagination__item--disabled):not(:disabled) {
+    background: var(--pagination-hover-bg);
+    color: var(--pagination-hover-color);
+  }
+
+  &:focus-visible {
+    outline: var(--pagination-focus-ring-width) solid var(--pagination-focus-ring);
+    outline-offset: var(--pagination-focus-ring-offset);
+  }
+
+  &:disabled,
+  &.gds-pagination__item--disabled {
+    color: var(--pagination-disabled-color);
+    opacity: var(--pagination-disabled-opacity);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// ============================================================================
+// Pagination bar — compact (size-select + nav + numbers on one row)
+// ============================================================================
+
+.gds-pagination-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pagination-bar-gap);
+  height: var(--pagination-bar-height);
+  padding: var(--pagination-bar-padding-y) var(--pagination-bar-padding-x);
+  font-family: var(--gds-font-family-base);
+  font-size: var(--pagination-font-size);
+  line-height: var(--pagination-line-height);
+  color: var(--pagination-color);
+  background: transparent;
+  border-radius: var(--pagination-full-radius);
+}
+
+// --- On-Surface variant (pill on coloured surfaces) ---
+.gds-pagination-bar--on-surface {
+  background: var(--pagination-full-bg);
+  border: var(--pagination-full-border-width) solid var(--pagination-full-border);
+}
+
+// ============================================================================
+// Pagination bar — full-width (summary + size-select + numbers)
+// ============================================================================
+
+.gds-pagination-bar--full {
+  display: flex;
+  width: 100%;
+  height: var(--pagination-full-height);
+  padding: $space-0 var(--pagination-full-padding-x);
+  background: var(--pagination-full-bg);
+  border: var(--pagination-full-border-width) solid var(--pagination-full-border);
+  border-radius: var(--pagination-full-radius);
+  justify-content: space-between;
+}
+
+.gds-pagination-bar--no-border {
+  border-color: transparent;
+}
+
+// --- Summary text (left of full bar) ---
+.gds-pagination-bar__summary {
+  display: inline-flex;
+  align-items: center;
+  color: var(--pagination-summary-color);
+  font-size: var(--pagination-font-size);
+  line-height: var(--pagination-line-height);
+}
+
+// --- Right-side cluster (select + numbers) ---
+.gds-pagination-bar__cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pagination-bar-gap);
+}
+
+// --- Size-select trigger ("10 Items per page ▾") ---
+.gds-pagination-bar__select {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pagination-select-gap);
+  height: var(--pagination-item-size);
+  padding: $space-0 var(--pagination-item-padding-x);
+  background: transparent;
+  border: $space-0 solid transparent;
+  border-radius: var(--pagination-nav-radius);
+  color: var(--pagination-select-color);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: var(--pagination-font-weight);
+  cursor: pointer;
+  transition:
+    background-color var(--pagination-duration) var(--pagination-ease),
+    color var(--pagination-duration) var(--pagination-ease);
+
+  &:hover {
+    background: var(--pagination-hover-bg);
+    color: var(--pagination-hover-color);
+  }
+
+  &:focus-visible {
+    outline: var(--pagination-focus-ring-width) solid var(--pagination-focus-ring);
+    outline-offset: var(--pagination-focus-ring-offset);
+  }
+
+  svg {
+    width: var(--pagination-select-icon);
+    height: var(--pagination-select-icon);
+    stroke-width: var(--gds-icon-stroke);
+  }
+}
+
+// --- Vertical divider inside the full bar ---
+.gds-pagination-bar__divider {
+  width: var(--pagination-divider-width);
+  height: var(--pagination-divider-height);
+  background: var(--pagination-divider-color);
+  align-self: center;
+}
+
+// ============================================================================
+// Chevron / ellipsis icon sizing (inside items)
+// ============================================================================
+
+.gds-pagination__item svg,
+.gds-pagination__nav svg,
+.gds-pagination__ellipsis svg {
+  width: var(--pagination-chevron-size);
+  height: var(--pagination-chevron-size);
+  stroke-width: var(--gds-icon-stroke);
+  flex-shrink: 0;
+}
+
+// ============================================================================
+// State preview helpers — .is-hover-preview / .is-focus-preview
+// Same tokens the real :hover / :focus-visible rules use. Useful for docs,
+// framework wrappers, and testing without user interaction.
+// ============================================================================
+
+.gds-pagination__item.is-hover-preview:not(.gds-pagination__item--current):not(.gds-pagination__item--disabled),
+.gds-pagination__nav.is-hover-preview:not(.gds-pagination__item--disabled):not(:disabled) {
+  background: var(--pagination-hover-bg);
+  color: var(--pagination-hover-color);
+}
+
+.gds-pagination__item.is-focus-preview,
+.gds-pagination__nav.is-focus-preview {
+  outline: var(--pagination-focus-ring-width) solid var(--pagination-focus-ring);
+  outline-offset: var(--pagination-focus-ring-offset);
+}
+
+// ============================================================================
+// Size modifiers — .gds-pagination--sm / --lg (default = md)
+// Scoped so they cascade to nested items + chevrons in the same row.
+// ============================================================================
+
+.gds-pagination--sm {
+  --pagination-item-size:      var(--pagination-item-size-sm);
+  --pagination-item-min-width: var(--pagination-item-size-sm);
+  --pagination-item-padding-x: var(--pagination-item-padding-x-sm);
+  --pagination-item-gap:       var(--pagination-item-gap-sm);
+  --pagination-chevron-size:   var(--pagination-chevron-size-sm);
+  font-size: var(--pagination-font-size-sm);
+}
+
+.gds-pagination--lg {
+  --pagination-item-size:      var(--pagination-item-size-lg);
+  --pagination-item-min-width: var(--pagination-item-size-lg);
+  --pagination-item-padding-x: var(--pagination-item-padding-x-lg);
+  --pagination-item-gap:       var(--pagination-item-gap-lg);
+  --pagination-chevron-size:   var(--pagination-chevron-size-lg);
+  font-size: var(--pagination-font-size-lg);
+}
+
+// Bar size modifiers — cascade to nested .gds-pagination + __select
+.gds-pagination-bar--sm {
+  --pagination-item-size:      var(--pagination-item-size-sm);
+  --pagination-item-min-width: var(--pagination-item-size-sm);
+  --pagination-item-padding-x: var(--pagination-item-padding-x-sm);
+  --pagination-item-gap:       var(--pagination-item-gap-sm);
+  --pagination-chevron-size:   var(--pagination-chevron-size-sm);
+  --pagination-font-size:      var(--pagination-font-size-sm);
+}
+
+.gds-pagination-bar--lg {
+  --pagination-item-size:      var(--pagination-item-size-lg);
+  --pagination-item-min-width: var(--pagination-item-size-lg);
+  --pagination-item-padding-x: var(--pagination-item-padding-x-lg);
+  --pagination-item-gap:       var(--pagination-item-gap-lg);
+  --pagination-chevron-size:   var(--pagination-chevron-size-lg);
+  --pagination-font-size:      var(--pagination-font-size-lg);
+}
+
+// ============================================================================
+// Responsive — full bar collapses gracefully
+//   ≤ 640px:  hide the summary, keep controls
+//   ≤ 480px:  tighten gaps, let cluster wrap under the summary area
+// Breakpoints are allowed raw values per the zero-hardcoded rule
+// (media query conditions cannot resolve CSS custom properties).
+// ============================================================================
+
+@media (max-width: 640px) {
+  .gds-pagination-bar--full .gds-pagination-bar__summary {
+    display: none;
+  }
+
+  .gds-pagination-bar--full {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .gds-pagination-bar--full,
+  .gds-pagination-bar {
+    gap: var(--gds-space-8);
+    padding-left: var(--gds-space-8);
+    padding-right: var(--gds-space-8);
+  }
+
+  // Hide the page-size trigger on the smallest screens — keep only number nav.
+  .gds-pagination-bar__select {
+    display: none;
+  }
+}

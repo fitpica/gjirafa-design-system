@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Gjirafa Helpdesk — Theme Override
+   Drop this file AFTER gjirafa-ds.css in your project.
+   Usage: <body data-theme="helpdesk">
+   ========================================================================== */
+
+[data-theme="helpdesk"] {
+
+  /* -----------------------------------------------------------------------
+     1. BRAND / ACTION — Green primary (#4CAF50)
+     Overrides GDS blue-500 defaults. Every gds-btn--primary, focus ring,
+     selected tab, active toggle, and checkbox automatically turns green.
+     ----------------------------------------------------------------------- */
+  --gds-color-brand-primary:         #4CAF50;
+  --gds-color-action-primary:        #4CAF50;
+  --gds-color-action-primary-hover:  #388E3C;
+  --gds-color-action-primary-active: #2E7D32;
+  --gds-color-action-on-primary:     #FFFFFF;
+
+  /* -----------------------------------------------------------------------
+     2. TEXT
+     ----------------------------------------------------------------------- */
+  --gds-color-text-primary:     #212121;
+  --gds-color-text-secondary:   #546E7A;
+  --gds-color-text-tertiary:    #78909C;
+  --gds-color-text-disabled:    #BDBDBD;
+  --gds-color-text-placeholder: #BDBDBD;
+  --gds-color-text-label:       #546E7A;
+  --gds-color-text-helper:      #78909C;
+  --gds-color-text-inverse:     #FFFFFF;
+
+  /* -----------------------------------------------------------------------
+     3. BACKGROUNDS
+     ----------------------------------------------------------------------- */
+  --gds-color-bg-primary:   #FFFFFF;
+  --gds-color-bg-secondary: #F5F5F5;
+  --gds-color-bg-tertiary:  #EEEEEE;
+  --gds-color-bg-disabled:  #F5F5F5;
+
+  /* -----------------------------------------------------------------------
+     4. BORDERS
+     ----------------------------------------------------------------------- */
+  --gds-color-border-default: #E0E0E0;
+  --gds-color-border-strong:  #BDBDBD;
+  --gds-color-border-focus:   #4CAF50;
+  --gds-color-border-subtle:  #F0F0F0;
+
+  /* -----------------------------------------------------------------------
+     5. FEEDBACK / SEMANTIC
+     ----------------------------------------------------------------------- */
+  --gds-color-error:        #F44336;
+  --gds-color-error-text:   #C62828;
+  --gds-color-success:      #4CAF50;
+  --gds-color-success-text: #2E7D32;
+  --gds-color-warning:      #FF9800;
+  --gds-color-warning-text: #E65100;
+
+  /* -----------------------------------------------------------------------
+     6. HELPDESK-SPECIFIC TOKENS (not in GDS — add to your app CSS)
+     These extend GDS for product-specific needs.
+     ----------------------------------------------------------------------- */
+
+  /* Brand navy — headers, primary headings */
+  --hd-color-brand-navy: #1B2A3D;
+
+  /* Selection state — sidebar active, conversation selected */
+  --hd-color-selected-bg:     #E8F5E9;
+  --hd-color-selected-border: #4CAF50;
+
+  /* Hover / pressed */
+  --hd-color-hover-bg:   #F5F5F5;
+  --hd-color-pressed-bg: #EEEEEE;
+
+  /* Info (links, unread) — GDS doesn't have info semantic */
+  --hd-color-info:         #2196F3;
+  --hd-color-info-surface: #E3F2FD;
+
+  /* Surface variants */
+  --hd-color-surface:        #FFFFFF;
+  --hd-color-surface-sidebar: #FAFAFA;
+
+  /* Product tag colors */
+  --hd-color-tag-gjirafa50:   #1565C0;
+  --hd-color-tag-travel:      #00897B;
+  --hd-color-tag-esim:        #7B1FA2;
+  --hd-color-tag-girafamall:  #E65100;
+  --hd-color-tag-starlink:    #263238;
+
+  /* AI badge */
+  --hd-color-ai: #7C4DFF;
+
+  /* SLA severity tiers */
+  --hd-color-sla-ontrack:  #4CAF50;
+  --hd-color-sla-atrisk:   #FF9800;
+  --hd-color-sla-breached: #F44336;
+  --hd-color-sla-severe:   #B71C1C;
+  --hd-color-sla-none:     #9E9E9E;
+
+  /* Agent status */
+  --hd-color-status-online:  #4CAF50;
+  --hd-color-status-offline: #BDBDBD;
+  --hd-color-status-away:    #FFC107;
+
+  /* Layout widths */
+  --hd-sidebar-width: 240px;
+  --hd-conversation-list-width: 360px;
+  --hd-detail-min-width: 480px;
+  --hd-max-content-width: 1440px;
+}

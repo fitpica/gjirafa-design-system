@@ -1,0 +1,110 @@
+// ============================================================================
+// Component Tokens / Pagination
+// Maps foundation tokens → pagination-specific custom properties
+// ZERO hardcoded values — every value references a foundation token
+// Source of truth: Figma "Pagination" component (node 1044:863)
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-motion' as *;
+
+:root {
+  // --- Typography (defaults to md) ---
+  --pagination-font-size:       #{$font-size-12};      // Body/Small
+  --pagination-line-height:     #{$line-height-normal};
+  --pagination-font-weight:     #{$font-weight-regular};
+  --pagination-current-weight:  #{$font-weight-medium}; // current page number
+
+  // --- Size scale (sm / md / lg) ---
+  // Item (square) — matches row height as well.
+  --pagination-item-size-sm:    #{$space-20};
+  --pagination-item-size-md:    #{$space-24};
+  --pagination-item-size-lg:    #{$space-32};
+
+  --pagination-item-padding-x-sm: #{$space-4};
+  --pagination-item-padding-x-md: #{$space-6};
+  --pagination-item-padding-x-lg: #{$space-10};
+
+  --pagination-font-size-sm:    #{$font-size-11}; // caption / body-xs
+  --pagination-font-size-md:    #{$font-size-12}; // body-sm
+  --pagination-font-size-lg:    #{$font-size-14}; // body-base
+
+  --pagination-item-gap-sm:     #{$space-2};
+  --pagination-item-gap-md:     #{$space-2};
+  --pagination-item-gap-lg:     #{$space-4};
+
+  --pagination-chevron-size-sm: #{$icon-sm}; // 16 — tighter icon inside 20
+  --pagination-chevron-size-md: #{$icon-sm};
+  --pagination-chevron-size-lg: #{$icon-md};
+
+  // Default size (md) — referenced by base .gds-pagination / .gds-pagination__item
+  --pagination-item-size:       var(--pagination-item-size-md);
+  --pagination-item-min-width:  var(--pagination-item-size-md);
+  --pagination-item-padding-x:  var(--pagination-item-padding-x-md);
+  --pagination-item-radius:     #{$radius-pill}; // fully rounded pill for current
+  --pagination-item-gap:        var(--pagination-item-gap-md);
+
+  // --- Prev / Next (text label variant) ---
+  --pagination-nav-padding-x:   #{$space-8};
+  --pagination-nav-padding-y:   #{$space-2};
+  --pagination-nav-gap:         #{$space-4};    // icon ↔ label gap
+  --pagination-nav-radius:      #{$radius-m};
+
+  // --- Colors / default ---
+  --pagination-color:           var(--gds-color-text-tertiary);
+  --pagination-icon-color:      var(--gds-color-text-tertiary);
+
+  // --- Colors / hover ---
+  --pagination-hover-color:     var(--gds-color-text-primary);
+  --pagination-hover-bg:        var(--gds-color-bg-secondary);
+
+  // --- Colors / current (active page) ---
+  --pagination-current-color:   var(--gds-color-text-primary);
+  --pagination-current-bg:      var(--gds-color-bg-tertiary);
+
+  // --- Colors / disabled ---
+  --pagination-disabled-color:  var(--gds-color-text-disabled);
+  --pagination-disabled-opacity: #{$opacity-disabled};
+
+  // --- Focus ---
+  --pagination-focus-ring:       var(--gds-color-border-focus);
+  --pagination-focus-ring-width: #{$border-width-thick};
+  --pagination-focus-ring-offset: #{$space-2};
+
+  // --- Bar container (compact + full-width) ---
+  --pagination-bar-gap:         #{$space-16};   // section gap inside bar
+  --pagination-bar-height:      #{$space-32};   // compact bar row height
+  --pagination-bar-padding-x:   #{$space-16};
+  --pagination-bar-padding-y:   #{$space-6};
+
+  // --- Full-width bar (with "Viewing X of Y" summary) ---
+  --pagination-full-height:     #{$space-48};
+  --pagination-full-padding-x:  #{$space-16};
+  --pagination-full-bg:         var(--gds-color-bg-primary);
+  --pagination-full-border:     var(--gds-color-border-default);
+  --pagination-full-border-width: #{$border-width-default};
+  --pagination-full-radius:     #{$radius-m};
+
+  // --- Summary text ("Viewing 1 to 10 of 52 Items") ---
+  --pagination-summary-color:   var(--gds-color-text-tertiary);
+
+  // --- Page-size trigger ("10 Items per page ▾") ---
+  --pagination-select-color:    var(--gds-color-text-tertiary);
+  --pagination-select-gap:      #{$space-4};
+  --pagination-select-icon:     #{$icon-sm};
+
+  // --- Divider between sections inside the full bar ---
+  --pagination-divider-color:   var(--gds-color-border-default);
+  --pagination-divider-width:   #{$border-width-default};
+  --pagination-divider-height:  #{$space-20};
+
+  // --- Icon sizes (default = md) ---
+  --pagination-chevron-size:    var(--pagination-chevron-size-md);   // ‹ › « » glyphs
+  --pagination-ellipsis-size:   #{$icon-sm};
+
+  // --- Motion ---
+  --pagination-duration:        #{$duration-fast};
+  --pagination-ease:            #{$ease-default};
+}

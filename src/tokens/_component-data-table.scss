@@ -1,0 +1,150 @@
+// ============================================================================
+// Component Tokens / Data Table
+// Agent: Token Architect
+// Rule: ZERO hardcoded values — every value references foundation or semantic
+// ============================================================================
+
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-colors' as *;
+@use 'foundation-motion' as *;
+@use 'foundation-shadows' as *;
+
+// SCSS-only breakpoint (CSS @media can't use custom properties)
+$table-bp-mobile: 640px;
+
+:root {
+  // ---------------------------------------------------------------------------
+  // Container
+  // ---------------------------------------------------------------------------
+  --table-border-color:     var(--gds-color-border-subtle);
+  --table-border-width:     #{$border-width-default};
+  --table-border-radius:    #{$radius-l};
+  --table-bg:               var(--gds-color-bg-primary);
+  --table-font-family:      var(--gds-font-family-base);
+
+  // ---------------------------------------------------------------------------
+  // Header row
+  // ---------------------------------------------------------------------------
+  --table-header-height:       #{$space-32};
+  --table-header-bg:           var(--gds-color-bg-tertiary);
+  --table-header-color:        var(--gds-color-text-helper);
+  --table-header-font-size:    #{$font-size-12};
+  --table-header-font-weight:  #{$font-weight-semibold};
+  --table-header-line-height:  #{$line-height-normal};
+
+  // ---------------------------------------------------------------------------
+  // Body row
+  // ---------------------------------------------------------------------------
+  --table-row-height:          #{$space-40};
+  --table-row-bg:              var(--gds-color-bg-primary);
+  --table-row-color:           var(--gds-color-text-primary);
+  --table-row-font-size:       #{$font-size-14};
+  --table-row-font-weight:     #{$font-weight-regular};
+  --table-row-line-height:     #{$line-height-normal};
+  --table-row-border-color:    var(--gds-color-border-subtle);
+  --table-row-border-width:    #{$border-width-default};
+
+  // ---------------------------------------------------------------------------
+  // Card row (rich layout — each row is a visual card with shadow)
+  // ---------------------------------------------------------------------------
+  --table-card-gap:            #{$space-6};
+  --table-card-shadow:         #{$shadow-sm};
+  --table-card-header-shadow:  #{$shadow-xs};
+  --table-card-row-radius:     #{$radius-m};
+  --table-card-row-padding-y:  #{$space-6};
+  --table-card-entry-gap:      #{$space-12};
+  --table-card-title-size:     #{$font-size-14};
+  --table-card-title-weight:   #{$font-weight-regular};
+  --table-card-title-color:    var(--gds-color-text-primary);
+  --table-card-subtitle-size:  #{$font-size-12};
+  --table-card-subtitle-weight: #{$font-weight-regular};
+  --table-card-subtitle-color: var(--gds-color-text-secondary);
+  --table-card-image-size:     #{$space-40};
+  --table-card-image-radius:   #{$radius-s};
+
+  // ---------------------------------------------------------------------------
+  // Cell
+  // ---------------------------------------------------------------------------
+  --table-cell-padding-x:      #{$space-12};
+  --table-cell-padding-y:      #{$space-0};
+  --table-cell-gap:            #{$space-8};
+
+  // ---------------------------------------------------------------------------
+  // Checkbox cell
+  // ---------------------------------------------------------------------------
+  --table-checkbox-cell-width: #{$space-40};
+
+  // ---------------------------------------------------------------------------
+  // Action / overflow cell
+  // ---------------------------------------------------------------------------
+  --table-action-cell-width:   #{$space-40};
+  --table-action-icon-size:    #{$icon-sm};
+  --table-action-color:        var(--gds-color-text-tertiary);
+  --table-action-hover-color:  var(--gds-color-text-primary);
+
+  // ---------------------------------------------------------------------------
+  // Row states
+  // ---------------------------------------------------------------------------
+  --table-row-hover-bg:        var(--gds-color-bg-secondary);
+  --table-row-striped-bg:      var(--gds-color-bg-tertiary);
+  --table-row-selected-bg:     #{$color-blue-50};
+  --table-row-selected-border: var(--gds-color-action-primary);
+
+  // ---------------------------------------------------------------------------
+  // Sort indicator
+  // ---------------------------------------------------------------------------
+  --table-sort-icon-size:      #{$space-12};
+  --table-sort-icon-gap:       #{$space-4};
+  --table-sort-color:          var(--gds-color-text-tertiary);
+  --table-sort-active-color:   var(--gds-color-action-primary);
+
+  // ---------------------------------------------------------------------------
+  // Secondary text (date, label columns)
+  // ---------------------------------------------------------------------------
+  --table-text-secondary-color: var(--gds-color-text-secondary);
+  --table-text-secondary-size:  #{$font-size-12};
+
+  // ---------------------------------------------------------------------------
+  // Bulk actions toolbar
+  // ---------------------------------------------------------------------------
+  --table-toolbar-height:       #{$space-48};
+  --table-toolbar-bg:           var(--gds-color-action-primary);
+  --table-toolbar-color:        #{$color-neutral-0};
+  --table-toolbar-font-size:    #{$font-size-14};
+  --table-toolbar-font-weight:  #{$font-weight-medium};
+  --table-toolbar-padding-x:    #{$space-16};
+  --table-toolbar-radius:       #{$radius-m};
+  --table-toolbar-gap:          #{$space-8};
+  --table-toolbar-btn-color:    #{$color-neutral-0};
+  --table-toolbar-btn-hover-bg: rgba(#{$color-neutral-0}, 0.15);  // overlay on action-primary
+  --table-toolbar-divider:      rgba(#{$color-neutral-0}, 0.25);  // divider on action-primary
+  --table-toolbar-gap-bottom:   #{$space-8};
+
+  // ---------------------------------------------------------------------------
+  // Loading / skeleton
+  // ---------------------------------------------------------------------------
+  --table-skeleton-color:       var(--gds-color-bg-tertiary);
+  --table-skeleton-shine:       var(--gds-color-bg-secondary);
+  --table-skeleton-radius:      #{$radius-s};
+  --table-skeleton-height:      #{$space-12};
+  --table-skeleton-duration:    #{$duration-slow * 6};
+
+  // ---------------------------------------------------------------------------
+  // Motion
+  // ---------------------------------------------------------------------------
+  --table-transition-duration:  #{$duration-fast};
+  --table-transition-easing:    #{$ease-default};
+
+  // ---------------------------------------------------------------------------
+  // Scroll shadow (horizontal overflow)
+  // ---------------------------------------------------------------------------
+  --table-scroll-shadow:       #{$shadow-side-panel};
+
+  // ---------------------------------------------------------------------------
+  // Empty state
+  // ---------------------------------------------------------------------------
+  --table-empty-padding:       #{$space-48};
+  --table-empty-color:         var(--gds-color-text-tertiary);
+  --table-empty-font-size:     #{$font-size-14};
+}

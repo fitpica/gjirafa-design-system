@@ -1,0 +1,106 @@
+// ============================================================================
+// Component Tokens / Tabs
+// Maps foundation tokens → tabs-specific custom properties
+// ZERO hardcoded values — every value references a foundation token
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-motion' as *;
+
+:root {
+  // --- Shared (MD = default) ---
+  --tab-font-size:       #{$font-size-14};
+  --tab-font-weight:     #{$font-weight-medium};
+  --tab-line-height:     #{$line-height-normal};
+  --tab-icon-size:       #{$icon-lg};
+  --tab-status-size:     #{$space-8};
+  --tab-duration:        #{$duration-normal};
+  --tab-ease:            #{$ease-default};
+
+  // --- SM size overrides ---
+  --tab-sm-font-size:    #{$font-size-12};
+  --tab-sm-icon-size:    #{$icon-sm};
+  --tab-sm-status-size:  #{$space-6};
+
+  // --- Colors ---
+  --tab-color-default:   var(--gds-color-text-label);
+  --tab-color-hover:     var(--gds-color-text-primary);
+  --tab-color-active:    var(--gds-color-action-primary);
+  --tab-border-color:    var(--gds-color-border-default);
+  --tab-active-border:   var(--gds-color-action-primary);
+  --tab-status-bg:       var(--gds-color-error);
+
+  // --- Disabled ---
+  --tab-disabled-opacity: #{$opacity-disabled};
+  --tab-disabled-color:  var(--gds-color-text-disabled);
+
+  // --- Focus ---
+  --tab-focus-ring:      var(--gds-color-border-focus);
+  --tab-focus-offset:    var(--gds-color-bg-primary);
+
+  // --- Scroll fade ---
+  --tab-fade-width:      #{$space-32};
+
+  // --- Close button ---
+  --tab-close-size:      #{$icon-sm};
+  --tab-close-color:     var(--gds-color-text-helper);
+  --tab-close-hover:     var(--gds-color-text-primary);
+  --tab-close-hover-bg:  var(--gds-color-bg-tertiary);
+  --tab-close-radius:    #{$radius-s};
+
+  // --- Bordered / horizontal (MD) ---
+  --tab-bordered-height:       #{$space-40};
+  --tab-bordered-gap:          #{$space-32};
+  --tab-bordered-border-width: #{$border-width-default};
+  --tab-bordered-item-gap:     #{$space-8};
+
+  // --- Bordered / horizontal (SM) ---
+  --tab-bordered-sm-height:    #{$space-32};
+  --tab-bordered-sm-gap:       #{$space-24};
+  --tab-bordered-sm-item-gap:  #{$space-6};
+
+  // --- Vertical (MD) ---
+  --tab-vertical-width:         #{$space-160};
+  --tab-vertical-height:        #{$space-40};
+  --tab-vertical-gap:           #{$space-12};
+  --tab-vertical-padding-x:     #{$space-16};
+  --tab-vertical-padding-y:     #{$space-8};
+  --tab-vertical-item-gap:      #{$space-4};
+  --tab-vertical-active-bg:     var(--gds-color-bg-tertiary);
+  --tab-vertical-active-radius: #{$radius-s};
+
+  // --- Vertical (SM) ---
+  --tab-vertical-sm-height:     #{$space-32};
+  --tab-vertical-sm-gap:        #{$space-8};
+  --tab-vertical-sm-padding-x:  #{$space-12};
+  --tab-vertical-sm-padding-y:  #{$space-6};
+
+  // --- Filled (MD) ---
+  --tab-filled-padding-x:       #{$space-12};
+  --tab-filled-padding-y:       #{$space-6};
+  --tab-filled-gap:             #{$space-4};
+  --tab-filled-wrapper-bg:      var(--gds-color-bg-secondary);
+  --tab-filled-wrapper-radius:  #{$radius-l};
+  --tab-filled-wrapper-padding: #{$space-4};
+  --tab-filled-active-bg:       var(--gds-color-bg-primary);
+  --tab-filled-active-radius:   #{$radius-m};
+  --tab-filled-item-gap:        #{$space-8};
+
+  // --- Filled (SM) ---
+  --tab-filled-sm-padding-x:    #{$space-8};
+  --tab-filled-sm-padding-y:    #{$space-4};
+  --tab-filled-sm-item-gap:     #{$space-6};
+
+  // --- Card variant ---
+  --tab-card-bg:                transparent;
+  --tab-card-hover-bg:          var(--gds-color-bg-secondary);
+  --tab-card-active-bg:         var(--gds-color-bg-primary);
+  --tab-card-border-color:      var(--gds-color-border-default);
+  --tab-card-border-width:      #{$border-width-default};
+  --tab-card-radius:            #{$radius-m};
+  --tab-card-padding-x:         #{$space-16};
+  --tab-card-padding-y:         #{$space-8};
+  --tab-card-gap:               #{$space-4};
+}

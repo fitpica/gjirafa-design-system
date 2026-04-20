@@ -209,7 +209,9 @@
     border: var(--avatar-group-border-width) solid var(--avatar-group-border);
     box-sizing: content-box;
 
-    &:not(:last-child) {
+    // row-reverse: :first-child is visually rightmost (front of stack)
+    // so all EXCEPT :first-child need negative margin to overlap
+    &:not(:first-child) {
       margin-right: var(--avatar-group-overlap);
     }
   }
@@ -232,7 +234,10 @@
   width: var(--avatar-size-32);
   height: var(--avatar-size-32);
   font-size: var(--avatar-font-32);
-  margin-right: var(--avatar-group-overlap);
+  // Only overlap when counter is NOT the first child (not visually rightmost in row-reverse)
+  &:not(:first-child) {
+    margin-right: var(--avatar-group-overlap);
+  }
 }
 
 // ============================================================================

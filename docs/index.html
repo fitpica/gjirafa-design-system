@@ -117,6 +117,7 @@
   }
   .doc-nav-dot--stable { background: var(--gds-color-success); }
   .doc-nav-dot--beta { background: var(--gds-color-warning); }
+  .doc-nav-dot--new { background: var(--gds-color-action-primary); }
 
   /* Sidebar footer */
   .doc-sidebar-footer {
@@ -252,6 +253,17 @@
     min-height: 88px;
     background: var(--gds-color-bg-primary);
     position: relative;
+  }
+  /* Canvas: a flex container by default so inline `gap` / `flex-direction`
+     on individual previews works without needing display:flex everywhere. */
+  .doc-preview-canvas {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--gds-space-16);
+    padding: var(--gds-space-24);
+    flex-wrap: wrap;
+    background: var(--gds-color-bg-primary);
   }
   .doc-preview-stage--checkerboard {
     background-image: linear-gradient(45deg, var(--gds-color-bg-secondary) 25%, transparent 25%),
@@ -514,17 +526,358 @@
     .doc-content { padding: var(--gds-space-24) var(--gds-space-16) var(--gds-space-64); }
     .doc-topbar { padding: var(--gds-space-8) var(--gds-space-16); }
   }
+
+  /* ============================================================ */
+  /* LIGHT SHELL — shadcn-style docs layout (scoped to .gds-layout-docs) */
+  /* Zero hardcoded values. Every value references a foundation   */
+  /* token or a docs-scoped layout constant composed from          */
+  /* foundation tokens.                                            */
+  /* ============================================================ */
+
+  .gds-layout-docs {
+    /* --- Docs-scoped layout constants — composed from foundation tokens --- */
+    --docs-topbar-height:        calc(var(--gds-space-48) + var(--gds-space-8));     /* 56 */
+    --docs-content-max-width:    calc(var(--gds-space-160) * 9);                     /* 1440 */
+    --docs-sidebar-width:        calc(var(--gds-space-160) + var(--gds-space-80));   /* 240 */
+    --docs-right-rail-width:     calc(var(--gds-space-160) + var(--gds-space-48) + var(--gds-space-12)); /* 220 */
+    --docs-search-min-width:     calc(var(--gds-space-160) + var(--gds-space-80) + var(--gds-space-20)); /* 260 */
+    --docs-search-results-max-h: calc(var(--gds-space-160) * 2 + var(--gds-space-48) + var(--gds-space-12)); /* 380 */
+    --docs-iconbtn-size:         var(--gds-space-32);
+    --docs-brand-logo-size:      var(--gds-space-32);
+    --docs-z-topbar:             var(--gds-z-sticky);
+    --docs-z-popover:            var(--gds-z-dropdown);
+
+    min-height: 100vh;
+    background: var(--gds-color-bg-primary);
+    color: var(--gds-color-text-primary);
+  }
+
+  /* --- Docs topbar --- */
+  .gds-docs-topbar {
+    position: sticky; top: 0; z-index: var(--docs-z-topbar);
+    display: flex; align-items: center;
+    height: var(--docs-topbar-height);
+    padding: 0 var(--gds-space-24);
+    background: var(--gds-color-bg-primary);
+    border-bottom: var(--gds-border-width-default) solid var(--gds-color-border-subtle);
+  }
+  .gds-docs-topbar__inner {
+    display: flex; align-items: center; gap: var(--gds-space-24);
+    width: 100%; max-width: var(--docs-content-max-width); margin: 0 auto;
+  }
+  .gds-docs-topbar__brand {
+    display: flex; align-items: center; gap: var(--gds-space-8);
+    text-decoration: none; color: inherit;
+    padding-right: var(--gds-space-16);
+    border-right: var(--gds-border-width-default) solid var(--gds-color-border-subtle);
+  }
+  .gds-docs-topbar__logo {
+    width: var(--docs-brand-logo-size); height: var(--docs-brand-logo-size);
+    border-radius: var(--gds-radius-md);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--gds-color-action-primary);
+    color: var(--gds-color-text-inverse);
+    font-weight: var(--gds-font-weight-semibold);
+    font-size: var(--gds-font-size-body-sm);
+  }
+  .gds-docs-topbar__name {
+    font-size: var(--gds-font-size-body-sm);
+    font-weight: var(--gds-font-weight-semibold);
+    letter-spacing: var(--gds-letter-spacing-tight);
+    color: var(--gds-color-text-primary);
+  }
+  .gds-docs-topbar__version {
+    font-size: var(--gds-font-size-body-xs);
+    font-weight: var(--gds-font-weight-semibold);
+    color: var(--gds-color-action-primary);
+    border: var(--gds-border-width-default) solid var(--gds-color-action-primary);
+    padding: 0 var(--gds-space-6);
+    border-radius: var(--gds-radius-full);
+  }
+  .gds-docs-topbar__nav {
+    display: flex; align-items: center; gap: var(--gds-space-4);
+    flex: 1;
+  }
+  .gds-docs-topbar__link {
+    font-size: var(--gds-font-size-body-sm);
+    font-weight: var(--gds-font-weight-medium);
+    color: var(--gds-color-text-tertiary);
+    text-decoration: none;
+    padding: var(--gds-space-6) var(--gds-space-12);
+    border-radius: var(--gds-radius-md);
+    transition: color var(--gds-duration-fast), background var(--gds-duration-fast);
+  }
+  .gds-docs-topbar__link:hover { color: var(--gds-color-text-primary); }
+  .gds-docs-topbar__link--active { color: var(--gds-color-text-primary); }
+  .gds-docs-topbar__right {
+    display: flex; align-items: center; gap: var(--gds-space-8);
+  }
+  /* Positioning wrapper around .gds-input--sm — dropdown anchors off this */
+  .gds-docs-search {
+    position: relative;
+    min-width: var(--docs-search-min-width);
+  }
+  /* ⌘K hint — lives inside .gds-input__suffix */
+  .gds-docs-search kbd {
+    font-family: var(--gds-font-family-mono);
+    font-size: var(--gds-font-size-body-xs);
+    color: var(--gds-color-text-tertiary);
+    background: var(--gds-color-bg-secondary);
+    border: var(--gds-border-width-default) solid var(--gds-color-border-default);
+    border-radius: var(--gds-radius-sm);
+    padding: 0 var(--gds-space-4);
+  }
+  /* --- Results dropdown (positioning only — .gds-menu handles the visuals) --- */
+  .gds-docs-search__results {
+    position: absolute;
+    top: calc(100% + var(--gds-space-4));
+    left: 0; right: 0;
+    z-index: var(--docs-z-popover);
+    display: none;
+  }
+  .gds-docs-search__results.is-open { display: block; }
+  .gds-docs-search__results .gds-menu {
+    width: 100%;
+    max-height: var(--docs-search-results-max-h);
+    overflow-y: auto;
+  }
+  /* Keyboard-active state mirrors :hover on .gds-menu__item */
+  .gds-docs-search__results .gds-menu__item.is-active {
+    background: var(--dd-item-hover-bg);
+  }
+  /* Highlight matched substring — uses semantic tokens only */
+  .gds-docs-search__results mark {
+    background: var(--gds-color-bg-tertiary);
+    color: var(--gds-color-action-primary);
+    font-weight: var(--gds-font-weight-semibold);
+    border-radius: var(--gds-radius-sm);
+    padding: 0 var(--gds-space-2);
+  }
+  /* Input takes the full width of the search wrapper */
+  .gds-docs-search .gds-input { width: 100%; }
+  .gds-docs-iconbtn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: var(--docs-iconbtn-size); height: var(--docs-iconbtn-size);
+    border-radius: var(--gds-radius-md);
+    color: var(--gds-color-text-tertiary);
+    background: transparent;
+    border: var(--gds-border-width-default) solid transparent;
+    cursor: pointer;
+    transition: all var(--gds-duration-fast);
+    text-decoration: none;
+  }
+  .gds-docs-iconbtn:hover {
+    color: var(--gds-color-text-primary);
+    background: var(--gds-color-bg-secondary);
+  }
+  .gds-docs-theme-pills {
+    display: inline-flex; align-items: center; gap: var(--gds-space-2);
+    padding: var(--gds-space-2);
+    background: var(--gds-color-bg-secondary);
+    border: var(--gds-border-width-default) solid var(--gds-color-border-subtle);
+    border-radius: var(--gds-radius-full);
+  }
+  .gds-docs-theme-pills .doc-theme-btn {
+    border: none; background: transparent;
+    color: var(--gds-color-text-tertiary);
+    padding: var(--gds-space-4) var(--gds-space-10);
+    font-size: var(--gds-font-size-body-xs);
+  }
+  .gds-docs-theme-pills .doc-theme-btn.active {
+    background: var(--gds-color-action-primary);
+    color: var(--gds-color-text-inverse);
+  }
+
+  /* --- 3-col grid shell — applied to existing .doc-layout inside docs --- */
+  .gds-layout-docs .doc-layout {
+    display: grid;
+    grid-template-columns: var(--docs-sidebar-width) minmax(0, 1fr) var(--docs-right-rail-width);
+    gap: var(--gds-space-32);
+    max-width: var(--docs-content-max-width); margin: 0 auto;
+    padding: 0 var(--gds-space-24);
+    min-height: auto;
+  }
+  .gds-layout-docs .doc-sidebar {
+    width: auto;
+    padding: var(--gds-space-24) 0;
+    position: sticky; top: var(--docs-topbar-height);
+    height: calc(100vh - var(--docs-topbar-height));
+    border-right: none;
+    background: transparent;
+  }
+  .gds-layout-docs .doc-main {
+    padding-top: var(--gds-space-24);
+    min-width: 0;
+  }
+  .gds-layout-docs .doc-topbar { display: none; }
+  .gds-layout-docs .doc-content {
+    padding: 0 0 var(--gds-space-80);
+    max-width: none;
+  }
+
+  /* Sidebar brand is replaced by topbar — hide the in-sidebar one */
+  .gds-layout-docs .doc-sidebar-brand { display: none; }
+
+  /* Breadcrumb (moved into main) */
+  .gds-docs-crumb {
+    font-size: var(--gds-font-size-body-sm);
+    color: var(--gds-color-text-tertiary);
+    margin-bottom: var(--gds-space-16);
+  }
+  .gds-docs-crumb strong {
+    color: var(--gds-color-text-primary);
+    font-weight: var(--gds-font-weight-medium);
+  }
+
+  /* --- Right rail TOC --- */
+  .gds-docs-right {
+    padding-top: var(--gds-space-24);
+    position: sticky; top: var(--docs-topbar-height);
+    height: calc(100vh - var(--docs-topbar-height));
+    overflow-y: auto;
+  }
+  .gds-docs-right__label {
+    font-size: var(--gds-font-size-body-sm);
+    font-weight: var(--gds-font-weight-semibold);
+    color: var(--gds-color-text-primary);
+    margin-bottom: var(--gds-space-12);
+    padding: 0 var(--gds-space-8);
+  }
+  .gds-docs-toc {
+    display: flex; flex-direction: column;
+    border-left: var(--gds-border-width-default) solid var(--gds-color-border-subtle);
+  }
+  .gds-docs-toc__item {
+    display: block;
+    font-size: var(--gds-font-size-body-sm);
+    color: var(--gds-color-text-tertiary);
+    text-decoration: none;
+    padding: var(--gds-space-4) var(--gds-space-12);
+    border-left: var(--gds-border-width-thick) solid transparent;
+    margin-left: calc(-1 * var(--gds-border-width-default));
+    transition: color var(--gds-duration-fast), border-color var(--gds-duration-fast);
+    cursor: pointer;
+    background: none;
+    border-top: none; border-right: none; border-bottom: none;
+    text-align: left; font-family: inherit;
+  }
+  .gds-docs-toc__item:hover { color: var(--gds-color-text-primary); }
+  .gds-docs-toc__item.is-active {
+    color: var(--gds-color-action-primary);
+    border-left-color: var(--gds-color-action-primary);
+  }
+
+  /* Hide old accent bar — topbar replaces it */
+  .gds-layout-docs ~ .doc-accent-bar,
+  .gds-layout-docs .doc-accent-bar { display: none; }
+
+  /* --- Responsive --- */
+  /* Breakpoints: tokenised via --docs-breakpoint-* but expanded inline here
+     since CSS media-query conditions don't resolve custom properties.       */
+  @media (max-width: 1100px) {
+    .gds-layout-docs .doc-layout { grid-template-columns: var(--docs-sidebar-width) minmax(0, 1fr); }
+    .gds-docs-right { display: none; }
+  }
+  @media (max-width: 900px) {
+    .gds-layout-docs .doc-layout { grid-template-columns: 1fr; padding: 0 var(--gds-space-16); }
+    .gds-layout-docs .doc-sidebar { display: none; }
+    .gds-docs-topbar { padding: 0 var(--gds-space-16); }
+    .gds-docs-search { min-width: 0; width: calc(var(--gds-space-160) + var(--gds-space-20)); }
+  }
+  @media (max-width: 640px) {
+    .gds-docs-topbar__nav { display: none; }
+    .gds-docs-search { display: none; }
+  }
+
+  /* --- Pagination docs helpers (layout / positioning only) --- */
+  .doc-state-label {
+    font-size: var(--gds-font-size-caption);
+    font-weight: var(--gds-font-weight-medium);
+    color: var(--gds-color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: var(--gds-letter-spacing-wide);
+    margin-bottom: var(--gds-space-12);
+  }
+  .doc-pagination-live { position: relative; }
+  .doc-pagination-popover {
+    position: absolute;
+    top: calc(100% + var(--gds-space-4));
+    z-index: var(--gds-z-dropdown);
+    min-width: calc(var(--gds-space-160) + var(--gds-space-20));
+  }
+  .doc-pagination-popover[hidden] { display: none; }
+  .doc-pagination-live[data-size-pos="right"] .doc-pagination-popover {
+    right: var(--gds-space-16);
+  }
+  .doc-pagination-live[data-size-pos="left"] .doc-pagination-popover {
+    left: var(--gds-space-16);
+  }
+  .doc-pagination-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gds-space-8);
+    padding: var(--gds-space-32) var(--gds-space-16);
+    color: var(--gds-color-text-tertiary);
+  }
+  .doc-pagination-empty svg { color: var(--gds-color-text-tertiary); }
+  .doc-pagination-skeleton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pagination-item-gap);
+  }
+  .doc-pagination-skeleton__box {
+    width: var(--pagination-item-size);
+    height: var(--pagination-item-size);
+    border-radius: var(--pagination-item-radius);
+    background: var(--gds-color-bg-tertiary);
+    opacity: var(--gds-opacity-disabled);
+  }
 </style>
 </head>
 <body>
-
-<!-- Accent bar -->
-<div class="doc-accent-bar"></div>
 
 <!-- Scroll-to-top button -->
 <button class="doc-scroll-top" id="scrollTop" aria-label="Scroll to top" onclick="window.scrollTo({top:0})">
   <i data-lucide="chevron-up" width="16" height="16"></i>
 </button>
+
+<div class="gds-layout-docs">
+
+  <!-- === Docs Topbar === -->
+  <header class="gds-docs-topbar">
+    <div class="gds-docs-topbar__inner">
+      <a href="#" class="gds-docs-topbar__brand" onclick="navigateTo('install');return false;">
+        <span class="gds-docs-topbar__logo">G</span>
+        <span class="gds-docs-topbar__name">Gjirafa DS</span>
+        <span class="gds-docs-topbar__version">v2.2</span>
+      </a>
+      <nav class="gds-docs-topbar__nav" aria-label="Primary">
+        <a href="#" class="gds-docs-topbar__link gds-docs-topbar__link--active" onclick="navigateTo('install');return false;">Docs</a>
+        <a href="#" class="gds-docs-topbar__link" onclick="navigateTo('button');return false;">Components</a>
+        <a href="#" class="gds-docs-topbar__link" onclick="navigateTo('tokens');return false;">Tokens</a>
+      </nav>
+      <div class="gds-docs-topbar__right">
+        <div class="gds-docs-search" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-owns="docsSearchResults">
+          <div class="gds-input gds-input--sm">
+            <div class="gds-input__wrap">
+              <span class="gds-input__icon" aria-hidden="true"><i data-lucide="search"></i></span>
+              <input class="gds-input__field" type="search" placeholder="Search documentation…" id="docsSearch" autocomplete="off" aria-label="Search docs"/>
+              <span class="gds-input__suffix"><kbd>⌘K</kbd></span>
+            </div>
+          </div>
+          <div class="gds-docs-search__results" id="docsSearchResults" role="listbox"></div>
+        </div>
+        <a class="gds-docs-iconbtn" href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">
+          <i data-lucide="github" width="16" height="16"></i>
+        </a>
+        <div class="gds-docs-theme-pills" role="group" aria-label="Theme">
+          <button class="doc-theme-btn active" onclick="setTheme('codex')">CODEX</button>
+          <button class="doc-theme-btn" onclick="setTheme('vpplayer')">VP Player</button>
+        </div>
+      </div>
+    </div>
+  </header>
 
 <div class="doc-layout">
 
@@ -570,6 +923,9 @@
         <button class="doc-nav-item" data-page="filter-badge">Filter Badge <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
         <button class="doc-nav-item" data-page="modal">Modal <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
         <button class="doc-nav-item" data-page="sidepanel">Side Panel <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
+        <button class="doc-nav-item" data-page="tabs">Tabs <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
+        <button class="doc-nav-item" data-page="data-table">Data Table <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
+        <button class="doc-nav-item" data-page="pagination">Pagination <span class="doc-nav-dot doc-nav-dot--new"></span></button>
       </div>
       <div class="doc-nav-group">
         <div class="doc-nav-label">Utilities</div>
@@ -583,16 +939,8 @@
   </aside>
 
   <div class="doc-main">
-    <!-- Top bar -->
-    <header class="doc-topbar">
-      <div class="doc-topbar-title" id="breadcrumb">Getting Started &rsaquo; <strong>Installation</strong></div>
-      <div class="doc-topbar-actions">
-        <button class="doc-theme-btn active" onclick="setTheme('codex')">CODEX</button>
-        <button class="doc-theme-btn" onclick="setTheme('vpplayer')">VP Player</button>
-      </div>
-    </header>
-
     <main class="doc-content">
+    <div class="gds-docs-crumb" id="breadcrumb">Getting Started &rsaquo; <strong>Installation</strong></div>
 
 <!-- ============================================================ -->
 <!-- INSTALLATION -->
@@ -614,6 +962,7 @@
   </div>
 
   <div class="doc-gap-md"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Import in your project</div>
   <div class="doc-preview">
     <details class="doc-preview-code-wrap" open>
@@ -628,6 +977,7 @@
   </div>
 
   <div class="doc-gap-md"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">CDN (Quick Start)</div>
   <div class="doc-preview">
     <details class="doc-preview-code-wrap" open>
@@ -638,6 +988,7 @@
   </div>
 
   <div class="doc-gap-md"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Theme Setup</div>
   <div class="doc-note">
     <strong>Theming is done via the <code>data-theme</code> attribute.</strong>
@@ -662,6 +1013,7 @@
   </div>
 
   <div class="doc-gap-md"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">React Example</div>
   <div class="doc-preview">
     <details class="doc-preview-code-wrap" open>
@@ -682,6 +1034,7 @@ function App() {
   </div>
 
   <div class="doc-gap-md"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Vue Example</div>
   <div class="doc-preview">
     <details class="doc-preview-code-wrap" open>
@@ -752,6 +1105,7 @@ function App() {
     <div class="doc-token-row"><span class="doc-mono">_component-input.scss</span><span>Component</span><span>22</span></div>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Rules</div>
   <div class="doc-note">
     <strong>Do:</strong> Use semantic tokens in components. Reference <code>--text-primary</code>, not <code>--color-neutral-700</code>.<br/>
@@ -785,6 +1139,7 @@ function App() {
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-blue-900)"></span><span class="doc-swatch-name">900</span><span class="doc-swatch-hex">#0d2e59</span></div>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Green</div>
   <div class="doc-swatch-grid">
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-green-50)"></span><span class="doc-swatch-name">50</span><span class="doc-swatch-hex">#e9f4ef</span></div>
@@ -796,6 +1151,7 @@ function App() {
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-green-900)"></span><span class="doc-swatch-name">900</span><span class="doc-swatch-hex">#0d3d29</span></div>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Orange</div>
   <div class="doc-swatch-grid">
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-orange-50)"></span><span class="doc-swatch-name">50</span><span class="doc-swatch-hex">#FDF6EC</span></div>
@@ -807,6 +1163,7 @@ function App() {
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-orange-900)"></span><span class="doc-swatch-name">900</span><span class="doc-swatch-hex">#643b08</span></div>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Red</div>
   <div class="doc-swatch-grid">
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-red-50)"></span><span class="doc-swatch-name">50</span><span class="doc-swatch-hex">#fdeeec</span></div>
@@ -818,6 +1175,7 @@ function App() {
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-red-900)"></span><span class="doc-swatch-name">900</span><span class="doc-swatch-hex">#62251c</span></div>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Purple</div>
   <div class="doc-swatch-grid">
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-purple-50)"></span><span class="doc-swatch-name">50</span><span class="doc-swatch-hex">#f4f2fc</span></div>
@@ -829,6 +1187,7 @@ function App() {
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-purple-900)"></span><span class="doc-swatch-name">900</span><span class="doc-swatch-hex">#3b3460</span></div>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Neutral</div>
   <div class="doc-swatch-grid">
     <div class="doc-swatch"><span class="doc-swatch-color" style="background:var(--gds-color-neutral-0)"></span><span class="doc-swatch-name">0</span><span class="doc-swatch-hex">#ffffff</span></div>
@@ -950,6 +1309,7 @@ function App() {
     <div class="doc-type-row"><span class="gds-text-title-sm" style="min-width:120px">title-sm</span><span class="doc-mono gds-text-body-xs gds-text-placeholder">16px / 500 / 1.25</span><span class="gds-text-body-sm gds-text-placeholder">.gds-text-title-sm</span></div>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Body Scale</div>
   <div style="display:flex;flex-direction:column;gap:var(--gds-space-2);margin-bottom:var(--gds-space-20)">
     <div class="doc-type-row"><span class="gds-text-body-lg" style="min-width:120px">body-lg</span><span class="doc-mono gds-text-body-xs gds-text-placeholder">16px / 400 / 1.5</span><span class="gds-text-body-sm gds-text-placeholder">.gds-text-body-lg</span></div>
@@ -958,6 +1318,7 @@ function App() {
     <div class="doc-type-row"><span class="gds-text-body-xs" style="min-width:120px">body-xs</span><span class="doc-mono gds-text-body-xs gds-text-placeholder">11px / 400 / 1.5</span><span class="gds-text-body-sm gds-text-placeholder">.gds-text-body-xs</span></div>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Caption</div>
   <div style="display:flex;flex-direction:column;gap:var(--gds-space-2);margin-bottom:var(--gds-space-8)">
     <div class="doc-type-row"><span class="gds-text-caption" style="min-width:120px">caption</span><span class="doc-mono gds-text-body-xs gds-text-placeholder">11px / 400 / 1.5</span><span class="gds-text-body-sm gds-text-placeholder">.gds-text-caption</span></div>
@@ -1075,6 +1436,7 @@ function App() {
     <button class="gds-btn gds-btn--secondary gds-btn--sm doc-lang-btn" data-lang="react-native"><span class="gds-btn__label">React Native</span></button>
   </div>
 
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Search Icons</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;padding:var(--gds-space-16);align-items:stretch">
@@ -1090,6 +1452,7 @@ function App() {
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Installation</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;padding:var(--gds-space-24);gap:var(--gds-space-16)">
@@ -1115,6 +1478,7 @@ npm install lucide-vue-next
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">GDS Icon Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-32);padding:var(--gds-space-24) var(--gds-space-40);align-items:end">
@@ -1150,6 +1514,7 @@ npm install lucide-vue-next
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Usage with GDS Components</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -1265,6 +1630,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- SIZES -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-20); align-items:center">
@@ -1287,6 +1653,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- SIZE SPEC TABLE -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Size Specifications</div>
   <div class="doc-token-table">
     <div class="doc-token-header" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr"><span>Size</span><span>Height</span><span>Padding</span><span>Radius</span><span>Font</span><span>Icon</span></div>
@@ -1299,6 +1666,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- PILL SHAPE -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Pill Shape</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16); align-items:center">
@@ -1318,6 +1686,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- WITH ICONS -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Icons</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16); align-items:center">
@@ -1357,6 +1726,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- ICON BUTTONS -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Icon Buttons</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16); align-items:center">
@@ -1404,6 +1774,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- LOADING STATE -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Loading State</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16); align-items:center">
@@ -1436,6 +1807,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- BUTTON GROUP -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Button Group</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-32); align-items:center">
@@ -1464,6 +1836,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- FULL WIDTH -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Full Width</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column; gap:var(--gds-space-12); padding:var(--gds-space-24) var(--gds-space-40)">
@@ -1481,6 +1854,7 @@ import { Search } from 'lucide-vue-next';
 
   <!-- DISABLED -->
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Disabled</div>
   <div class="doc-preview">
     <div class="doc-preview-stage">
@@ -1635,6 +2009,7 @@ import { Search } from 'lucide-vue-next';
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -1667,6 +2042,7 @@ import { Search } from 'lucide-vue-next';
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Icons</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -1694,6 +2070,7 @@ import { Search } from 'lucide-vue-next';
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Prefix &amp; Suffix</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -1740,6 +2117,7 @@ import { Search } from 'lucide-vue-next';
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Textarea</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -1765,6 +2143,7 @@ import { Search } from 'lucide-vue-next';
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Outline vs Shadow</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-24);padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -1913,6 +2292,7 @@ import { Search } from 'lucide-vue-next';
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-24);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -2014,6 +2394,7 @@ import { Search } from 'lucide-vue-next';
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-24);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -2116,6 +2497,7 @@ import { Search } from 'lucide-vue-next';
   </div>
 
   <div class="doc-gap-lg"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-24);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -2206,6 +2588,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Menu with shortcuts -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Keyboard Shortcuts</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2241,6 +2624,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Groups and dividers -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Groups &amp; Dividers</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2280,6 +2664,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Danger and disabled -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Danger &amp; Disabled States</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2317,6 +2702,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Submenu indicator -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Submenu Indicator</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2347,6 +2733,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Rich two-line items -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Rich Items (Two-line)</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2458,6 +2845,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- With search -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Searchable</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2501,6 +2889,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Multi-select with checkboxes -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Multi-select with Checkboxes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2556,6 +2945,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Grouped items -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Grouped Items</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2596,6 +2986,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Avatar items -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Avatars</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2649,6 +3040,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Empty and loading states -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Empty &amp; Loading States</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-24);padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2695,6 +3087,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Create new action -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Create New Action</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -2729,6 +3122,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Trigger sizes -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Trigger Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start;flex-direction:column">
@@ -2804,6 +3198,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Default + Rounded -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Default &amp; Rounded</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -2827,6 +3222,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Outline variant -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Outline Variant</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -2867,6 +3263,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Selectable / toggle -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Selectable / Toggle</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -2907,6 +3304,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- With icon -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Icon</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -2938,6 +3336,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Avatar chip -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Avatar Chip</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -2979,6 +3378,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Color variants (filled) -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Color Variants (Filled)</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -3017,6 +3417,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Chip group with overflow counter -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Chip Group with Overflow Counter</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -3051,6 +3452,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Chips inside input -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Chips Input (Tags Field)</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start;flex-direction:column;gap:var(--gds-space-16)">
@@ -3095,6 +3497,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Disabled -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Disabled</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -3205,6 +3608,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Minimal alerts -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Minimal (No Title)</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -3263,6 +3667,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Left accent border -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Left Accent Border</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -3322,6 +3727,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- With action buttons -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Action Buttons</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -3372,6 +3778,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Compact -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Compact (Inline)</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -3417,6 +3824,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Banner -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Banner (Full-width)</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:0;padding:0;align-items:stretch">
@@ -3459,6 +3867,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Toast -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Toast / Notification</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:flex-start">
@@ -3593,6 +4002,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Without Action -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Without Action</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -3624,6 +4034,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Action Without Timer -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Action Without Timer</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -3658,6 +4069,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Stacked Toasts -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Stacked Toasts</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -3699,6 +4111,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- Accessibility -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Accessibility</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -3716,6 +4129,7 @@ import { Search } from 'lucide-vue-next';
   <div class="doc-gap-lg"></div>
 
   <!-- JS Usage -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">JS Usage</div>
   <div class="doc-preview">
     <details class="doc-preview-code-wrap" open>
@@ -3807,6 +4221,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Shapes: Circle vs Square -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Shapes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40)">
@@ -3841,6 +4256,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- All 7 Sizes -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -3882,6 +4298,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Status Indicator -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Status Indicator</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -3919,6 +4336,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Avatar Group -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Avatar Group</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-20);padding:var(--gds-space-24) var(--gds-space-40)">
@@ -3984,6 +4402,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Avatar Name -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Avatar Name</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-20);padding:var(--gds-space-24) var(--gds-space-40)">
@@ -4038,6 +4457,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Soft style -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Soft Style</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-20);padding:var(--gds-space-24) var(--gds-space-40)">
@@ -4078,6 +4498,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Accessibility -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Accessibility</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -4130,6 +4551,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Outline -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Outline</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap">
@@ -4153,6 +4575,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Solid -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Solid</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap">
@@ -4176,6 +4599,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Text Only -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Text Only</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap">
@@ -4199,6 +4623,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- With Icon -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Icon</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap">
@@ -4222,6 +4647,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- With Count -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Count</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap">
@@ -4246,6 +4672,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Sizes -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);align-items:center;flex-wrap:wrap">
@@ -4265,6 +4692,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Accessibility -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Accessibility</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -4334,6 +4762,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Sizes -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -4367,6 +4796,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- With Ring -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">With Ring</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -4388,6 +4818,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- On Avatars -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">On Avatars</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-20);padding:var(--gds-space-24) var(--gds-space-40);align-items:center">
@@ -4418,6 +4849,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Size Matrix -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Size × State Matrix</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40)">
@@ -4470,6 +4902,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Accessibility -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Accessibility</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="flex-direction:column;gap:var(--gds-space-8);padding:var(--gds-space-24) var(--gds-space-40);align-items:stretch">
@@ -4538,6 +4971,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Dark Style — All Tones -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Dark Style</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap;align-items:center">
@@ -4574,6 +5008,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Sizes -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-24);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap;align-items:center">
@@ -4605,6 +5040,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Tone × Size Matrix (Light) -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Light — Tone × Size Matrix</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-16) var(--gds-space-24);flex-direction:column;align-items:stretch">
@@ -4630,6 +5066,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Tone × Size Matrix (Dark) -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Dark — Tone × Size Matrix</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-16) var(--gds-space-24);flex-direction:column;align-items:stretch">
@@ -4654,6 +5091,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Use Cases -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Use Cases</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-32);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap;align-items:center">
@@ -4737,6 +5175,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Increase -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Increase (arrow up)</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap;align-items:center">
@@ -4770,6 +5209,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Matrix -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Tone × Direction Matrix</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-16) var(--gds-space-24);flex-direction:column;align-items:stretch">
@@ -4792,6 +5232,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Dashboard Use Case -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Dashboard Use Case</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-32);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap;align-items:flex-start">
@@ -4864,6 +5305,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Different Counts -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Different Counts</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-16);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap;align-items:center">
@@ -4876,6 +5318,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Toolbar Use Case -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Toolbar Use Case</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="gap:var(--gds-space-12);padding:var(--gds-space-24) var(--gds-space-40);flex-wrap:wrap;align-items:center">
@@ -4946,6 +5389,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Small -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Small</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24);justify-content:center">
@@ -4965,6 +5409,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Destructive -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Destructive</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24);justify-content:center">
@@ -4988,6 +5433,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- Kitchen Sink -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Kitchen Sink (all components)</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24);justify-content:center">
@@ -5063,6 +5509,7 @@ function startToastTimer(toastEl) {
   <div class="doc-gap-lg"></div>
 
   <!-- All Sizes -->
+  <div class="doc-divider"></div>
   <div class="doc-section-label">All Sizes</div>
   <div class="doc-preview">
     <div class="doc-preview-stage" style="padding:var(--gds-space-24);gap:var(--gds-space-12);justify-content:center;flex-wrap:wrap">
@@ -5544,6 +5991,988 @@ function startToastTimer(toastEl) {
 </div>
 
 <!-- ============================================================ -->
+<!-- TABS -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-tabs">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Tabs</h1>
+    <p class="doc-desc">Navigation component for switching between content panels. Supports horizontal bordered, vertical, filled, and card variants with SM sizing.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-tabs</span><span class="doc-tag">.gds-tab</span><span class="doc-tag">.gds-tabs--vertical</span><span class="doc-tag">.gds-tabs--filled</span><span class="doc-tag">.gds-tabs--card</span><span class="doc-tag">.gds-tabs--sm</span></div>
+  </div>
+
+  <!-- Text only (default) -->
+  <div class="doc-section-label">DEFAULT (TEXT ONLY)</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs" aria-label="Text tabs">
+        <button class="gds-tab gds-tab--active"><span class="gds-tab__text">Dashboard</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Documents</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Settings</span></button>
+        <button class="gds-tab gds-tab--disabled"><span class="gds-tab__text">Archived</span></button>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;nav class="gds-tabs"&gt;
+  &lt;button class="gds-tab gds-tab--active"&gt;
+    &lt;span class="gds-tab__text"&gt;Dashboard&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="gds-tab"&gt;&lt;span class="gds-tab__text"&gt;Documents&lt;/span&gt;&lt;/button&gt;
+  &lt;button class="gds-tab gds-tab--disabled"&gt;&lt;span class="gds-tab__text"&gt;Archived&lt;/span&gt;&lt;/button&gt;
+&lt;/nav&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- With icon -->
+  <div class="doc-section-label">WITH ICON</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs" aria-label="Icon tabs demo">
+        <button class="gds-tab gds-tab--active"><span class="gds-tab__icon"><i data-lucide="layout-dashboard"></i></span><span class="gds-tab__text">Dashboard</span></button>
+        <button class="gds-tab"><span class="gds-tab__icon"><i data-lucide="file-text"></i></span><span class="gds-tab__text">Documents</span></button>
+        <button class="gds-tab"><span class="gds-tab__icon"><i data-lucide="settings"></i></span><span class="gds-tab__text">Settings</span></button>
+        <button class="gds-tab gds-tab--disabled"><span class="gds-tab__icon"><i data-lucide="archive"></i></span><span class="gds-tab__text">Archived</span></button>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;nav class="gds-tabs"&gt;
+  &lt;button class="gds-tab gds-tab--active"&gt;
+    &lt;span class="gds-tab__icon"&gt;&lt;i data-lucide="layout-dashboard"&gt;&lt;/i&gt;&lt;/span&gt;
+    &lt;span class="gds-tab__text"&gt;Dashboard&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/nav&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- SM size -->
+  <div class="doc-section-label">SMALL SIZE</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs gds-tabs--sm" aria-label="SM tabs">
+        <button class="gds-tab gds-tab--active"><span class="gds-tab__text">Home</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Users</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Analytics</span></button>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;nav class="gds-tabs gds-tabs--sm"&gt;
+  &lt;button class="gds-tab gds-tab--active"&gt;&lt;span class="gds-tab__text"&gt;Home&lt;/span&gt;&lt;/button&gt;
+&lt;/nav&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- With badge & status -->
+  <div class="doc-section-label">WITH BADGE, STATUS &amp; CLOSE</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs" aria-label="Tabs with extras">
+        <button class="gds-tab gds-tab--active"><span class="gds-tab__text">Inbox</span><span class="gds-tab__badge"><span class="gds-badge gds-badge--sm gds-badge--info"><span class="gds-badge__label">12</span></span></span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Notifications</span><span class="gds-tab__status"></span></button>
+        <div class="gds-tab"><span class="gds-tab__text">Drafts</span><button class="gds-tab__close" aria-label="Close tab"><i data-lucide="x" width="12" height="12"></i></button></div>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;button class="gds-tab"&gt;
+  &lt;span class="gds-tab__text"&gt;Inbox&lt;/span&gt;
+  &lt;span class="gds-tab__badge"&gt;
+    &lt;span class="gds-badge gds-badge--sm gds-badge--info"&gt;
+      &lt;span class="gds-badge__label"&gt;12&lt;/span&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+&lt;/button&gt;
+&lt;button class="gds-tab"&gt;
+  &lt;span class="gds-tab__text"&gt;Notifications&lt;/span&gt;
+  &lt;span class="gds-tab__status"&gt;&lt;/span&gt;
+&lt;/button&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- Icon only -->
+  <div class="doc-section-label">ICON ONLY</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs" aria-label="Icon tabs">
+        <button class="gds-tab gds-tab--icon-only gds-tab--active" aria-label="Grid"><span class="gds-tab__icon"><i data-lucide="layout-grid"></i></span></button>
+        <button class="gds-tab gds-tab--icon-only" aria-label="List"><span class="gds-tab__icon"><i data-lucide="list"></i></span></button>
+        <button class="gds-tab gds-tab--icon-only" aria-label="Columns"><span class="gds-tab__icon"><i data-lucide="columns-3"></i></span></button>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;button class="gds-tab gds-tab--icon-only gds-tab--active"&gt;
+  &lt;span class="gds-tab__icon"&gt;&lt;i data-lucide="layout-grid"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;/button&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- Vertical -->
+  <div class="doc-section-label">VERTICAL</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs gds-tabs--vertical" style="width:var(--tab-vertical-width)" aria-label="Vertical tabs">
+        <button class="gds-tab gds-tab--active"><span class="gds-tab__icon"><i data-lucide="user"></i></span><span class="gds-tab__text">Profile</span></button>
+        <button class="gds-tab"><span class="gds-tab__icon"><i data-lucide="shield"></i></span><span class="gds-tab__text">Security</span></button>
+        <button class="gds-tab"><span class="gds-tab__icon"><i data-lucide="bell"></i></span><span class="gds-tab__text">Notifications</span></button>
+        <button class="gds-tab"><span class="gds-tab__icon"><i data-lucide="credit-card"></i></span><span class="gds-tab__text">Payments</span></button>
+        <button class="gds-tab gds-tab--disabled"><span class="gds-tab__icon"><i data-lucide="plug"></i></span><span class="gds-tab__text">Integrations</span></button>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;nav class="gds-tabs gds-tabs--vertical" style="width:var(--tab-vertical-width)"&gt;
+  &lt;button class="gds-tab gds-tab--active"&gt;...&lt;/button&gt;
+  &lt;button class="gds-tab"&gt;...&lt;/button&gt;
+&lt;/nav&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- Filled -->
+  <div class="doc-section-label">FILLED</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs gds-tabs--filled" aria-label="Filled tabs">
+        <button class="gds-tab gds-tab--active"><span class="gds-tab__text">All</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Published</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Drafts</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Archived</span></button>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;nav class="gds-tabs gds-tabs--filled"&gt;
+  &lt;button class="gds-tab gds-tab--active"&gt;&lt;span class="gds-tab__text"&gt;All&lt;/span&gt;&lt;/button&gt;
+  &lt;button class="gds-tab"&gt;&lt;span class="gds-tab__text"&gt;Published&lt;/span&gt;&lt;/button&gt;
+&lt;/nav&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- Filled SM -->
+  <div class="doc-section-label">FILLED SMALL</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs gds-tabs--filled gds-tabs--sm" aria-label="Filled SM tabs">
+        <button class="gds-tab gds-tab--active"><span class="gds-tab__text">Day</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Week</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Month</span></button>
+        <button class="gds-tab"><span class="gds-tab__text">Year</span></button>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;nav class="gds-tabs gds-tabs--filled gds-tabs--sm"&gt;...&lt;/nav&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- Card -->
+  <div class="doc-section-label">CARD</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-primary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-24)">
+      <nav class="gds-tabs gds-tabs--card" aria-label="Card tabs">
+        <button class="gds-tab gds-tab--active"><span class="gds-tab__icon"><i data-lucide="code"></i></span><span class="gds-tab__text">Code</span></button>
+        <button class="gds-tab"><span class="gds-tab__icon"><i data-lucide="eye"></i></span><span class="gds-tab__text">Preview</span></button>
+        <button class="gds-tab"><span class="gds-tab__icon"><i data-lucide="terminal"></i></span><span class="gds-tab__text">Console</span></button>
+      </nav>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;nav class="gds-tabs gds-tabs--card"&gt;
+  &lt;button class="gds-tab gds-tab--active"&gt;...&lt;/button&gt;
+&lt;/nav&gt;</pre></details>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DATA TABLE -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-data-table">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Data Table</h1>
+    <p class="doc-desc">Flexible data table for displaying structured content. Supports plain rows, rich card rows with images, sorting, selection, striped rows, and multiple column types. Composes with existing GDS components (gds-checkbox, gds-avatar-name, gds-badge, gds-chip).</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-table</span><span class="doc-tag">.gds-table--cards</span><span class="doc-tag">.gds-table--striped</span><span class="doc-tag">.gds-table--compact</span><span class="doc-tag">.gds-table--loading</span></div>
+  </div>
+
+  <!-- ===== CARD TABLE (primary — from Figma) ===== -->
+  <div class="doc-section-label">CARD TABLE</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-secondary)">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table-scroll">
+        <div class="gds-table gds-table--cards">
+          <table class="gds-table__table">
+            <thead class="gds-table__head">
+              <tr class="gds-table__row">
+                <th class="gds-table__cell gds-table__cell--checkbox gds-table__cell--sticky-checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select all"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></th>
+                <th class="gds-table__cell gds-table__cell--sticky-entry">Entries</th>
+                <th class="gds-table__cell">Date Created</th>
+                <th class="gds-table__cell">Status</th>
+                <th class="gds-table__cell">Author</th>
+                <th class="gds-table__cell">Tags</th>
+                <th class="gds-table__cell">Assignees</th>
+                <th class="gds-table__cell">Payment</th>
+                <th class="gds-table__cell">Action</th>
+                <th class="gds-table__cell gds-table__cell--action"></th>
+                <th class="gds-table__cell gds-table__cell--action"></th>
+              </tr>
+            </thead>
+            <tbody class="gds-table__body">
+              <tr class="gds-table__row">
+                <td class="gds-table__cell gds-table__cell--checkbox gds-table__cell--sticky-checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select row"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+                <td class="gds-table__cell gds-table__cell--sticky-entry"><div class="gds-table__entry"><img class="gds-table__entry-image" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=96&h=96&fit=crop" alt="" /><div class="gds-table__entry-info"><span class="gds-table__entry-title">5 Reasons Why Breakfast Is The Most Important Me...</span><span class="gds-table__entry-subtitle">Model name</span></div></div></td>
+                <td class="gds-table__cell gds-table__cell--secondary">12 Jan 2023</td>
+                <td class="gds-table__cell"><span class="gds-badge gds-badge--purple"><span class="gds-badge__dot"></span><span class="gds-badge__label">Information</span></span></td>
+                <td class="gds-table__cell"><div class="gds-avatar-name gds-avatar-name--sm"><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=1" alt="" /></div><div class="gds-avatar-name__info"><span class="gds-avatar-name__label">Full Name</span></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><span class="gds-chip gds-chip--rounded"><span class="gds-chip__label">Design</span><button class="gds-chip__close" aria-label="Remove Design"><i data-lucide="x" width="8" height="8"></i></button></span><span class="gds-chip gds-chip--rounded"><span class="gds-chip__label">UX</span><button class="gds-chip__close" aria-label="Remove UX"><i data-lucide="x" width="8" height="8"></i></button></span><span class="gds-badge gds-badge--neutral"><span class="gds-badge__label">+1</span></span></div></td>
+                <td class="gds-table__cell"><div class="gds-avatar-group"><span class="gds-avatar-group__counter">+3</span><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=1" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=2" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=3" alt="" /></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><i data-lucide="credit-card" width="16" height="16"></i><span class="gds-table__cell--secondary" style="font-size:var(--gds-font-size-body-sm)">Visa •••• 4242</span></div></td>
+                <td class="gds-table__cell"><button class="gds-btn gds-btn--secondary gds-btn--sm"><span class="gds-btn__label">Edit</span></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><button class="gds-table__action-btn" aria-label="Expand"><i data-lucide="chevron-right" width="16" height="16"></i></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><div class="gds-dropdown"><button class="gds-table__action-btn" aria-label="More actions" aria-haspopup="true"><i data-lucide="ellipsis" width="16" height="16"></i></button><div class="gds-menu gds-dropdown__menu"><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="pencil" width="16" height="16"></i></span><span class="gds-menu__label">Edit</span></button><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="eye" width="16" height="16"></i></span><span class="gds-menu__label">Preview</span></button><div class="gds-menu__divider"></div><button class="gds-menu__item gds-menu__item--danger"><span class="gds-menu__icon"><i data-lucide="trash-2" width="16" height="16"></i></span><span class="gds-menu__label">Delete</span></button></div></div></td>
+              </tr>
+              <tr class="gds-table__row">
+                <td class="gds-table__cell gds-table__cell--checkbox gds-table__cell--sticky-checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select row"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+                <td class="gds-table__cell gds-table__cell--sticky-entry"><div class="gds-table__entry"><img class="gds-table__entry-image" src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=96&h=96&fit=crop" alt="" /><div class="gds-table__entry-info"><span class="gds-table__entry-title">Belajar Cara Mengasuh Anak di Era Digital bersam...</span><span class="gds-table__entry-subtitle">Model name</span></div></div></td>
+                <td class="gds-table__cell gds-table__cell--secondary">15 Feb 2023</td>
+                <td class="gds-table__cell"><span class="gds-badge gds-badge--positive"><span class="gds-badge__dot"></span><span class="gds-badge__label">Published</span></span></td>
+                <td class="gds-table__cell"><div class="gds-avatar-name gds-avatar-name--sm"><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=4" alt="" /></div><div class="gds-avatar-name__info"><span class="gds-avatar-name__label">Full Name</span></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><span class="gds-chip gds-chip--rounded"><span class="gds-chip__label">Frontend</span><button class="gds-chip__close" aria-label="Remove"><i data-lucide="x" width="8" height="8"></i></button></span><span class="gds-chip gds-chip--rounded"><span class="gds-chip__label">React</span><button class="gds-chip__close" aria-label="Remove"><i data-lucide="x" width="8" height="8"></i></button></span><span class="gds-badge gds-badge--neutral"><span class="gds-badge__label">+1</span></span></div></td>
+                <td class="gds-table__cell"><div class="gds-avatar-group"><span class="gds-avatar-group__counter">+3</span><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=4" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=5" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=6" alt="" /></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><i data-lucide="credit-card" width="16" height="16"></i><span class="gds-table__cell--secondary" style="font-size:var(--gds-font-size-body-sm)">Mastercard •••• 8831</span></div></td>
+                <td class="gds-table__cell"><button class="gds-btn gds-btn--secondary gds-btn--sm"><span class="gds-btn__label">View</span></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><button class="gds-table__action-btn" aria-label="Expand"><i data-lucide="chevron-right" width="16" height="16"></i></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><div class="gds-dropdown"><button class="gds-table__action-btn" aria-label="More actions" aria-haspopup="true"><i data-lucide="ellipsis" width="16" height="16"></i></button><div class="gds-menu gds-dropdown__menu"><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="pencil" width="16" height="16"></i></span><span class="gds-menu__label">Edit</span></button><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="eye" width="16" height="16"></i></span><span class="gds-menu__label">Preview</span></button><div class="gds-menu__divider"></div><button class="gds-menu__item gds-menu__item--danger"><span class="gds-menu__icon"><i data-lucide="trash-2" width="16" height="16"></i></span><span class="gds-menu__label">Delete</span></button></div></div></td>
+              </tr>
+              <tr class="gds-table__row">
+                <td class="gds-table__cell gds-table__cell--checkbox gds-table__cell--sticky-checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select row"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+                <td class="gds-table__cell gds-table__cell--sticky-entry"><div class="gds-table__entry"><img class="gds-table__entry-image" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=96&h=96&fit=crop" alt="" /><div class="gds-table__entry-info"><span class="gds-table__entry-title">7 Tips Belajar untuk Ujian Try Out UTBK</span><span class="gds-table__entry-subtitle">Model name</span></div></div></td>
+                <td class="gds-table__cell gds-table__cell--secondary">20 Mar 2023</td>
+                <td class="gds-table__cell"><span class="gds-badge gds-badge--purple"><span class="gds-badge__dot"></span><span class="gds-badge__label">Information</span></span></td>
+                <td class="gds-table__cell"><div class="gds-avatar-name gds-avatar-name--sm"><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=7" alt="" /></div><div class="gds-avatar-name__info"><span class="gds-avatar-name__label">Full Name</span></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><span class="gds-chip gds-chip--rounded"><span class="gds-chip__label">Backend</span><button class="gds-chip__close" aria-label="Remove"><i data-lucide="x" width="8" height="8"></i></button></span><span class="gds-badge gds-badge--neutral"><span class="gds-badge__label">+2</span></span></div></td>
+                <td class="gds-table__cell"><div class="gds-avatar-group"><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=7" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=8" alt="" /></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><i data-lucide="credit-card" width="16" height="16"></i><span class="gds-table__cell--secondary" style="font-size:var(--gds-font-size-body-sm)">Visa •••• 1234</span></div></td>
+                <td class="gds-table__cell"><button class="gds-btn gds-btn--secondary gds-btn--sm"><span class="gds-btn__label">Edit</span></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><button class="gds-table__action-btn" aria-label="Expand"><i data-lucide="chevron-right" width="16" height="16"></i></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><div class="gds-dropdown"><button class="gds-table__action-btn" aria-label="More actions" aria-haspopup="true"><i data-lucide="ellipsis" width="16" height="16"></i></button><div class="gds-menu gds-dropdown__menu"><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="pencil" width="16" height="16"></i></span><span class="gds-menu__label">Edit</span></button><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="eye" width="16" height="16"></i></span><span class="gds-menu__label">Preview</span></button><div class="gds-menu__divider"></div><button class="gds-menu__item gds-menu__item--danger"><span class="gds-menu__icon"><i data-lucide="trash-2" width="16" height="16"></i></span><span class="gds-menu__label">Delete</span></button></div></div></td>
+              </tr>
+              <tr class="gds-table__row">
+                <td class="gds-table__cell gds-table__cell--checkbox gds-table__cell--sticky-checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select row"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+                <td class="gds-table__cell gds-table__cell--sticky-entry"><div class="gds-table__entry"><img class="gds-table__entry-image" src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=96&h=96&fit=crop" alt="" /><div class="gds-table__entry-info"><span class="gds-table__entry-title">Urutan Lapisan Atmosfer Beserta Ciri dan Fungsinya</span><span class="gds-table__entry-subtitle">Model name</span></div></div></td>
+                <td class="gds-table__cell gds-table__cell--secondary">03 Apr 2023</td>
+                <td class="gds-table__cell"><span class="gds-badge gds-badge--warning"><span class="gds-badge__dot"></span><span class="gds-badge__label">Scheduled</span></span></td>
+                <td class="gds-table__cell"><div class="gds-avatar-name gds-avatar-name--sm"><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=9" alt="" /></div><div class="gds-avatar-name__info"><span class="gds-avatar-name__label">Full Name</span></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><span class="gds-chip gds-chip--rounded"><span class="gds-chip__label">Design</span><button class="gds-chip__close" aria-label="Remove"><i data-lucide="x" width="8" height="8"></i></button></span><span class="gds-chip gds-chip--rounded"><span class="gds-chip__label">Mobile</span><button class="gds-chip__close" aria-label="Remove"><i data-lucide="x" width="8" height="8"></i></button></span><span class="gds-badge gds-badge--neutral"><span class="gds-badge__label">+1</span></span></div></td>
+                <td class="gds-table__cell"><div class="gds-avatar-group"><span class="gds-avatar-group__counter">+3</span><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=9" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=10" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=11" alt="" /></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><i data-lucide="credit-card" width="16" height="16"></i><span class="gds-table__cell--secondary" style="font-size:var(--gds-font-size-body-sm)">Amex •••• 5678</span></div></td>
+                <td class="gds-table__cell"><button class="gds-btn gds-btn--secondary gds-btn--sm"><span class="gds-btn__label">View</span></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><button class="gds-table__action-btn" aria-label="Expand"><i data-lucide="chevron-right" width="16" height="16"></i></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><div class="gds-dropdown"><button class="gds-table__action-btn" aria-label="More actions" aria-haspopup="true"><i data-lucide="ellipsis" width="16" height="16"></i></button><div class="gds-menu gds-dropdown__menu"><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="pencil" width="16" height="16"></i></span><span class="gds-menu__label">Edit</span></button><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="eye" width="16" height="16"></i></span><span class="gds-menu__label">Preview</span></button><div class="gds-menu__divider"></div><button class="gds-menu__item gds-menu__item--danger"><span class="gds-menu__icon"><i data-lucide="trash-2" width="16" height="16"></i></span><span class="gds-menu__label">Delete</span></button></div></div></td>
+              </tr>
+              <tr class="gds-table__row">
+                <td class="gds-table__cell gds-table__cell--checkbox gds-table__cell--sticky-checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select row"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+                <td class="gds-table__cell gds-table__cell--sticky-entry"><div class="gds-table__entry"><img class="gds-table__entry-image" src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=96&h=96&fit=crop" alt="" /><div class="gds-table__entry-info"><span class="gds-table__entry-title">10 Bahasa yang Paling Banyak Digunakan di Dunia...</span><span class="gds-table__entry-subtitle">Model name</span></div></div></td>
+                <td class="gds-table__cell gds-table__cell--secondary">18 May 2023</td>
+                <td class="gds-table__cell"><span class="gds-badge gds-badge--purple"><span class="gds-badge__dot"></span><span class="gds-badge__label">Information</span></span></td>
+                <td class="gds-table__cell"><div class="gds-avatar-name gds-avatar-name--sm"><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=11" alt="" /></div><div class="gds-avatar-name__info"><span class="gds-avatar-name__label">Full Name</span></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><span class="gds-chip gds-chip--rounded"><span class="gds-chip__label">Analytics</span><button class="gds-chip__close" aria-label="Remove"><i data-lucide="x" width="8" height="8"></i></button></span><span class="gds-badge gds-badge--neutral"><span class="gds-badge__label">+2</span></span></div></td>
+                <td class="gds-table__cell"><div class="gds-avatar-group"><span class="gds-avatar-group__counter">+3</span><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=2" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=8" alt="" /></div><div class="gds-avatar gds-avatar--24"><img class="gds-avatar__img" src="https://i.pravatar.cc/64?img=12" alt="" /></div></div></td>
+                <td class="gds-table__cell"><div class="gds-table__cell-content"><i data-lucide="credit-card" width="16" height="16"></i><span class="gds-table__cell--secondary" style="font-size:var(--gds-font-size-body-sm)">Visa •••• 9012</span></div></td>
+                <td class="gds-table__cell"><button class="gds-btn gds-btn--secondary gds-btn--sm"><span class="gds-btn__label">Edit</span></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><button class="gds-table__action-btn" aria-label="Expand"><i data-lucide="chevron-right" width="16" height="16"></i></button></td>
+                <td class="gds-table__cell gds-table__cell--action"><div class="gds-dropdown"><button class="gds-table__action-btn" aria-label="More actions" aria-haspopup="true"><i data-lucide="ellipsis" width="16" height="16"></i></button><div class="gds-menu gds-dropdown__menu"><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="pencil" width="16" height="16"></i></span><span class="gds-menu__label">Edit</span></button><button class="gds-menu__item"><span class="gds-menu__icon"><i data-lucide="eye" width="16" height="16"></i></span><span class="gds-menu__label">Preview</span></button><div class="gds-menu__divider"></div><button class="gds-menu__item gds-menu__item--danger"><span class="gds-menu__icon"><i data-lucide="trash-2" width="16" height="16"></i></span><span class="gds-menu__label">Delete</span></button></div></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-table-scroll"&gt;
+  &lt;div class="gds-table gds-table--cards"&gt;
+    &lt;table class="gds-table__table"&gt;
+      &lt;thead class="gds-table__head"&gt;...&lt;/thead&gt;
+      &lt;tbody class="gds-table__body"&gt;
+        &lt;tr class="gds-table__row"&gt;
+          &lt;td class="gds-table__cell gds-table__cell--checkbox"&gt;
+            &lt;label class="gds-checkbox gds-checkbox--sm"&gt;...&lt;/label&gt;
+          &lt;/td&gt;
+          &lt;td class="gds-table__cell"&gt;
+            &lt;div class="gds-table__entry"&gt;
+              &lt;img class="gds-table__entry-image" src="..." /&gt;
+              &lt;div class="gds-table__entry-info"&gt;
+                &lt;span class="gds-table__entry-title"&gt;Title&lt;/span&gt;
+                &lt;span class="gds-table__entry-subtitle"&gt;Subtitle&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/td&gt;
+          &lt;td class="gds-table__cell gds-table__cell--secondary"&gt;12 Jan 2023&lt;/td&gt;
+          &lt;td class="gds-table__cell"&gt;&lt;span class="gds-badge gds-badge--positive"&gt;...&lt;/span&gt;&lt;/td&gt;
+          &lt;td class="gds-table__cell"&gt;&lt;div class="gds-avatar-name gds-avatar-name--sm"&gt;...&lt;/div&gt;&lt;/td&gt;
+          &lt;td class="gds-table__cell"&gt;&lt;span class="gds-chip gds-chip--rounded"&gt;...&lt;/span&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- ===== BASIC TABLE ===== -->
+  <div class="doc-section-label">BASIC TABLE</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table">
+        <table class="gds-table__table">
+          <thead class="gds-table__head"><tr class="gds-table__row"><th class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select all"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></th><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th><th class="gds-table__cell gds-table__cell--action"></th></tr></thead>
+          <tbody class="gds-table__body">
+            <tr class="gds-table__row"><td class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select row"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell gds-table__cell--action"><button class="gds-table__action-btn" aria-label="More"><i data-lucide="ellipsis" width="16" height="16"></i></button></td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select row"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell gds-table__cell--action"><button class="gds-table__action-btn" aria-label="More"><i data-lucide="ellipsis" width="16" height="16"></i></button></td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select row"/><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell gds-table__cell--action"><button class="gds-table__action-btn" aria-label="More"><i data-lucide="ellipsis" width="16" height="16"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-table"&gt;
+  &lt;table class="gds-table__table"&gt;...&lt;/table&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- ===== ROW STATES ===== -->
+  <div class="doc-section-label">ROW STATES</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table">
+        <table class="gds-table__table">
+          <tbody class="gds-table__body">
+            <tr class="gds-table__row"><td class="gds-table__cell gds-table__cell--label">Default</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+            <tr class="gds-table__row gds-table__row--hover"><td class="gds-table__cell gds-table__cell--label">Hovered</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+            <tr class="gds-table__row gds-table__row--selected"><td class="gds-table__cell gds-table__cell--label">Selected</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+            <tr class="gds-table__row gds-table__row--striped"><td class="gds-table__cell gds-table__cell--label">Striped</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;tr class="gds-table__row"&gt;...&lt;/tr&gt;                        &lt;!-- Default --&gt;
+&lt;tr class="gds-table__row gds-table__row--hover"&gt;...&lt;/tr&gt;    &lt;!-- Hovered --&gt;
+&lt;tr class="gds-table__row gds-table__row--selected"&gt;...&lt;/tr&gt; &lt;!-- Selected --&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- ===== STRIPED ===== -->
+  <div class="doc-section-label">STRIPED</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table gds-table--striped">
+        <table class="gds-table__table">
+          <thead class="gds-table__head"><tr class="gds-table__row"><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th></tr></thead>
+          <tbody class="gds-table__body">
+            <tr class="gds-table__row"><td class="gds-table__cell">Row 1</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell">Row 2</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell">Row 3</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell">Row 4</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-table gds-table--striped"&gt;...&lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- ===== COMPACT ===== -->
+  <div class="doc-section-label">COMPACT</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table gds-table--compact">
+        <table class="gds-table__table">
+          <thead class="gds-table__head"><tr class="gds-table__row"><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th></tr></thead>
+          <tbody class="gds-table__body">
+            <tr class="gds-table__row"><td class="gds-table__cell">Compact row 1</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell">Compact row 2</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell">Compact row 3</td><td class="gds-table__cell">Text</td><td class="gds-table__cell">Text</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-table gds-table--compact"&gt;...&lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- ===== SORTABLE ===== -->
+  <div class="doc-section-label">SORTABLE</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table">
+        <table class="gds-table__table">
+          <thead class="gds-table__head">
+            <tr class="gds-table__row">
+              <th class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted" aria-sort="ascending">Name <span class="gds-table__sort-icon"><i data-lucide="arrow-up" width="12" height="12"></i></span></th>
+              <th class="gds-table__cell gds-table__cell--sortable">Date <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down" width="12" height="12"></i></span></th>
+              <th class="gds-table__cell gds-table__cell--sortable">Status <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down" width="12" height="12"></i></span></th>
+            </tr>
+          </thead>
+          <tbody class="gds-table__body">
+            <tr class="gds-table__row"><td class="gds-table__cell">Alpha</td><td class="gds-table__cell gds-table__cell--secondary">01 Jan 2024</td><td class="gds-table__cell"><span class="gds-badge gds-badge--positive"><span class="gds-badge__dot"></span><span class="gds-badge__label">Active</span></span></td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell">Beta</td><td class="gds-table__cell gds-table__cell--secondary">15 Mar 2024</td><td class="gds-table__cell"><span class="gds-badge gds-badge--warning"><span class="gds-badge__dot"></span><span class="gds-badge__label">Pending</span></span></td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell">Gamma</td><td class="gds-table__cell gds-table__cell--secondary">22 Jun 2024</td><td class="gds-table__cell"><span class="gds-badge gds-badge--neutral"><span class="gds-badge__dot"></span><span class="gds-badge__label">Draft</span></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;th class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted" aria-sort="ascending"&gt;
+  Name &lt;span class="gds-table__sort-icon"&gt;&lt;i data-lucide="arrow-up"&gt;&lt;/i&gt;&lt;/span&gt;
+&lt;/th&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- ===== LOADING SKELETON ===== -->
+  <div class="doc-section-label">LOADING SKELETON</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table gds-table--loading" aria-busy="true">
+        <table class="gds-table__table">
+          <thead class="gds-table__head"><tr class="gds-table__row"><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th></tr></thead>
+          <tbody class="gds-table__body">
+            <tr class="gds-table__row"><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--wide"></div></td><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--medium"></div></td><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--short"></div></td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--medium"></div></td><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--wide"></div></td><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--xs"></div></td></tr>
+            <tr class="gds-table__row"><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--short"></div></td><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--medium"></div></td><td class="gds-table__cell"><div class="gds-table__skeleton gds-table__skeleton--wide"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-table gds-table--loading" aria-busy="true"&gt;
+  &lt;td class="gds-table__cell"&gt;
+    &lt;div class="gds-table__skeleton gds-table__skeleton--wide"&gt;&lt;/div&gt;
+  &lt;/td&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- ===== EMPTY STATE ===== -->
+  <div class="doc-section-label">EMPTY STATE</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table">
+        <table class="gds-table__table">
+          <thead class="gds-table__head"><tr class="gds-table__row"><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th><th class="gds-table__cell">Header</th></tr></thead>
+          <tbody class="gds-table__body">
+            <tr class="gds-table__row"><td class="gds-table__cell gds-table__empty" colspan="3"><i data-lucide="inbox" width="32" height="32" style="margin-bottom:var(--gds-space-8);opacity:0.4"></i><br/>No data available</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;td class="gds-table__cell gds-table__empty" colspan="3"&gt;
+  No data available
+&lt;/td&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+  <!-- ===== BULK ACTIONS TOOLBAR ===== -->
+  <div class="doc-section-label">BULK ACTIONS TOOLBAR</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding:var(--gds-space-16)">
+      <div class="gds-table__toolbar is-visible">
+        <span class="gds-table__toolbar-count">3 selected</span>
+        <div class="gds-table__toolbar-divider"></div>
+        <button class="gds-table__toolbar-btn"><i data-lucide="download"></i> Export</button>
+        <button class="gds-table__toolbar-btn"><i data-lucide="archive"></i> Archive</button>
+        <button class="gds-table__toolbar-btn"><i data-lucide="trash-2"></i> Delete</button>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-table__toolbar is-visible"&gt;
+  &lt;span class="gds-table__toolbar-count"&gt;3 selected&lt;/span&gt;
+  &lt;div class="gds-table__toolbar-divider"&gt;&lt;/div&gt;
+  &lt;button class="gds-table__toolbar-btn"&gt;Export&lt;/button&gt;
+  &lt;button class="gds-table__toolbar-btn"&gt;Delete&lt;/button&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGINATION -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-pagination">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Pagination</h1>
+    <p class="doc-desc">Navigate through paged datasets. Composes from a numbered row (<code>.gds-pagination</code>), two wrapper bars (<code>.gds-pagination-bar</code>, <code>.gds-pagination-bar--full</code>), three sizes, full keyboard support, and responsive behavior. Every value references the foundation layer — swap <code>data-theme</code> and all colors follow.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-pagination</span><span class="doc-tag">.gds-pagination--sm</span><span class="doc-tag">.gds-pagination--lg</span><span class="doc-tag">.gds-pagination-bar</span><span class="doc-tag">.gds-pagination-bar--full</span></div>
+  </div>
+
+  <!-- =========================================================== -->
+  <!-- 1. LIVE DEMO — click numbers, use ← → Home End, real menu    -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">LIVE DEMO — TRY IT</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas">
+      <div class="gds-pagination-bar gds-pagination-bar--full doc-pagination-live"
+           id="docsPaginationLive"
+           data-current="1"
+           data-page-size="10"
+           data-total="397"
+           data-size-pos="right">
+        <span class="gds-pagination-bar__summary" data-role="summary"></span>
+        <div class="gds-pagination-bar__cluster">
+          <button class="gds-pagination-bar__select" type="button" data-role="size-trigger" aria-haspopup="listbox" aria-expanded="false">
+            <span data-role="size-label"></span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <nav class="gds-pagination" aria-label="Pagination" data-role="pager"></nav>
+        </div>
+        <div class="gds-menu doc-pagination-popover" hidden data-role="size-menu" role="listbox" aria-label="Items per page">
+          <div class="gds-menu__group">Items per page</div>
+          <button class="gds-menu__item" data-size="10" role="option">10</button>
+          <button class="gds-menu__item" data-size="25" role="option">25</button>
+          <button class="gds-menu__item" data-size="50" role="option">50</button>
+          <button class="gds-menu__item" data-size="100" role="option">100</button>
+        </div>
+      </div>
+    </div>
+    <div class="doc-desc" style="margin-top:var(--gds-space-12);font-size:var(--gds-font-size-body-xs);color:var(--gds-color-text-tertiary)">
+      Keyboard: <kbd>←</kbd> <kbd>→</kbd> move one page · <kbd>Home</kbd> first · <kbd>End</kbd> last · <kbd>Enter</kbd>/<kbd>Space</kbd> on a page number jumps there
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-pagination-bar gds-pagination-bar--full"&gt;
+  &lt;span class="gds-pagination-bar__summary"&gt;Viewing 1 to 10 of 397 Items&lt;/span&gt;
+  &lt;div class="gds-pagination-bar__cluster"&gt;
+    &lt;button class="gds-pagination-bar__select" aria-haspopup="listbox"&gt;
+      &lt;span&gt;10 Items per page&lt;/span&gt;&lt;i data-lucide="chevron-down"&gt;&lt;/i&gt;
+    &lt;/button&gt;
+    &lt;nav class="gds-pagination" aria-label="Pagination"&gt;
+      &lt;button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="First page"&gt;
+        &lt;i data-lucide="chevrons-left"&gt;&lt;/i&gt;
+      &lt;/button&gt;
+      &lt;button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"&gt;
+        &lt;i data-lucide="chevron-left"&gt;&lt;/i&gt;
+      &lt;/button&gt;
+      &lt;button class="gds-pagination__item gds-pagination__item--current" aria-current="page"&gt;1&lt;/button&gt;
+      &lt;!-- more page numbers --&gt;
+      &lt;button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"&gt;
+        &lt;i data-lucide="chevron-right"&gt;&lt;/i&gt;
+      &lt;/button&gt;
+      &lt;button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Last page"&gt;
+        &lt;i data-lucide="chevrons-right"&gt;&lt;/i&gt;
+      &lt;/button&gt;
+    &lt;/nav&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 2. SIZES                                                     -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">SIZES</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:flex-start;gap:var(--gds-space-32)">
+      <div>
+        <div class="doc-state-label">.gds-pagination--sm</div>
+        <nav class="gds-pagination gds-pagination--sm" aria-label="Small">
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+          <button class="gds-pagination__item">1</button>
+          <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">2</button>
+          <button class="gds-pagination__item">3</button>
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+        </nav>
+      </div>
+      <div>
+        <div class="doc-state-label">.gds-pagination (md — default)</div>
+        <nav class="gds-pagination" aria-label="Medium">
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+          <button class="gds-pagination__item">1</button>
+          <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">2</button>
+          <button class="gds-pagination__item">3</button>
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+        </nav>
+      </div>
+      <div>
+        <div class="doc-state-label">.gds-pagination--lg</div>
+        <nav class="gds-pagination gds-pagination--lg" aria-label="Large">
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+          <button class="gds-pagination__item">1</button>
+          <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">2</button>
+          <button class="gds-pagination__item">3</button>
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+        </nav>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;nav class="gds-pagination gds-pagination--sm"&gt; ... &lt;/nav&gt;
+&lt;nav class="gds-pagination"&gt; ... &lt;/nav&gt;
+&lt;nav class="gds-pagination gds-pagination--lg"&gt; ... &lt;/nav&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 3. NAVIGATION — FIRST / PREV / NEXT / LAST (icon-only)       -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">NAVIGATION CONTROLS</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:flex-start;gap:var(--gds-space-32)">
+      <div>
+        <div class="doc-state-label">Four controls — First / Prev / Next / Last</div>
+        <nav class="gds-pagination" aria-label="Four-control">
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="First page"><i data-lucide="chevrons-left"></i></button>
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+          <button class="gds-pagination__item">1</button>
+          <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">2</button>
+          <button class="gds-pagination__item">3</button>
+          <button class="gds-pagination__item">4</button>
+          <button class="gds-pagination__item">5</button>
+          <span class="gds-pagination__ellipsis" aria-hidden="true">…</span>
+          <button class="gds-pagination__item">40</button>
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Last page"><i data-lucide="chevrons-right"></i></button>
+        </nav>
+      </div>
+      <div>
+        <div class="doc-state-label">Labeled — "Prev" / "Next"</div>
+        <nav class="gds-pagination" aria-label="Labeled">
+          <button class="gds-pagination__nav"><i data-lucide="chevron-left"></i><span>Prev</span></button>
+          <button class="gds-pagination__nav"><span>Next</span><i data-lucide="chevron-right"></i></button>
+        </nav>
+      </div>
+      <div>
+        <div class="doc-state-label">Disabled (at boundary)</div>
+        <nav class="gds-pagination" aria-label="Disabled boundary">
+          <button class="gds-pagination__nav gds-pagination__item--disabled" disabled><i data-lucide="chevron-left"></i><span>Prev</span></button>
+          <button class="gds-pagination__nav"><span>Next</span><i data-lucide="chevron-right"></i></button>
+        </nav>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;!-- Icon-only chevrons — semantic pairing --&gt;
+&lt;button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="First page"&gt;
+  &lt;i data-lucide="chevrons-left"&gt;&lt;/i&gt;   &lt;!-- « --&gt;
+&lt;/button&gt;
+&lt;button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"&gt;
+  &lt;i data-lucide="chevron-left"&gt;&lt;/i&gt;    &lt;!-- ‹ --&gt;
+&lt;/button&gt;
+&lt;!-- and matching Next / Last --&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 4. PAGE NUMBER STATES (using is-hover-preview / is-focus-preview) -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">PAGE NUMBER — STATES</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-32);flex-wrap:wrap">
+      <div>
+        <div class="doc-state-label">Default</div>
+        <nav class="gds-pagination"><button class="gds-pagination__item">1</button></nav>
+      </div>
+      <div>
+        <div class="doc-state-label">Hover</div>
+        <nav class="gds-pagination"><button class="gds-pagination__item is-hover-preview">1</button></nav>
+      </div>
+      <div>
+        <div class="doc-state-label">Focus</div>
+        <nav class="gds-pagination"><button class="gds-pagination__item is-focus-preview">1</button></nav>
+      </div>
+      <div>
+        <div class="doc-state-label">Current</div>
+        <nav class="gds-pagination"><button class="gds-pagination__item gds-pagination__item--current" aria-current="page">1</button></nav>
+      </div>
+      <div>
+        <div class="doc-state-label">Disabled</div>
+        <nav class="gds-pagination"><button class="gds-pagination__item gds-pagination__item--disabled" disabled>1</button></nav>
+      </div>
+      <div>
+        <div class="doc-state-label">Ellipsis</div>
+        <nav class="gds-pagination"><span class="gds-pagination__ellipsis" aria-hidden="true">…</span></nav>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;!-- Real interactive states: .gds-pagination__item triggers them via :hover / :focus-visible --&gt;
+&lt;!-- Preview helpers (optional, for docs / frameworks): --&gt;
+&lt;button class="gds-pagination__item is-hover-preview"&gt;1&lt;/button&gt;
+&lt;button class="gds-pagination__item is-focus-preview"&gt;1&lt;/button&gt;
+&lt;button class="gds-pagination__item gds-pagination__item--current" aria-current="page"&gt;1&lt;/button&gt;
+&lt;button class="gds-pagination__item gds-pagination__item--disabled" disabled&gt;1&lt;/button&gt;
+&lt;span class="gds-pagination__ellipsis"&gt;…&lt;/span&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 5. COMPACT BAR                                               -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">COMPACT BAR</div>
+  <div class="doc-preview" style="background:var(--gds-color-bg-secondary)">
+    <div class="doc-preview-canvas" style="flex-direction:column;gap:var(--gds-space-32);align-items:flex-start">
+      <div class="gds-pagination-bar gds-pagination-bar--on-surface">
+        <button class="gds-pagination-bar__select" type="button"><span>10 Items per page</span><i data-lucide="chevron-down"></i></button>
+        <nav class="gds-pagination" aria-label="Pagination">
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+          <button class="gds-pagination__item">1</button>
+          <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">2</button>
+          <button class="gds-pagination__item">3</button>
+          <button class="gds-pagination__item">4</button>
+          <button class="gds-pagination__item">5</button>
+          <span class="gds-pagination__ellipsis" aria-hidden="true">…</span>
+          <button class="gds-pagination__item">40</button>
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+        </nav>
+      </div>
+      <div class="gds-pagination-bar">
+        <button class="gds-pagination-bar__select" type="button"><span>10 Items per page</span><i data-lucide="chevron-down"></i></button>
+        <nav class="gds-pagination" aria-label="Pagination">
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+          <button class="gds-pagination__item">1</button>
+          <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">2</button>
+          <button class="gds-pagination__item">3</button>
+          <button class="gds-pagination__item">4</button>
+          <button class="gds-pagination__item">5</button>
+          <span class="gds-pagination__ellipsis" aria-hidden="true">…</span>
+          <button class="gds-pagination__item">40</button>
+          <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+        </nav>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-pagination-bar gds-pagination-bar--on-surface"&gt;
+  &lt;button class="gds-pagination-bar__select"&gt;10 Items per page &lt;i data-lucide="chevron-down"&gt;&lt;/i&gt;&lt;/button&gt;
+  &lt;nav class="gds-pagination" aria-label="Pagination"&gt; ... &lt;/nav&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 6. FULL BAR — NO BORDER                                      -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">FULL BAR — NO BORDER</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas">
+      <div class="gds-pagination-bar--full gds-pagination-bar gds-pagination-bar--no-border">
+        <span class="gds-pagination-bar__summary">Viewing 1 to 10 of 52 Items</span>
+        <div class="gds-pagination-bar__cluster">
+          <button class="gds-pagination-bar__select" type="button"><span>10 Items per page</span><i data-lucide="chevron-down"></i></button>
+          <nav class="gds-pagination" aria-label="Pagination">
+            <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+            <button class="gds-pagination__item">1</button>
+            <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">2</button>
+            <button class="gds-pagination__item">3</button>
+            <button class="gds-pagination__item">4</button>
+            <button class="gds-pagination__item">5</button>
+            <span class="gds-pagination__ellipsis" aria-hidden="true">…</span>
+            <button class="gds-pagination__item">40</button>
+            <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-pagination-bar gds-pagination-bar--full gds-pagination-bar--no-border"&gt; ... &lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 7. EDGE STATES — single page, empty, loading                 -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">EDGE STATES</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:stretch;gap:var(--gds-space-32)">
+      <div>
+        <div class="doc-state-label">Single page — hide pagination, show summary only</div>
+        <div class="gds-pagination-bar--full gds-pagination-bar">
+          <span class="gds-pagination-bar__summary">Viewing 1 to 3 of 3 Items</span>
+        </div>
+      </div>
+      <div>
+        <div class="doc-state-label">Zero results</div>
+        <div class="gds-pagination-bar--full gds-pagination-bar">
+          <div class="doc-pagination-empty" style="width:100%">
+            <i data-lucide="search-x" width="24" height="24"></i>
+            <span>No items match your filters</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="doc-state-label">Loading (skeleton)</div>
+        <div class="gds-pagination-bar--full gds-pagination-bar">
+          <span class="gds-pagination-bar__summary"><span class="doc-pagination-skeleton__box" style="width:var(--gds-space-160);height:var(--gds-space-14);border-radius:var(--gds-radius-sm)"></span></span>
+          <div class="gds-pagination-bar__cluster">
+            <div class="doc-pagination-skeleton" aria-hidden="true">
+              <span class="doc-pagination-skeleton__box"></span>
+              <span class="doc-pagination-skeleton__box"></span>
+              <span class="doc-pagination-skeleton__box"></span>
+              <span class="doc-pagination-skeleton__box"></span>
+              <span class="doc-pagination-skeleton__box"></span>
+              <span class="doc-pagination-skeleton__box"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;!-- Rule: hide number nav when total pages &lt;= 1; keep the summary --&gt;
+{ pagesCount &lt;= 1
+    ? &lt;span class="gds-pagination-bar__summary"&gt;Viewing 1 to {n} of {n} Items&lt;/span&gt;
+    : &lt;nav class="gds-pagination"&gt; ... &lt;/nav&gt;
+}</pre></details>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 8. RESPONSIVE                                                -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">RESPONSIVE</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:stretch;gap:var(--gds-space-8)">
+      <p class="doc-desc" style="margin:0">
+        <code>.gds-pagination-bar--full</code> responds to viewport width automatically:
+      </p>
+      <ul class="doc-desc" style="margin:0;padding-left:var(--gds-space-20)">
+        <li><code>&lt; 640px</code> — summary text hides; pager centers in the bar.</li>
+        <li><code>&lt; 480px</code> — page-size trigger hides; bar tightens; pager stays.</li>
+      </ul>
+      <p class="doc-desc" style="margin:0">Try narrowing this window — the live demo at the top will collapse.</p>
+    </div>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 9. MODIFIER TABLE                                            -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">MODIFIERS</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:stretch;gap:0;padding:var(--gds-space-16) var(--gds-space-24)">
+      <table style="border-collapse:collapse;width:100%;font-size:var(--gds-font-size-body-sm)">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:var(--gds-space-8);color:var(--gds-color-text-secondary);font-weight:var(--gds-font-weight-medium);border-bottom:var(--gds-border-width-default) solid var(--gds-color-border-subtle)">Class</th>
+            <th style="text-align:left;padding:var(--gds-space-8);color:var(--gds-color-text-secondary);font-weight:var(--gds-font-weight-medium);border-bottom:var(--gds-border-width-default) solid var(--gds-color-border-subtle)">Applies to</th>
+            <th style="text-align:left;padding:var(--gds-space-8);color:var(--gds-color-text-secondary);font-weight:var(--gds-font-weight-medium);border-bottom:var(--gds-border-width-default) solid var(--gds-color-border-subtle)">Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination--sm</code></td><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination</code></td><td style="padding:var(--gds-space-8);vertical-align:top">Small size: 20×20 items, body-xs text.</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination--lg</code></td><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination</code></td><td style="padding:var(--gds-space-8);vertical-align:top">Large size: 32×32 items, body-base text.</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination-bar--sm</code>&nbsp;/&nbsp;<code>--lg</code></td><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination-bar</code></td><td style="padding:var(--gds-space-8);vertical-align:top">Size propagates to nested pager + size-select.</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination__item--current</code></td><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination__item</code></td><td style="padding:var(--gds-space-8);vertical-align:top">Filled pill, primary text, medium weight. Set <code>aria-current="page"</code>.</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination__item--disabled</code></td><td style="padding:var(--gds-space-8);vertical-align:top">item / nav</td><td style="padding:var(--gds-space-8);vertical-align:top">Muted color, reduced opacity, no hover.</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination__item--icon-only</code></td><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination__item</code></td><td style="padding:var(--gds-space-8);vertical-align:top">Square hit-area, no side padding — for chevrons.</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.is-hover-preview</code>&nbsp;/&nbsp;<code>.is-focus-preview</code></td><td style="padding:var(--gds-space-8);vertical-align:top">item / nav</td><td style="padding:var(--gds-space-8);vertical-align:top">Forces hover / focus visual (for docs, testing, programmatic preview).</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination-bar--on-surface</code></td><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination-bar</code></td><td style="padding:var(--gds-space-8);vertical-align:top">White background + border. Use on coloured surfaces.</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination-bar--full</code></td><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination-bar</code></td><td style="padding:var(--gds-space-8);vertical-align:top">Stretches to 100% width, summary on left / controls on right.</td></tr>
+          <tr><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination-bar--no-border</code></td><td style="padding:var(--gds-space-8);vertical-align:top"><code>.gds-pagination-bar--full</code></td><td style="padding:var(--gds-space-8);vertical-align:top">Drops the outer border.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 10. ACCESSIBILITY                                            -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">ACCESSIBILITY</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:stretch;gap:var(--gds-space-8)">
+      <ul class="doc-desc" style="margin:0;padding-left:var(--gds-space-20);display:flex;flex-direction:column;gap:var(--gds-space-6)">
+        <li>Wrap number rows in <code>&lt;nav aria-label="Pagination"&gt;</code>.</li>
+        <li>The active page uses <code>aria-current="page"</code>.</li>
+        <li>Icon-only buttons must carry <code>aria-label</code>: <code>"First page"</code>, <code>"Previous page"</code>, <code>"Next page"</code>, <code>"Last page"</code>.</li>
+        <li>Disabled Prev/Next use both the native <code>disabled</code> attribute and <code>.gds-pagination__item--disabled</code>.</li>
+        <li>Keyboard: <kbd>←</kbd>/<kbd>→</kbd> move one page, <kbd>Home</kbd>/<kbd>End</kbd> jump to first/last, <kbd>Enter</kbd>/<kbd>Space</kbd> activates a page number, <kbd>Esc</kbd> closes the size menu.</li>
+        <li>The size menu is a real <code>.gds-menu</code> listbox with <code>role="listbox"</code> + <code>aria-haspopup="listbox"</code> + <code>aria-expanded</code> on the trigger.</li>
+        <li>Focus ring is <code>var(--pagination-focus-ring-width)</code> solid <code>var(--pagination-focus-ring)</code>, inherited from the semantic layer.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="doc-divider"></div>
+
+  <!-- =========================================================== -->
+  <!-- 11. FRAMEWORK INTEGRATION                                    -->
+  <!-- =========================================================== -->
+  <div class="doc-section-label">FRAMEWORK INTEGRATION</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:stretch;gap:var(--gds-space-16)">
+      <details class="doc-preview-code-wrap" open>
+        <summary>React</summary>
+        <pre class="doc-preview-code">import '@gjirafa/design-system/dist/gjirafa-ds.css';
+
+function Pagination({ current, pagesCount, onChange }) {
+  if (pagesCount &lt;= 1) return null;
+  const pages = buildRange(current, pagesCount); // [1, '…', 4, 5, 6, '…', 40]
+  return (
+    &lt;nav className="gds-pagination" aria-label="Pagination"&gt;
+      &lt;button
+        className="gds-pagination__item gds-pagination__item--icon-only"
+        aria-label="First page"
+        disabled={current === 1}
+        onClick={() =&gt; onChange(1)}
+      &gt;
+        &lt;i data-lucide="chevrons-left" /&gt;
+      &lt;/button&gt;
+      &lt;button
+        className="gds-pagination__item gds-pagination__item--icon-only"
+        aria-label="Previous page"
+        disabled={current === 1}
+        onClick={() =&gt; onChange(current - 1)}
+      &gt;
+        &lt;i data-lucide="chevron-left" /&gt;
+      &lt;/button&gt;
+      {pages.map((p, i) =&gt;
+        p === '…'
+          ? &lt;span key={`e${i}`} className="gds-pagination__ellipsis"&gt;…&lt;/span&gt;
+          : &lt;button
+              key={p}
+              className={
+                'gds-pagination__item' +
+                (p === current ? ' gds-pagination__item--current' : '')
+              }
+              aria-current={p === current ? 'page' : undefined}
+              onClick={() =&gt; onChange(p)}
+            &gt;{p}&lt;/button&gt;
+      )}
+      &lt;button className="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"
+        disabled={current === pagesCount} onClick={() =&gt; onChange(current + 1)}&gt;
+        &lt;i data-lucide="chevron-right" /&gt;
+      &lt;/button&gt;
+      &lt;button className="gds-pagination__item gds-pagination__item--icon-only" aria-label="Last page"
+        disabled={current === pagesCount} onClick={() =&gt; onChange(pagesCount)}&gt;
+        &lt;i data-lucide="chevrons-right" /&gt;
+      &lt;/button&gt;
+    &lt;/nav&gt;
+  );
+}</pre>
+      </details>
+      <details class="doc-preview-code-wrap">
+        <summary>Vue 3</summary>
+        <pre class="doc-preview-code">&lt;script setup&gt;
+import '@gjirafa/design-system/dist/gjirafa-ds.css';
+import { computed } from 'vue';
+
+const props = defineProps({ current: Number, pagesCount: Number });
+const emit = defineEmits(['change']);
+const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;nav v-if="pagesCount &gt; 1" class="gds-pagination" aria-label="Pagination"&gt;
+    &lt;button class="gds-pagination__item gds-pagination__item--icon-only"
+            aria-label="First page" :disabled="current === 1"
+            @click="emit('change', 1)"&gt;
+      &lt;i data-lucide="chevrons-left" /&gt;
+    &lt;/button&gt;
+    &lt;button class="gds-pagination__item gds-pagination__item--icon-only"
+            aria-label="Previous page" :disabled="current === 1"
+            @click="emit('change', current - 1)"&gt;
+      &lt;i data-lucide="chevron-left" /&gt;
+    &lt;/button&gt;
+    &lt;template v-for="(p, i) in pages" :key="p + '-' + i"&gt;
+      &lt;span v-if="p === '…'" class="gds-pagination__ellipsis"&gt;…&lt;/span&gt;
+      &lt;button v-else
+              class="gds-pagination__item"
+              :class="{ 'gds-pagination__item--current': p === current }"
+              :aria-current="p === current ? 'page' : null"
+              @click="emit('change', p)"&gt;{{ p }}&lt;/button&gt;
+    &lt;/template&gt;
+    &lt;button class="gds-pagination__item gds-pagination__item--icon-only"
+            aria-label="Next page" :disabled="current === pagesCount"
+            @click="emit('change', current + 1)"&gt;
+      &lt;i data-lucide="chevron-right" /&gt;
+    &lt;/button&gt;
+    &lt;button class="gds-pagination__item gds-pagination__item--icon-only"
+            aria-label="Last page" :disabled="current === pagesCount"
+            @click="emit('change', pagesCount)"&gt;
+      &lt;i data-lucide="chevrons-right" /&gt;
+    &lt;/button&gt;
+  &lt;/nav&gt;
+&lt;/template&gt;</pre>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
 <!-- UTILITIES -->
 <!-- ============================================================ -->
 <section class="doc-section" id="page-utilities">
@@ -5564,6 +6993,7 @@ function startToastTimer(toastEl) {
   </div>
 
   <div class="doc-gap-sm"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Spacing Utilities</div>
   <div class="doc-token-table">
     <div class="doc-token-header"><span>Class</span><span>Property</span><span>Values</span></div>
@@ -5576,6 +7006,7 @@ function startToastTimer(toastEl) {
   </div>
 
   <div class="doc-gap-sm"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Typography Utilities</div>
   <div class="doc-token-table">
     <div class="doc-token-header"><span>Class</span><span>Size</span><span>Weight</span></div>
@@ -5591,6 +7022,7 @@ function startToastTimer(toastEl) {
   </div>
 
   <div class="doc-gap-sm"></div>
+  <div class="doc-divider"></div>
   <div class="doc-section-label">Other Utilities</div>
   <div class="doc-token-table">
     <div class="doc-token-header"><span>Class</span><span>Property</span><span>Value</span></div>
@@ -5605,6 +7037,13 @@ function startToastTimer(toastEl) {
 
     </main>
   </div>
+
+  <!-- === Right rail — "On This Page" TOC === -->
+  <aside class="gds-docs-right" aria-label="Table of contents">
+    <div class="gds-docs-right__label">On This Page</div>
+    <nav class="gds-docs-toc" id="docsTOC"></nav>
+  </aside>
+</div>
 </div>
 
 <script>
@@ -5646,6 +7085,8 @@ const CRUMBS = {
   'filter-badge': 'Components > Filter Badge',
   modal: 'Components > Modal',
   sidepanel: 'Components > Side Panel',
+  tabs: 'Components > Tabs',
+  'data-table': 'Components > Data Table',
   utilities: 'Utilities > All Utilities',
 };
 
@@ -5666,6 +7107,71 @@ function navigateTo(page) {
 
   // Re-render Lucide icons for the newly visible section
   initLucideIcons();
+
+  // Rebuild "On This Page" table of contents for the new section
+  buildTOC(page);
+}
+
+// === "On This Page" TOC — scroll-spy over .doc-section-label =========
+let _tocObserver = null;
+const _tocIdRegistry = new Set();
+
+function _slugify(text, page) {
+  const base = (text || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '') || 'section';
+  return 'toc-' + page + '-' + base;
+}
+
+function buildTOC(page) {
+  const tocEl = document.getElementById('docsTOC');
+  if (!tocEl) return;
+  tocEl.innerHTML = '';
+
+  const section = document.getElementById('page-' + page);
+  if (!section) return;
+
+  const labels = section.querySelectorAll('.doc-section-label');
+  if (!labels.length) {
+    tocEl.innerHTML = '<span style="color:var(--gds-color-text-tertiary);font-size:var(--gds-font-size-body-sm);padding:var(--gds-space-4) var(--gds-space-12)">No sections</span>';
+    return;
+  }
+
+  // Ensure ids + build links
+  const items = [];
+  labels.forEach(el => {
+    if (!el.id) {
+      let id = _slugify(el.textContent, page);
+      let suffix = 1;
+      while (_tocIdRegistry.has(id)) id = _slugify(el.textContent, page) + '-' + (++suffix);
+      el.id = id;
+      _tocIdRegistry.add(id);
+    }
+    const a = document.createElement('a');
+    a.href = '#' + el.id;
+    a.className = 'gds-docs-toc__item';
+    a.dataset.target = el.id;
+    a.textContent = el.textContent.trim();
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById(el.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    tocEl.appendChild(a);
+    items.push({ el, link: a });
+  });
+
+  // Scroll-spy
+  if (_tocObserver) _tocObserver.disconnect();
+  _tocObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        items.forEach(i => i.link.classList.toggle('is-active', i.el.id === entry.target.id));
+      }
+    });
+  }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+
+  items.forEach(i => _tocObserver.observe(i.el));
 }
 
 // === Navigation click handlers ===
@@ -5673,11 +7179,231 @@ document.querySelectorAll('.doc-nav-item').forEach(btn => {
   btn.addEventListener('click', () => navigateTo(btn.dataset.page));
 });
 
+// === Docs search — ⌘K, dropdown, keyboard nav =========================
+(function() {
+  const input   = document.getElementById('docsSearch');
+  const results = document.getElementById('docsSearchResults');
+  const combo   = document.querySelector('.gds-docs-search');
+  if (!input || !results || !combo) return;
+
+  // --- Build index: walk every .doc-section once ---
+  // Also assign stable ids to every .doc-section-label so search picks survive
+  // page switches (buildTOC will reuse these ids instead of creating new ones).
+  const INDEX = [];
+  const _idSeen = new Set();
+  const _slug = (t, page) => {
+    let base = 'lbl-' + page + '-' + (t || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    let id = base, n = 1;
+    while (_idSeen.has(id)) id = base + '-' + (++n);
+    _idSeen.add(id);
+    return id;
+  };
+
+  document.querySelectorAll('.doc-section').forEach(sec => {
+    const id = sec.id;                       // "page-button"
+    if (!id || !id.startsWith('page-')) return;
+    const page = id.slice(5);
+    const crumb = (CRUMBS[page] || '').split(' > ');
+    const h1 = sec.querySelector('.doc-h1');
+    const title = h1 ? h1.textContent.trim() : page;
+    const desc = sec.querySelector('.doc-desc');
+    const descText = desc ? desc.textContent.trim() : '';
+
+    // Page-level entry
+    INDEX.push({
+      page, sectionId: null,
+      title, crumb: crumb.join(' › '),
+      haystack: (title + ' ' + descText + ' ' + crumb.join(' ')).toLowerCase(),
+      kind: 'page'
+    });
+
+    // Section-level entries (every .doc-section-label inside this page)
+    sec.querySelectorAll('.doc-section-label').forEach(lbl => {
+      if (!lbl.id) lbl.id = _slug(lbl.textContent, page);
+      INDEX.push({
+        page, sectionId: lbl.id,
+        title: lbl.textContent.trim(),
+        crumb: (crumb[1] || page),
+        haystack: (lbl.textContent + ' ' + title).toLowerCase(),
+        kind: 'section'
+      });
+    });
+  });
+
+  // --- Render helpers ---
+  const escapeHtml = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const highlight = (text, q) => {
+    if (!q) return escapeHtml(text);
+    const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+    return escapeHtml(text).replace(re, '<mark>$1</mark>');
+  };
+
+  let activeIdx = -1;
+  let currentHits = [];
+
+  function render(q) {
+    activeIdx = -1;
+    results.innerHTML = '';
+    combo.setAttribute('aria-expanded', 'true');
+    results.classList.add('is-open');
+
+    if (!q) {
+      results.classList.remove('is-open');
+      combo.setAttribute('aria-expanded', 'false');
+      return;
+    }
+
+    const ql = q.toLowerCase();
+    currentHits = INDEX
+      .filter(it => it.haystack.includes(ql))
+      .slice(0, 20);
+
+    // Every result lives inside a single .gds-menu container
+    const menu = document.createElement('div');
+    menu.className = 'gds-menu';
+    results.appendChild(menu);
+
+    if (!currentHits.length) {
+      const empty = document.createElement('div');
+      empty.className = 'gds-menu__group';
+      empty.style.textAlign = 'center';
+      empty.style.textTransform = 'none';
+      empty.style.letterSpacing = '0';
+      empty.style.padding = 'var(--gds-space-12)';
+      empty.textContent = 'No results for "' + q + '"';
+      menu.appendChild(empty);
+      return;
+    }
+
+    const pages = currentHits.filter(h => h.kind === 'page');
+    const sections = currentHits.filter(h => h.kind === 'section');
+
+    const mkRow = (hit, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gds-menu__item gds-menu__item--rich';
+      btn.setAttribute('role', 'option');
+      btn.dataset.idx = i;
+      btn.innerHTML =
+        '<span class="gds-menu__icon">' +
+          (hit.kind === 'page'
+            ? '<i data-lucide="file-text"></i>'
+            : '<i data-lucide="hash"></i>') +
+        '</span>' +
+        '<span class="gds-menu__content">' +
+          '<span class="gds-menu__label">' + highlight(hit.title, q) + '</span>' +
+          '<span class="gds-menu__desc">' + escapeHtml(hit.crumb) + '</span>' +
+        '</span>';
+      btn.addEventListener('click', () => pick(i));
+      btn.addEventListener('mouseenter', () => setActive(i));
+      return btn;
+    };
+
+    let idx = 0;
+    if (pages.length) {
+      const grp = document.createElement('div');
+      grp.className = 'gds-menu__group';
+      grp.textContent = 'Pages';
+      menu.appendChild(grp);
+      pages.forEach(h => menu.appendChild(mkRow(h, idx++)));
+    }
+    if (sections.length) {
+      if (pages.length) {
+        const div = document.createElement('div');
+        div.className = 'gds-menu__divider';
+        menu.appendChild(div);
+      }
+      const grp = document.createElement('div');
+      grp.className = 'gds-menu__group';
+      grp.textContent = 'Sections';
+      menu.appendChild(grp);
+      sections.forEach(h => menu.appendChild(mkRow(h, idx++)));
+    }
+
+    currentHits = pages.concat(sections);
+    setActive(0);
+
+    // Render the Lucide icons we just injected
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  function setActive(i) {
+    activeIdx = i;
+    results.querySelectorAll('.gds-menu__item').forEach((el, idx) => {
+      el.classList.toggle('is-active', idx === i);
+    });
+    const activeEl = results.querySelector('.gds-menu__item.is-active');
+    if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+  }
+
+  function pick(i) {
+    const hit = currentHits[i];
+    if (!hit) return;
+    close();
+    input.value = '';
+    navigateTo(hit.page);
+    if (hit.sectionId) {
+      // Let navigateTo finish rendering before scrolling
+      setTimeout(() => {
+        const el = document.getElementById(hit.sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+  }
+
+  function close() {
+    results.classList.remove('is-open');
+    combo.setAttribute('aria-expanded', 'false');
+  }
+
+  // --- Input handlers ---
+  input.addEventListener('input', e => render(e.target.value.trim()));
+  input.addEventListener('focus', () => { if (input.value.trim()) render(input.value.trim()); });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); if (currentHits.length) setActive((activeIdx + 1) % currentHits.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); if (currentHits.length) setActive((activeIdx - 1 + currentHits.length) % currentHits.length); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (activeIdx >= 0) pick(activeIdx); }
+    else if (e.key === 'Escape') { close(); input.blur(); }
+  });
+
+  // Click outside → close
+  document.addEventListener('click', e => {
+    if (!combo.contains(e.target)) close();
+  });
+
+  // --- Global ⌘K / Ctrl+K shortcut ---
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
+})();
+
+// === Topbar nav active-state sync (Docs / Components / Tokens) ===
+(function() {
+  const COMPONENT_PAGES = new Set(['button','checkbox','input','radio','toggle','menu','dropdown','chip','alert','toast','avatar','badge','status-dot','pill','pct-badge','filter-badge','modal','sidepanel','tabs','data-table','pagination']);
+  const TOKEN_PAGES = new Set(['tokens','colors','spacing','typography','shadows','icons']);
+  const origNavigateTo = window.navigateTo;
+  window.navigateTo = function(page) {
+    origNavigateTo(page);
+    document.querySelectorAll('.gds-docs-topbar__link').forEach(l => l.classList.remove('gds-docs-topbar__link--active'));
+    const links = document.querySelectorAll('.gds-docs-topbar__link');
+    if (COMPONENT_PAGES.has(page)) links[1]?.classList.add('gds-docs-topbar__link--active');
+    else if (TOKEN_PAGES.has(page)) links[2]?.classList.add('gds-docs-topbar__link--active');
+    else links[0]?.classList.add('gds-docs-topbar__link--active');
+  };
+})();
+
 // === Restore page from URL on load ===
 (function() {
   const params = getParams();
   if (params.page && document.getElementById('page-' + params.page)) {
     navigateTo(params.page);
+  } else {
+    // Default active page is "install" — build its TOC
+    buildTOC('install');
   }
 })();
 
@@ -5687,10 +7413,16 @@ const THEME_TOKENS = {
   vpplayer: { primary: '#ef8c13', hover: '#D97F11', focus: '#ef8c13' },
 };
 
-function setTheme(theme) {
+function setTheme(theme, ev) {
   document.documentElement.setAttribute('data-theme', theme);
   document.querySelectorAll('.doc-theme-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  const target = (ev && ev.target) || (typeof event !== 'undefined' && event && event.target);
+  if (target) {
+    target.classList.add('active');
+  } else {
+    const fallback = document.querySelector(`.doc-theme-btn[onclick*="${theme}"]`);
+    if (fallback) fallback.classList.add('active');
+  }
 
   // Update token chain resolved values
   const t = THEME_TOKENS[theme];
@@ -5982,6 +7714,212 @@ document.querySelectorAll('.gds-sidepanel__content').forEach(function(content) {
       panel.style.display = 'none';
     });
   });
+})();
+
+// === Tab demo click handlers — toggle active state within each .gds-tabs ===
+document.querySelectorAll('.gds-tabs').forEach(tabsContainer => {
+  tabsContainer.addEventListener('click', (e) => {
+    const tab = e.target.closest('.gds-tab');
+    if (!tab || tab.classList.contains('gds-tab--disabled')) return;
+    // Don't toggle if clicking the close button
+    if (e.target.closest('.gds-tab__close')) return;
+    tabsContainer.querySelectorAll('.gds-tab').forEach(t => t.classList.remove('gds-tab--active'));
+    tab.classList.add('gds-tab--active');
+  });
+});
+
+// === Data table: dropdown toggle ===
+document.querySelectorAll('.gds-table__cell--action .gds-dropdown').forEach(dropdown => {
+  const btn = dropdown.querySelector('.gds-table__action-btn');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wasOpen = dropdown.classList.contains('is-open');
+      // Close all other dropdowns
+      document.querySelectorAll('.gds-dropdown.is-open').forEach(d => d.classList.remove('is-open'));
+      if (!wasOpen) dropdown.classList.add('is-open');
+    });
+  }
+});
+document.addEventListener('click', () => {
+  document.querySelectorAll('.gds-dropdown.is-open').forEach(d => d.classList.remove('is-open'));
+});
+
+// === Data table: select-all checkbox ===
+document.querySelectorAll('.gds-table__head .gds-table__cell--checkbox .gds-checkbox__input').forEach(selectAll => {
+  selectAll.addEventListener('change', () => {
+    const table = selectAll.closest('.gds-table, .gds-table--cards');
+    if (!table) return;
+    const bodyCheckboxes = table.querySelectorAll('.gds-table__body .gds-table__cell--checkbox .gds-checkbox__input');
+    bodyCheckboxes.forEach(cb => { cb.checked = selectAll.checked; });
+    table.querySelectorAll('.gds-table__body .gds-table__row').forEach(row => {
+      row.classList.toggle('gds-table__row--selected', selectAll.checked);
+    });
+  });
+});
+
+// ============================================================================
+// Pagination — live interactive demo
+//   - First / Prev / Next / Last + numbered pages with ellipsis compression
+//   - Keyboard: ← → Home End, Enter/Space on a page
+//   - Items-per-page via real .gds-menu popover (click outside / Esc to close)
+//   - Summary text updates live
+// ============================================================================
+(function initPaginationLive() {
+  const root = document.getElementById('docsPaginationLive');
+  if (!root) return;
+
+  const pager      = root.querySelector('[data-role="pager"]');
+  const summary    = root.querySelector('[data-role="summary"]');
+  const sizeBtn    = root.querySelector('[data-role="size-trigger"]');
+  const sizeLabel  = root.querySelector('[data-role="size-label"]');
+  const sizeMenu   = root.querySelector('[data-role="size-menu"]');
+
+  const state = {
+    current:  parseInt(root.dataset.current,  10) || 1,
+    pageSize: parseInt(root.dataset.pageSize, 10) || 10,
+    total:    parseInt(root.dataset.total,    10) || 0,
+  };
+
+  // Build a compact range: [1, '…', c-1, c, c+1, '…', last]
+  function buildRange(current, totalPages) {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const range = [1];
+    const left  = Math.max(2, current - 1);
+    const right = Math.min(totalPages - 1, current + 1);
+    if (left > 2) range.push('…');
+    for (let i = left; i <= right; i++) range.push(i);
+    if (right < totalPages - 1) range.push('…');
+    range.push(totalPages);
+    return range;
+  }
+
+  function render() {
+    const totalPages = Math.max(1, Math.ceil(state.total / state.pageSize));
+    if (state.current > totalPages) state.current = totalPages;
+    if (state.current < 1) state.current = 1;
+
+    const from = (state.current - 1) * state.pageSize + 1;
+    const to   = Math.min(state.current * state.pageSize, state.total);
+    summary.textContent = `Viewing ${from} to ${to} of ${state.total} Items`;
+    sizeLabel.textContent = `${state.pageSize} Items per page`;
+
+    const atFirst = state.current === 1;
+    const atLast  = state.current === totalPages;
+
+    const range = buildRange(state.current, totalPages);
+
+    pager.innerHTML = '';
+
+    const frag = document.createDocumentFragment();
+
+    // First
+    frag.appendChild(makeIconBtn('chevrons-left', 'First page', atFirst, () => go(1)));
+    // Prev
+    frag.appendChild(makeIconBtn('chevron-left', 'Previous page', atFirst, () => go(state.current - 1)));
+
+    // Numbers
+    range.forEach((p) => {
+      if (p === '…') {
+        const span = document.createElement('span');
+        span.className = 'gds-pagination__ellipsis';
+        span.setAttribute('aria-hidden', 'true');
+        span.textContent = '…';
+        frag.appendChild(span);
+        return;
+      }
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gds-pagination__item';
+      btn.textContent = String(p);
+      btn.dataset.page = String(p);
+      if (p === state.current) {
+        btn.classList.add('gds-pagination__item--current');
+        btn.setAttribute('aria-current', 'page');
+      }
+      btn.addEventListener('click', () => go(p));
+      frag.appendChild(btn);
+    });
+
+    // Next
+    frag.appendChild(makeIconBtn('chevron-right', 'Next page', atLast, () => go(state.current + 1)));
+    // Last
+    frag.appendChild(makeIconBtn('chevrons-right', 'Last page', atLast, () => go(totalPages)));
+
+    pager.appendChild(frag);
+
+    if (window.lucide) window.lucide.createIcons({
+      attrs: { 'stroke-width': getComputedStyle(document.documentElement).getPropertyValue('--gds-icon-stroke').trim() || 1.5 },
+    });
+  }
+
+  function makeIconBtn(icon, label, disabled, onClick) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'gds-pagination__item gds-pagination__item--icon-only';
+    btn.setAttribute('aria-label', label);
+    if (disabled) {
+      btn.classList.add('gds-pagination__item--disabled');
+      btn.disabled = true;
+    } else {
+      btn.addEventListener('click', onClick);
+    }
+    const i = document.createElement('i');
+    i.setAttribute('data-lucide', icon);
+    btn.appendChild(i);
+    return btn;
+  }
+
+  function go(page) {
+    state.current = page;
+    render();
+  }
+
+  // Keyboard nav when focus is inside the pager
+  pager.addEventListener('keydown', (e) => {
+    const totalPages = Math.max(1, Math.ceil(state.total / state.pageSize));
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); go(Math.max(1, state.current - 1)); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(Math.min(totalPages, state.current + 1)); }
+    if (e.key === 'Home')       { e.preventDefault(); go(1); }
+    if (e.key === 'End')        { e.preventDefault(); go(totalPages); }
+  });
+
+  // --- Size menu popover ---
+  function openMenu() {
+    sizeMenu.hidden = false;
+    sizeBtn.setAttribute('aria-expanded', 'true');
+    // Focus first option
+    const first = sizeMenu.querySelector('.gds-menu__item');
+    if (first) first.focus();
+  }
+  function closeMenu() {
+    sizeMenu.hidden = true;
+    sizeBtn.setAttribute('aria-expanded', 'false');
+  }
+  sizeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sizeMenu.hidden ? openMenu() : closeMenu();
+  });
+  sizeMenu.querySelectorAll('.gds-menu__item').forEach((item) => {
+    item.addEventListener('click', () => {
+      state.pageSize = parseInt(item.dataset.size, 10) || 10;
+      state.current = 1;
+      closeMenu();
+      render();
+      sizeBtn.focus();
+    });
+  });
+  // Esc closes; outside click closes
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !sizeMenu.hidden) { closeMenu(); sizeBtn.focus(); }
+  });
+  document.addEventListener('click', (e) => {
+    if (!root.contains(e.target)) closeMenu();
+  });
+
+  render();
 })();
 
 </script>

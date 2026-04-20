@@ -34,6 +34,9 @@
 @use 'tokens/component-filter-badge';
 @use 'tokens/component-modal';
 @use 'tokens/component-sidepanel';
+@use 'tokens/component-tabs';
+@use 'tokens/component-data-table';
+@use 'tokens/component-pagination';
 
 // --- Component styles ---
 @use 'components/button';
@@ -54,6 +57,9 @@
 @use 'components/filter-badge';
 @use 'components/modal';
 @use 'components/sidepanel';
+@use 'components/tabs';
+@use 'components/data-table';
+@use 'components/pagination';
 
 // --- Utility classes ---
 @use 'utilities/colors';

@@ -1,0 +1,705 @@
+// ============================================================================
+// Component / Data Table
+// Agent: Component Builder
+// BEM: .gds-table, .gds-table__head, .gds-table__row, .gds-table__cell, etc.
+// Rule: ZERO hardcoded values — all references to component / foundation tokens
+// Rule: Dogfood GDS — cells compose existing GDS components (checkbox, avatar-name,
+//       status-dot, pill, chip, button). No custom one-off UI for cell content.
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+@use '../tokens/component-data-table' as *;
+
+// =============================================================================
+// Container
+// =============================================================================
+.gds-table {
+  width: 100%;
+  border: var(--table-border-width) solid var(--table-border-color);
+  border-radius: var(--table-border-radius);
+  background: var(--table-bg);
+  font-family: var(--table-font-family);
+  overflow: hidden;
+}
+
+// Optional: scroll wrapper for horizontal overflow
+.gds-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// =============================================================================
+// Table structure (uses CSS table layout for column alignment)
+// =============================================================================
+.gds-table__table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: $space-0;
+  table-layout: auto;
+}
+
+// =============================================================================
+// Header
+// =============================================================================
+.gds-table__head {
+  .gds-table__row {
+    background: var(--table-header-bg);
+    height: var(--table-header-height);
+  }
+
+  .gds-table__cell {
+    color: var(--table-header-color);
+    font-size: var(--table-header-font-size);
+    font-weight: var(--table-header-font-weight);
+    line-height: var(--table-header-line-height);
+    white-space: nowrap;
+    user-select: none;
+    border-bottom: var(--table-row-border-width) solid var(--table-row-border-color);
+  }
+}
+
+// =============================================================================
+// Body
+// =============================================================================
+.gds-table__body {
+  .gds-table__row {
+    background: var(--table-row-bg);
+    height: var(--table-row-height);
+    transition: background var(--table-transition-duration) var(--table-transition-easing);
+
+    &:not(:last-child) {
+      .gds-table__cell {
+        border-bottom: var(--table-row-border-width) solid var(--table-row-border-color);
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Cell (th / td)
+// =============================================================================
+.gds-table__cell {
+  padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+  color: var(--table-row-color);
+  font-size: var(--table-row-font-size);
+  font-weight: var(--table-row-font-weight);
+  line-height: var(--table-row-line-height);
+  text-align: left;
+  vertical-align: middle;
+}
+
+// Flex content wrapper inside a cell (for icon + text combos using GDS components)
+.gds-table__cell-content {
+  display: flex;
+  align-items: center;
+  gap: var(--table-cell-gap);
+  min-width: $space-0;
+  white-space: nowrap;
+}
+
+// =============================================================================
+// Checkbox cell (fixed width, centered)
+// Uses: .gds-checkbox inside
+// =============================================================================
+.gds-table__cell--checkbox {
+  width: var(--table-checkbox-cell-width);
+  text-align: center;
+  padding-left: var(--table-cell-padding-x);
+  padding-right: var(--table-cell-padding-x);
+  // Collapse line-height so vertical-align:middle centers geometrically
+  line-height: 0;
+
+  // Override gds-checkbox gap/label in table context — no label, centered
+  .gds-checkbox {
+    gap: $space-0;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// Cells containing only a GDS component (no raw text) — collapse line-height
+// so vertical-align:middle centers to the cell midpoint, not the text baseline.
+.gds-table__cell--action {
+  line-height: 0;
+}
+
+// Auto-detect component-only cells and fix baseline centering
+.gds-table__cell:has(> .gds-avatar-name),
+.gds-table__cell:has(> .gds-avatar-group),
+.gds-table__cell:has(> .gds-badge),
+.gds-table__cell:has(> .gds-btn) {
+  line-height: 0;
+}
+
+
+// =============================================================================
+// Sticky (frozen) columns for horizontal scroll
+// Apply .gds-table__cell--sticky-checkbox on checkbox cells
+// Apply .gds-table__cell--sticky-entry on entry (2nd) cells
+// =============================================================================
+.gds-table__cell--sticky-checkbox,
+.gds-table__cell--sticky-entry {
+  position: sticky;
+  z-index: 2;
+}
+
+.gds-table__cell--sticky-checkbox {
+  left: $space-0;
+}
+
+.gds-table__cell--sticky-entry {
+  left: var(--table-checkbox-cell-width);
+}
+
+// Remove left padding on the cell immediately after a checkbox to avoid double gap
+.gds-table__cell--checkbox + .gds-table__cell {
+  padding-left: $space-0;
+}
+
+// Sticky cells need their own background to hide scrolled content behind them
+.gds-table__head .gds-table__cell--sticky-checkbox,
+.gds-table__head .gds-table__cell--sticky-entry {
+  background: var(--table-header-bg);
+}
+
+.gds-table__body .gds-table__cell--sticky-checkbox,
+.gds-table__body .gds-table__cell--sticky-entry {
+  background: var(--table-row-bg);
+}
+
+// Inherit hover/selected bg on sticky cells
+.gds-table__body .gds-table__row:hover .gds-table__cell--sticky-checkbox,
+.gds-table__body .gds-table__row:hover .gds-table__cell--sticky-entry {
+  background: var(--table-row-hover-bg);
+}
+
+.gds-table__row--selected .gds-table__cell--sticky-checkbox,
+.gds-table__row--selected .gds-table__cell--sticky-entry {
+  background: var(--table-row-selected-bg);
+}
+
+// =============================================================================
+// Action / overflow cell (fixed width, rightmost)
+// =============================================================================
+.gds-table__cell--action {
+  width: var(--table-action-cell-width);
+  text-align: center;
+}
+
+.gds-table__action-btn {
+  // Button reset
+  background: none;
+  border: none;
+  padding: $space-4;
+  margin: $space-0;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+  color: var(--table-action-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-s;
+  transition: color var(--table-transition-duration) var(--table-transition-easing),
+              background var(--table-transition-duration) var(--table-transition-easing);
+
+  &:hover {
+    color: var(--table-action-hover-color);
+    background: var(--gds-color-bg-secondary);
+  }
+
+  &:focus-visible {
+    outline: $border-width-thick solid var(--gds-color-border-focus);
+    outline-offset: $space-2;
+  }
+
+  svg,
+  i {
+    width: var(--table-action-icon-size);
+    height: var(--table-action-icon-size);
+  }
+}
+
+// Dropdown wrapper inside action cell — positions the menu relative to the button
+.gds-table__cell--action .gds-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.gds-table__cell--action .gds-dropdown__menu {
+  position: absolute;
+  top: 100%;
+  right: $space-0;
+  margin-top: $space-4;
+  min-width: $space-160;
+  z-index: 10;
+  display: none;
+}
+
+.gds-table__cell--action .gds-dropdown.is-open .gds-dropdown__menu {
+  display: block;
+}
+
+// =============================================================================
+// Sortable header cell
+// =============================================================================
+.gds-table__cell--sortable {
+  cursor: pointer;
+
+  .gds-table__sort-icon {
+    display: inline-flex;
+    width: var(--table-sort-icon-size);
+    height: var(--table-sort-icon-size);
+    margin-left: var(--table-sort-icon-gap);
+    color: var(--table-sort-color);
+    vertical-align: middle;
+    transition: color var(--table-transition-duration) var(--table-transition-easing);
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &:hover .gds-table__sort-icon {
+    color: var(--table-sort-active-color);
+  }
+}
+
+.gds-table__cell--sorted {
+  .gds-table__sort-icon {
+    color: var(--table-sort-active-color);
+  }
+}
+
+.gds-table__cell--sorted-desc {
+  .gds-table__sort-icon {
+    transform: rotate(180deg);
+  }
+}
+
+// =============================================================================
+// Row states
+// =============================================================================
+
+// Hover
+.gds-table__body .gds-table__row:hover {
+  background: var(--table-row-hover-bg);
+}
+
+// Striped modifier
+.gds-table--striped {
+  .gds-table__body .gds-table__row:nth-child(even) {
+    background: var(--table-row-striped-bg);
+  }
+
+  .gds-table__body .gds-table__row:nth-child(even):hover {
+    background: var(--table-row-hover-bg);
+  }
+}
+
+// Selected row
+.gds-table__row--selected {
+  background: var(--table-row-selected-bg) !important;
+}
+
+// Hover preview (forced, for demos — mimics :hover without JS)
+.gds-table__row--hover {
+  background: var(--table-row-hover-bg);
+}
+
+// Striped preview (forced, for demos — mimics striped without nth-child)
+.gds-table__row--striped {
+  background: var(--table-row-striped-bg);
+}
+
+// =============================================================================
+// State label cell (used in docs to label demo rows: "Default", "Hovered", etc.)
+// =============================================================================
+.gds-table__cell--label {
+  width: $space-80;
+  color: var(--table-header-color);
+  font-size: var(--table-header-font-size);
+  font-weight: var(--table-header-font-weight);
+}
+
+// =============================================================================
+// Card variant (each row is a visual card with shadow, gap, rounded corners)
+// Cells compose: .gds-avatar-name, .gds-badge, .gds-pill, .gds-checkbox
+// =============================================================================
+.gds-table--cards {
+  // Remove container border — cards have individual shadows
+  border: none;
+  border-radius: $space-0;
+  background: transparent;
+  overflow: visible;
+
+  .gds-table__table {
+    border-collapse: separate;
+    border-spacing: 0 var(--table-card-gap);
+  }
+
+  // Header row as its own card
+  .gds-table__head .gds-table__row {
+    background: var(--table-row-bg);
+    box-shadow: var(--table-card-header-shadow);
+
+    .gds-table__cell {
+      border-bottom: none;
+      background: var(--table-row-bg);
+    }
+
+    .gds-table__cell:first-child {
+      border-radius: var(--table-card-row-radius) 0 0 var(--table-card-row-radius);
+    }
+
+    .gds-table__cell:last-child {
+      border-radius: 0 var(--table-card-row-radius) var(--table-card-row-radius) 0;
+    }
+  }
+
+  // Body rows — each is a card
+  .gds-table__body .gds-table__row {
+    height: auto;
+    box-shadow: var(--table-card-shadow);
+
+    .gds-table__cell {
+      background: var(--table-row-bg);
+      border-bottom: none;
+      padding-top: var(--table-card-row-padding-y);
+      padding-bottom: var(--table-card-row-padding-y);
+    }
+
+    .gds-table__cell:first-child {
+      border-radius: var(--table-card-row-radius) 0 0 var(--table-card-row-radius);
+    }
+
+    .gds-table__cell:last-child {
+      border-radius: 0 var(--table-card-row-radius) var(--table-card-row-radius) 0;
+    }
+
+    &:not(:last-child) .gds-table__cell {
+      border-bottom: none;
+    }
+  }
+
+  // Hover on card rows
+  .gds-table__body .gds-table__row:hover .gds-table__cell {
+    background: var(--table-row-hover-bg);
+  }
+
+  // Selected card rows
+  .gds-table__row--selected .gds-table__cell {
+    background: var(--table-row-selected-bg) !important;
+  }
+}
+
+// Card: entry cell (image + title + subtitle)
+// This is table-specific layout — the image thumbnail is not an avatar
+.gds-table__entry {
+  display: flex;
+  align-items: center;
+  gap: var(--table-card-entry-gap);
+  min-width: $space-0;
+}
+
+.gds-table__entry-image {
+  width: var(--table-card-image-size);
+  height: var(--table-card-image-size);
+  border-radius: var(--table-card-image-radius);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.gds-table__entry-info {
+  display: flex;
+  flex-direction: column;
+  gap: $space-0;
+  min-width: $space-0;
+}
+
+.gds-table__entry-title {
+  font-size: var(--table-card-title-size);
+  font-weight: var(--table-card-title-weight);
+  color: var(--table-card-title-color);
+  line-height: var(--table-row-line-height);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gds-table__entry-subtitle {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  font-size: var(--table-card-subtitle-size);
+  font-weight: var(--table-card-subtitle-weight);
+  color: var(--table-card-subtitle-color);
+  line-height: var(--table-row-line-height);
+}
+
+// =============================================================================
+// Avatar group in table context — counter must match 24px avatars used in cells
+// =============================================================================
+.gds-table__cell .gds-avatar-group__counter {
+  width: var(--avatar-size-24);
+  height: var(--avatar-size-24);
+  font-size: var(--avatar-font-24);
+}
+
+
+// =============================================================================
+// Status cell — use .gds-badge .gds-badge--{variant} (GDS component, default subtle)
+// Provides dot + label in a single GDS component. No custom wrapper needed.
+// =============================================================================
+
+// =============================================================================
+// Secondary text cell (date, label columns — lighter color, smaller size)
+// =============================================================================
+.gds-table__cell--secondary {
+  color: var(--table-text-secondary-color);
+  font-size: var(--table-text-secondary-size);
+}
+
+// =============================================================================
+// Header action text (e.g. "Edit" column header)
+// =============================================================================
+.gds-table__cell--header-action {
+  font-weight: #{$font-weight-semibold};
+  text-align: right;
+  padding-right: var(--table-cell-padding-x);
+}
+
+// =============================================================================
+// Empty state
+// =============================================================================
+.gds-table__empty {
+  text-align: center;
+  padding: var(--table-empty-padding);
+  color: var(--table-empty-color);
+  font-size: var(--table-empty-font-size);
+}
+
+// =============================================================================
+// Borderless modifier
+// =============================================================================
+.gds-table--borderless {
+  border: none;
+  border-radius: $space-0;
+}
+
+// =============================================================================
+// Compact modifier (denser rows)
+// =============================================================================
+.gds-table--compact {
+  .gds-table__head .gds-table__row {
+    height: $space-24;
+  }
+
+  .gds-table__body .gds-table__row {
+    height: $space-32;
+  }
+
+  .gds-table__cell {
+    font-size: #{$font-size-12};
+    padding: $space-0 $space-8;
+  }
+}
+
+// =============================================================================
+// Bulk actions toolbar
+// Appears above table when rows are selected. Shows count + action buttons.
+// Toggle visibility with .gds-table__toolbar.is-visible
+// =============================================================================
+.gds-table__toolbar {
+  display: none;
+  align-items: center;
+  height: var(--table-toolbar-height);
+  background: var(--table-toolbar-bg);
+  color: var(--table-toolbar-color);
+  font-size: var(--table-toolbar-font-size);
+  font-weight: var(--table-toolbar-font-weight);
+  padding: $space-0 var(--table-toolbar-padding-x);
+  border-radius: var(--table-toolbar-radius);
+  gap: var(--table-toolbar-gap);
+  margin-bottom: var(--table-toolbar-gap-bottom);
+
+  &.is-visible {
+    display: flex;
+  }
+}
+
+.gds-table__toolbar-count {
+  margin-right: auto;
+}
+
+.gds-table__toolbar-divider {
+  width: $border-width-default;
+  height: $space-24;
+  background: var(--table-toolbar-divider);
+}
+
+.gds-table__toolbar-btn {
+  background: none;
+  border: none;
+  padding: $space-6 $space-12;
+  margin: $space-0;
+  font: inherit;
+  font-size: #{$font-size-12};
+  font-weight: #{$font-weight-medium};
+  cursor: pointer;
+  color: var(--table-toolbar-btn-color);
+  display: inline-flex;
+  align-items: center;
+  gap: $space-6;
+  border-radius: $radius-s;
+  transition: background var(--table-transition-duration) var(--table-transition-easing);
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--table-toolbar-btn-hover-bg);
+  }
+
+  &:focus-visible {
+    outline: $border-width-thick solid var(--table-toolbar-btn-color);
+    outline-offset: $space-2;
+  }
+
+  svg, i {
+    width: $icon-sm;
+    height: $icon-sm;
+  }
+}
+
+// =============================================================================
+// Loading state — skeleton rows
+// Apply .gds-table--loading on the container
+// =============================================================================
+.gds-table--loading {
+  pointer-events: none;
+  // Consumer should add aria-busy="true" on the table when loading
+}
+
+.gds-table__skeleton {
+  height: var(--table-skeleton-height);
+  background: var(--table-skeleton-color);
+  border-radius: var(--table-skeleton-radius);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--table-skeleton-shine) 50%,
+      transparent 100%
+    );
+    animation: gds-table-skeleton-pulse var(--table-skeleton-duration) ease-in-out infinite;
+  }
+}
+
+// Width variants for varied skeleton widths
+.gds-table__skeleton--wide   { width: 70%; }
+.gds-table__skeleton--medium { width: 50%; }
+.gds-table__skeleton--short  { width: 30%; }
+.gds-table__skeleton--xs     { width: 20%; }
+
+@keyframes gds-table-skeleton-pulse {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+// =============================================================================
+// Responsive stacking — on small screens rows collapse to card layout
+// Each cell shows as a label/value pair stacked vertically
+// =============================================================================
+@media (max-width: $table-bp-mobile) {
+  .gds-table--responsive {
+    border: none;
+    background: transparent;
+
+    .gds-table__head {
+      // Visually hide headers but keep accessible for screen readers
+      position: absolute;
+      width: $border-width-default;
+      height: $border-width-default;
+      padding: $space-0;
+      margin: -#{$border-width-default};
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: none;
+    }
+
+    .gds-table__table {
+      display: block;
+    }
+
+    .gds-table__body {
+      display: flex;
+      flex-direction: column;
+      gap: $space-12;
+    }
+
+    .gds-table__body .gds-table__row {
+      display: flex;
+      flex-direction: column;
+      background: var(--table-row-bg);
+      border-radius: var(--table-card-row-radius);
+      box-shadow: var(--table-card-shadow);
+      padding: $space-12;
+      height: auto;
+
+      &:not(:last-child) .gds-table__cell {
+        border-bottom: none;
+      }
+    }
+
+    .gds-table__cell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: $space-6 $space-0;
+      border-bottom: $border-width-default solid var(--table-row-border-color);
+      text-align: right;
+
+      &::before {
+        content: attr(data-label);
+        font-size: #{$font-size-12};
+        font-weight: #{$font-weight-semibold};
+        color: var(--table-header-color);
+        text-align: left;
+        margin-right: $space-12;
+        white-space: nowrap;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .gds-table__cell--checkbox {
+      display: none;
+    }
+
+    .gds-table__cell--action {
+      justify-content: flex-end;
+      width: auto;
+      &::before { display: none; }
+    }
+  }
+}
+
+// =============================================================================
+// Accessibility: focus visible on rows (keyboard nav)
+// =============================================================================
+.gds-table__row:focus-visible {
+  outline: $border-width-thick solid var(--gds-color-border-focus);
+  outline-offset: -#{$border-width-thick};
+}

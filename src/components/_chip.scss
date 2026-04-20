@@ -21,8 +21,8 @@
   color: var(--chip-text);
   font-family: inherit;
   font-size: var(--chip-md-font-size);
-  font-weight: $font-weight-regular;
-  line-height: $line-height-normal;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
   white-space: nowrap;
   max-width: 100%;
   border: $border-width-default solid transparent;
@@ -239,14 +239,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: $space-2 $space-6;
+  padding: var(--chip-md-padding);
   border-radius: var(--chip-radius);
   background: var(--chip-counter-bg);
   color: var(--chip-counter-text);
   font-family: inherit;
-  font-size: $font-size-12;
+  font-size: var(--chip-md-font-size);
   font-weight: $font-weight-medium;
-  line-height: $line-height-normal;
+  line-height: $line-height-tight;
   white-space: nowrap;
   cursor: pointer;
   border: none;

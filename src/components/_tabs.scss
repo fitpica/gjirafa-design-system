@@ -1,0 +1,394 @@
+// ============================================================================
+// Component / Tabs
+// Classes: .gds-tabs, .gds-tabs--vertical, .gds-tabs--filled, .gds-tabs--card
+//          .gds-tabs--sm
+//          .gds-tab, .gds-tab--active, .gds-tab--disabled, .gds-tab--icon-only
+//          .gds-tab__icon, .gds-tab__text, .gds-tab__badge, .gds-tab__status
+//          .gds-tab__close
+// Rule: ZERO hardcoded values — all references to component / foundation tokens
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-typography' as *;
+@use '../tokens/foundation-motion' as *;
+
+// ============================================================================
+// Tabs container — horizontal bordered (default)
+// ============================================================================
+
+.gds-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: var(--tab-bordered-gap);
+  border-bottom: var(--tab-bordered-border-width) solid var(--tab-border-color);
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: relative;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+// ============================================================================
+// Scroll fade wrapper
+// ============================================================================
+
+.gds-tabs-wrap {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: $space-0;
+    bottom: $space-0;
+    width: var(--tab-fade-width);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity var(--tab-duration) var(--tab-ease);
+  }
+
+  &::before {
+    left: $space-0;
+    background: linear-gradient(to right, var(--gds-color-bg-primary), transparent);
+  }
+
+  &::after {
+    right: $space-0;
+    background: linear-gradient(to left, var(--gds-color-bg-primary), transparent);
+  }
+
+  &--fade-left::before { opacity: 1; }
+  &--fade-right::after { opacity: 1; }
+}
+
+// ============================================================================
+// Individual tab item
+// ============================================================================
+
+.gds-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--tab-bordered-item-gap);
+  height: var(--tab-bordered-height);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  flex-shrink: 0;
+  // Reset button
+  background: none;
+  border: none;
+  padding: $space-0;
+  font: inherit;
+  outline: none;
+  // Bottom border
+  border-bottom: var(--tab-bordered-border-width) solid transparent;
+  margin-bottom: calc(-1 * #{$border-width-default});
+  transition:
+    color var(--tab-duration) var(--tab-ease),
+    border-color var(--tab-duration) var(--tab-ease),
+    background var(--tab-duration) var(--tab-ease),
+    box-shadow var(--tab-duration) var(--tab-ease),
+    opacity var(--tab-duration) var(--tab-ease);
+
+  &:focus-visible {
+    outline: none;
+    border-bottom-color: var(--tab-focus-ring);
+    border-bottom-width: $border-width-thick;
+  }
+}
+
+// ============================================================================
+// Tab elements
+// ============================================================================
+
+.gds-tab__text {
+  font-family: var(--gds-font-family-base);
+  font-size: var(--tab-font-size);
+  font-weight: var(--tab-font-weight);
+  line-height: var(--tab-line-height);
+  color: var(--tab-color-default);
+  transition: color var(--tab-duration) var(--tab-ease);
+}
+
+.gds-tab__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tab-icon-size);
+  height: var(--tab-icon-size);
+  flex-shrink: 0;
+  color: var(--tab-color-default);
+  transition: color var(--tab-duration) var(--tab-ease);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.gds-tab__status {
+  width: var(--tab-status-size);
+  height: var(--tab-status-size);
+  border-radius: $radius-pill;
+  background: var(--tab-status-bg);
+  flex-shrink: 0;
+}
+
+.gds-tab__badge {
+  flex-shrink: 0;
+}
+
+// Close button
+.gds-tab__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tab-close-size);
+  height: var(--tab-close-size);
+  flex-shrink: 0;
+  color: var(--tab-close-color);
+  background: none;
+  border: none;
+  padding: $space-0;
+  cursor: pointer;
+  border-radius: var(--tab-close-radius);
+  transition:
+    color var(--tab-duration) var(--tab-ease),
+    background var(--tab-duration) var(--tab-ease);
+
+  &:hover {
+    color: var(--tab-close-hover);
+    background: var(--tab-close-hover-bg);
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// ============================================================================
+// States — horizontal bordered
+// ============================================================================
+
+.gds-tab:hover .gds-tab__text,
+.gds-tab:hover .gds-tab__icon {
+  color: var(--tab-color-hover);
+}
+
+.gds-tab--active {
+  border-bottom-color: var(--tab-active-border);
+
+  .gds-tab__text,
+  .gds-tab__icon {
+    color: var(--tab-color-active);
+  }
+}
+
+// ============================================================================
+// Disabled state
+// ============================================================================
+
+.gds-tab--disabled {
+  opacity: var(--tab-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+
+  .gds-tab__text,
+  .gds-tab__icon {
+    color: var(--tab-disabled-color);
+  }
+}
+
+// ============================================================================
+// Icon-only tab
+// ============================================================================
+
+.gds-tab--icon-only {
+  gap: $space-0;
+}
+
+// ============================================================================
+// SM size
+// ============================================================================
+
+.gds-tabs--sm {
+  gap: var(--tab-bordered-sm-gap);
+
+  .gds-tab {
+    height: var(--tab-bordered-sm-height);
+    gap: var(--tab-bordered-sm-item-gap);
+  }
+
+  .gds-tab__text {
+    font-size: var(--tab-sm-font-size);
+  }
+
+  .gds-tab__icon {
+    width: var(--tab-sm-icon-size);
+    height: var(--tab-sm-icon-size);
+  }
+
+  .gds-tab__status {
+    width: var(--tab-sm-status-size);
+    height: var(--tab-sm-status-size);
+  }
+}
+
+// ============================================================================
+// Vertical variant
+// ============================================================================
+
+.gds-tabs--vertical {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--tab-vertical-gap);
+  border-bottom: none;
+  overflow-x: visible;
+
+  .gds-tab {
+    height: var(--tab-vertical-height);
+    gap: var(--tab-vertical-item-gap);
+    padding: var(--tab-vertical-padding-y) var(--tab-vertical-padding-x);
+    border-bottom: none;
+    border-left: var(--tab-bordered-border-width) solid transparent;
+    margin-bottom: $space-0;
+    border-radius: $space-0;
+    justify-content: flex-start;
+
+    &:focus-visible {
+      outline: none;
+      border-left-color: var(--tab-focus-ring);
+      border-left-width: $border-width-thick;
+    }
+  }
+
+  .gds-tab__text {
+    flex: 1 0 0;
+    min-width: $space-0;
+    text-align: left;
+  }
+
+  .gds-tab:hover .gds-tab__text,
+  .gds-tab:hover .gds-tab__icon {
+    color: var(--tab-color-hover);
+  }
+
+  .gds-tab--active {
+    background: var(--tab-vertical-active-bg);
+    border-left-color: var(--tab-active-border);
+    border-top-right-radius: var(--tab-vertical-active-radius);
+    border-bottom-right-radius: var(--tab-vertical-active-radius);
+
+    .gds-tab__text,
+    .gds-tab__icon {
+      color: var(--tab-color-hover);
+    }
+  }
+
+  // SM vertical
+  &.gds-tabs--sm {
+    gap: var(--tab-vertical-sm-gap);
+
+    .gds-tab {
+      height: var(--tab-vertical-sm-height);
+      padding: var(--tab-vertical-sm-padding-y) var(--tab-vertical-sm-padding-x);
+    }
+  }
+}
+
+// ============================================================================
+// Filled variant
+// ============================================================================
+
+.gds-tabs--filled {
+  gap: var(--tab-filled-gap);
+  border-bottom: none;
+  background: var(--tab-filled-wrapper-bg);
+  border-radius: var(--tab-filled-wrapper-radius);
+  padding: var(--tab-filled-wrapper-padding);
+  align-items: center;
+  overflow-x: auto;
+
+  .gds-tab {
+    height: auto;
+    gap: var(--tab-filled-item-gap);
+    padding: var(--tab-filled-padding-y) var(--tab-filled-padding-x);
+    border-bottom: none;
+    border-radius: var(--tab-filled-active-radius);
+    margin-bottom: $space-0;
+
+    &:focus-visible {
+      outline: $border-width-thick solid var(--tab-focus-ring);
+      outline-offset: calc(-1 * #{$border-width-thick});
+      border-radius: var(--tab-filled-active-radius);
+    }
+  }
+
+  .gds-tab:hover .gds-tab__text,
+  .gds-tab:hover .gds-tab__icon {
+    color: var(--tab-color-hover);
+  }
+
+  .gds-tab--active {
+    background: var(--tab-filled-active-bg);
+
+    .gds-tab__text,
+    .gds-tab__icon {
+      color: var(--tab-color-active);
+    }
+  }
+
+  // SM filled
+  &.gds-tabs--sm .gds-tab {
+    padding: var(--tab-filled-sm-padding-y) var(--tab-filled-sm-padding-x);
+    gap: var(--tab-filled-sm-item-gap);
+  }
+}
+
+// ============================================================================
+// Card variant
+// ============================================================================
+
+.gds-tabs--card {
+  gap: var(--tab-card-gap);
+  border-bottom: var(--tab-card-border-width) solid var(--tab-card-border-color);
+
+  .gds-tab {
+    padding: var(--tab-card-padding-y) var(--tab-card-padding-x);
+    background: var(--tab-card-bg);
+    border: var(--tab-card-border-width) solid transparent;
+    border-bottom: none;
+    border-radius: var(--tab-card-radius) var(--tab-card-radius) $space-0 $space-0;
+    margin-bottom: calc(-1 * #{$border-width-default});
+
+    &:focus-visible {
+      outline: $border-width-thick solid var(--tab-focus-ring);
+      outline-offset: calc(-1 * #{$border-width-thick});
+      border-radius: var(--tab-card-radius) var(--tab-card-radius) $space-0 $space-0;
+    }
+  }
+
+  .gds-tab:hover {
+    background: var(--tab-card-hover-bg);
+  }
+
+  .gds-tab--active {
+    background: var(--tab-card-active-bg);
+    border-color: var(--tab-card-border-color);
+    // Hide bottom border to "connect" tab with panel below
+    box-shadow: 0 #{$border-width-default} 0 $space-0 var(--tab-card-active-bg);
+
+    .gds-tab__text,
+    .gds-tab__icon {
+      color: var(--tab-color-active);
+    }
+  }
+
+  // SM card
+  &.gds-tabs--sm .gds-tab {
+    padding: var(--tab-vertical-sm-padding-y) var(--tab-filled-padding-x);
+  }
+}
