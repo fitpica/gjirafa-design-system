@@ -1,0 +1,47 @@
+// ============================================================================
+// Component Tokens / Card
+// Container primitive — header / body / footer slots + interactive/elevated
+// modifiers. Zero hardcoded values.
+// ============================================================================
+
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+
+:root {
+  // --- Surface ---
+  --card-bg:           var(--gds-color-bg-primary);
+  --card-border:       var(--gds-color-border-default);
+  --card-border-width: var(--gds-border-width-default);
+  --card-radius:       var(--gds-radius-lg);
+  --card-shadow:       var(--gds-shadow-sm);
+  --card-shadow-hover: var(--gds-shadow-sm-hover);
+  --card-shadow-elevated: var(--gds-shadow-md);
+
+  // --- Separator (between header/body/footer) ---
+  --card-separator-color: var(--gds-color-border-subtle);
+  --card-separator-width: var(--gds-border-width-default);
+
+  // --- Spacing (default = md) ---
+  --card-padding-sm: #{$space-12};
+  --card-padding-md: #{$space-16};
+  --card-padding-lg: #{$space-24};
+  --card-padding:    var(--card-padding-md);
+
+  --card-header-gap: #{$space-4};   // title ↔ subtitle
+  --card-footer-gap: #{$space-8};   // footer action buttons gap
+
+  // --- Typography ---
+  --card-title-size:    #{$font-size-16};
+  --card-title-weight:  #{$font-weight-medium};
+  --card-title-color:   var(--gds-color-text-primary);
+
+  --card-subtitle-size:   #{$font-size-12};
+  --card-subtitle-weight: #{$font-weight-regular};
+  --card-subtitle-color:  var(--gds-color-text-tertiary);
+
+  // --- Interactive ---
+  --card-hover-lift: #{$space-2};   // translateY on hover
+  --card-focus-ring-width: #{$border-width-thick};
+  --card-focus-ring:       var(--gds-color-border-focus);
+  --card-focus-ring-offset: #{$space-2};
+}

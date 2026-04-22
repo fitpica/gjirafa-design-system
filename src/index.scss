@@ -1,5 +1,5 @@
 // ============================================================================
-// Gjirafa Design System v2.3
+// Gjirafa Design System v2.4
 // Main entry point
 // ============================================================================
 
@@ -40,6 +40,9 @@
 @use 'tokens/component-tabs';
 @use 'tokens/component-data-table';
 @use 'tokens/component-pagination';
+@use 'tokens/component-skeleton';
+@use 'tokens/component-card';
+@use 'tokens/component-tooltip';
 
 // --- Component styles ---
 @use 'components/button';
@@ -63,6 +66,9 @@
 @use 'components/tabs';
 @use 'components/data-table';
 @use 'components/pagination';
+@use 'components/skeleton';
+@use 'components/card';
+@use 'components/tooltip';
 
 // --- Utility classes ---
 @use 'utilities/colors';

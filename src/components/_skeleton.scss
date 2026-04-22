@@ -1,0 +1,114 @@
+// ============================================================================
+// Component / Skeleton
+// Classes:
+//   .gds-skeleton                       — base placeholder (default: rect)
+//   .gds-skeleton--text                 — text line bar (pill radius, h = body-sm)
+//   .gds-skeleton--text-sm/md/lg/xl/2xl — text bar height variants
+//   .gds-skeleton--circle               — any-size circle (width/height on parent)
+//   .gds-skeleton--avatar-sm/md/lg/xl   — preset avatar placeholder sizes
+//   .gds-skeleton--rect                 — rectangle placeholder (hero, image)
+//   .gds-skeleton--w-25/50/75           — width helpers for varied line lengths
+//
+//   .gds-skeleton-group                 — vertical stack (column)
+//   .gds-skeleton-group--row            — horizontal cluster (row)
+//
+// Rule: ZERO hardcoded values — all references to component / foundation tokens.
+// Note: no animation in v2.4 — opacity-based static placeholder. Animation
+// needs a foundation pulse-duration token (not added yet; ask before adding).
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+
+// ============================================================================
+// Base
+// ============================================================================
+
+.gds-skeleton {
+  display: block;
+  width: 100%;
+  height: var(--skeleton-rect-h);
+  background: var(--skeleton-bg);
+  opacity: var(--skeleton-opacity);
+  border-radius: var(--skeleton-radius-rect);
+  flex-shrink: 0;
+}
+
+// ============================================================================
+// Text line variants — pill radius, shorter heights
+// ============================================================================
+
+.gds-skeleton--text {
+  height: var(--skeleton-text-h-md);  // default = body-sm height
+  border-radius: var(--skeleton-radius-text);
+}
+
+.gds-skeleton--text-sm  { height: var(--skeleton-text-h-sm); }
+.gds-skeleton--text-md  { height: var(--skeleton-text-h-md); }
+.gds-skeleton--text-lg  { height: var(--skeleton-text-h-lg); }
+.gds-skeleton--text-xl  { height: var(--skeleton-text-h-xl); }
+.gds-skeleton--text-2xl { height: var(--skeleton-text-h-2xl); }
+
+// --- Width helpers (useful for varied line lengths) ---
+.gds-skeleton--w-25 { width: 25%; }
+.gds-skeleton--w-50 { width: 50%; }
+.gds-skeleton--w-75 { width: 75%; }
+
+// ============================================================================
+// Circle (sized via parent or preset avatar classes)
+// ============================================================================
+
+.gds-skeleton--circle {
+  border-radius: var(--skeleton-radius-circle);
+  width: var(--skeleton-avatar-md);
+  height: var(--skeleton-avatar-md);
+}
+
+.gds-skeleton--avatar-sm {
+  width: var(--skeleton-avatar-sm);
+  height: var(--skeleton-avatar-sm);
+  border-radius: var(--skeleton-radius-circle);
+}
+
+.gds-skeleton--avatar-md {
+  width: var(--skeleton-avatar-md);
+  height: var(--skeleton-avatar-md);
+  border-radius: var(--skeleton-radius-circle);
+}
+
+.gds-skeleton--avatar-lg {
+  width: var(--skeleton-avatar-lg);
+  height: var(--skeleton-avatar-lg);
+  border-radius: var(--skeleton-radius-circle);
+}
+
+.gds-skeleton--avatar-xl {
+  width: var(--skeleton-avatar-xl);
+  height: var(--skeleton-avatar-xl);
+  border-radius: var(--skeleton-radius-circle);
+}
+
+// ============================================================================
+// Rectangle (explicit — same as base, for clarity in markup)
+// ============================================================================
+
+.gds-skeleton--rect {
+  height: var(--skeleton-rect-h);
+  border-radius: var(--skeleton-radius-rect);
+}
+
+// ============================================================================
+// Composition — grouping multiple skeletons
+// ============================================================================
+
+.gds-skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--skeleton-group-gap);
+  width: 100%;
+}
+
+.gds-skeleton-group--row {
+  flex-direction: row;
+  align-items: center;
+  width: auto;
+}

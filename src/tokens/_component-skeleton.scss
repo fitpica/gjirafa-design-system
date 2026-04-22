@@ -1,0 +1,38 @@
+// ============================================================================
+// Component Tokens / Skeleton
+// Placeholder shapes shown while content is loading — zero hardcoded values.
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+
+:root {
+  // --- Surface ---
+  --skeleton-bg:         #{$color-neutral-30};
+  --skeleton-opacity:    #{$opacity-disabled};
+
+  // --- Shape ---
+  --skeleton-radius-rect:   var(--gds-radius-md);
+  --skeleton-radius-text:   var(--gds-radius-full);  // pill for text bars
+  --skeleton-radius-circle: var(--gds-radius-full);  // circle for avatars
+
+  // --- Text line heights (match typography sizes) ---
+  --skeleton-text-h-sm:  #{$space-8};   // caption / body-xs
+  --skeleton-text-h-md:  #{$space-12};  // body-sm (default)
+  --skeleton-text-h-lg:  #{$space-16};  // body-base / body-lg
+  --skeleton-text-h-xl:  #{$space-20};  // title-sm / title-md
+  --skeleton-text-h-2xl: #{$space-24};  // title-lg / title-xl
+
+  // --- Avatar sizes (match .gds-avatar) ---
+  --skeleton-avatar-sm: #{$space-24};
+  --skeleton-avatar-md: #{$space-32};
+  --skeleton-avatar-lg: #{$space-48};
+  --skeleton-avatar-xl: #{$space-64};
+
+  // --- Rectangle defaults (hero/image placeholder) ---
+  --skeleton-rect-h:  #{$space-160};
+
+  // --- Vertical rhythm (for stacking multiple lines) ---
+  --skeleton-group-gap: #{$space-8};
+}

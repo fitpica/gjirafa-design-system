@@ -1,0 +1,164 @@
+// ============================================================================
+// Component / Tooltip
+// Classes:
+//   .gds-tooltip                          — wrapper (inline, position: relative)
+//   .gds-tooltip__bubble                  — floating label (role="tooltip")
+//   .gds-tooltip__bubble--top             — placement (default)
+//   .gds-tooltip__bubble--bottom
+//   .gds-tooltip__bubble--left
+//   .gds-tooltip__bubble--right
+//   .gds-tooltip__bubble--multiline       — allow line-wrap (default: nowrap)
+//
+//   .gds-tooltip.is-open                  — forces visible (for docs / controlled)
+//
+// Behavior:
+//   - Shows on :hover or :focus-within of .gds-tooltip wrapper.
+//   - `pointer-events: none` on the bubble so it never interferes with clicks.
+//   - Render the bubble as the LAST child of the wrapper so the arrow + z-index
+//     stack correctly.
+//
+// Accessibility:
+//   - The bubble SHOULD have `role="tooltip"` and a unique `id`.
+//   - The trigger SHOULD have `aria-describedby="<bubble-id>"`.
+//   - For keyboard-only users, tooltip appears when the trigger receives focus.
+//
+// Rule: ZERO hardcoded values — all references to component / foundation tokens.
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+
+// ============================================================================
+// Wrapper
+// ============================================================================
+
+.gds-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+// ============================================================================
+// Bubble
+// ============================================================================
+
+.gds-tooltip__bubble {
+  position: absolute;
+  z-index: var(--tooltip-z);
+  max-width: var(--tooltip-max-width);
+  padding: var(--tooltip-padding-y) var(--tooltip-padding-x);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-color);
+  border-radius: var(--tooltip-radius);
+  box-shadow: var(--tooltip-shadow);
+  font-family: inherit;
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--tooltip-duration) var(--tooltip-ease),
+    visibility var(--tooltip-duration) var(--tooltip-ease);
+
+  // --- Arrow (diamond sticking out of the bubble edge) ---
+  &::after {
+    content: "";
+    position: absolute;
+    width: var(--tooltip-arrow-size);
+    height: var(--tooltip-arrow-size);
+    background: var(--tooltip-bg);
+  }
+}
+
+// Let long copy wrap
+.gds-tooltip__bubble--multiline {
+  white-space: normal;
+}
+
+// ============================================================================
+// Show on hover / focus / forced .is-open
+// ============================================================================
+
+.gds-tooltip:hover > .gds-tooltip__bubble,
+.gds-tooltip:focus-within > .gds-tooltip__bubble,
+.gds-tooltip.is-open > .gds-tooltip__bubble {
+  opacity: 1;
+  visibility: visible;
+}
+
+// ============================================================================
+// Placement — TOP (default if no modifier given, positioned above the trigger)
+// ============================================================================
+
+.gds-tooltip__bubble,
+.gds-tooltip__bubble--top {
+  bottom: calc(100% + var(--tooltip-gap));
+  left: 50%;
+  transform: translateX(-50%);
+
+  &::after {
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+}
+
+// ============================================================================
+// Placement — BOTTOM
+// ============================================================================
+
+.gds-tooltip__bubble--bottom {
+  top: calc(100% + var(--tooltip-gap));
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+
+  &::after {
+    bottom: 100%;
+    top: auto;
+    left: 50%;
+    transform: translate(-50%, 50%) rotate(45deg);
+  }
+}
+
+// ============================================================================
+// Placement — LEFT
+// ============================================================================
+
+.gds-tooltip__bubble--left {
+  right: calc(100% + var(--tooltip-gap));
+  left: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+
+  &::after {
+    left: 100%;
+    top: 50%;
+    bottom: auto;
+    right: auto;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+}
+
+// ============================================================================
+// Placement — RIGHT
+// ============================================================================
+
+.gds-tooltip__bubble--right {
+  left: calc(100% + var(--tooltip-gap));
+  right: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+
+  &::after {
+    right: 100%;
+    left: auto;
+    top: 50%;
+    bottom: auto;
+    transform: translate(50%, -50%) rotate(45deg);
+  }
+}

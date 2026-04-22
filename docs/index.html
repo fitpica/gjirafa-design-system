@@ -925,7 +925,10 @@
         <button class="doc-nav-item" data-page="sidepanel">Side Panel <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
         <button class="doc-nav-item" data-page="tabs">Tabs <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
         <button class="doc-nav-item" data-page="data-table">Data Table <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
-        <button class="doc-nav-item" data-page="pagination">Pagination <span class="doc-nav-dot doc-nav-dot--new"></span></button>
+        <button class="doc-nav-item" data-page="pagination">Pagination <span class="doc-nav-dot doc-nav-dot--stable"></span></button>
+        <button class="doc-nav-item" data-page="card">Card <span class="doc-nav-dot doc-nav-dot--new"></span></button>
+        <button class="doc-nav-item" data-page="tooltip">Tooltip <span class="doc-nav-dot doc-nav-dot--new"></span></button>
+        <button class="doc-nav-item" data-page="skeleton">Skeleton <span class="doc-nav-dot doc-nav-dot--new"></span></button>
       </div>
       <div class="doc-nav-group">
         <div class="doc-nav-label">Utilities</div>
@@ -6973,6 +6976,376 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
 </section>
 
 <!-- ============================================================ -->
+<!-- CARD -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-card">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Card <span class="doc-status doc-status--stable">New in v2.4</span></h1>
+    <p class="doc-desc">The container primitive. Holds a header, body, and footer with sensible separators. Choose a surface (bordered / elevated / flat), optionally make it interactive (hoverable + focusable), and compose the rest with other GDS components.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-card</span><span class="doc-tag">--elevated</span><span class="doc-tag">--flat</span><span class="doc-tag">--interactive</span><span class="doc-tag">--padded-sm / --padded-lg</span></div>
+  </div>
+
+  <div class="doc-section-label">BASIC CARD</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:stretch;gap:var(--gds-space-16);max-width:calc(var(--gds-space-160) * 3)">
+      <article class="gds-card">
+        <div class="gds-card__header">
+          <h3 class="gds-card__title">Monthly report</h3>
+          <p class="gds-card__subtitle">Auto-generated on the 1st of every month</p>
+        </div>
+        <div class="gds-card__body">
+          <p class="gds-text-body-sm" style="margin:0">Revenue is up 12% versus last month. The full breakdown by region, plan, and campaign is ready for review.</p>
+        </div>
+        <div class="gds-card__footer">
+          <button class="gds-btn gds-btn--secondary gds-btn--sm"><span class="gds-btn__label">Dismiss</span></button>
+          <button class="gds-btn gds-btn--primary gds-btn--sm"><span class="gds-btn__label">Open report</span></button>
+        </div>
+      </article>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;article class="gds-card"&gt;
+  &lt;div class="gds-card__header"&gt;
+    &lt;h3 class="gds-card__title"&gt;Monthly report&lt;/h3&gt;
+    &lt;p class="gds-card__subtitle"&gt;Auto-generated on the 1st of every month&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="gds-card__body"&gt;
+    &lt;p&gt;Revenue is up 12% versus last month…&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="gds-card__footer"&gt;
+    &lt;button class="gds-btn gds-btn--secondary gds-btn--sm"&gt;Dismiss&lt;/button&gt;
+    &lt;button class="gds-btn gds-btn--primary gds-btn--sm"&gt;Open report&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</pre></details>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">SURFACE VARIANTS</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-32);flex-wrap:wrap">
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">.gds-card (default)</div>
+        <article class="gds-card">
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">Bordered surface with a subtle shadow. The default.</p></div>
+        </article>
+      </div>
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">--elevated</div>
+        <article class="gds-card gds-card--elevated">
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">No border, stronger shadow. Floats above the page.</p></div>
+        </article>
+      </div>
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">--flat</div>
+        <article class="gds-card gds-card--flat">
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">Background only — no border, no shadow. Quiet grouping.</p></div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">INTERACTIVE (HOVER + FOCUS)</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-32);flex-wrap:wrap">
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">Default (hover me)</div>
+        <a href="#page-card" class="gds-card gds-card--interactive" style="display:block;text-decoration:none">
+          <div class="gds-card__header"><h3 class="gds-card__title">Billing</h3><p class="gds-card__subtitle">Next invoice on May 1</p></div>
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">Hover lifts the card and deepens the shadow. Focus draws the ring.</p></div>
+        </a>
+      </div>
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">.is-hover-preview</div>
+        <div class="gds-card gds-card--interactive is-hover-preview">
+          <div class="gds-card__header"><h3 class="gds-card__title">Billing</h3><p class="gds-card__subtitle">Next invoice on May 1</p></div>
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">Frozen at hover state for visual spec / tests.</p></div>
+        </div>
+      </div>
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">.is-focus-preview</div>
+        <div class="gds-card gds-card--interactive is-focus-preview">
+          <div class="gds-card__header"><h3 class="gds-card__title">Billing</h3><p class="gds-card__subtitle">Next invoice on May 1</p></div>
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">Frozen at focus-visible state.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">PADDING SIZES</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-32);flex-wrap:wrap">
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">--padded-sm · 12px</div>
+        <article class="gds-card gds-card--padded-sm">
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">Compact.</p></div>
+        </article>
+      </div>
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">default · 16px</div>
+        <article class="gds-card">
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">Normal.</p></div>
+        </article>
+      </div>
+      <div style="flex:1 1 calc(var(--gds-space-160) * 1.4);min-width:calc(var(--gds-space-160) * 1.4)">
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-12)">--padded-lg · 24px</div>
+        <article class="gds-card gds-card--padded-lg">
+          <div class="gds-card__body"><p class="gds-text-body-sm" style="margin:0">Generous.</p></div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">WITH MEDIA (FLUSH TOP)</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas">
+      <article class="gds-card gds-card--elevated" style="width:calc(var(--gds-space-160) * 2)">
+        <div class="gds-card__media" style="height:calc(var(--gds-space-80) * 1.5);background:linear-gradient(135deg,var(--gds-color-blue-500),var(--gds-color-purple-500))"></div>
+        <div class="gds-card__header">
+          <h3 class="gds-card__title">New in CODEX</h3>
+          <p class="gds-card__subtitle">2 min read</p>
+        </div>
+        <div class="gds-card__body">
+          <p class="gds-text-body-sm" style="margin:0">Full-bleed image at the top — no padding gap — then headered content below.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">MODIFIER REFERENCE</div>
+  <div class="doc-preview">
+    <div class="doc-token-table">
+      <div class="doc-token-header"><span>Class</span><span>Effect</span><span>Foundation token</span></div>
+      <div class="doc-token-row"><span class="doc-mono">.gds-card</span><span>Base: border + sm shadow + radius-lg</span><span>--card-bg, --card-border, --card-radius</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--elevated</span><span>No border, shadow-md</span><span>--card-shadow-elevated</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--flat</span><span>No border, no shadow</span><span>(bg only)</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--interactive</span><span>Cursor pointer, hover lift + shadow, focus ring</span><span>--card-hover-lift, --card-shadow-hover</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--padded-sm</span><span>padding = 12px</span><span>--card-padding-sm</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--padded-lg</span><span>padding = 24px</span><span>--card-padding-lg</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__media</span><span>Full-bleed (no padding); image at card edges</span><span>—</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__header</span><span>Title + subtitle slot; auto-separator below</span><span>--card-separator-color</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__body</span><span>Main content; flex: 1</span><span>--card-padding</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__footer</span><span>Right-aligned actions; auto-separator above</span><span>--card-footer-gap</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TOOLTIP -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-tooltip">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Tooltip <span class="doc-status doc-status--stable">New in v2.4</span></h1>
+    <p class="doc-desc">A small floating label that appears on hover or focus of its trigger. Four placements, auto-shows via <code>:focus-within</code> so it works without JS, and uses a dark surface that stays consistent across both CODEX and VP Player themes.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-tooltip</span><span class="doc-tag">__bubble--top / --bottom / --left / --right</span><span class="doc-tag">--multiline</span><span class="doc-tag">role="tooltip"</span></div>
+  </div>
+
+  <div class="doc-section-label">LIVE — HOVER OR TAB TO A BUTTON</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-32);padding-top:calc(var(--gds-space-32) + var(--gds-space-16));padding-bottom:calc(var(--gds-space-32) + var(--gds-space-16))">
+      <span class="gds-tooltip">
+        <button class="gds-btn gds-btn--secondary gds-btn--md" aria-describedby="tip-save"><span class="gds-btn__label">Save</span></button>
+        <span id="tip-save" class="gds-tooltip__bubble gds-tooltip__bubble--top" role="tooltip">Saves your draft locally</span>
+      </span>
+      <span class="gds-tooltip">
+        <button class="gds-btn gds-btn--secondary gds-btn--md gds-btn--icon-only" aria-describedby="tip-help" aria-label="Help">
+          <i data-lucide="help-circle"></i>
+        </button>
+        <span id="tip-help" class="gds-tooltip__bubble gds-tooltip__bubble--bottom" role="tooltip">Opens the help center</span>
+      </span>
+      <span class="gds-tooltip">
+        <button class="gds-btn gds-btn--primary gds-btn--md" aria-describedby="tip-publish"><span class="gds-btn__label">Publish</span></button>
+        <span id="tip-publish" class="gds-tooltip__bubble gds-tooltip__bubble--right" role="tooltip">Makes this public</span>
+      </span>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;span class="gds-tooltip"&gt;
+  &lt;button class="gds-btn gds-btn--secondary" aria-describedby="tip-save"&gt;
+    &lt;span class="gds-btn__label"&gt;Save&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;span id="tip-save" class="gds-tooltip__bubble gds-tooltip__bubble--top" role="tooltip"&gt;
+    Saves your draft locally
+  &lt;/span&gt;
+&lt;/span&gt;</pre></details>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">PLACEMENT VARIANTS (FORCED OPEN WITH .is-open)</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:calc(var(--gds-space-64) * 1.5);padding-top:calc(var(--gds-space-48) + var(--gds-space-16));padding-bottom:calc(var(--gds-space-48) + var(--gds-space-16));padding-left:var(--gds-space-48);padding-right:var(--gds-space-48)">
+      <span class="gds-tooltip is-open">
+        <button class="gds-btn gds-btn--secondary gds-btn--md"><span class="gds-btn__label">Top</span></button>
+        <span class="gds-tooltip__bubble gds-tooltip__bubble--top" role="tooltip">Top placement (default)</span>
+      </span>
+      <span class="gds-tooltip is-open">
+        <button class="gds-btn gds-btn--secondary gds-btn--md"><span class="gds-btn__label">Bottom</span></button>
+        <span class="gds-tooltip__bubble gds-tooltip__bubble--bottom" role="tooltip">Bottom placement</span>
+      </span>
+      <span class="gds-tooltip is-open">
+        <button class="gds-btn gds-btn--secondary gds-btn--md"><span class="gds-btn__label">Left</span></button>
+        <span class="gds-tooltip__bubble gds-tooltip__bubble--left" role="tooltip">Left placement</span>
+      </span>
+      <span class="gds-tooltip is-open">
+        <button class="gds-btn gds-btn--secondary gds-btn--md"><span class="gds-btn__label">Right</span></button>
+        <span class="gds-tooltip__bubble gds-tooltip__bubble--right" role="tooltip">Right placement</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">MULTILINE (LONG COPY)</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="padding-top:calc(var(--gds-space-64) + var(--gds-space-16));padding-bottom:var(--gds-space-24)">
+      <span class="gds-tooltip is-open">
+        <button class="gds-btn gds-btn--secondary gds-btn--md"><span class="gds-btn__label">Multiline tip</span></button>
+        <span class="gds-tooltip__bubble gds-tooltip__bubble--top gds-tooltip__bubble--multiline" role="tooltip">When the label is more than a few words, add <code>--multiline</code> so it wraps at the max-width instead of stretching horizontally off-screen.</span>
+      </span>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;span class="gds-tooltip__bubble gds-tooltip__bubble--top gds-tooltip__bubble--multiline"&gt;
+  Long copy wraps at --tooltip-max-width (240px)
+&lt;/span&gt;</pre></details>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">ACCESSIBILITY</div>
+  <div class="doc-preview">
+    <div class="doc-token-table">
+      <div class="doc-token-header"><span>Rule</span><span>Why</span><span>How</span></div>
+      <div class="doc-token-row"><span><strong>role="tooltip"</strong></span><span>Tells assistive tech what the bubble is</span><span>Add to <code>__bubble</code></span></div>
+      <div class="doc-token-row"><span><strong>aria-describedby</strong></span><span>Links trigger → tooltip for screen readers</span><span>Trigger gets <code>aria-describedby="<em>bubble-id</em>"</code></span></div>
+      <div class="doc-token-row"><span><strong>Keyboard-visible</strong></span><span>Tooltips show on <code>:focus-within</code>, so tabbing reveals them</span><span>Built-in</span></div>
+      <div class="doc-token-row"><span><strong>No interactive content inside</strong></span><span>Tooltips disappear on blur — can't hold links or buttons</span><span>Use Popover for that</span></div>
+      <div class="doc-token-row"><span><strong>Icon-only triggers need labels</strong></span><span>Screen readers read the bubble, not the icon</span><span>Also add <code>aria-label</code> to the button</span></div>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">MODIFIER REFERENCE</div>
+  <div class="doc-preview">
+    <div class="doc-token-table">
+      <div class="doc-token-header"><span>Class</span><span>Effect</span><span>Token</span></div>
+      <div class="doc-token-row"><span class="doc-mono">.gds-tooltip</span><span>Inline wrapper (position: relative)</span><span>—</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__bubble</span><span>Floating label; default = top placement</span><span>--tooltip-bg, --tooltip-color</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__bubble--top</span><span>Above the trigger (default, explicit)</span><span>--tooltip-gap</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__bubble--bottom</span><span>Below the trigger</span><span>--tooltip-gap</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__bubble--left</span><span>Left side of the trigger</span><span>--tooltip-gap</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__bubble--right</span><span>Right side of the trigger</span><span>--tooltip-gap</span></div>
+      <div class="doc-token-row"><span class="doc-mono">__bubble--multiline</span><span>Allow line-wrap (default: nowrap)</span><span>--tooltip-max-width (240px)</span></div>
+      <div class="doc-token-row"><span class="doc-mono">.gds-tooltip.is-open</span><span>Force visible (for docs / controlled state)</span><span>—</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SKELETON -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-skeleton">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Skeleton <span class="doc-status doc-status--stable">New in v2.4</span></h1>
+    <p class="doc-desc">Placeholder shapes rendered while real content is fetching. Use instead of spinners on layouts where you already know the rough structure — lists, cards, tables, profiles. Compose <code>--text</code>, <code>--avatar-*</code>, and <code>--rect</code> inside a <code>.gds-skeleton-group</code>.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-skeleton</span><span class="doc-tag">--text / --text-sm / --text-lg / --text-xl / --text-2xl</span><span class="doc-tag">--avatar-sm / --avatar-md / --avatar-lg / --avatar-xl</span><span class="doc-tag">--circle / --rect</span><span class="doc-tag">--w-25 / --w-50 / --w-75</span></div>
+  </div>
+
+  <div class="doc-section-label">LIVE — PROFILE ROW LOADING</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:stretch;gap:var(--gds-space-16);max-width:calc(var(--gds-space-160) * 2.5)">
+      <div class="gds-skeleton-group gds-skeleton-group--row">
+        <div class="gds-skeleton gds-skeleton--avatar-lg"></div>
+        <div class="gds-skeleton-group" style="flex:1">
+          <div class="gds-skeleton gds-skeleton--text-xl gds-skeleton--w-50"></div>
+          <div class="gds-skeleton gds-skeleton--text gds-skeleton--w-75"></div>
+        </div>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-skeleton-group gds-skeleton-group--row"&gt;
+  &lt;div class="gds-skeleton gds-skeleton--avatar-lg"&gt;&lt;/div&gt;
+  &lt;div class="gds-skeleton-group" style="flex:1"&gt;
+    &lt;div class="gds-skeleton gds-skeleton--text-xl gds-skeleton--w-50"&gt;&lt;/div&gt;
+    &lt;div class="gds-skeleton gds-skeleton--text gds-skeleton--w-75"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">CARD LOADING STATE</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="max-width:calc(var(--gds-space-160) * 2.5)">
+      <article class="gds-card" style="width:100%">
+        <div class="gds-skeleton gds-skeleton--rect" style="height:calc(var(--gds-space-80) * 1.5);border-radius:0"></div>
+        <div class="gds-card__header">
+          <div class="gds-skeleton gds-skeleton--text-xl gds-skeleton--w-50"></div>
+          <div class="gds-skeleton gds-skeleton--text gds-skeleton--w-25"></div>
+        </div>
+        <div class="gds-card__body">
+          <div class="gds-skeleton-group">
+            <div class="gds-skeleton gds-skeleton--text"></div>
+            <div class="gds-skeleton gds-skeleton--text"></div>
+            <div class="gds-skeleton gds-skeleton--text gds-skeleton--w-75"></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">TEXT LINE SIZES</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:stretch;gap:var(--gds-space-12);max-width:calc(var(--gds-space-160) * 2.5)">
+      <div>
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-4)">--text-sm · 8px</div>
+        <div class="gds-skeleton gds-skeleton--text-sm gds-skeleton--w-75"></div>
+      </div>
+      <div>
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-4)">--text-md · 12px (default)</div>
+        <div class="gds-skeleton gds-skeleton--text"></div>
+      </div>
+      <div>
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-4)">--text-lg · 16px</div>
+        <div class="gds-skeleton gds-skeleton--text-lg gds-skeleton--w-75"></div>
+      </div>
+      <div>
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-4)">--text-xl · 20px</div>
+        <div class="gds-skeleton gds-skeleton--text-xl gds-skeleton--w-50"></div>
+      </div>
+      <div>
+        <div class="doc-state-label" style="margin-bottom:var(--gds-space-4)">--text-2xl · 24px</div>
+        <div class="gds-skeleton gds-skeleton--text-2xl gds-skeleton--w-50"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">AVATAR SIZES</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-32);align-items:flex-end">
+      <div style="text-align:center">
+        <div class="gds-skeleton gds-skeleton--avatar-sm"></div>
+        <div class="doc-mono gds-text-body-xs gds-text-placeholder" style="margin-top:var(--gds-space-6)">--avatar-sm · 24px</div>
+      </div>
+      <div style="text-align:center">
+        <div class="gds-skeleton gds-skeleton--avatar-md"></div>
+        <div class="doc-mono gds-text-body-xs gds-text-placeholder" style="margin-top:var(--gds-space-6)">--avatar-md · 32px</div>
+      </div>
+      <div style="text-align:center">
+        <div class="gds-skeleton gds-skeleton--avatar-lg"></div>
+        <div class="doc-mono gds-text-body-xs gds-text-placeholder" style="margin-top:var(--gds-space-6)">--avatar-lg · 48px</div>
+      </div>
+      <div style="text-align:center">
+        <div class="gds-skeleton gds-skeleton--avatar-xl"></div>
+        <div class="doc-mono gds-text-body-xs gds-text-placeholder" style="margin-top:var(--gds-space-6)">--avatar-xl · 64px</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">MODIFIER REFERENCE</div>
+  <div class="doc-preview">
+    <div class="doc-token-table">
+      <div class="doc-token-header"><span>Class</span><span>Shape</span><span>Default dimensions</span></div>
+      <div class="doc-token-row"><span class="doc-mono">.gds-skeleton</span><span>Rect base (full width)</span><span>w: 100%, h: 160px, radius: md</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--text</span><span>Pill text bar</span><span>h: 12px, radius: full</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--text-sm / --text-lg / --text-xl / --text-2xl</span><span>Text bar height variants</span><span>8 / 16 / 20 / 24 px</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--circle</span><span>Circle (avatar)</span><span>w/h: 32px, radius: full</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--avatar-sm / --avatar-md / --avatar-lg / --avatar-xl</span><span>Preset circle sizes</span><span>24 / 32 / 48 / 64 px</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--rect</span><span>Rectangle (image / card header)</span><span>w: 100%, h: 160px</span></div>
+      <div class="doc-token-row"><span class="doc-mono">--w-25 / --w-50 / --w-75</span><span>Width helper for varied text lengths</span><span>25% / 50% / 75%</span></div>
+      <div class="doc-token-row"><span class="doc-mono">.gds-skeleton-group</span><span>Stack (default column, gap: 8px)</span><span>—</span></div>
+      <div class="doc-token-row"><span class="doc-mono">.gds-skeleton-group--row</span><span>Horizontal cluster</span><span>—</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
 <!-- UTILITIES -->
 <!-- ============================================================ -->
 <section class="doc-section" id="page-utilities">
@@ -7087,6 +7460,10 @@ const CRUMBS = {
   sidepanel: 'Components > Side Panel',
   tabs: 'Components > Tabs',
   'data-table': 'Components > Data Table',
+  pagination: 'Components > Pagination',
+  card: 'Components > Card',
+  tooltip: 'Components > Tooltip',
+  skeleton: 'Components > Skeleton',
   utilities: 'Utilities > All Utilities',
 };
 

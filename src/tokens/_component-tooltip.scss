@@ -1,0 +1,42 @@
+// ============================================================================
+// Component Tokens / Tooltip
+// Small floating label — dark surface on both CODEX and VP Player themes.
+// Zero hardcoded values.
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-motion' as *;
+@use 'foundation-zindex' as *;
+
+:root {
+  // --- Surface (dark — intentionally theme-agnostic) ---
+  --tooltip-bg:       #{$color-neutral-700};
+  --tooltip-color:    #{$color-neutral-0};
+  --tooltip-shadow:   var(--gds-shadow-md);
+
+  // --- Shape ---
+  --tooltip-radius:     var(--gds-radius-md);
+  --tooltip-padding-y:  #{$space-6};
+  --tooltip-padding-x:  #{$space-8};
+  --tooltip-max-width:  calc(#{$space-80} * 3);   // 240px — two-sentence cap
+
+  // --- Typography ---
+  --tooltip-font-size:    #{$font-size-12};
+  --tooltip-line-height:  #{$line-height-normal};
+  --tooltip-font-weight:  #{$font-weight-regular};
+
+  // --- Arrow ---
+  --tooltip-arrow-size: #{$space-6};   // 6×6 rotated square = diamond
+
+  // --- Distance from trigger ---
+  --tooltip-gap: #{$space-8};
+
+  // --- Motion ---
+  --tooltip-duration: #{$duration-fast};
+  --tooltip-ease:     #{$ease-default};
+
+  // --- Stacking ---
+  --tooltip-z: #{$z-tooltip};
+}

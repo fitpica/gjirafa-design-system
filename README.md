@@ -68,12 +68,13 @@ $color-blue-500               --gds-color-action-primary      --btn-primary-bg
 | | | |
 |---|---|---|
 | `.gds-alert` | `.gds-avatar` | `.gds-badge` |
-| `.gds-btn` | `.gds-checkbox` | `.gds-chip` |
-| `.gds-data-table` | `.gds-dropdown` | `.gds-filter-badge` |
-| `.gds-input` | `.gds-menu` | `.gds-modal` |
-| `.gds-pagination` | `.gds-pct-badge` | `.gds-pill` |
-| `.gds-radio` | `.gds-sidepanel` | `.gds-status-dot` |
-| `.gds-tabs` | `.gds-toast` | `.gds-toggle` |
+| `.gds-btn` | `.gds-card` | `.gds-checkbox` |
+| `.gds-chip` | `.gds-data-table` | `.gds-dropdown` |
+| `.gds-filter-badge` | `.gds-input` | `.gds-menu` |
+| `.gds-modal` | `.gds-pagination` | `.gds-pct-badge` |
+| `.gds-pill` | `.gds-radio` | `.gds-sidepanel` |
+| `.gds-skeleton` | `.gds-status-dot` | `.gds-tabs` |
+| `.gds-toast` | `.gds-toggle` | `.gds-tooltip` |
 
 Every component has sizes, states (hover, focus, disabled, current),
 and passes through `data-theme` automatically.
