@@ -1,18 +1,42 @@
 {
   "name": "@gjirafa/design-system",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Gjirafa Design System — CSS/SCSS tokens, components, and utilities for CODEX and VP Player",
+  "author": "Gjirafa",
+  "license": "MIT",
+  "homepage": "https://design-system-ten-iota.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fitpica/gjirafa-design-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fitpica/gjirafa-design-system/issues"
+  },
   "main": "dist/gjirafa-ds.css",
   "style": "dist/gjirafa-ds.css",
   "sass": "src/index.scss",
+  "exports": {
+    ".": {
+      "sass": "./src/index.scss",
+      "style": "./dist/gjirafa-ds.css",
+      "default": "./dist/gjirafa-ds.css"
+    },
+    "./min": "./dist/gjirafa-ds.min.css",
+    "./scss": "./src/index.scss",
+    "./tokens.json": "./dist/tokens.json",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist/",
-    "src/"
+    "src/",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
     "figma:sync": "node scripts/figma-sync.mjs",
-    "dev": "sass --watch src/index.scss:dist/gjirafa-ds.css"
+    "dev": "sass --watch src/index.scss:dist/gjirafa-ds.css",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "design-system",
@@ -23,7 +47,9 @@
     "codex",
     "vpplayer"
   ],
-  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "sass": "^1.77.0",
     "clean-css": "^5.3.0"
