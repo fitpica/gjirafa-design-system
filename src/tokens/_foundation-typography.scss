@@ -1,9 +1,10 @@
 // ============================================================================
 // Foundation / Typography
 // Source: design-system.html typography section
+//
+// Font family is self-hosted via @font-face in _foundation-fonts.scss —
+// zero external runtime dependencies. Do NOT re-add a Google Fonts @import.
 // ============================================================================
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 // --- Font families ---
 $font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;

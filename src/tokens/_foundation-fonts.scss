@@ -1,0 +1,24 @@
+// ============================================================================
+// Foundation / Fonts
+// Self-hosted Inter variable font — zero external runtime dependencies.
+//
+// Font file ships alongside the compiled CSS in dist/fonts/InterVariable.woff2
+// (copied by scripts/build.mjs). When consumers load dist/gjirafa-ds.css the
+// relative URL below resolves to the bundled font — no Google Fonts request.
+//
+// Source: https://rsms.me/inter (Rasmus Andersson, SIL Open Font License)
+// Variable axis: weight 100-900 (we use 400 / 500 / 600 in tokens)
+// ============================================================================
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  // Path is relative to the compiled CSS location (dist/gjirafa-ds.css →
+  // dist/fonts/InterVariable.woff2). Consumers loading the raw SCSS
+  // (@use '@gjirafa/design-system/scss') must ensure their bundler copies
+  // fonts to the same relative path, or override this @font-face rule.
+  src: url('./fonts/InterVariable.woff2') format('woff2-variations'),
+       url('./fonts/InterVariable.woff2') format('woff2');
+}

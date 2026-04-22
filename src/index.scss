@@ -1,7 +1,10 @@
 // ============================================================================
-// Gjirafa Design System v2.2
+// Gjirafa Design System v2.3
 // Main entry point
 // ============================================================================
+
+// --- Foundation fonts (self-hosted @font-face — must be first) ---
+@use 'tokens/foundation-fonts';
 
 // --- Foundation tokens (raw values + :root custom properties) ---
 @use 'tokens/foundation-colors';
