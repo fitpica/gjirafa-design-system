@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "Docs Preview",
-      "runtimeExecutable": "/usr/local/bin/node",
-      "runtimeArgs": ["-e", "require('http').createServer((q,r)=>{let fs=require('fs'),p=require('path'),u=q.url.split('?')[0],f=p.join('docs',u==='/'?'index.html':u),t={'.html':'text/html','.css':'text/css','.js':'application/javascript'};fs.readFile(f,(e,d)=>{if(e){r.writeHead(404);r.end()}else{r.writeHead(200,{'Content-Type':t[p.extname(f)]||'text/plain'});r.end(d)}})}).listen(3000,()=>console.log('listening'))"],
-      "port": 3000,
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/serve-docs.mjs"],
+      "port": 4173,
       "autoPort": true
     }
   ]

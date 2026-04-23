@@ -5,6 +5,9 @@
 //   .gds-card--elevated        — no border, stronger shadow
 //   .gds-card--flat            — no border, no shadow (bg only)
 //   .gds-card--interactive     — hoverable (lift + shadow) / focusable
+//   .gds-card--selected        — active/chosen state (e.g. plan picker)
+//   .gds-card--disabled        — dimmed + non-interactive
+//   .gds-card--padded-none     — zero padding on header/body/footer slots
 //   .gds-card--padded-sm/lg    — spacing overrides (default = md)
 //
 //   .gds-card__media           — full-bleed image/video at top (flush, no pad)
@@ -13,6 +16,11 @@
 //   .gds-card__subtitle        — muted secondary line
 //   .gds-card__body            — main content area
 //   .gds-card__footer          — action row (right-aligned buttons)
+//
+// Behavior:
+//   - Interactive hover lift respects prefers-reduced-motion (snaps on fallback).
+//   - Disabled blocks pointer events + kills interactive hover state.
+//   - Selected paints a focus-colored ring even when not focused.
 //
 // Rule: ZERO hardcoded values — all references to component / foundation tokens.
 // ============================================================================
@@ -151,6 +159,58 @@
 
 .gds-card--padded-lg {
   --card-padding: var(--card-padding-lg);
+}
+
+.gds-card--padded-none {
+  --card-padding: var(--gds-space-0);
+}
+
+// ============================================================================
+// Modifiers — state
+// ============================================================================
+
+.gds-card--selected {
+  border-color: var(--card-selected-border);
+  outline: var(--card-selected-ring-width) solid var(--card-selected-border);
+  outline-offset: calc(var(--card-selected-ring-width) * -1);   // inset ring
+}
+
+.gds-card--disabled {
+  opacity: var(--card-disabled-opacity);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+// Disabled wins over interactive — don't lift / hover / focus-ring a disabled card
+.gds-card--interactive.gds-card--disabled {
+  &:hover,
+  &:focus-visible,
+  &:active {
+    transform: none;
+    box-shadow: var(--card-shadow);
+    outline: none;
+  }
+}
+
+// ============================================================================
+// Reduced-motion — drop the hover lift transform
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .gds-card {
+    transition: none;
+  }
+
+  .gds-card--interactive {
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+
+  .gds-card--interactive.is-hover-preview {
+    transform: none;
+  }
 }
 
 // ============================================================================

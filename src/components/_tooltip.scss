@@ -8,14 +8,22 @@
 //   .gds-tooltip__bubble--left
 //   .gds-tooltip__bubble--right
 //   .gds-tooltip__bubble--multiline       — allow line-wrap (default: nowrap)
+//   .gds-tooltip__bubble--interactive     — re-enables pointer events on bubble
+//                                           (use for bubbles with links / buttons)
+//   .gds-tooltip__kbd                     — kbd shortcut chip inside the bubble
 //
 //   .gds-tooltip.is-open                  — forces visible (for docs / controlled)
 //
 // Behavior:
-//   - Shows on :hover or :focus-within of .gds-tooltip wrapper.
-//   - `pointer-events: none` on the bubble so it never interferes with clicks.
+//   - Shows on :hover or :focus-within after --tooltip-delay-show.
+//   - Hides quickly (--tooltip-delay-hide) to feel snappy.
+//   - Respects prefers-reduced-motion (snap instead of fade).
+//   - `pointer-events: none` on the bubble so it never interferes with clicks
+//      — override with `--interactive` for bubbles that contain links.
+//   - Max-width is clamped to the viewport so the bubble cannot clip off-screen
+//      horizontally (width only — position flipping requires JS / Floating UI).
 //   - Render the bubble as the LAST child of the wrapper so the arrow + z-index
-//     stack correctly.
+//      stack correctly.
 //
 // Accessibility:
 //   - The bubble SHOULD have `role="tooltip"` and a unique `id`.
@@ -44,7 +52,12 @@
 .gds-tooltip__bubble {
   position: absolute;
   z-index: var(--tooltip-z);
-  max-width: var(--tooltip-max-width);
+  // Clamp width to viewport minus safe edge on each side — prevents horizontal
+  // clipping on narrow screens. Vertical / positional flip still requires JS.
+  max-width: min(
+    var(--tooltip-max-width),
+    calc(100vw - var(--tooltip-edge-safe) * 2)
+  );
   padding: var(--tooltip-padding-y) var(--tooltip-padding-x);
   background: var(--tooltip-bg);
   color: var(--tooltip-color);
@@ -61,6 +74,7 @@
   transition:
     opacity var(--tooltip-duration) var(--tooltip-ease),
     visibility var(--tooltip-duration) var(--tooltip-ease);
+  transition-delay: var(--tooltip-delay-hide);
 
   // --- Arrow (diamond sticking out of the bubble edge) ---
   &::after {
@@ -72,13 +86,59 @@
   }
 }
 
-// Let long copy wrap
+// Let long copy wrap.
+// `width: max-content` is critical: because the bubble is position:absolute
+// inside an inline-flex wrapper (which hugs the trigger button ~100px wide),
+// the browser's shrink-to-fit picks the WRAPPER width as its "available width"
+// and ignores --tooltip-max-width. `max-content` tells the bubble to want the
+// full-text width, then `max-width` clamps it at 240 / 290 / 380 px — so the
+// text wraps inside the declared size rather than squeezing into a narrow column.
 .gds-tooltip__bubble--multiline {
+  width: max-content;
   white-space: normal;
 }
 
+// Allow pointer events (for bubbles with links / buttons inside)
+.gds-tooltip__bubble--interactive {
+  pointer-events: auto;
+}
+
 // ============================================================================
-// Show on hover / focus / forced .is-open
+// Size variants — override max-width only (composes cleanly with placement,
+// multiline, interactive). Default (no modifier) = sm (240px).
+// ============================================================================
+
+.gds-tooltip__bubble--sm {
+  --tooltip-max-width: var(--tooltip-max-width-sm);
+}
+
+.gds-tooltip__bubble--md {
+  --tooltip-max-width: var(--tooltip-max-width-md);
+}
+
+.gds-tooltip__bubble--lg {
+  --tooltip-max-width: var(--tooltip-max-width-lg);
+}
+
+// ============================================================================
+// Kbd chip — keyboard-shortcut hint inside tooltip (e.g. "Save · ⌘S")
+// ============================================================================
+
+.gds-tooltip__kbd {
+  display: inline-block;
+  padding: var(--tooltip-kbd-padding-y) var(--tooltip-kbd-padding-x);
+  margin-inline-start: var(--tooltip-padding-x);  // gap after the label
+  background: var(--tooltip-kbd-bg);
+  color: var(--tooltip-kbd-color);
+  border-radius: var(--tooltip-kbd-radius);
+  font-family: inherit;
+  font-size: var(--tooltip-kbd-font-size);
+  font-weight: var(--tooltip-kbd-font-weight);
+  line-height: inherit;
+}
+
+// ============================================================================
+// Show on hover / focus / forced .is-open — reverses the delay direction
 // ============================================================================
 
 .gds-tooltip:hover > .gds-tooltip__bubble,
@@ -86,6 +146,24 @@
 .gds-tooltip.is-open > .gds-tooltip__bubble {
   opacity: 1;
   visibility: visible;
+  transition-delay: var(--tooltip-delay-show);
+}
+
+// ============================================================================
+// Reduced-motion — snap instead of fade, no show delay
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .gds-tooltip__bubble {
+    transition: none;
+    transition-delay: 0s;
+  }
+
+  .gds-tooltip:hover > .gds-tooltip__bubble,
+  .gds-tooltip:focus-within > .gds-tooltip__bubble,
+  .gds-tooltip.is-open > .gds-tooltip__bubble {
+    transition-delay: 0s;
+  }
 }
 
 // ============================================================================

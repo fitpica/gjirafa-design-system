@@ -3,14 +3,21 @@
 // Transition durations and easing curves
 // ============================================================================
 
-// --- Durations ---
+// --- Transition durations (state changes) ---
 $duration-fast:   0.1s;
 $duration-normal: 0.15s;
 $duration-slow:   0.25s;
 
+// --- Loop animation durations (shimmer, pulse, spinner) ---
+$duration-pulse:  1500ms;
+
+// --- Hover-to-show delays (tooltip, dropdown) ---
+$delay-hover:     500ms;
+
 // --- Easing ---
 $ease-default: cubic-bezier(0.2, 0, 0.38, 0.9);
 $ease-out:     cubic-bezier(0, 0, 0.38, 0.9);
+$ease-linear:  linear;   // used for continuous loop animations
 
 // ============================================================================
 // CSS Custom Properties — Motion
@@ -19,6 +26,9 @@ $ease-out:     cubic-bezier(0, 0, 0.38, 0.9);
   --gds-duration-fast:   #{$duration-fast};
   --gds-duration-normal: #{$duration-normal};
   --gds-duration-slow:   #{$duration-slow};
+  --gds-duration-pulse:  #{$duration-pulse};
+  --gds-delay-hover:     #{$delay-hover};
   --gds-ease-default:    #{$ease-default};
   --gds-ease-out:        #{$ease-out};
+  --gds-ease-linear:     #{$ease-linear};
 }

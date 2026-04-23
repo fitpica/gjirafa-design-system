@@ -44,4 +44,11 @@
   --card-focus-ring-width: #{$border-width-thick};
   --card-focus-ring:       var(--gds-color-border-focus);
   --card-focus-ring-offset: #{$space-2};
+
+  // --- Selected state (e.g. selectable plan/option card) ---
+  --card-selected-border:     var(--gds-color-border-focus);
+  --card-selected-ring-width: #{$border-width-thick};
+
+  // --- Disabled state ---
+  --card-disabled-opacity: var(--gds-opacity-disabled);
 }

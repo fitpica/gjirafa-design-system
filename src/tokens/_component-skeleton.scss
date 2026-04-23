@@ -9,8 +9,13 @@
 
 :root {
   // --- Surface ---
-  --skeleton-bg:         #{$color-neutral-30};
-  --skeleton-opacity:    #{$opacity-disabled};
+  --skeleton-bg:         #{$color-neutral-30};  // base / trough color
+  --skeleton-shimmer:    #{$color-neutral-20};  // highlight sweep color
+  --skeleton-opacity:    #{$opacity-disabled};  // static fallback (prefers-reduced-motion)
+
+  // --- Motion ---
+  --skeleton-duration: var(--gds-duration-pulse);
+  --skeleton-ease:     var(--gds-ease-linear);
 
   // --- Shape ---
   --skeleton-radius-rect:   var(--gds-radius-md);
@@ -32,6 +37,9 @@
 
   // --- Rectangle defaults (hero/image placeholder) ---
   --skeleton-rect-h:  #{$space-160};
+
+  // --- Table row preset (full-width text bar matching data-table row) ---
+  --skeleton-row-h: #{$space-20};
 
   // --- Vertical rhythm (for stacking multiple lines) ---
   --skeleton-group-gap: #{$space-8};

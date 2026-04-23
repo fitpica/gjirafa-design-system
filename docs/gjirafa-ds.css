@@ -138,8 +138,11 @@
   --gds-duration-fast: 0.1s;
   --gds-duration-normal: 0.15s;
   --gds-duration-slow: 0.25s;
+  --gds-duration-pulse: 1500ms;
+  --gds-delay-hover: 500ms;
   --gds-ease-default: cubic-bezier(0.2, 0, 0.38, 0.9);
   --gds-ease-out: cubic-bezier(0, 0, 0.38, 0.9);
+  --gds-ease-linear: linear;
 }
 
 :root {
@@ -931,7 +934,10 @@
 
 :root {
   --skeleton-bg: #ebebed;
+  --skeleton-shimmer: #F7F7F8;
   --skeleton-opacity: 0.5;
+  --skeleton-duration: var(--gds-duration-pulse);
+  --skeleton-ease: var(--gds-ease-linear);
   --skeleton-radius-rect: var(--gds-radius-md);
   --skeleton-radius-text: var(--gds-radius-full);
   --skeleton-radius-circle: var(--gds-radius-full);
@@ -945,6 +951,7 @@
   --skeleton-avatar-lg: 48px;
   --skeleton-avatar-xl: 64px;
   --skeleton-rect-h: 160px;
+  --skeleton-row-h: 20px;
   --skeleton-group-gap: 8px;
 }
 
@@ -974,6 +981,9 @@
   --card-focus-ring-width: 2px;
   --card-focus-ring: var(--gds-color-border-focus);
   --card-focus-ring-offset: 2px;
+  --card-selected-border: var(--gds-color-border-focus);
+  --card-selected-ring-width: 2px;
+  --card-disabled-opacity: var(--gds-opacity-disabled);
 }
 
 :root {
@@ -983,14 +993,27 @@
   --tooltip-radius: var(--gds-radius-md);
   --tooltip-padding-y: 6px;
   --tooltip-padding-x: 8px;
-  --tooltip-max-width: calc(80px * 3);
+  --tooltip-max-width-sm: calc(80px * 3);
+  --tooltip-max-width-md: calc(80px * 3 + 48px + 2px);
+  --tooltip-max-width-lg: calc(160px * 2 + 48px + 12px);
+  --tooltip-max-width: var(--tooltip-max-width-sm);
   --tooltip-font-size: 12px;
   --tooltip-line-height: 1.5;
-  --tooltip-font-weight: 400;
+  --tooltip-font-weight: 500;
   --tooltip-arrow-size: 6px;
   --tooltip-gap: 8px;
   --tooltip-duration: 0.1s;
   --tooltip-ease: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --tooltip-delay-show: var(--gds-delay-hover);
+  --tooltip-delay-hide: 0.1s;
+  --tooltip-edge-safe: 16px;
+  --tooltip-kbd-bg: color-mix(in srgb, var(--gds-color-neutral-0) 14%, transparent);
+  --tooltip-kbd-color: var(--tooltip-color);
+  --tooltip-kbd-radius: var(--gds-radius-sm);
+  --tooltip-kbd-padding-x: 4px;
+  --tooltip-kbd-padding-y: 0px;
+  --tooltip-kbd-font-size: 10px;
+  --tooltip-kbd-font-weight: 500;
   --tooltip-z: 1040;
 }
 
@@ -5679,16 +5702,35 @@
     display: none;
   }
 }
+@keyframes gds-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
 .gds-skeleton {
   display: block;
   width: 100%;
   height: var(--skeleton-rect-h);
-  background: var(--skeleton-bg);
-  opacity: var(--skeleton-opacity);
   border-radius: var(--skeleton-radius-rect);
   flex-shrink: 0;
+  background-color: var(--skeleton-bg);
+  background-image: linear-gradient(90deg, var(--skeleton-bg) 0%, var(--skeleton-shimmer) 50%, var(--skeleton-bg) 100%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: gds-skeleton-shimmer var(--skeleton-duration) var(--skeleton-ease) infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .gds-skeleton {
+    background-image: none;
+    background-color: var(--skeleton-bg);
+    opacity: var(--skeleton-opacity);
+    animation: none;
+  }
+}
 .gds-skeleton--text {
   height: var(--skeleton-text-h-md);
   border-radius: var(--skeleton-radius-text);
@@ -5759,6 +5801,11 @@
 .gds-skeleton--rect {
   height: var(--skeleton-rect-h);
   border-radius: var(--skeleton-radius-rect);
+}
+
+.gds-skeleton--row {
+  height: var(--skeleton-row-h);
+  border-radius: var(--skeleton-radius-text);
 }
 
 .gds-skeleton-group {
@@ -5874,6 +5921,39 @@
   --card-padding: var(--card-padding-lg);
 }
 
+.gds-card--padded-none {
+  --card-padding: var(--gds-space-0);
+}
+
+.gds-card--selected {
+  border-color: var(--card-selected-border);
+  outline: var(--card-selected-ring-width) solid var(--card-selected-border);
+  outline-offset: calc(var(--card-selected-ring-width) * -1);
+}
+
+.gds-card--disabled {
+  opacity: var(--card-disabled-opacity);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.gds-card--interactive.gds-card--disabled:hover, .gds-card--interactive.gds-card--disabled:focus-visible, .gds-card--interactive.gds-card--disabled:active {
+  transform: none;
+  box-shadow: var(--card-shadow);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gds-card {
+    transition: none;
+  }
+  .gds-card--interactive:hover, .gds-card--interactive:active {
+    transform: none;
+  }
+  .gds-card--interactive.is-hover-preview {
+    transform: none;
+  }
+}
 .gds-card--interactive.is-hover-preview {
   box-shadow: var(--card-shadow-hover);
   transform: translateY(calc(var(--card-hover-lift) * -1));
@@ -5893,7 +5973,7 @@
 .gds-tooltip__bubble {
   position: absolute;
   z-index: var(--tooltip-z);
-  max-width: var(--tooltip-max-width);
+  max-width: min(var(--tooltip-max-width), 100vw - var(--tooltip-edge-safe) * 2);
   padding: var(--tooltip-padding-y) var(--tooltip-padding-x);
   background: var(--tooltip-bg);
   color: var(--tooltip-color);
@@ -5908,6 +5988,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--tooltip-duration) var(--tooltip-ease), visibility var(--tooltip-duration) var(--tooltip-ease);
+  transition-delay: var(--tooltip-delay-hide);
 }
 .gds-tooltip__bubble::after {
   content: "";
@@ -5918,7 +5999,37 @@
 }
 
 .gds-tooltip__bubble--multiline {
+  width: max-content;
   white-space: normal;
+}
+
+.gds-tooltip__bubble--interactive {
+  pointer-events: auto;
+}
+
+.gds-tooltip__bubble--sm {
+  --tooltip-max-width: var(--tooltip-max-width-sm);
+}
+
+.gds-tooltip__bubble--md {
+  --tooltip-max-width: var(--tooltip-max-width-md);
+}
+
+.gds-tooltip__bubble--lg {
+  --tooltip-max-width: var(--tooltip-max-width-lg);
+}
+
+.gds-tooltip__kbd {
+  display: inline-block;
+  padding: var(--tooltip-kbd-padding-y) var(--tooltip-kbd-padding-x);
+  margin-inline-start: var(--tooltip-padding-x);
+  background: var(--tooltip-kbd-bg);
+  color: var(--tooltip-kbd-color);
+  border-radius: var(--tooltip-kbd-radius);
+  font-family: inherit;
+  font-size: var(--tooltip-kbd-font-size);
+  font-weight: var(--tooltip-kbd-font-weight);
+  line-height: inherit;
 }
 
 .gds-tooltip:hover > .gds-tooltip__bubble,
@@ -5926,8 +6037,20 @@
 .gds-tooltip.is-open > .gds-tooltip__bubble {
   opacity: 1;
   visibility: visible;
+  transition-delay: var(--tooltip-delay-show);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .gds-tooltip__bubble {
+    transition: none;
+    transition-delay: 0s;
+  }
+  .gds-tooltip:hover > .gds-tooltip__bubble,
+  .gds-tooltip:focus-within > .gds-tooltip__bubble,
+  .gds-tooltip.is-open > .gds-tooltip__bubble {
+    transition-delay: 0s;
+  }
+}
 .gds-tooltip__bubble,
 .gds-tooltip__bubble--top {
   bottom: calc(100% + var(--tooltip-gap));
