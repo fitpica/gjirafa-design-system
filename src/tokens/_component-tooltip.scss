@@ -1,0 +1,62 @@
+// ============================================================================
+// Component Tokens / Tooltip
+// Small floating label — dark surface on both CODEX and VP Player themes.
+// Zero hardcoded values.
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-motion' as *;
+@use 'foundation-zindex' as *;
+
+:root {
+  // --- Surface (dark — intentionally theme-agnostic) ---
+  --tooltip-bg:       #{$color-neutral-700};
+  --tooltip-color:    #{$color-neutral-0};
+  --tooltip-shadow:   var(--gds-shadow-md);
+
+  // --- Shape ---
+  --tooltip-radius:     var(--gds-radius-md);
+  --tooltip-padding-y:  #{$space-6};
+  --tooltip-padding-x:  #{$space-8};
+
+  // --- Max-width scale (compose from foundation spacing tokens) ---
+  --tooltip-max-width-sm: calc(#{$space-80} * 3);                                      // 240px — short label / default
+  --tooltip-max-width-md: calc(#{$space-80} * 3 + #{$space-48} + #{$space-2});         // 290px — one sentence
+  --tooltip-max-width-lg: calc(#{$space-160} * 2 + #{$space-48} + #{$space-12});       // 380px — two short sentences
+  --tooltip-max-width:    var(--tooltip-max-width-sm);                                 // default
+
+  // --- Typography ---
+  --tooltip-font-size:    #{$font-size-12};
+  --tooltip-line-height:  #{$line-height-normal};
+  --tooltip-font-weight:  #{$font-weight-medium};
+
+  // --- Arrow ---
+  --tooltip-arrow-size: #{$space-6};   // 6×6 rotated square = diamond
+
+  // --- Distance from trigger ---
+  --tooltip-gap: #{$space-8};
+
+  // --- Motion ---
+  --tooltip-duration:   #{$duration-fast};
+  --tooltip-ease:       #{$ease-default};
+  --tooltip-delay-show: var(--gds-delay-hover);   // wait before appearing
+  --tooltip-delay-hide: #{$duration-fast};        // quick dismiss on leave
+
+  // --- Viewport safety (keeps bubble from clipping at window edges) ---
+  --tooltip-edge-safe: #{$space-16};
+
+  // --- Keyboard shortcut chip inside tooltip (e.g. "Save · ⌘S") ---
+  // Tint composed from foundation neutral-0 at low alpha — no raw rgba.
+  --tooltip-kbd-bg:          color-mix(in srgb, var(--gds-color-neutral-0) 14%, transparent);
+  --tooltip-kbd-color:       var(--tooltip-color);
+  --tooltip-kbd-radius:      var(--gds-radius-sm);
+  --tooltip-kbd-padding-x:   #{$space-4};
+  --tooltip-kbd-padding-y:   #{$space-0};
+  --tooltip-kbd-font-size:   #{$font-size-10};
+  --tooltip-kbd-font-weight: #{$font-weight-medium};
+
+  // --- Stacking ---
+  --tooltip-z: #{$z-tooltip};
+}
