@@ -16,6 +16,13 @@ import {
   stepMinute,
   clampInt,
   formatDateTime,
+  startOfWeek,
+  endOfWeek,
+  addMonthsClampDay,
+  addYearsClampDay,
+  formatFullDate,
+  firstEnabledInMonth,
+  nextEnabled,
 } from './dateUtils';
 
 describe('toDate', () => {
@@ -130,6 +137,42 @@ describe('time helpers (datetime)', () => {
   it('formatDateTime outputs "DD/MM/YYYY HH:mm" (en-GB)', () => {
     expect(formatDateTime(new Date(2026, 5, 15, 10, 0), 'en-GB')).toBe('15/06/2026 10:00');
     expect(formatDateTime(new Date(2026, 5, 15, 9, 5), 'en-GB')).toBe('15/06/2026 09:05');
+  });
+});
+
+describe('navigation helpers (keyboard)', () => {
+  it('startOfWeek / endOfWeek honor weekStartsOn', () => {
+    const wed = new Date(2026, 5, 17); // Wed 17 June 2026
+    expect(startOfWeek(wed, 0).getDate()).toBe(14); // Sun
+    expect(endOfWeek(wed, 0).getDate()).toBe(20); // Sat
+    expect(startOfWeek(wed, 1).getDate()).toBe(15); // Mon
+    expect(endOfWeek(wed, 1).getDate()).toBe(21); // Sun
+  });
+  it('addMonthsClampDay clamps the day to the target month length', () => {
+    const jan31 = new Date(2026, 0, 31);
+    const feb = addMonthsClampDay(jan31, 1);
+    expect([feb.getMonth(), feb.getDate()]).toEqual([1, 28]); // Feb 28 2026
+    const keep = addMonthsClampDay(new Date(2026, 5, 15), 1);
+    expect([keep.getMonth(), keep.getDate()]).toEqual([6, 15]); // Jul 15
+  });
+  it('addYearsClampDay clamps Feb 29 → Feb 28', () => {
+    const leap = new Date(2024, 1, 29);
+    const next = addYearsClampDay(leap, 1);
+    expect([next.getFullYear(), next.getMonth(), next.getDate()]).toEqual([2025, 1, 28]);
+  });
+  it('formatFullDate gives a full accessible label', () => {
+    expect(formatFullDate(new Date(2026, 5, 15), 'en-GB')).toBe('Monday, 15 June 2026');
+  });
+  it('firstEnabledInMonth skips disabled leading days', () => {
+    const d = firstEnabledInMonth(2026, 5, { min: new Date(2026, 5, 10) })!;
+    expect(d.getDate()).toBe(10);
+    expect(firstEnabledInMonth(2026, 5, { disabledDates: () => true })).toBeNull();
+  });
+  it('nextEnabled scans in the given direction', () => {
+    // disable June 16–18; from the 16th going forward → 19th
+    const opts = { disabledDates: [new Date(2026, 5, 16), new Date(2026, 5, 17), new Date(2026, 5, 18)] };
+    expect(nextEnabled(new Date(2026, 5, 16), 1, opts)!.getDate()).toBe(19);
+    expect(nextEnabled(new Date(2026, 5, 16), -1, opts)!.getDate()).toBe(15);
   });
 });
 

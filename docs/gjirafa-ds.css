@@ -6331,6 +6331,10 @@
   align-content: start;
 }
 
+.gds-calendar__week {
+  display: contents;
+}
+
 .gds-calendar__weekday {
   display: flex;
   align-items: center;
@@ -6369,7 +6373,7 @@
 .gds-calendar__day:hover {
   background: var(--calendar-day-hover-bg);
 }
-.gds-calendar__day:focus-visible {
+.gds-calendar__day:focus-visible, .gds-calendar__day:focus {
   outline: var(--calendar-focus-ring-width) solid var(--calendar-focus-ring-color);
   outline-offset: var(--calendar-focus-ring-offset);
 }

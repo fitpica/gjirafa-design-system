@@ -15,9 +15,16 @@ export {
   getWeekdayLabels,
   defaultFormat,
   formatDateTime,
+  formatFullDate,
   setTime,
   stepHour,
   stepMinute,
   clampInt,
+  startOfWeek,
+  endOfWeek,
+  addMonthsClampDay,
+  addYearsClampDay,
+  firstEnabledInMonth,
+  nextEnabled,
 } from './dateUtils';
 export type { DisableOptions } from './dateUtils';

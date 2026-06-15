@@ -301,6 +301,176 @@ describe('datetime mode', () => {
   });
 });
 
+describe('keyboard navigation + roving tabindex', () => {
+  const active = () => document.activeElement as HTMLElement;
+  const press = (key: string, opts: KeyboardEventInit = {}) =>
+    active().dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, ...opts }));
+
+  it('focuses the selected date on open; exactly one tabbable cell', () => {
+    const dp = createDatePicker(input, { defaultValue: '2026-06-15', locale: 'en-GB' });
+    dp.open();
+    expect(active().textContent).toBe('15');
+    expect(active().getAttribute('role')).toBe('gridcell');
+    const tabbables = [...document.querySelectorAll('.gds-calendar__day')].filter(
+      (c) => (c as HTMLElement).tabIndex === 0,
+    );
+    expect(tabbables).toHaveLength(1);
+    dp.destroy();
+  });
+
+  it('falls back to today, then first enabled, for initial focus', () => {
+    const today = new Date();
+    const dp1 = createDatePicker(input, {}); // no value → today
+    dp1.open();
+    expect(active().textContent).toBe(String(today.getDate()));
+    dp1.destroy();
+
+    // today disabled → first enabled day of the month
+    const dp2 = createDatePicker(input, { disabledDates: [new Date(today.getFullYear(), today.getMonth(), today.getDate())] });
+    dp2.open();
+    expect(active().getAttribute('aria-disabled')).not.toBe('true');
+    dp2.destroy();
+  });
+
+  it('ArrowRight/Left move by a day; ArrowDown/Up by a week', () => {
+    const dp = createDatePicker(input, { defaultValue: '2026-06-15' });
+    dp.open();
+    press('ArrowRight');
+    expect(active().textContent).toBe('16');
+    press('ArrowLeft');
+    expect(active().textContent).toBe('15');
+    press('ArrowDown');
+    expect(active().textContent).toBe('22'); // +7
+    press('ArrowUp');
+    expect(active().textContent).toBe('15');
+    dp.destroy();
+  });
+
+  it('Home/End move to week start/end (weekStartsOn=1)', () => {
+    const dp = createDatePicker(input, { defaultValue: '2026-06-17', weekStartsOn: 1 }); // Wed
+    dp.open();
+    press('Home');
+    expect(active().textContent).toBe('15'); // Monday
+    press('End');
+    expect(active().textContent).toBe('21'); // Sunday
+    dp.destroy();
+  });
+
+  it('PageDown/PageUp change month; Shift changes year; view + live region update', () => {
+    const dp = createDatePicker(input, { defaultValue: '2026-06-15', locale: 'en-GB' });
+    dp.open();
+    press('PageDown');
+    expect(document.querySelector('.gds-calendar__title')!.textContent).toMatch(/July 2026/);
+    expect(document.querySelector('[aria-live]')!.textContent).toMatch(/July 2026/);
+    press('PageUp');
+    expect(document.querySelector('.gds-calendar__title')!.textContent).toMatch(/June 2026/);
+    press('PageDown', { shiftKey: true });
+    expect(document.querySelector('.gds-calendar__title')!.textContent).toMatch(/June 2027/);
+    dp.destroy();
+  });
+
+  it('Enter selects the focused date; Space too', () => {
+    const onChange = vi.fn();
+    const dp = createDatePicker(input, { defaultValue: '2026-06-15', onChange });
+    dp.open();
+    press('ArrowRight'); // focus 16
+    press('Enter');
+    expect(dp.getValue()!.getDate()).toBe(16);
+    expect(onChange).toHaveBeenCalled();
+    dp.destroy();
+  });
+
+  it('arrow navigation skips disabled dates', () => {
+    const dp = createDatePicker(input, {
+      defaultValue: '2026-06-15',
+      disabledDates: ['2026-06-16', '2026-06-17'],
+    });
+    dp.open();
+    press('ArrowRight'); // 16 disabled, 17 disabled → lands on 18
+    expect(active().textContent).toBe('18');
+    dp.destroy();
+  });
+
+  it('Escape closes from the grid and returns focus to the input', () => {
+    const dp = createDatePicker(input, { defaultValue: '2026-06-15' });
+    input.focus();
+    dp.open();
+    expect(active().textContent).toBe('15'); // focus moved into grid
+    press('Escape');
+    expect(dp.isOpen).toBe(false);
+    expect(document.activeElement).toBe(input);
+    dp.destroy();
+  });
+});
+
+describe('ARIA', () => {
+  it('grid has role=grid + month aria-label; rows/columnheaders/gridcells present', () => {
+    const dp = createDatePicker(input, { defaultValue: '2026-06-15', locale: 'en-GB' });
+    dp.open();
+    const grid = document.querySelector('.gds-calendar__grid')!;
+    expect(grid.getAttribute('role')).toBe('grid');
+    expect(grid.getAttribute('aria-label')).toMatch(/June 2026/);
+    expect(grid.querySelectorAll('[role="row"]')).toHaveLength(6);
+    expect(document.querySelectorAll('.gds-calendar__weekday[role="columnheader"]')).toHaveLength(7);
+    expect(grid.querySelectorAll('[role="gridcell"]')).toHaveLength(42);
+    dp.destroy();
+  });
+
+  it('cells expose full label, selected, today, and disabled state', () => {
+    const dp = createDatePicker(input, {
+      defaultValue: '2026-06-15',
+      locale: 'en-GB',
+      disabledDates: ['2026-06-20'],
+    });
+    dp.open();
+    const sel = document.querySelector('.gds-calendar__day--selected')!;
+    expect(sel.getAttribute('aria-selected')).toBe('true');
+    expect(sel.getAttribute('aria-label')).toBe('Monday, 15 June 2026');
+    const disabled = [...document.querySelectorAll('.gds-calendar__day')].find(
+      (c) => c.textContent === '20' && !c.classList.contains('gds-calendar__day--outside'),
+    )!;
+    expect(disabled.getAttribute('aria-disabled')).toBe('true');
+    const today = document.querySelector('[aria-current="date"]');
+    expect(today).not.toBeNull();
+    dp.destroy();
+  });
+
+  it('Today/Clear have accessible labels', () => {
+    const dp = createDatePicker(input, { defaultValue: '2026-06-15' });
+    dp.open();
+    expect(document.querySelector(`[aria-label="Select today's date"]`)).not.toBeNull();
+    expect(document.querySelector(`[aria-label="Clear selected date"]`)).not.toBeNull();
+    dp.destroy();
+  });
+
+  it('time fields expose spinbutton semantics (datetime)', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:30' });
+    dp.open();
+    const fields = [...document.querySelectorAll('.gds-time-stepper__field')] as HTMLInputElement[];
+    const [hh, mm] = fields;
+    expect(hh!.getAttribute('role')).toBe('spinbutton');
+    expect(hh!.getAttribute('aria-valuemin')).toBe('0');
+    expect(hh!.getAttribute('aria-valuemax')).toBe('23');
+    expect(hh!.getAttribute('aria-valuenow')).toBe('10');
+    expect(hh!.getAttribute('aria-label')).toBe('Hours');
+    expect(mm!.getAttribute('aria-valuemax')).toBe('59');
+    expect(mm!.getAttribute('aria-valuenow')).toBe('30');
+    dp.destroy();
+  });
+
+  it('time field ArrowUp/ArrowDown increments/decrements (datetime)', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:30' });
+    dp.open();
+    const hh = document.querySelector('.gds-time-stepper__field') as HTMLInputElement;
+    hh.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    expect(dp.getValue()!.getHours()).toBe(11);
+    hh.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    expect(dp.getValue()!.getHours()).toBe(10);
+    expect(hh.getAttribute('aria-valuenow')).toBe('10');
+    dp.destroy();
+  });
+});
+
 describe('teardown', () => {
   it('destroy removes the surface and listeners', () => {
     const dp = createDatePicker(input, { defaultValue: '2026-06-15' });
