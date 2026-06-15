@@ -25,6 +25,7 @@
   --calendar-popover-radius:       #{$radius-m};
   --calendar-popover-shadow:       var(--gds-shadow-overlay);
   --calendar-popover-offset:       #{$space-4};   // gap between trigger and popover
+  --calendar-popover-max-h:        calc(100vh - #{$space-48});  // keep within viewport; scroll if taller
   --calendar-z:                    var(--gds-z-dropdown);
 
   // --- Body layout ---
@@ -40,10 +41,10 @@
   --calendar-title-chevron:     #{$icon-sm};                    // month-select ▾ affordance
   --calendar-title-hover-bg:    var(--gds-color-bg-secondary);  // month-select hover
   --calendar-title-radius:      #{$radius-s};
-  --calendar-nav-color:         var(--gds-color-text-tertiary);
+  --calendar-nav-color:         var(--gds-color-text-secondary);  // ≥3:1 for icon controls
 
   // --- Weekday header row ---
-  --calendar-weekday-color:     var(--gds-color-text-tertiary);
+  --calendar-weekday-color:     var(--gds-color-text-secondary);  // was tertiary (2.96:1) → secondary (6.4:1)
   --calendar-weekday-size:      #{$font-size-11};        // caption
   --calendar-weekday-weight:    #{$font-weight-medium};
   --calendar-weekday-spacing:   #{$letter-spacing-wide};
@@ -60,9 +61,9 @@
   // --- Day states ---
   --calendar-day-color:            var(--gds-color-text-primary);
   --calendar-day-hover-bg:         var(--gds-color-bg-secondary);
-  --calendar-day-outside-color:    var(--gds-color-text-tertiary);
-  --calendar-day-disabled-color:   var(--gds-color-text-disabled);
-  --calendar-day-disabled-opacity: #{$opacity-disabled};
+  --calendar-day-outside-color:    var(--gds-color-text-secondary);  // neutral-300, 6.4:1 (passes AA); still muted vs primary's 14:1
+  --calendar-day-disabled-color:   var(--gds-color-neutral-100);     // ~4:1, lighter than outside → reads as "off" (disabled text is WCAG-exempt)
+  --calendar-day-disabled-opacity: #{$opacity-disabled};          // retained for the stepper button only
 
   // Selected — auto-themes blue (CODEX) → orange (VP Player) via action token
   --calendar-day-selected-bg:       var(--gds-color-action-primary);
@@ -97,7 +98,7 @@
   --calendar-stepper-field-height: #{$space-32};
   --calendar-stepper-field-color:  var(--gds-color-text-primary);
   --calendar-stepper-field-size:   #{$font-size-18};  // borderless, prominent HH : MM
-  --calendar-stepper-btn-color:    var(--gds-color-text-tertiary);
+  --calendar-stepper-btn-color:    var(--gds-color-text-secondary);  // ≥3:1 for icon controls
   --calendar-stepper-btn-hover-bg: var(--gds-color-bg-secondary);
   --calendar-stepper-btn-radius:   #{$radius-s};
   --calendar-stepper-icon:         #{$icon-sm};
@@ -118,4 +119,18 @@
   --calendar-duration:         #{$duration-fast};
   --calendar-popover-duration: #{$duration-normal};
   --calendar-ease:             #{$ease-default};
+}
+
+// ============================================================================
+// VP Player theme — orange-500 is too light: white text on it (~2.0:1) and a
+// ring against white (~1.9:1) fail WCAG. Darken the action-derived calendar
+// surfaces to orange-700 (white text ~5:1, ring ~5:1). CODEX blue-500 already
+// passes, so it is left on the action token. Composes from the orange palette —
+// no new tokens, no hardcoded values.
+// ============================================================================
+[data-theme="vpplayer"] {
+  --calendar-day-selected-bg:       var(--gds-color-orange-700);
+  --calendar-day-selected-hover-bg: var(--gds-color-orange-900);
+  --calendar-today-ring-color:      var(--gds-color-orange-700);
+  --calendar-focus-ring-color:      var(--gds-color-orange-700);
 }

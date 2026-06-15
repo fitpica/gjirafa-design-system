@@ -63,12 +63,16 @@
 .gds-calendar-popover {
   position: absolute;
   top: calc(100% + var(--calendar-popover-offset));
-  left: 0;
+  inset-inline-start: 0;                       // logical → RTL-safe
   z-index: var(--calendar-z);
   background: var(--calendar-popover-bg);
   border: var(--calendar-popover-border-width) solid var(--calendar-popover-border-color);
   border-radius: var(--calendar-popover-radius);
   box-shadow: var(--calendar-popover-shadow);
+  // Stay within the viewport; scroll internally instead of running off-screen
+  // (advanced / preset / month-select layouts on short viewports).
+  max-height: var(--calendar-popover-max-h);
+  overflow-y: auto;
   // Hidden state
   opacity: 0;
   visibility: hidden;
@@ -81,8 +85,8 @@
 
 // Right-aligned placement helper (consumer chooses)
 .gds-calendar-popover--align-end {
-  left: auto;
-  right: 0;
+  inset-inline-start: auto;
+  inset-inline-end: 0;
 }
 
 // Shown — consumer-toggled, mirrors .gds-dropdown--open / .gds-modal-overlay--open
@@ -193,6 +197,14 @@
   gap: var(--calendar-grid-gap);
 }
 
+// Reserve a stable 6-week height so the popover doesn't jump (44px) when paging
+// to a month that spans 6 rows. 6 = max weeks any month occupies; height is
+// derived from the day-size + gap tokens (no raw values).
+.gds-calendar__grid {
+  grid-template-rows: repeat(6, var(--calendar-day-size));
+  align-content: start;
+}
+
 .gds-calendar__weekday {
   display: flex;
   align-items: center;
@@ -249,10 +261,12 @@
   color: var(--calendar-day-outside-color);
 }
 
-// --- Today — inset ring, no fill (mirrors card --selected ring idiom) ---
+// --- Today — inset ring + bold numeral so it's not a color-only cue (WCAG 1.4.1)
+// and is distinct from the focus ring (which is never bold) ---
 .gds-calendar__day--today {
   outline: var(--calendar-today-ring-width) solid var(--calendar-today-ring-color);
   outline-offset: calc(var(--calendar-today-ring-width) * -1);
+  font-weight: var(--calendar-title-weight);   // medium — non-color "today" cue
 }
 
 // --- Selected — action-themed fill (auto blue→orange) ---
@@ -265,31 +279,59 @@
   }
 }
 
-// --- Range fill ---
+// --- Range — a connecting tint band bridges the inter-cell grid gap so the
+// selection reads as ONE continuous band, not 7 separated tints. The band is a
+// ::before painted BEHIND the numeral (z-index:-1); it extends half the grid
+// gap past each inline edge to meet the neighbouring cell's band. Endpoints
+// keep the solid circular disc; their band reaches only inward (toward centre).
+// All offsets are logical (inset-inline-*) → RTL-safe.
 .gds-calendar__day--in-range {
-  background: var(--calendar-range-bg);
   color: var(--calendar-range-color);
-  border-radius: $radius-none;     // butt cells together to read as one track
+  border-radius: $radius-none;
 }
 
-.gds-calendar__day--range-start {
-  background: var(--calendar-day-selected-bg);
-  color: var(--calendar-day-selected-color);
-  border-radius: var(--calendar-day-radius) 0 0 var(--calendar-day-radius);
-}
-
+.gds-calendar__day--range-start,
 .gds-calendar__day--range-end {
   background: var(--calendar-day-selected-bg);
   color: var(--calendar-day-selected-color);
-  border-radius: 0 var(--calendar-day-radius) var(--calendar-day-radius) 0;
+  // endpoints stay circular (inherits --calendar-day-radius = pill)
 }
 
-// --- Disabled / out-of-range — wins over the states above ---
+.gds-calendar__day--in-range::before,
+.gds-calendar__day--range-start::before,
+.gds-calendar__day--range-end::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  background: var(--calendar-range-bg);
+  z-index: -1;                                  // behind the numeral
+}
+
+.gds-calendar__day--in-range::before {
+  inset-inline: calc(var(--calendar-grid-gap) / -2);
+}
+
+.gds-calendar__day--range-start::before {
+  inset-inline-start: 50%;
+  inset-inline-end: calc(var(--calendar-grid-gap) / -2);
+}
+
+.gds-calendar__day--range-end::before {
+  inset-inline-start: calc(var(--calendar-grid-gap) / -2);
+  inset-inline-end: 50%;
+}
+
+// --- Disabled / out-of-range — must win over selected/today/range above.
+// No opacity (it tanked contrast to ~1.4:1); a readable muted token instead,
+// and explicitly clears any inherited fill / ring so it never looks selectable.
 .gds-calendar__day--disabled {
   color: var(--calendar-day-disabled-color);
-  opacity: var(--calendar-day-disabled-opacity);
+  background: transparent;
+  outline: none;
   pointer-events: none;
   cursor: not-allowed;
+
+  &::before { content: none; }   // drop any range band
 }
 
 // --- Event / availability dot under the number ---
@@ -446,7 +488,7 @@
   width: var(--calendar-presets-width);
   flex-shrink: 0;
   padding: var(--calendar-padding);
-  border-left: var(--calendar-divider-width) solid var(--calendar-divider-color);
+  border-inline-start: var(--calendar-divider-width) solid var(--calendar-divider-color);
 }
 
 .gds-calendar__presets-title {
@@ -484,8 +526,8 @@
 
   .gds-calendar--advanced .gds-calendar__presets {
     width: auto;
-    border-left: none;
-    border-top: var(--calendar-divider-width) solid var(--calendar-divider-color);
+    border-inline-start: none;
+    border-block-start: var(--calendar-divider-width) solid var(--calendar-divider-color);
   }
 }
 
@@ -506,6 +548,62 @@
   .gds-calendar__day,
   .gds-time-stepper__btn {
     transition: none;
+  }
+}
+
+// ============================================================================
+// Forced colors (Windows high-contrast) — our fills / color-mix tints / outline
+// colors collapse here, so map every state to a guaranteed system-color pair.
+// ============================================================================
+
+@media (forced-colors: active) {
+  // Selected + range (endpoints AND middle) read as one Highlight band
+  .gds-calendar__day--selected,
+  .gds-calendar__day--range-start,
+  .gds-calendar__day--range-end,
+  .gds-calendar__day--in-range {
+    background: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+
+  .gds-calendar__day--in-range::before,
+  .gds-calendar__day--range-start::before,
+  .gds-calendar__day--range-end::before {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+
+  // Today ring + focus rings → system outline colors
+  .gds-calendar__day--today {
+    outline-color: CanvasText;
+  }
+
+  .gds-calendar__day:focus-visible,
+  .gds-time-stepper__field:focus-visible,
+  .gds-time-stepper__btn:focus-visible,
+  .gds-calendar__title-select:focus-visible {
+    outline-color: Highlight;
+  }
+
+  // Disabled → system GrayText; event dot stays visible
+  .gds-calendar__day--disabled { color: GrayText; }
+  .gds-calendar__day-dot { background: CanvasText; }
+}
+
+// ============================================================================
+// Print — flatten the popover so a captured/printed calendar is visible
+// ============================================================================
+
+@media print {
+  .gds-calendar-popover {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
   }
 }
 
