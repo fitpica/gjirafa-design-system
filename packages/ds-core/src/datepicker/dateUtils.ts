@@ -99,6 +99,81 @@ export function isDateDisabled(date: Date, opts: DisableOptions): boolean {
   return false;
 }
 
+/** Start of the week containing `date`, given `weekStartsOn` (0 = Sunday). */
+export function startOfWeek(date: Date, weekStartsOn: Weekday): Date {
+  const back = (date.getDay() - weekStartsOn + 7) % 7;
+  return addDays(startOfDay(date), -back);
+}
+
+/** End of the week containing `date` (6 days after startOfWeek). */
+export function endOfWeek(date: Date, weekStartsOn: Weekday): Date {
+  return addDays(startOfWeek(date, weekStartsOn), 6);
+}
+
+/** Add `n` months, keeping the day-of-month (clamped to the target month length). */
+export function addMonthsClampDay(date: Date, n: number): Date {
+  const day = date.getDate();
+  const target = new Date(date.getFullYear(), date.getMonth() + n, 1);
+  const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+  return new Date(
+    target.getFullYear(),
+    target.getMonth(),
+    Math.min(day, lastDay),
+    date.getHours(),
+    date.getMinutes(),
+  );
+}
+
+/** Add `n` years, keeping month/day (clamped — e.g. Feb 29 → Feb 28). */
+export function addYearsClampDay(date: Date, n: number): Date {
+  return addMonthsClampDay(date, n * 12);
+}
+
+/** Full accessible date label, e.g. "Monday, 15 June 2026". */
+export function formatFullDate(date: Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+}
+
+/**
+ * First enabled day in the given month (scanning from day 1), or null if the
+ * whole month is disabled.
+ */
+export function firstEnabledInMonth(
+  year: number,
+  month: number,
+  opts: DisableOptions,
+): Date | null {
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  for (let d = 1; d <= lastDay; d++) {
+    const candidate = new Date(year, month, d);
+    if (!isDateDisabled(candidate, opts)) return candidate;
+  }
+  return null;
+}
+
+/**
+ * Nearest enabled day starting at `from`, stepping by `dir` (±1), up to `limit`
+ * days. Returns `from` if it's already enabled, or null if none found.
+ */
+export function nextEnabled(
+  from: Date,
+  dir: number,
+  opts: DisableOptions,
+  limit = 366,
+): Date | null {
+  let d = startOfDay(from);
+  for (let i = 0; i <= limit; i++) {
+    if (!isDateDisabled(d, opts)) return d;
+    d = addDays(d, dir === 0 ? 1 : dir);
+  }
+  return null;
+}
+
 /** Localized month + year label, e.g. "June 2026". */
 export function getMonthLabel(year: number, month: number, locale: string): string {
   return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(

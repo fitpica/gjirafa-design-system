@@ -7500,7 +7500,7 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
   <div class="doc-page-header">
     <div class="doc-eyebrow">Components</div>
     <h1 class="doc-h1">Calendar / DatePicker <span class="doc-status doc-status--stable">v2.6 · CSS layer</span></h1>
-    <p class="doc-desc">The visual skin for date, date-time, time, and advanced preset pickers. Composed entirely from existing GDS primitives — the trigger reuses <code>.gds-input</code>, month nav reuses <code>.gds-btn-icon</code>, presets reuse <code>.gds-menu</code>, the footer reuses <code>.gds-btn</code>. Selected days auto-theme blue → orange. <strong>This release ships CSS only</strong> — open/close, keyboard grid nav, date math, and typed props arrive with the framework-agnostic TS core + Vue 3 wrapper.</p>
+    <p class="doc-desc">The GDS calendar skin plus a <strong>functional, keyboard-accessible DatePicker</strong> (<code>@gjirafa/ds-core</code>). The visual layer composes existing GDS primitives — trigger reuses <code>.gds-input</code>, nav reuses <code>.gds-btn-icon</code>, footer reuses <code>.gds-btn</code>; selected days auto-theme blue → orange. <strong>Date and date-time modes</strong> work end-to-end with full keyboard navigation + ARIA (see the live demos below). Time-only, presets, and a Vue 3 wrapper are upcoming phases. The static examples further down illustrate the CSS skin only.</p>
     <div class="doc-tags"><span class="doc-tag">.gds-datepicker</span><span class="doc-tag">.gds-calendar-popover</span><span class="doc-tag">.gds-calendar</span><span class="doc-tag">__day --selected/--today/--outside/--disabled</span><span class="doc-tag">--range-start/--in-range/--range-end</span><span class="doc-tag">.gds-time-stepper</span><span class="doc-tag">--compact / --advanced</span></div>
   </div>
 
@@ -7616,8 +7616,26 @@ const dp = createDatePicker(document.querySelector('#dt'), {
     }
   </script>
 
+  <!-- KEYBOARD INTERACTION -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">KEYBOARD NAVIGATION <span class="doc-status doc-status--stable">fully keyboard accessible</span></div>
+  <div class="doc-preview">
+    <p class="doc-state-label" style="text-transform:none;padding:var(--gds-space-12) var(--gds-space-16) 0">The functional DatePicker (both date and datetime modes) is fully operable by keyboard. The day grid uses roving tabindex — one day is tabbable; arrow keys move focus; disabled days are skipped. Month changes are announced via an <code>aria-live</code> region.</p>
+    <div class="doc-token-table">
+      <div class="doc-token-header"><span>Key</span><span>Action</span></div>
+      <div class="doc-token-row"><span><strong>← / →</strong></span><span>Focus previous / next day</span></div>
+      <div class="doc-token-row"><span><strong>↑ / ↓</strong></span><span>Focus same day previous / next week</span></div>
+      <div class="doc-token-row"><span><strong>Home / End</strong></span><span>Focus first / last day of the week</span></div>
+      <div class="doc-token-row"><span><strong>PageUp / PageDown</strong></span><span>Previous / next month</span></div>
+      <div class="doc-token-row"><span><strong>Shift + PageUp / PageDown</strong></span><span>Previous / next year</span></div>
+      <div class="doc-token-row"><span><strong>Enter / Space</strong></span><span>Select the focused day</span></div>
+      <div class="doc-token-row"><span><strong>Escape</strong></span><span>Close the picker, return focus to the input</span></div>
+      <div class="doc-token-row"><span><strong>↑ / ↓ (in time fields)</strong></span><span>Increment / decrement hours or minutes (datetime)</span></div>
+      <div class="doc-token-row"><span><strong>Tab</strong></span><span>Move between input → grid → time → footer (logical order)</span></div>
+    </div>
+  </div>
+
   <!-- 1 · DATE-ONLY (compact) -->
-  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">1 · DATE-ONLY PICKER (STATIC SKIN) <span class="doc-state-label" style="text-transform:none">— compact density</span></div>
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">1 · DATE-ONLY PICKER (STATIC SKIN) <span class="doc-state-label" style="text-transform:none">— compact density · illustration only</span></div>
   <div class="doc-preview">
     <div class="doc-preview-canvas" style="flex-direction:column;align-items:flex-start;gap:var(--gds-space-12)">
       <label class="gds-input gds-input--md" style="width:auto;min-width:calc(var(--gds-space-160) + var(--gds-space-64))">

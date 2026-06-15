@@ -205,6 +205,13 @@
   align-content: start;
 }
 
+// Week wrapper carries role="row" for valid grid semantics. `display: contents`
+// keeps the day cells as direct grid items of __grid, so the visual 7×6 layout,
+// focus ring, and spacing are unchanged.
+.gds-calendar__week {
+  display: contents;
+}
+
 .gds-calendar__weekday {
   display: flex;
   align-items: center;
@@ -250,7 +257,12 @@
     background: var(--calendar-day-hover-bg);
   }
 
-  &:focus-visible {
+  // Roving-tabindex grid: the focused cell is the navigation cursor and must
+  // always show a ring — use :focus (not only :focus-visible) so it's reliable
+  // regardless of the browser's keyboard-modality heuristic. Clicking a day
+  // selects it (date mode closes immediately), so a mouse focus ring is moot.
+  &:focus-visible,
+  &:focus {
     outline: var(--calendar-focus-ring-width) solid var(--calendar-focus-ring-color);
     outline-offset: var(--calendar-focus-ring-offset);
   }

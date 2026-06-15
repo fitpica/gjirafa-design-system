@@ -2,18 +2,27 @@ import { createPopover } from '../popover/createPopover';
 import type { PopoverInstance } from '../popover/types';
 import type { DatePickerInstance, DatePickerOptions, Weekday } from './types';
 import {
+  addDays,
   addMonths,
+  addMonthsClampDay,
+  addYearsClampDay,
   buildMonthMatrix,
   clampInt,
   defaultFormat,
+  endOfWeek,
+  firstEnabledInMonth,
   formatDateTime,
+  formatFullDate,
   getMonthLabel,
   getWeekdayLabels,
   isDateDisabled,
   isSameDay,
+  isSameMonth,
+  nextEnabled,
   pad2Time,
   setTime,
   startOfDay,
+  startOfWeek,
   stepHour,
   stepMinute,
   toDate,
@@ -114,6 +123,8 @@ export function createDatePicker(
   const initialView = selected ?? startOfDay(new Date());
   let viewYear = initialView.getFullYear();
   let viewMonth = initialView.getMonth();
+  // Roving-tabindex focus position within the grid (distinct from `selected`).
+  let focusedDate: Date = startOfDay(selected ?? new Date());
 
   // --- DOM: surface > calendar (header, weekdays, grid, [time], [footer]) ---
   const surface = el('div', 'gds-popover gds-datepicker__popover');
@@ -144,7 +155,10 @@ export function createDatePicker(
   const grid = el('div', 'gds-calendar__grid', { role: 'grid' });
   grid.id = `gds-dp-grid-${++idCounter}`;
 
-  calendar.append(header, weekdaysRow, grid);
+  // Visually-hidden polite live region — announces month changes to AT.
+  const liveRegion = el('div', 'gds-sr-only', { 'aria-live': 'polite', 'aria-atomic': 'true' });
+
+  calendar.append(header, weekdaysRow, grid, liveRegion);
 
   // --- Time row (datetime only): label + bordered HH / MM segment spinners ---
   let hourField: HTMLInputElement | null = null;
@@ -217,13 +231,19 @@ export function createDatePicker(
   if (showToday || showClear) {
     const footer = el('div', 'gds-calendar__footer');
     if (showToday) {
-      const todayBtn = el('button', 'gds-btn gds-btn--ghost gds-btn--sm', { type: 'button' });
+      const todayBtn = el('button', 'gds-btn gds-btn--ghost gds-btn--sm', {
+        type: 'button',
+        'aria-label': "Select today's date",
+      });
       todayBtn.innerHTML = '<span class="gds-btn__label">Today</span>';
       todayBtn.addEventListener('click', () => selectDate(startOfDay(new Date())));
       footer.appendChild(todayBtn);
     }
     if (showClear) {
-      const clearBtn = el('button', 'gds-btn gds-btn--ghost gds-btn--sm', { type: 'button' });
+      const clearBtn = el('button', 'gds-btn gds-btn--ghost gds-btn--sm', {
+        type: 'button',
+        'aria-label': 'Clear selected date',
+      });
       clearBtn.innerHTML = '<span class="gds-btn__label">Clear</span>';
       clearBtn.addEventListener('click', () => {
         timeH = defaultTime.hours;
@@ -240,11 +260,32 @@ export function createDatePicker(
     title.textContent = getMonthLabel(viewYear, viewMonth, locale);
   }
 
+  /** Announce the current month to the live region (called on month changes). */
+  function announce(): void {
+    liveRegion.textContent = getMonthLabel(viewYear, viewMonth, locale);
+  }
+
   function renderGrid(): void {
     grid.replaceChildren();
+    grid.setAttribute('aria-label', getMonthLabel(viewYear, viewMonth, locale));
     const today = startOfDay(new Date());
     const cells = buildMonthMatrix(viewYear, viewMonth, weekStartsOn as Weekday);
-    for (const date of cells) {
+
+    // Exactly one tabbable cell: the focused date if it's a visible, enabled day
+    // of this month; otherwise the first enabled day in the month.
+    const focusInView =
+      isSameMonth(focusedDate, new Date(viewYear, viewMonth, 1)) &&
+      !isDateDisabled(focusedDate, disableOpts);
+    const tabbable: Date | null = focusInView
+      ? focusedDate
+      : firstEnabledInMonth(viewYear, viewMonth, disableOpts);
+
+    let week: HTMLElement | null = null;
+    cells.forEach((date, i) => {
+      if (i % 7 === 0) {
+        week = el('div', 'gds-calendar__week', { role: 'row' });
+        grid.appendChild(week);
+      }
       const outside = date.getMonth() !== viewMonth;
       const disabled = isDateDisabled(date, disableOpts);
       const isSelected = selected != null && isSameDay(date, selected);
@@ -256,18 +297,24 @@ export function createDatePicker(
       if (isSelected) classes.push('gds-calendar__day--selected');
       if (disabled) classes.push('gds-calendar__day--disabled');
 
-      const cell = el('button', classes.join(' '), { type: 'button', role: 'gridcell' });
+      const cell = el('button', classes.join(' '), {
+        type: 'button',
+        role: 'gridcell',
+        'aria-label': formatFullDate(date, locale),
+      });
       cell.textContent = String(date.getDate());
       cell.dataset.date = String(date.getTime());
       if (isSelected) cell.setAttribute('aria-selected', 'true');
       if (isToday) cell.setAttribute('aria-current', 'date');
       if (disabled) {
         cell.setAttribute('aria-disabled', 'true');
-        cell.tabIndex = -1;
         cell.disabled = true;
+        cell.tabIndex = -1;
+      } else {
+        cell.tabIndex = tabbable && isSameDay(date, tabbable) ? 0 : -1;
       }
-      grid.appendChild(cell);
-    }
+      week!.appendChild(cell);
+    });
   }
 
   function renderTime(): void {
@@ -311,11 +358,60 @@ export function createDatePicker(
 
   function selectDate(date: Date): void {
     if (isDateDisabled(date, disableOpts)) return;
+    focusedDate = startOfDay(date);
     viewYear = date.getFullYear();
     viewMonth = date.getMonth();
     emit(composeValue(date));
     if (closeOnSelect) close();
   }
+
+  /** Compute where roving focus lands when the picker opens. */
+  function computeInitialFocus(): Date {
+    const today = startOfDay(new Date());
+    if (selected && !isDateDisabled(selected, disableOpts)) return startOfDay(selected);
+    if (!isDateDisabled(today, disableOpts)) return today;
+    const base = selected ?? today;
+    return firstEnabledInMonth(base.getFullYear(), base.getMonth(), disableOpts) ?? today;
+  }
+
+  /** Move roving focus to `date`: sync the view, re-render, announce, focus the cell. */
+  function moveFocusTo(date: Date): void {
+    const monthChanged = !isSameMonth(date, new Date(viewYear, viewMonth, 1));
+    focusedDate = startOfDay(date);
+    viewYear = focusedDate.getFullYear();
+    viewMonth = focusedDate.getMonth();
+    render();
+    if (monthChanged) announce();
+    const cell = grid.querySelector<HTMLElement>(`[data-date="${focusedDate.getTime()}"]`);
+    cell?.focus();
+  }
+
+  // Keyboard grid navigation (roving tabindex). Disabled days are skipped.
+  grid.addEventListener('keydown', (e) => {
+    const base = focusedDate;
+    let target: Date | null = null;
+    let dir = 1;
+    switch (e.key) {
+      case 'ArrowRight': target = addDays(base, 1); dir = 1; break;
+      case 'ArrowLeft': target = addDays(base, -1); dir = -1; break;
+      case 'ArrowDown': target = addDays(base, 7); dir = 1; break;
+      case 'ArrowUp': target = addDays(base, -7); dir = -1; break;
+      case 'Home': target = startOfWeek(base, weekStartsOn as Weekday); dir = -1; break;
+      case 'End': target = endOfWeek(base, weekStartsOn as Weekday); dir = 1; break;
+      case 'PageUp': target = e.shiftKey ? addYearsClampDay(base, -1) : addMonthsClampDay(base, -1); dir = -1; break;
+      case 'PageDown': target = e.shiftKey ? addYearsClampDay(base, 1) : addMonthsClampDay(base, 1); dir = 1; break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        if (!isDateDisabled(focusedDate, disableOpts)) selectDate(focusedDate);
+        return;
+      default:
+        return;
+    }
+    e.preventDefault();
+    const enabled = nextEnabled(target, dir, disableOpts);
+    if (enabled) moveFocusTo(enabled);
+  });
 
   /** Time ±step. Updates the value when a day is already selected; never closes. */
   function stepTime(isHours: boolean, delta: number): void {
@@ -339,30 +435,31 @@ export function createDatePicker(
     selectDate(new Date(Number(target.dataset.date)));
   });
 
-  prevBtn.addEventListener('click', () => {
-    const v = addMonths(new Date(viewYear, viewMonth, 1), -1);
+  function shiftMonth(delta: number): void {
+    const v = addMonths(new Date(viewYear, viewMonth, 1), delta);
     viewYear = v.getFullYear();
     viewMonth = v.getMonth();
     render();
-  });
-  nextBtn.addEventListener('click', () => {
-    const v = addMonths(new Date(viewYear, viewMonth, 1), 1);
-    viewYear = v.getFullYear();
-    viewMonth = v.getMonth();
-    render();
-  });
+    announce();
+  }
+  prevBtn.addEventListener('click', () => shiftMonth(-1));
+  nextBtn.addEventListener('click', () => shiftMonth(1));
 
   // --- Popover wiring ---
   render();
   const popover: PopoverInstance = createPopover(input, surface, {
     placement,
     role: 'dialog',
+    // We manage initial focus ourselves (the focused day cell), not the popover.
+    initialFocus: 'none',
     returnFocus: true,
     onOpen: () => {
-      const base = selected ?? startOfDay(new Date());
-      viewYear = base.getFullYear();
-      viewMonth = base.getMonth();
+      focusedDate = computeInitialFocus();
+      viewYear = focusedDate.getFullYear();
+      viewMonth = focusedDate.getMonth();
       render();
+      const cell = grid.querySelector<HTMLElement>(`[data-date="${focusedDate.getTime()}"]`);
+      (cell ?? surface).focus();
       onOpen?.();
     },
     onClose: () => onClose?.(),
