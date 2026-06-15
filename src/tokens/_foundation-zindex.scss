@@ -8,6 +8,7 @@ $z-sticky:     200;
 $z-overlay:    1000;
 $z-modal:      1010;
 $z-sidepanel:  1020;
+$z-popover:    1025;  // floating layer that can open from inside a modal/sidepanel; below toast/tooltip
 $z-toast:      1030;
 $z-tooltip:    1040;
 
@@ -20,6 +21,7 @@ $z-tooltip:    1040;
   --gds-z-overlay:   #{$z-overlay};
   --gds-z-modal:     #{$z-modal};
   --gds-z-sidepanel: #{$z-sidepanel};
+  --gds-z-popover:   #{$z-popover};
   --gds-z-toast:     #{$z-toast};
   --gds-z-tooltip:   #{$z-tooltip};
 }

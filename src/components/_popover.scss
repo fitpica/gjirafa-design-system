@@ -1,0 +1,91 @@
+// ============================================================================
+// Component / Popover  (generic floating surface — CSS shell)
+//
+// The visual shell only. POSITION is written inline by the framework-agnostic
+// controller `createPopover()` in @gjirafa/ds-core (Floating UI: placement,
+// flip, shift, autoUpdate, portal-to-body). CSS owns appearance, the
+// open/close transition, max-height/scroll, stacking, and reduced-motion.
+//
+// ── Markup contract ────────────────────────────────────────────────────────
+//   <button aria-haspopup aria-expanded aria-controls="pop-id">Trigger</button>
+//   <div id="pop-id" class="gds-popover" role="dialog|menu|listbox">
+//     <div class="gds-popover__content"> …slotted content (menu / calendar / form)… </div>
+//     <div class="gds-popover__arrow" aria-hidden="true"></div>   <!-- optional -->
+//   </div>
+//   The controller toggles `.gds-popover--open` and sets inline top/left/position.
+//
+// ── State hook ─────────────────────────────────────────────────────────────
+//   .gds-popover--open — visibility hook owned by the controller; mirrors the
+//   house convention (.gds-dropdown--open, .gds-calendar-popover--open,
+//   .gds-modal-overlay--open).
+//
+// Rule: ZERO hardcoded values — all references to component / foundation tokens.
+// ============================================================================
+
+@use '../tokens/foundation-spacing' as *;
+@use '../tokens/foundation-motion' as *;
+
+.gds-popover {
+  // position / inset are set inline by the controller (default strategy: fixed).
+  // `fixed` here is a sensible pre-controller default; inline styles win.
+  position: fixed;
+  z-index: var(--popover-z);
+  box-sizing: border-box;
+  max-height: var(--popover-max-height);
+  overflow-y: auto;
+  background: var(--popover-bg);
+  border: var(--popover-border-width) solid var(--popover-border-color);
+  border-radius: var(--popover-radius);
+  box-shadow: var(--popover-shadow);
+
+  // Hidden until the controller adds --open (kept in the DOM so it can transition
+  // and so Floating UI can measure it).
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--popover-duration) var(--popover-ease),
+    visibility var(--popover-duration) var(--popover-ease);
+}
+
+.gds-popover--open {
+  opacity: 1;
+  visibility: visible;
+}
+
+// Inner padding / scroll container. Omit (or zero the padding) when the slotted
+// content manages its own spacing (e.g. the calendar brings --calendar-padding).
+.gds-popover__content {
+  padding: var(--popover-padding);
+}
+
+// Optional arrow — decorative diamond tinted with the surface bg. The controller
+// (Floating UI arrow middleware) writes its inline top/left so it tracks the
+// trigger after a shift. Same rotated-square recipe as the tooltip arrow.
+.gds-popover__arrow {
+  position: absolute;
+  width: var(--popover-arrow-size);
+  height: var(--popover-arrow-size);
+  background: var(--popover-bg);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+// ============================================================================
+// Reduced motion — snap open/close (matches tooltip / calendar)
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .gds-popover {
+    transition: none;
+  }
+}
+
+// ============================================================================
+// Forced colors — keep the surface border visible when bg/shadow are stripped
+// ============================================================================
+
+@media (forced-colors: active) {
+  .gds-popover {
+    border-color: CanvasText;
+  }
+}

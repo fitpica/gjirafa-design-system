@@ -44,6 +44,7 @@
 @use 'tokens/component-card';
 @use 'tokens/component-tooltip';
 @use 'tokens/component-calendar';
+@use 'tokens/component-popover';
 
 // --- Component styles ---
 @use 'components/button';
@@ -71,6 +72,7 @@
 @use 'components/card';
 @use 'components/tooltip';
 @use 'components/calendar';
+@use 'components/popover';
 
 // --- Utility classes ---
 @use 'utilities/colors';
