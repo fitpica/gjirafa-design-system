@@ -43,6 +43,7 @@
 @use 'tokens/component-skeleton';
 @use 'tokens/component-card';
 @use 'tokens/component-tooltip';
+@use 'tokens/component-calendar';
 
 // --- Component styles ---
 @use 'components/button';
@@ -69,6 +70,7 @@
 @use 'components/skeleton';
 @use 'components/card';
 @use 'components/tooltip';
+@use 'components/calendar';
 
 // --- Utility classes ---
 @use 'utilities/colors';
