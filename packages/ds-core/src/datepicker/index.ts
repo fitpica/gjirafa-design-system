@@ -15,6 +15,8 @@ export {
   getWeekdayLabels,
   defaultFormat,
   formatDateTime,
+  formatTimeValue,
+  toTime,
   formatFullDate,
   setTime,
   stepHour,

@@ -471,6 +471,148 @@ describe('ARIA', () => {
   });
 });
 
+describe('time-only mode', () => {
+  const fields = () => Array.from(document.querySelectorAll<HTMLInputElement>('.gds-time-stepper__field'));
+  const tbtn = (label: string) => document.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!;
+
+  it('renders NO calendar grid (no grid roles, no day cells, no month nav)', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:00' });
+    dp.open();
+    expect(document.querySelector('.gds-calendar__grid')).toBeNull();
+    expect(document.querySelectorAll('.gds-calendar__day')).toHaveLength(0);
+    expect(document.querySelector('[role="grid"]')).toBeNull();
+    expect(document.querySelectorAll('[role="gridcell"]')).toHaveLength(0);
+    expect(document.querySelector('.gds-calendar__weekdays')).toBeNull();
+    expect(document.querySelector('[aria-label="Previous month"]')).toBeNull();
+    expect(fields()).toHaveLength(2); // just HH/MM
+    dp.destroy();
+  });
+
+  it('formats the value as HH:mm', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:00' });
+    expect(input.value).toBe('10:00');
+    dp.open();
+    expect(fields()[0]!.value).toBe('10');
+    expect(fields()[1]!.value).toBe('00');
+    dp.destroy();
+  });
+
+  it('accepts a Date and an ISO string (uses their time)', () => {
+    const a = createDatePicker(input, { mode: 'time', defaultValue: new Date(2020, 0, 1, 9, 5) });
+    expect(input.value).toBe('09:05');
+    a.destroy();
+    const b = createDatePicker(input, { mode: 'time', defaultValue: '2026-06-15T14:30' });
+    expect(input.value).toBe('14:30');
+    b.destroy();
+  });
+
+  it('hour increment/decrement updates the value', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:00' });
+    dp.open();
+    tbtn('Increment hours').click();
+    expect(dp.getValue()!.getHours()).toBe(11);
+    expect(input.value).toBe('11:00');
+    tbtn('Decrement hours').click();
+    expect(input.value).toBe('10:00');
+    dp.destroy();
+  });
+
+  it('minute increment/decrement honors minuteStep', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:00', minuteStep: 15 });
+    dp.open();
+    tbtn('Increment minutes').click();
+    expect(dp.getValue()!.getMinutes()).toBe(15);
+    expect(input.value).toBe('10:15');
+    dp.destroy();
+  });
+
+  it('uncontrolled: stepping produces a value anchored to today', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '08:00' });
+    dp.open();
+    tbtn('Increment hours').click();
+    const v = dp.getValue()!;
+    const today = new Date();
+    expect([v.getFullYear(), v.getMonth(), v.getDate()]).toEqual([today.getFullYear(), today.getMonth(), today.getDate()]);
+    expect(v.getHours()).toBe(9);
+    dp.destroy();
+  });
+
+  it('controlled: stepping fires onChange but internal stays until setValue', () => {
+    const onChange = vi.fn();
+    const dp = createDatePicker(input, { mode: 'time', value: '10:00', onChange });
+    dp.open();
+    tbtn('Increment hours').click();
+    expect(onChange).toHaveBeenCalledWith(expect.any(Date));
+    expect(dp.getValue()!.getHours()).toBe(10); // controlled — unchanged
+    dp.setValue('12:30');
+    expect(input.value).toBe('12:30');
+    dp.destroy();
+  });
+
+  it('Clear empties the value and input', () => {
+    const onChange = vi.fn();
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:00', onChange });
+    dp.open();
+    tbtn('Clear selected time').click();
+    expect(dp.getValue()).toBeNull();
+    expect(input.value).toBe('');
+    expect(onChange).toHaveBeenCalledWith(null);
+    dp.destroy();
+  });
+
+  it('Now sets the current time', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '00:00' });
+    dp.open();
+    tbtn('Set the current time').click();
+    const now = new Date();
+    const v = dp.getValue()!;
+    expect(v.getHours()).toBe(now.getHours());
+    // minute may tick during the test; allow ±1
+    expect(Math.abs(v.getMinutes() - now.getMinutes())).toBeLessThanOrEqual(1);
+    dp.destroy();
+  });
+
+  it('focus on open goes to the hour field', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:00' });
+    dp.open();
+    expect(document.activeElement).toBe(fields()[0]);
+    dp.destroy();
+  });
+
+  it('Escape closes and returns focus to the input', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:00' });
+    input.focus();
+    dp.open();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(dp.isOpen).toBe(false);
+    expect(document.activeElement).toBe(input);
+    dp.destroy();
+  });
+
+  it('time fields expose spinbutton ARIA', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:30' });
+    dp.open();
+    const [hh, mm] = fields();
+    expect(hh!.getAttribute('role')).toBe('spinbutton');
+    expect(hh!.getAttribute('aria-valuemin')).toBe('0');
+    expect(hh!.getAttribute('aria-valuemax')).toBe('23');
+    expect(hh!.getAttribute('aria-valuenow')).toBe('10');
+    expect(hh!.getAttribute('aria-label')).toBe('Hours');
+    expect(mm!.getAttribute('aria-valuemax')).toBe('59');
+    expect(mm!.getAttribute('aria-valuenow')).toBe('30');
+    dp.destroy();
+  });
+
+  it('ArrowUp/ArrowDown on a time field steps it', () => {
+    const dp = createDatePicker(input, { mode: 'time', defaultValue: '10:30' });
+    dp.open();
+    const hh = fields()[0]!;
+    hh.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    expect(dp.getValue()!.getHours()).toBe(11);
+    dp.destroy();
+  });
+});
+
 describe('teardown', () => {
   it('destroy removes the surface and listeners', () => {
     const dp = createDatePicker(input, { defaultValue: '2026-06-15' });

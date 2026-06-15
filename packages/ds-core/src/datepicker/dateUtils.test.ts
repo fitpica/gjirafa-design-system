@@ -16,6 +16,8 @@ import {
   stepMinute,
   clampInt,
   formatDateTime,
+  formatTimeValue,
+  toTime,
   startOfWeek,
   endOfWeek,
   addMonthsClampDay,
@@ -137,6 +139,22 @@ describe('time helpers (datetime)', () => {
   it('formatDateTime outputs "DD/MM/YYYY HH:mm" (en-GB)', () => {
     expect(formatDateTime(new Date(2026, 5, 15, 10, 0), 'en-GB')).toBe('15/06/2026 10:00');
     expect(formatDateTime(new Date(2026, 5, 15, 9, 5), 'en-GB')).toBe('15/06/2026 09:05');
+  });
+  it('formatTimeValue outputs "HH:mm"', () => {
+    expect(formatTimeValue(new Date(2026, 5, 15, 10, 0))).toBe('10:00');
+    expect(formatTimeValue(new Date(2026, 5, 15, 9, 5))).toBe('09:05');
+  });
+  it('toTime parses "HH:mm" / Date / null, anchored to today', () => {
+    const today = new Date();
+    const a = toTime('14:30')!;
+    expect([a.getHours(), a.getMinutes()]).toEqual([14, 30]);
+    expect([a.getFullYear(), a.getMonth(), a.getDate()]).toEqual([today.getFullYear(), today.getMonth(), today.getDate()]);
+    const b = toTime(new Date(2020, 0, 1, 9, 5))!;
+    expect([b.getHours(), b.getMinutes()]).toEqual([9, 5]);
+    expect(toTime(null)).toBeNull();
+    // clamps out-of-range
+    const c = toTime('99:99')!;
+    expect([c.getHours(), c.getMinutes()]).toEqual([23, 59]);
   });
 });
 
