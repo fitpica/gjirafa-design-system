@@ -930,6 +930,7 @@
         <button class="doc-nav-item" data-page="tooltip">Tooltip <span class="doc-nav-dot doc-nav-dot--new"></span></button>
         <button class="doc-nav-item" data-page="skeleton">Skeleton <span class="doc-nav-dot doc-nav-dot--new"></span></button>
         <button class="doc-nav-item" data-page="calendar">Calendar <span class="doc-nav-dot doc-nav-dot--new"></span></button>
+        <button class="doc-nav-item" data-page="popover">Popover <span class="doc-nav-dot doc-nav-dot--new"></span></button>
       </div>
       <div class="doc-nav-group">
         <div class="doc-nav-label">Utilities</div>
@@ -7841,6 +7842,211 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
 </section>
 
 <!-- ============================================================ -->
+<!-- POPOVER -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-popover">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Primitives</div>
+    <h1 class="doc-h1">Popover <span class="doc-status doc-status--stable">v0.1 · JS primitive</span></h1>
+    <p class="doc-desc">A reusable floating-surface primitive: trigger + positioned content with collision handling, portal-to-body, outside-click / Escape dismiss, and focus management. Two layers — the <code>.gds-popover</code> CSS shell ships in <code>@gjirafa/design-system</code> (dependency-free), and the framework-agnostic <code>createPopover()</code> controller ships in <strong><code>@gjirafa/ds-core</code></strong> (wraps Floating UI). Reusable by Calendar, dropdowns, menus, and dialog-adjacent UI.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-popover</span><span class="doc-tag">.gds-popover--open</span><span class="doc-tag">.gds-popover__content</span><span class="doc-tag">createPopover()</span><span class="doc-tag">@gjirafa/ds-core</span></div>
+  </div>
+
+  <!-- STATUS callout -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gds-space-16);margin-bottom:var(--gds-space-32)">
+    <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
+      <div class="doc-state-label" style="color:var(--gds-color-success-text);margin-bottom:var(--gds-space-8)">✓ In this phase (Phase 1)</div>
+      <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
+        <li>Generic <code>.gds-popover</code> CSS shell (token-based, light surface)</li>
+        <li><code>createPopover()</code> — placement, flip/shift, autoUpdate</li>
+        <li>Portal-to-body — escapes <code>overflow:hidden</code> / modals</li>
+        <li>Outside-click + Escape (layered) dismiss</li>
+        <li>Focus move-in, trap (modal), return-to-trigger</li>
+        <li>Runtime ARIA wiring; dual ESM/CJS + types</li>
+      </ul>
+    </div>
+    <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
+      <div class="doc-state-label" style="color:var(--gds-color-warning-text);margin-bottom:var(--gds-space-8)">⏳ Later phases</div>
+      <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
+        <li>Date/time engine (Phase 2 — ds-core)</li>
+        <li>Keyboard grid nav + ARIA enforcement (Phase 3)</li>
+        <li>Vue 3 wrapper (Phase 4)</li>
+        <li>Storybook + visual-regression (Phase 5)</li>
+        <li>Refactor <code>.gds-calendar-popover</code> to compose <code>.gds-popover</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- LIVE DEMO -->
+  <div class="doc-section-label">LIVE — CLICK TO OPEN <span class="doc-state-label" style="text-transform:none">— Esc / outside-click closes, focus returns to the trigger</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-16);flex-wrap:wrap;min-height:calc(var(--gds-space-160) + var(--gds-space-32))">
+      <button id="pop-basic-trigger" class="gds-btn gds-btn--secondary gds-btn--md" type="button"><span class="gds-btn__label">Open popover</span></button>
+      <div id="pop-basic" class="gds-popover" hidden>
+        <div class="gds-popover__content" style="max-width:calc(var(--gds-space-160) * 1.6)">
+          <p style="margin:0 0 var(--gds-space-8);font-weight:var(--gds-font-weight-medium);color:var(--gds-color-text-primary)">Popover title</p>
+          <p style="margin:0 0 var(--gds-space-12);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary)">Positioned by Floating UI, dismissed on Escape or outside-click. Focus is trapped to this surface in modal mode and returns to the trigger on close.</p>
+          <button class="gds-btn gds-btn--primary gds-btn--sm" type="button" data-pop-close><span class="gds-btn__label">Got it</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLACEMENT -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">PLACEMENT — flip/shift keeps it on-screen</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-12);flex-wrap:wrap;justify-content:center;min-height:calc(var(--gds-space-160))">
+      <button class="gds-btn gds-btn--ghost gds-btn--sm" type="button" data-pop-place="top"><span class="gds-btn__label">Top</span></button>
+      <button class="gds-btn gds-btn--ghost gds-btn--sm" type="button" data-pop-place="bottom"><span class="gds-btn__label">Bottom</span></button>
+      <button class="gds-btn gds-btn--ghost gds-btn--sm" type="button" data-pop-place="left"><span class="gds-btn__label">Left</span></button>
+      <button class="gds-btn gds-btn--ghost gds-btn--sm" type="button" data-pop-place="right"><span class="gds-btn__label">Right</span></button>
+      <div id="pop-place" class="gds-popover" hidden>
+        <div class="gds-popover__content"><span style="font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-primary)">Placement: <strong id="pop-place-label">bottom</strong></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU CONTENT -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">MENU CONTENT <span class="doc-state-label" style="text-transform:none">— reuses .gds-menu inside the surface</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="min-height:calc(var(--gds-space-160) + var(--gds-space-64))">
+      <button id="pop-menu-trigger" class="gds-btn gds-btn--secondary gds-btn--md" type="button"><span class="gds-btn__label">Actions ▾</span></button>
+      <div id="pop-menu" class="gds-popover" role="menu" hidden>
+        <div class="gds-menu" style="border:none;box-shadow:none;min-width:calc(var(--gds-space-160))">
+          <button class="gds-menu__item" type="button" role="menuitem" data-pop-close><span class="gds-menu__label">Edit</span></button>
+          <button class="gds-menu__item" type="button" role="menuitem" data-pop-close><span class="gds-menu__label">Duplicate</span></button>
+          <button class="gds-menu__item" type="button" role="menuitem" data-pop-close><span class="gds-menu__label">Move to…</span></button>
+          <div class="gds-menu__divider"></div>
+          <button class="gds-menu__item gds-menu__item--danger" type="button" role="menuitem" data-pop-close><span class="gds-menu__label">Delete</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESCAPES OVERFLOW -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">ESCAPES CLIPPING <span class="doc-state-label" style="text-transform:none">— a popover inside an overflow:hidden / scrolling box portals out</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas">
+      <div style="width:100%;max-width:calc(var(--gds-space-160) * 2);height:calc(var(--gds-space-80) + var(--gds-space-48));overflow:auto;border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-secondary)">
+        <p style="margin:0 0 var(--gds-space-12);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary)">This box clips its overflow. The popover below still escapes it (portal + fixed strategy).</p>
+        <button id="pop-clip-trigger" class="gds-btn gds-btn--secondary gds-btn--sm" type="button"><span class="gds-btn__label">Open inside the box</span></button>
+        <div style="height:calc(var(--gds-space-80) * 1.5)"></div>
+      </div>
+      <div id="pop-clip" class="gds-popover" hidden>
+        <div class="gds-popover__content"><span style="font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-primary)">Not clipped ✓ — rendered in <code>document.body</code> above the box.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USAGE -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">USAGE</div>
+  <div class="doc-preview">
+    <details class="doc-preview-code-wrap" open><summary>Show code</summary><pre class="doc-preview-code">// npm i @gjirafa/ds-core   (CSS shell comes from @gjirafa/design-system)
+import { createPopover } from '@gjirafa/ds-core';
+import '@gjirafa/design-system/dist/gjirafa-ds.css';
+
+const trigger = document.querySelector('#trigger');
+const surface = document.querySelector('#surface'); // &lt;div class="gds-popover"&gt;…&lt;/div&gt;
+
+const popover = createPopover(trigger, surface, {
+  placement: 'bottom-start',   // 12 placements incl. -start/-end
+  strategy: 'fixed',           // portal-to-body; escapes overflow:hidden
+  role: 'dialog',              // dialog | menu | listbox | grid | tooltip
+  flip: true, shift: true,     // collision handling (Floating UI)
+  dismiss: { outsideClick: true, escapeKey: true },
+  returnFocus: true,           // focus the trigger on close
+  modal: false,                // true → focus trap + inert background
+  onOpen() {}, onClose(reason) {}, // 'escape' | 'outside-click' | 'api' | 'trigger'
+});
+
+trigger.addEventListener('click', () =&gt; popover.toggle());
+// popover.open() / .close() / .update() / .destroy() / .isOpen</pre></details>
+  </div>
+
+  <!-- ACCESSIBILITY -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">ACCESSIBILITY CONTRACT</div>
+  <div class="doc-preview">
+    <div class="doc-token-table">
+      <div class="doc-token-header"><span>Concern</span><span>Behavior</span><span>Owner</span></div>
+      <div class="doc-token-row"><span><strong>Trigger</strong></span><span>aria-haspopup (role), aria-controls, aria-expanded toggled</span><span>controller</span></div>
+      <div class="doc-token-row"><span><strong>Surface</strong></span><span>role from opts.role; aria-modal when modal</span><span>controller</span></div>
+      <div class="doc-token-row"><span><strong>Initial focus</strong></span><span>first focusable in surface (or configured / none)</span><span>controller</span></div>
+      <div class="doc-token-row"><span><strong>Return focus</strong></span><span>to trigger on close, keyed off transitionend</span><span>controller</span></div>
+      <div class="doc-token-row"><span><strong>Focus trap</strong></span><span>modal: Tab/Shift+Tab wrap; non-modal: roving (no hard trap)</span><span>controller</span></div>
+      <div class="doc-token-row"><span><strong>Escape</strong></span><span>closes topmost layer first (real last-opened stack)</span><span>controller</span></div>
+      <div class="doc-token-row"><span><strong>Background</strong></span><span>modal: inert + aria-hidden on siblings; cleared on close</span><span>controller</span></div>
+      <div class="doc-token-row"><span><strong>Reduced motion</strong></span><span>open/close transition snaps</span><span>CSS shell</span></div>
+    </div>
+  </div>
+
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">NOT INCLUDED IN PHASE 1</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:flex-start;gap:var(--gds-space-8);padding:var(--gds-space-16)">
+      <span class="doc-state-label" style="text-transform:none">✗ No date/time math (Phase 2) · ✗ No Vue/React wrapper (Phase 4) · ✗ No Storybook (Phase 5)</span>
+      <span class="doc-state-label" style="text-transform:none">✗ No changes to the Calendar CSS layer — <code>.gds-calendar-popover</code> stays as-is; refactor to compose <code>.gds-popover</code> is a later change.</span>
+      <span class="doc-state-label" style="text-transform:none">✗ CSS Anchor Positioning not used (≈76% support); revisit as progressive enhancement later.</span>
+    </div>
+  </div>
+</section>
+
+<script type="module">
+  import { createPopover } from './vendor/ds-core-popover.js';
+
+  const byId = (id) => document.getElementById(id);
+  const wireClose = (surface, instance) => {
+    surface.querySelectorAll('[data-pop-close]').forEach((el) =>
+      el.addEventListener('click', () => instance.close('api')),
+    );
+  };
+
+  // 1 — basic dialog
+  (() => {
+    const t = byId('pop-basic-trigger'), c = byId('pop-basic');
+    if (!t || !c) return;
+    c.hidden = false;
+    const p = createPopover(t, c, { role: 'dialog', placement: 'bottom-start' });
+    t.addEventListener('click', () => p.toggle());
+    wireClose(c, p);
+  })();
+
+  // 2 — placement
+  (() => {
+    const c = byId('pop-place'), label = byId('pop-place-label');
+    if (!c) return;
+    c.hidden = false;
+    let current = null;
+    document.querySelectorAll('[data-pop-place]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const placement = btn.getAttribute('data-pop-place');
+        if (label) label.textContent = placement;
+        if (current) current.destroy();
+        current = createPopover(btn, c, { placement, role: 'dialog' });
+        current.open();
+      });
+    });
+  })();
+
+  // 3 — menu content
+  (() => {
+    const t = byId('pop-menu-trigger'), c = byId('pop-menu');
+    if (!t || !c) return;
+    c.hidden = false;
+    const p = createPopover(t, c, { role: 'menu', placement: 'bottom-start' });
+    t.addEventListener('click', () => p.toggle());
+    wireClose(c, p);
+  })();
+
+  // 4 — escapes overflow
+  (() => {
+    const t = byId('pop-clip-trigger'), c = byId('pop-clip');
+    if (!t || !c) return;
+    c.hidden = false;
+    const p = createPopover(t, c, { role: 'dialog', placement: 'bottom-start' });
+    t.addEventListener('click', () => p.toggle());
+  })();
+</script>
+
+<!-- ============================================================ -->
 <!-- UTILITIES -->
 <!-- ============================================================ -->
 <section class="doc-section" id="page-utilities">
@@ -7959,6 +8165,8 @@ const CRUMBS = {
   card: 'Components > Card',
   tooltip: 'Components > Tooltip',
   skeleton: 'Components > Skeleton',
+  calendar: 'Components > Calendar',
+  popover: 'Primitives > Popover',
   utilities: 'Utilities > All Utilities',
 };
 
