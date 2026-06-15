@@ -235,6 +235,28 @@ export function formatDateTime(date: Date, locale: string): string {
   return `${defaultFormat(date, locale)} ${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
 }
 
+/** 24h "HH:mm" (e.g. "10:00") — the default time-only display format. */
+export function formatTimeValue(date: Date): string {
+  return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+}
+
+/**
+ * Parse a time-only value into a Date anchored to TODAY carrying the given
+ * hours/minutes. Accepts a Date (its time), 'HH:mm', or any Date-parsable string.
+ * Only hours/minutes are meaningful; the date portion is today.
+ */
+export function toTime(value: Date | string | null | undefined): Date | null {
+  const base = startOfDay(new Date());
+  if (value == null) return null;
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : setTime(base, value.getHours(), value.getMinutes());
+  }
+  const m = /^(\d{1,2}):(\d{2})/.exec(value);
+  if (m) return setTime(base, clampInt(Number(m[1]), 23), clampInt(Number(m[2]), 59));
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : setTime(base, parsed.getHours(), parsed.getMinutes());
+}
+
 /** Zero-padded "HH" / "MM". */
 export function pad2Time(n: number): string {
   return pad2(n);

@@ -7507,24 +7507,22 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
   <!-- STATUS callout -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gds-space-16);margin-bottom:var(--gds-space-32)">
     <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
-      <div class="doc-state-label" style="color:var(--gds-color-success-text);margin-bottom:var(--gds-space-8)">✓ Covered by this CSS layer</div>
+      <div class="doc-state-label" style="color:var(--gds-color-success-text);margin-bottom:var(--gds-space-8)">✓ Functional now (@gjirafa/ds-core)</div>
       <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
-        <li>Full calendar grid + all day-cell states</li>
-        <li>Date, date-time, time-only, advanced layouts</li>
-        <li>Time stepper, preset panel, footer actions</li>
-        <li>Both themes (CODEX + VP Player), reduced-motion</li>
-        <li><strong>Phase 0 polish:</strong> WCAG-AA contrast, stable 6-row height, connected range track, popover scroll</li>
-        <li>forced-colors, RTL-safe, print guards + <code>.gds-sr-only</code></li>
+        <li><strong>Date-only</strong>, <strong>date-time</strong>, and <strong>time-only</strong> modes</li>
+        <li>Popover: positioning, flip/shift, portal, outside-click / Esc / focus-return</li>
+        <li>Full keyboard navigation + grid ARIA + <code>aria-live</code></li>
+        <li>min/max · disabled dates/weekdays · weekStartsOn · locale · minuteStep · Today/Now/Clear</li>
+        <li>Both themes (CODEX + VP Player); CSS skin is token-based + accessible</li>
       </ul>
     </div>
     <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
-      <div class="doc-state-label" style="color:var(--gds-color-warning-text);margin-bottom:var(--gds-space-8)">⏳ Needs the component layer (TS core + Vue 3)</div>
+      <div class="doc-state-label" style="color:var(--gds-color-warning-text);margin-bottom:var(--gds-space-8)">⏳ Upcoming phases</div>
       <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
-        <li>Popover open/close + collision positioning</li>
-        <li>Arrow-key grid nav, Esc-close, focus return</li>
-        <li>Date/time math, locale, min/max, disabled rules</li>
-        <li>Time increment/decrement + wrap-around</li>
-        <li>Typed <code>&lt;DatePicker mode=…&gt;</code> props + Storybook</li>
+        <li><strong>Presets</strong> (advanced date-time shortcuts panel)</li>
+        <li><strong>Vue 3 wrapper</strong> (typed props, v-model)</li>
+        <li>Storybook + visual-regression + automated a11y tests</li>
+        <li>12-hour time format</li>
       </ul>
     </div>
   </div>
@@ -7612,6 +7610,43 @@ const dp = createDatePicker(document.querySelector('#dt'), {
         onChange(value) {
           out.textContent = value ? 'Value: ' + dtInput.value : 'No value';
         },
+      });
+    }
+  </script>
+
+  <!-- LIVE — TIME-ONLY -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">LIVE — PICK A TIME <span class="doc-status doc-status--stable">functional · time-only</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="align-items:flex-start;gap:var(--gds-space-16);flex-wrap:wrap;min-height:calc(var(--gds-space-64))">
+      <label class="gds-input gds-input--md" style="width:auto;min-width:calc(var(--gds-space-160))">
+        <span class="gds-input__label">Time</span>
+        <span class="gds-input__wrap">
+          <input id="t-live-input" class="gds-input__field" placeholder="Select a time" readonly />
+          <span class="gds-input__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+        </span>
+      </label>
+      <span id="t-live-value" class="doc-state-label" style="text-transform:none;align-self:center">No time</span>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">import { createDatePicker } from '@gjirafa/ds-core';
+
+const tp = createDatePicker(document.querySelector('#t'), {
+  mode: 'time',            // compact HH/MM only — no calendar
+  defaultValue: '10:00',   // value formats as "10:00"; getValue() → Date (today + time)
+  minuteStep: 5,
+  onChange(value) { /* Date anchored to today; read getHours()/getMinutes() */ },
+});
+// footer: "Now" sets the current time, "Clear" empties it</pre></details>
+  </div>
+  <script type="module">
+    import { createDatePicker } from './vendor/ds-core-datepicker.js';
+    const tInput = document.getElementById('t-live-input');
+    if (tInput) {
+      const out = document.getElementById('t-live-value');
+      createDatePicker(tInput, {
+        mode: 'time',
+        defaultValue: '10:00',
+        minuteStep: 5,
+        onChange(value) { out.textContent = value ? 'Value: ' + tInput.value : 'No time'; },
       });
     }
   </script>

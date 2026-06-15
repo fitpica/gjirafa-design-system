@@ -12,6 +12,7 @@ import {
   endOfWeek,
   firstEnabledInMonth,
   formatDateTime,
+  formatTimeValue,
   formatFullDate,
   getMonthLabel,
   getWeekdayLabels,
@@ -27,6 +28,7 @@ import {
   stepMinute,
   toDate,
   toDateTime,
+  toTime,
 } from './dateUtils';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -96,14 +98,17 @@ export function createDatePicker(
     onClose,
   } = options;
 
+  const isTime = mode === 'time';
   const isDateTime = mode === 'datetime';
+  const hasTime = isDateTime || isTime; // shows the HH/MM time control
+  const hasGrid = !isTime; // shows the calendar grid
   // datetime stays open after picking a day so the user can also set the time.
-  const closeOnSelect = options.closeOnSelect ?? !isDateTime;
+  const closeOnSelect = options.closeOnSelect ?? !hasTime;
   const defaultTime = options.defaultTime ?? { hours: 0, minutes: 0 };
 
   const controlled = options.value !== undefined;
   const parseValue = (v: Date | string | null | undefined): Date | null =>
-    isDateTime ? toDateTime(v) : toDate(v);
+    isTime ? toTime(v) : isDateTime ? toDateTime(v) : toDate(v);
 
   const min = toDate(options.min);
   const max = toDate(options.max);
@@ -112,7 +117,12 @@ export function createDatePicker(
     ? options.disabledDates.map((d) => toDate(d)).filter((d): d is Date => d !== null)
     : (options.disabledDates ?? null);
   const format =
-    options.format ?? (isDateTime ? (d: Date) => formatDateTime(d, locale) : (d: Date) => defaultFormat(d, locale));
+    options.format ??
+    (isTime
+      ? (d: Date) => formatTimeValue(d)
+      : isDateTime
+        ? (d: Date) => formatDateTime(d, locale)
+        : (d: Date) => defaultFormat(d, locale));
 
   const disableOpts = { min, max, disabledDates, disabledWeekdays };
 
@@ -158,14 +168,19 @@ export function createDatePicker(
   // Visually-hidden polite live region — announces month changes to AT.
   const liveRegion = el('div', 'gds-sr-only', { 'aria-live': 'polite', 'aria-atomic': 'true' });
 
-  calendar.append(header, weekdaysRow, grid, liveRegion);
+  // Time-only mode renders no calendar — only the time control + footer below.
+  if (hasGrid) {
+    calendar.append(header, weekdaysRow, grid, liveRegion);
+  }
 
-  // --- Time row (datetime only): label + bordered HH / MM segment spinners ---
+  // --- Time row (datetime + time modes): bordered HH / MM segment spinners ---
+  // datetime: "Time" label + stepper, below the grid with a divider.
+  // time-only: stepper only (no label), bare (no divider) — it is the whole panel.
   let hourField: HTMLInputElement | null = null;
   let minuteField: HTMLInputElement | null = null;
 
-  if (isDateTime) {
-    const timeRow = el('div', 'gds-calendar__time');
+  if (hasTime) {
+    const timeRow = el('div', `gds-calendar__time${isTime ? ' gds-calendar__time--bare' : ''}`);
     const label = el('span', 'gds-calendar__time-label');
     label.textContent = 'Time';
     const stepper = el('div', 'gds-time-stepper');
@@ -223,26 +238,40 @@ export function createDatePicker(
     stepper.appendChild(sep);
     minuteField = makeUnit('Minutes', 59);
 
-    timeRow.append(label, stepper);
+    if (isTime) timeRow.append(stepper);
+    else timeRow.append(label, stepper);
     calendar.appendChild(timeRow);
   }
 
-  // --- Footer (Today / Clear) ---
+  // --- Footer ---
+  // date / datetime: "Today" (selects today). time-only: "Today" becomes "Now"
+  // (sets the current time). "Clear" clears the value in every mode.
   if (showToday || showClear) {
     const footer = el('div', 'gds-calendar__footer');
     if (showToday) {
+      const label = isTime ? 'Now' : 'Today';
+      const ariaLabel = isTime ? 'Set the current time' : "Select today's date";
       const todayBtn = el('button', 'gds-btn gds-btn--ghost gds-btn--sm', {
         type: 'button',
-        'aria-label': "Select today's date",
+        'aria-label': ariaLabel,
       });
-      todayBtn.innerHTML = '<span class="gds-btn__label">Today</span>';
-      todayBtn.addEventListener('click', () => selectDate(startOfDay(new Date())));
+      todayBtn.innerHTML = `<span class="gds-btn__label">${label}</span>`;
+      todayBtn.addEventListener('click', () => {
+        if (isTime) {
+          const now = new Date();
+          timeH = now.getHours();
+          timeM = now.getMinutes();
+          applyTime();
+        } else {
+          selectDate(startOfDay(new Date()));
+        }
+      });
       footer.appendChild(todayBtn);
     }
     if (showClear) {
       const clearBtn = el('button', 'gds-btn gds-btn--ghost gds-btn--sm', {
         type: 'button',
-        'aria-label': 'Clear selected date',
+        'aria-label': isTime ? 'Clear selected time' : 'Clear selected date',
       });
       clearBtn.innerHTML = '<span class="gds-btn__label">Clear</span>';
       clearBtn.addEventListener('click', () => {
@@ -329,8 +358,10 @@ export function createDatePicker(
   }
 
   function render(): void {
-    renderTitle();
-    renderGrid();
+    if (hasGrid) {
+      renderTitle();
+      renderGrid();
+    }
     renderTime();
   }
 
@@ -387,7 +418,8 @@ export function createDatePicker(
   }
 
   // Keyboard grid navigation (roving tabindex). Disabled days are skipped.
-  grid.addEventListener('keydown', (e) => {
+  // Grid-only — not attached in time-only mode (no grid is rendered).
+  if (hasGrid) grid.addEventListener('keydown', (e) => {
     const base = focusedDate;
     let target: Date | null = null;
     let dir = 1;
@@ -421,15 +453,18 @@ export function createDatePicker(
   }
 
   function applyTime(): void {
-    if (selected) {
+    if (isTime) {
+      // Time-only: no day to wait for — always produce a value (anchored today).
+      emit(setTime(startOfDay(new Date()), timeH, timeM));
+    } else if (selected) {
       emit(setTime(selected, timeH, timeM));
     } else {
-      // No date chosen yet — just reflect the time in the fields.
+      // datetime with no day chosen yet — just reflect the time in the fields.
       renderTime();
     }
   }
 
-  grid.addEventListener('click', (e) => {
+  if (hasGrid) grid.addEventListener('click', (e) => {
     const target = (e.target as HTMLElement).closest<HTMLButtonElement>('.gds-calendar__day');
     if (!target || target.disabled || !target.dataset.date) return;
     selectDate(new Date(Number(target.dataset.date)));
@@ -442,8 +477,10 @@ export function createDatePicker(
     render();
     announce();
   }
-  prevBtn.addEventListener('click', () => shiftMonth(-1));
-  nextBtn.addEventListener('click', () => shiftMonth(1));
+  if (hasGrid) {
+    prevBtn.addEventListener('click', () => shiftMonth(-1));
+    nextBtn.addEventListener('click', () => shiftMonth(1));
+  }
 
   // --- Popover wiring ---
   render();
@@ -454,12 +491,18 @@ export function createDatePicker(
     initialFocus: 'none',
     returnFocus: true,
     onOpen: () => {
-      focusedDate = computeInitialFocus();
-      viewYear = focusedDate.getFullYear();
-      viewMonth = focusedDate.getMonth();
-      render();
-      const cell = grid.querySelector<HTMLElement>(`[data-date="${focusedDate.getTime()}"]`);
-      (cell ?? surface).focus();
+      if (isTime) {
+        // Time-only: focus the hour field (no grid).
+        renderTime();
+        hourField?.focus();
+      } else {
+        focusedDate = computeInitialFocus();
+        viewYear = focusedDate.getFullYear();
+        viewMonth = focusedDate.getMonth();
+        render();
+        const cell = grid.querySelector<HTMLElement>(`[data-date="${focusedDate.getTime()}"]`);
+        (cell ?? surface).focus();
+      }
       onOpen?.();
     },
     onClose: () => onClose?.(),
