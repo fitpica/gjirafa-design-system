@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   // '.' entry + './popover' subpath entry → dist/index.* and dist/popover/index.*
-  entry: ['src/index.ts', 'src/popover/index.ts'],
+  entry: ['src/index.ts', 'src/popover/index.ts', 'src/datepicker/index.ts'],
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,

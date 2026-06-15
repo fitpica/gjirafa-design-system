@@ -17,6 +17,11 @@
       "types": "./dist/popover/index.d.ts",
       "import": "./dist/popover/index.mjs",
       "require": "./dist/popover/index.cjs"
+    },
+    "./datepicker": {
+      "types": "./dist/datepicker/index.d.ts",
+      "import": "./dist/datepicker/index.mjs",
+      "require": "./dist/datepicker/index.cjs"
     }
   },
   "files": ["dist"],
