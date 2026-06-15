@@ -1,0 +1,48 @@
+{
+  "name": "@gjirafa/ds-core",
+  "version": "0.1.0",
+  "description": "Framework-agnostic behavior primitives for the Gjirafa Design System. Phase 1: Popover (Floating-UI-backed positioning, dismiss, focus management).",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./popover": {
+      "types": "./dist/popover/index.d.ts",
+      "import": "./dist/popover/index.mjs",
+      "require": "./dist/popover/index.cjs"
+    },
+    "./datepicker": {
+      "types": "./dist/datepicker/index.d.ts",
+      "import": "./dist/datepicker/index.mjs",
+      "require": "./dist/datepicker/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.7.0"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.0",
+    "tsup": "^8.2.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  },
+  "keywords": ["gjirafa", "design-system", "popover", "floating-ui", "headless"],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

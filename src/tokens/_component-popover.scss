@@ -1,0 +1,42 @@
+// ============================================================================
+// Component Tokens / Popover
+// Generic floating-surface primitive (reusable by calendar, dropdowns, menus,
+// dialog-adjacent UI). The CSS owns appearance + the open/close transition;
+// the @gjirafa/ds-core createPopover() controller writes position inline.
+//
+// ZERO hardcoded values — every value aliases a foundation / semantic token.
+// Uses the LIGHT dropdown/panel surface (NOT the tooltip's dark palette).
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-motion' as *;
+@use 'foundation-zindex' as *;
+
+:root {
+  // --- Surface (same recipe as the dropdown panel) ---
+  --popover-bg:           var(--gds-color-bg-primary);
+  --popover-border-color: var(--gds-color-border-default);
+  --popover-border-width: #{$border-width-default};
+  --popover-radius:       #{$radius-m};
+  --popover-shadow:       var(--gds-shadow-overlay);
+
+  // --- Content padding (override per use; calendar/menu bring their own) ---
+  --popover-padding: #{$space-8};
+
+  // --- Sizing: width is content-driven by default; tall content scrolls ---
+  --popover-max-height: calc(100vh - #{$space-48});
+
+  // --- Distance from trigger (consumed by the controller's offset default) ---
+  --popover-offset: #{$space-8};
+
+  // --- Optional arrow (decorative; controller positions it) ---
+  --popover-arrow-size: #{$space-6};
+
+  // --- Stacking — own level so it sits above a modal/sidepanel it opens from ---
+  --popover-z: var(--gds-z-popover);
+
+  // --- Motion (matches dropdown/calendar; reduced-motion snaps) ---
+  --popover-duration: #{$duration-normal};
+  --popover-ease:     #{$ease-default};
+}
