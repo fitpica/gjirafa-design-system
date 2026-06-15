@@ -613,6 +613,178 @@ describe('time-only mode', () => {
   });
 });
 
+describe('advanced presets', () => {
+  const addDays = (base: Date, n: number) =>
+    new Date(base.getFullYear(), base.getMonth(), base.getDate() + n, base.getHours(), base.getMinutes());
+  const presetButtons = () =>
+    Array.from(document.querySelectorAll<HTMLButtonElement>('.gds-calendar__presets .gds-menu__item'));
+  const presetByLabel = (label: string) => presetButtons().find((b) => b.textContent!.includes(label));
+
+  it('renders the advanced layout with preset buttons', () => {
+    const dp = createDatePicker(input, {
+      mode: 'datetime',
+      baseDate: '2026-06-01T09:00',
+      presets: [
+        { label: '1 day from first upload', value: (c) => addDays(c.baseDate!, 1) },
+        { label: '30 days from first upload', value: (c) => addDays(c.baseDate!, 30) },
+        { label: '90 days from first upload', value: (c) => addDays(c.baseDate!, 90) },
+      ],
+    });
+    dp.open();
+    expect(document.querySelector('.gds-calendar--advanced')).not.toBeNull();
+    expect(document.querySelector('.gds-calendar__main')).not.toBeNull();
+    const aside = document.querySelector('.gds-calendar__presets')!;
+    expect(aside.getAttribute('role')).toBe('group');
+    expect(aside.getAttribute('aria-label')).toBe('Shortcuts');
+    expect(presetButtons()).toHaveLength(3);
+    expect(presetButtons()[0]!.tagName).toBe('BUTTON');
+    dp.destroy();
+  });
+
+  it('selecting a preset (resolver + baseDate) sets value/input and fires onChange', () => {
+    const onChange = vi.fn();
+    const dp = createDatePicker(input, {
+      mode: 'datetime',
+      baseDate: '2026-06-01T00:00',
+      defaultValue: '2026-06-01T10:00',
+      locale: 'en-GB',
+      onChange,
+      presets: [{ label: '30 days from first upload', value: (c) => addDays(c.baseDate!, 30) }],
+    });
+    dp.open();
+    presetByLabel('30 days')!.click();
+    const v = dp.getValue()!;
+    // 2026-06-01 + 30 days = 2026-07-01
+    expect([v.getFullYear(), v.getMonth(), v.getDate()]).toEqual([2026, 6, 1]);
+    expect(input.value).toBe('01/07/2026 00:00'); // time from the resolved value
+    expect(onChange).toHaveBeenCalledWith(expect.any(Date));
+    expect(dp.isOpen).toBe(true); // datetime stays open
+    dp.destroy();
+  });
+
+  it('datetime preset preserves the current time when the resolver uses ctx.value', () => {
+    const dp = createDatePicker(input, {
+      mode: 'datetime',
+      baseDate: '2026-06-01',
+      defaultValue: '2026-06-01T14:30',
+      locale: 'en-GB',
+      presets: [
+        {
+          label: 'Keep my time',
+          value: (c) => {
+            const d = addDays(c.baseDate!, 7);
+            return new Date(d.getFullYear(), d.getMonth(), d.getDate(), c.value!.getHours(), c.value!.getMinutes());
+          },
+        },
+      ],
+    });
+    dp.open();
+    presetByLabel('Keep my time')!.click();
+    const v = dp.getValue()!;
+    expect([v.getDate(), v.getHours(), v.getMinutes()]).toEqual([8, 14, 30]); // June 8 @ 14:30
+    dp.destroy();
+  });
+
+  it('supports a static Date/string value and renders a description', () => {
+    const dp = createDatePicker(input, {
+      mode: 'date',
+      locale: 'en-GB',
+      presets: [{ label: 'Mid-June', value: '2026-06-15', description: '15 Jun 2026' }],
+    });
+    dp.open();
+    const btn = presetByLabel('Mid-June')!;
+    expect(btn.querySelector('.gds-menu__desc')!.textContent).toBe('15 Jun 2026');
+    btn.click();
+    expect(input.value).toBe('15/06/2026');
+    expect(dp.isOpen).toBe(false); // date mode closes
+    dp.destroy();
+  });
+
+  it('disabled preset cannot be selected', () => {
+    const onChange = vi.fn();
+    const dp = createDatePicker(input, {
+      mode: 'date',
+      onChange,
+      presets: [{ label: 'Nope', value: '2026-06-15', disabled: true }],
+    });
+    dp.open();
+    const btn = presetByLabel('Nope')!;
+    expect(btn.disabled).toBe(true);
+    expect(btn.getAttribute('aria-disabled')).toBe('true');
+    btn.click();
+    expect(onChange).not.toHaveBeenCalled();
+    dp.destroy();
+  });
+
+  it('out-of-range preset (past max) is auto-disabled and not applied', () => {
+    const onChange = vi.fn();
+    const dp = createDatePicker(input, {
+      mode: 'date',
+      max: '2026-06-30',
+      onChange,
+      presets: [{ label: 'Too far', value: '2026-12-31' }],
+    });
+    dp.open();
+    const btn = presetByLabel('Too far')!;
+    expect(btn.disabled).toBe(true);
+    btn.click();
+    expect(onChange).not.toHaveBeenCalled();
+    dp.destroy();
+  });
+
+  it('keyboard activation: Enter on a focused preset applies it', () => {
+    const dp = createDatePicker(input, {
+      mode: 'date',
+      locale: 'en-GB',
+      presets: [{ label: 'Mid-June', value: '2026-06-15' }],
+    });
+    dp.open();
+    const btn = presetByLabel('Mid-June')!;
+    btn.focus();
+    btn.click(); // native button: Enter/Space → click; jsdom doesn't synthesize, so click directly
+    expect(input.value).toBe('15/06/2026');
+    dp.destroy();
+  });
+
+  it('Escape still closes and returns focus to input (advanced)', () => {
+    const dp = createDatePicker(input, {
+      mode: 'datetime',
+      presets: [{ label: 'x', value: '2026-06-15T10:00' }],
+    });
+    input.focus();
+    dp.open();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(dp.isOpen).toBe(false);
+    expect(document.activeElement).toBe(input);
+    dp.destroy();
+  });
+
+  it('grid keyboard navigation is unchanged in advanced mode', () => {
+    const dp = createDatePicker(input, {
+      mode: 'datetime',
+      defaultValue: '2026-06-15T10:00',
+      presets: [{ label: 'x', value: '2026-06-20T10:00' }],
+    });
+    dp.open();
+    expect((document.activeElement as HTMLElement).textContent).toBe('15');
+    (document.activeElement as HTMLElement).dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    expect((document.activeElement as HTMLElement).textContent).toBe('16');
+    dp.destroy();
+  });
+
+  it('presets are ignored in time-only mode (no advanced layout)', () => {
+    const dp = createDatePicker(input, {
+      mode: 'time',
+      defaultValue: '10:00',
+      presets: [{ label: 'x', value: '12:00' }],
+    });
+    dp.open();
+    expect(document.querySelector('.gds-calendar--advanced')).toBeNull();
+    expect(document.querySelector('.gds-calendar__presets')).toBeNull();
+    dp.destroy();
+  });
+});
+
 describe('teardown', () => {
   it('destroy removes the surface and listeners', () => {
     const dp = createDatePicker(input, { defaultValue: '2026-06-15' });

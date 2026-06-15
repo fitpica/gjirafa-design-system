@@ -7500,7 +7500,7 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
   <div class="doc-page-header">
     <div class="doc-eyebrow">Components</div>
     <h1 class="doc-h1">Calendar / DatePicker <span class="doc-status doc-status--stable">v2.6 · CSS layer</span></h1>
-    <p class="doc-desc">The GDS calendar skin plus a <strong>functional, keyboard-accessible DatePicker</strong> (<code>@gjirafa/ds-core</code>). The visual layer composes existing GDS primitives — trigger reuses <code>.gds-input</code>, nav reuses <code>.gds-btn-icon</code>, footer reuses <code>.gds-btn</code>; selected days auto-theme blue → orange. <strong>Date and date-time modes</strong> work end-to-end with full keyboard navigation + ARIA (see the live demos below). Time-only, presets, and a Vue 3 wrapper are upcoming phases. The static examples further down illustrate the CSS skin only.</p>
+    <p class="doc-desc">The GDS calendar skin plus a <strong>functional, keyboard-accessible DatePicker</strong> (<code>@gjirafa/ds-core</code>). The visual layer composes existing GDS primitives — trigger reuses <code>.gds-input</code>, nav reuses <code>.gds-btn-icon</code>, footer reuses <code>.gds-btn</code>; selected days auto-theme blue → orange. <strong>Date, date-time, time-only, and advanced-presets</strong> all work end-to-end with full keyboard navigation + ARIA (see the live demos below). A Vue 3 wrapper is the next phase. The static examples further down illustrate the CSS skin only.</p>
     <div class="doc-tags"><span class="doc-tag">.gds-datepicker</span><span class="doc-tag">.gds-calendar-popover</span><span class="doc-tag">.gds-calendar</span><span class="doc-tag">__day --selected/--today/--outside/--disabled</span><span class="doc-tag">--range-start/--in-range/--range-end</span><span class="doc-tag">.gds-time-stepper</span><span class="doc-tag">--compact / --advanced</span></div>
   </div>
 
@@ -7509,17 +7509,17 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
     <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
       <div class="doc-state-label" style="color:var(--gds-color-success-text);margin-bottom:var(--gds-space-8)">✓ Functional now (@gjirafa/ds-core)</div>
       <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
-        <li><strong>Date-only</strong>, <strong>date-time</strong>, and <strong>time-only</strong> modes</li>
+        <li><strong>Date-only</strong>, <strong>date-time</strong>, <strong>time-only</strong>, and <strong>advanced presets</strong></li>
         <li>Popover: positioning, flip/shift, portal, outside-click / Esc / focus-return</li>
         <li>Full keyboard navigation + grid ARIA + <code>aria-live</code></li>
         <li>min/max · disabled dates/weekdays · weekStartsOn · locale · minuteStep · Today/Now/Clear</li>
+        <li>Product-provided presets resolved from a <code>baseDate</code></li>
         <li>Both themes (CODEX + VP Player); CSS skin is token-based + accessible</li>
       </ul>
     </div>
     <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
       <div class="doc-state-label" style="color:var(--gds-color-warning-text);margin-bottom:var(--gds-space-8)">⏳ Upcoming phases</div>
       <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
-        <li><strong>Presets</strong> (advanced date-time shortcuts panel)</li>
         <li><strong>Vue 3 wrapper</strong> (typed props, v-model)</li>
         <li>Storybook + visual-regression + automated a11y tests</li>
         <li>12-hour time format</li>
@@ -7647,6 +7647,60 @@ const tp = createDatePicker(document.querySelector('#t'), {
         defaultValue: '10:00',
         minuteStep: 5,
         onChange(value) { out.textContent = value ? 'Value: ' + tInput.value : 'No time'; },
+      });
+    }
+  </script>
+
+  <!-- LIVE — ADVANCED (datetime + presets) -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">LIVE — ADVANCED (DATE-TIME + PRESETS) <span class="doc-status doc-status--stable">functional · presets</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="align-items:flex-start;gap:var(--gds-space-16);flex-wrap:wrap;min-height:calc(var(--gds-space-64))">
+      <label class="gds-input gds-input--md" style="width:auto;min-width:calc(var(--gds-space-160) + var(--gds-space-80))">
+        <span class="gds-input__label">Publish at</span>
+        <span class="gds-input__wrap">
+          <input id="adv-live-input" class="gds-input__field" placeholder="Select date &amp; time" readonly />
+          <span class="gds-input__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        </span>
+      </label>
+      <span id="adv-live-value" class="doc-state-label" style="text-transform:none;align-self:center">No value</span>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">import { createDatePicker } from '@gjirafa/ds-core';
+
+// Presets are PRODUCT-PROVIDED (examples shown here), resolved from a baseDate.
+const firstUploadDate = '2026-06-01T09:00';
+const addDays = (base, n) =&gt; new Date(base.getFullYear(), base.getMonth(), base.getDate() + n, base.getHours(), base.getMinutes());
+
+createDatePicker(document.querySelector('#publish'), {
+  mode: 'datetime',
+  baseDate: firstUploadDate,
+  defaultValue: firstUploadDate,
+  locale: 'en-GB',
+  presets: [
+    { label: '1 day from first upload',   value: (ctx) =&gt; addDays(ctx.baseDate, 1) },
+    { label: '30 days from first upload',  value: (ctx) =&gt; addDays(ctx.baseDate, 30) },
+    { label: '90 days from first upload',  value: (ctx) =&gt; addDays(ctx.baseDate, 90) },
+  ],
+  onChange(value) { /* full datetime Date */ },
+});</pre></details>
+  </div>
+  <script type="module">
+    import { createDatePicker } from './vendor/ds-core-datepicker.js';
+    const advInput = document.getElementById('adv-live-input');
+    if (advInput) {
+      const out = document.getElementById('adv-live-value');
+      const firstUpload = '2026-06-01T09:00';
+      const addDays = (base, n) => new Date(base.getFullYear(), base.getMonth(), base.getDate() + n, base.getHours(), base.getMinutes());
+      createDatePicker(advInput, {
+        mode: 'datetime',
+        baseDate: firstUpload,
+        defaultValue: firstUpload,
+        locale: 'en-GB',
+        presets: [
+          { label: '1 day from first upload',  value: (ctx) => addDays(ctx.baseDate, 1) },
+          { label: '30 days from first upload', value: (ctx) => addDays(ctx.baseDate, 30) },
+          { label: '90 days from first upload', value: (ctx) => addDays(ctx.baseDate, 90) },
+        ],
+        onChange(value) { out.textContent = value ? 'Value: ' + advInput.value : 'No value'; },
       });
     }
   </script>

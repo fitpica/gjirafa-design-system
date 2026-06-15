@@ -3,9 +3,38 @@ import type { Weekday } from './dateUtils';
 
 export type { Weekday };
 
+/** Context passed to preset `value` / `disabled` resolver functions. */
+export interface PresetContext {
+  /** The `baseDate` option (parsed), e.g. a first-upload date. */
+  baseDate: Date | null;
+  /** The picker's current value. */
+  value: Date | null;
+  /** Current mode. */
+  mode: 'date' | 'datetime' | 'time';
+  /** `new Date()` at resolve time. */
+  now: Date;
+}
+
+/** A product-provided shortcut shown in the advanced (presets) layout. */
+export interface DatePickerPreset {
+  /** Visible label, e.g. "30 days from first upload". */
+  label: string;
+  /** Resolved value — a Date, an ISO/'HH:mm' string, or a resolver receiving context. */
+  value: Date | string | ((ctx: PresetContext) => Date | string | null);
+  /** Optional secondary line under the label. */
+  description?: string;
+  /** Disable the preset (static or resolver). Out-of-range values are auto-disabled. */
+  disabled?: boolean | ((ctx: PresetContext) => boolean);
+}
+
 export interface DatePickerOptions {
   /** 'date' (default), 'datetime' (calendar + compact time-below), or 'time' (compact HH/MM only, no calendar). */
   mode?: 'date' | 'datetime' | 'time';
+
+  /** Product-provided shortcut presets (date + datetime modes). Renders the advanced layout. */
+  presets?: DatePickerPreset[];
+  /** Reference date for preset resolvers (e.g. firstUploadDate). */
+  baseDate?: Date | string;
   /** datetime/time: minute increment for the stepper. Default 1. */
   minuteStep?: number;
   /** datetime/time: time format. Only '24h' is supported this phase. */
