@@ -350,16 +350,17 @@
 // Time selection (datetime + time-only modes)
 // ============================================================================
 
+// Compact, integrated time row: "Time"  [ HH ▲▼ ] : [ MM ▲▼ ]
 .gds-calendar__time {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--calendar-time-gap);
-  padding-top: var(--calendar-section-gap);
+  padding-top: var(--calendar-time-padding-y);
   border-top: var(--calendar-divider-width) solid var(--calendar-divider-color);
 }
 
-// Time-only mode: no divider / top padding (the stepper is the whole panel)
+// Bare time block (e.g. a stepper-only panel) — no divider / top gap.
 .gds-calendar__time--bare {
   padding-top: 0;
   border-top: none;
@@ -367,58 +368,68 @@
 
 .gds-calendar__time-label {
   font-family: inherit;
-  font-size: $font-size-12;
+  font-size: var(--calendar-time-label-size);
   color: var(--calendar-time-label-color);
 }
 
-// Stepper: HH : MM, each unit = ▲ / value / ▼
 .gds-time-stepper {
   display: inline-flex;
   align-items: center;
   gap: var(--calendar-stepper-gap);
 }
 
+// Bordered segment: number field + inline ▲/▼ spin column (native-spinner look)
 .gds-time-stepper__unit {
   display: inline-flex;
-  flex-direction: column;
   align-items: stretch;
-  gap: var(--calendar-stepper-gap);
+  height: var(--calendar-stepper-field-height);
+  background: var(--calendar-stepper-field-bg);
+  border: var(--gds-border-width-default) solid var(--calendar-stepper-field-border);
+  border-radius: var(--calendar-stepper-field-radius);
+  overflow: hidden;
+
+  &:focus-within {
+    border-color: var(--calendar-focus-ring-color);
+  }
 }
 
 .gds-time-stepper__field {
   width: var(--calendar-stepper-field-width);
-  height: var(--calendar-stepper-field-height);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  // Borderless — the number reads as plain text between the ▲/▼ controls
-  background: transparent;
   border: none;
-  border-radius: var(--calendar-title-radius);
+  background: transparent;
   font-family: inherit;
   font-size: var(--calendar-stepper-field-size);
   font-weight: var(--calendar-title-weight);
   font-variant-numeric: tabular-nums;
   color: var(--calendar-stepper-field-color);
   text-align: center;
-  // when rendered as <input>:
+  padding: 0;
   outline: none;
   appearance: textfield;
 
-  &:focus-visible {
-    outline: var(--calendar-focus-ring-width) solid var(--calendar-focus-ring-color);
-    outline-offset: var(--calendar-focus-ring-offset);
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
   }
 }
 
+.gds-time-stepper__spin {
+  display: inline-flex;
+  flex-direction: column;
+  width: var(--calendar-stepper-spin-width);
+  border-inline-start: var(--gds-border-width-default) solid var(--calendar-stepper-field-border);
+}
+
 .gds-time-stepper__btn {
+  flex: 1 1 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 0;
   padding: 0;
   border: none;
   background: transparent;
-  border-radius: var(--calendar-stepper-btn-radius);
   color: var(--calendar-stepper-btn-color);
   cursor: pointer;
   transition: background-color var(--calendar-duration) var(--calendar-ease);
@@ -435,19 +446,19 @@
 
   &:focus-visible {
     outline: var(--calendar-focus-ring-width) solid var(--calendar-focus-ring-color);
-    outline-offset: var(--calendar-focus-ring-offset);
+    outline-offset: calc(var(--calendar-focus-ring-width) * -1);
   }
 
-  &:disabled {
-    opacity: var(--calendar-day-disabled-opacity);
-    pointer-events: none;
-    cursor: not-allowed;
+  // Divider between the up and down halves
+  &--up {
+    border-bottom: var(--gds-border-width-default) solid var(--calendar-stepper-field-border);
   }
 }
 
 .gds-time-stepper__separator {
   font-family: inherit;
   font-size: var(--calendar-stepper-field-size);
+  font-weight: var(--calendar-title-weight);
   font-variant-numeric: tabular-nums;
   color: var(--calendar-time-separator-color);
 }

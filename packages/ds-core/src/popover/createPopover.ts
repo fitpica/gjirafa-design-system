@@ -75,6 +75,7 @@ export function createPopover(
   let cleanupEsc: (() => void) | null = null;
   let cleanupOutside: (() => void) | null = null;
   let cleanupTrap: (() => void) | null = null;
+  let cancelDetach: (() => void) | null = null;
   let inertedSiblings: HTMLElement[] = [];
 
   // --- Static ARIA wiring (idempotent) ---
@@ -143,6 +144,12 @@ export function createPopover(
     if (open) return;
     open = true;
 
+    // If a previous close() is still mid-fade with a pending detach, cancel it —
+    // otherwise its leftover transitionend listener fires on THIS open's fade-in
+    // and detaches the surface we just reopened (the close→reopen race).
+    cancelDetach?.();
+    cancelDetach = null;
+
     // Portal to body so a fixed-strategy surface escapes overflow:hidden ancestors.
     document.body.appendChild(content);
     // Make the surface focusable immediately. `.gds-popover` is visibility:hidden
@@ -201,13 +208,21 @@ export function createPopover(
         if (done) return;
         done = true;
         content.removeEventListener('transitionend', onEnd);
+        clearTimeout(timer);
+        cancelDetach = null;
         detach();
       };
       const onEnd = (e: TransitionEvent): void => {
         if (e.target === content && e.propertyName === 'opacity') finish();
       };
       content.addEventListener('transitionend', onEnd);
-      setTimeout(finish, DETACH_FALLBACK_MS);
+      const timer = setTimeout(finish, DETACH_FALLBACK_MS);
+      // Expose a canceller so a reopen during fade-out can abort this detach.
+      cancelDetach = () => {
+        content.removeEventListener('transitionend', onEnd);
+        clearTimeout(timer);
+        cancelDetach = null;
+      };
     } else {
       detach();
     }

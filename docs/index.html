@@ -7573,6 +7573,49 @@ const dp = createDatePicker(document.querySelector('#date'), {
     }
   </script>
 
+  <!-- LIVE — DATE + TIME (datetime mode) -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">LIVE — PICK A DATE + TIME <span class="doc-status doc-status--stable">functional · datetime</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="align-items:flex-start;gap:var(--gds-space-16);flex-wrap:wrap;min-height:calc(var(--gds-space-64))">
+      <label class="gds-input gds-input--md" style="width:auto;min-width:calc(var(--gds-space-160) + var(--gds-space-80))">
+        <span class="gds-input__label">Date &amp; time</span>
+        <span class="gds-input__wrap">
+          <input id="dt-live-input" class="gds-input__field" placeholder="Select date &amp; time" readonly />
+          <span class="gds-input__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        </span>
+      </label>
+      <span id="dt-live-value" class="doc-state-label" style="text-transform:none;align-self:center">No value</span>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">import { createDatePicker } from '@gjirafa/ds-core';
+
+const dp = createDatePicker(document.querySelector('#dt'), {
+  mode: 'datetime',          // calendar on top, compact time below
+  defaultValue: '2026-06-15T10:00',
+  locale: 'en-GB',           // value formats as "15/06/2026 10:00"
+  minuteStep: 5,
+  weekStartsOn: 1,
+  onChange(value) { /* full datetime Date, or null */ },
+});
+// picking a day keeps the time; ▲/▼ steps hour/minute; Clear/Today work</pre></details>
+  </div>
+  <script type="module">
+    import { createDatePicker } from './vendor/ds-core-datepicker.js';
+    const dtInput = document.getElementById('dt-live-input');
+    if (dtInput) {
+      const out = document.getElementById('dt-live-value');
+      createDatePicker(dtInput, {
+        mode: 'datetime',
+        defaultValue: '2026-06-15T10:00',
+        locale: 'en-GB',
+        minuteStep: 5,
+        weekStartsOn: 1,
+        onChange(value) {
+          out.textContent = value ? 'Value: ' + dtInput.value : 'No value';
+        },
+      });
+    }
+  </script>
+
   <!-- 1 · DATE-ONLY (compact) -->
   <div class="doc-section-label" style="margin-top:var(--gds-space-32)">1 · DATE-ONLY PICKER (STATIC SKIN) <span class="doc-state-label" style="text-transform:none">— compact density</span></div>
   <div class="doc-preview">
@@ -7647,16 +7690,8 @@ const dp = createDatePicker(document.querySelector('#date'), {
         <div class="gds-calendar__grid" role="grid" aria-label="June 2026"><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">31</button><button type="button" class="gds-calendar__day"  role="gridcell">1</button><button type="button" class="gds-calendar__day"  role="gridcell">2</button><button type="button" class="gds-calendar__day"  role="gridcell">3</button><button type="button" class="gds-calendar__day"  role="gridcell">4</button><button type="button" class="gds-calendar__day"  role="gridcell">5</button><button type="button" class="gds-calendar__day"  role="gridcell">6</button><button type="button" class="gds-calendar__day"  role="gridcell">7</button><button type="button" class="gds-calendar__day"  role="gridcell">8</button><button type="button" class="gds-calendar__day"  role="gridcell">9</button><button type="button" class="gds-calendar__day"  role="gridcell">10</button><button type="button" class="gds-calendar__day"  role="gridcell">11</button><button type="button" class="gds-calendar__day"  role="gridcell">12</button><button type="button" class="gds-calendar__day"  role="gridcell">13</button><button type="button" class="gds-calendar__day"  role="gridcell">14</button><button type="button" class="gds-calendar__day gds-calendar__day--selected" aria-selected="true" role="gridcell">15</button><button type="button" class="gds-calendar__day"  role="gridcell">16</button><button type="button" class="gds-calendar__day"  role="gridcell">17</button><button type="button" class="gds-calendar__day"  role="gridcell">18</button><button type="button" class="gds-calendar__day"  role="gridcell">19</button><button type="button" class="gds-calendar__day"  role="gridcell">20</button><button type="button" class="gds-calendar__day"  role="gridcell">21</button><button type="button" class="gds-calendar__day"  role="gridcell">22</button><button type="button" class="gds-calendar__day"  role="gridcell">23</button><button type="button" class="gds-calendar__day"  role="gridcell">24</button><button type="button" class="gds-calendar__day"  role="gridcell">25<span class="gds-calendar__day-dot"></span></button><button type="button" class="gds-calendar__day"  role="gridcell">26</button><button type="button" class="gds-calendar__day"  role="gridcell">27</button><button type="button" class="gds-calendar__day"  role="gridcell">28</button><button type="button" class="gds-calendar__day"  role="gridcell">29</button><button type="button" class="gds-calendar__day"  role="gridcell">30</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">2</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">3</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">4</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">5</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">6</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">7</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">8</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">9</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">10</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">11</button></div>
         <div class="gds-calendar__time">
           <div class="gds-time-stepper">
-            <div class="gds-time-stepper__unit">
-              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
-              <input class="gds-time-stepper__field" value="10" aria-label="Hours" inputmode="numeric" />
-              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-            </div><span class="gds-time-stepper__separator">:</span>
-            <div class="gds-time-stepper__unit">
-              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
-              <input class="gds-time-stepper__field" value="00" aria-label="Minutes" inputmode="numeric" />
-              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-            </div></div>
+            <div class="gds-time-stepper__unit"><input class="gds-time-stepper__field" value="10" aria-label="Hours" inputmode="numeric" role="spinbutton" /><span class="gds-time-stepper__spin"><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--up" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--down" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></span></div><span class="gds-time-stepper__separator">:</span>
+            <div class="gds-time-stepper__unit"><input class="gds-time-stepper__field" value="00" aria-label="Minutes" inputmode="numeric" role="spinbutton" /><span class="gds-time-stepper__spin"><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--up" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--down" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></span></div></div>
         </div>
         </div>
       </div>
@@ -7683,16 +7718,8 @@ const dp = createDatePicker(document.querySelector('#date'), {
         <div class="gds-calendar">
         <div class="gds-calendar__time gds-calendar__time--bare">
           <div class="gds-time-stepper">
-            <div class="gds-time-stepper__unit">
-              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
-              <input class="gds-time-stepper__field" value="00" aria-label="Hours" inputmode="numeric" />
-              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-            </div><span class="gds-time-stepper__separator">:</span>
-            <div class="gds-time-stepper__unit">
-              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
-              <input class="gds-time-stepper__field" value="00" aria-label="Minutes" inputmode="numeric" />
-              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-            </div></div>
+            <div class="gds-time-stepper__unit"><input class="gds-time-stepper__field" value="00" aria-label="Hours" inputmode="numeric" role="spinbutton" /><span class="gds-time-stepper__spin"><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--up" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--down" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></span></div><span class="gds-time-stepper__separator">:</span>
+            <div class="gds-time-stepper__unit"><input class="gds-time-stepper__field" value="00" aria-label="Minutes" inputmode="numeric" role="spinbutton" /><span class="gds-time-stepper__spin"><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--up" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--down" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></span></div></div>
         </div>
         </div>
       </div>
@@ -7720,16 +7747,8 @@ const dp = createDatePicker(document.querySelector('#date'), {
         <div class="gds-calendar__grid" role="grid" aria-label="June 2026"><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">31</button><button type="button" class="gds-calendar__day"  role="gridcell">1</button><button type="button" class="gds-calendar__day"  role="gridcell">2</button><button type="button" class="gds-calendar__day"  role="gridcell">3</button><button type="button" class="gds-calendar__day"  role="gridcell">4</button><button type="button" class="gds-calendar__day"  role="gridcell">5</button><button type="button" class="gds-calendar__day"  role="gridcell">6</button><button type="button" class="gds-calendar__day"  role="gridcell">7</button><button type="button" class="gds-calendar__day"  role="gridcell">8</button><button type="button" class="gds-calendar__day"  role="gridcell">9</button><button type="button" class="gds-calendar__day"  role="gridcell">10</button><button type="button" class="gds-calendar__day"  role="gridcell">11</button><button type="button" class="gds-calendar__day"  role="gridcell">12</button><button type="button" class="gds-calendar__day"  role="gridcell">13</button><button type="button" class="gds-calendar__day"  role="gridcell">14</button><button type="button" class="gds-calendar__day gds-calendar__day--today" aria-current="date" role="gridcell">15</button><button type="button" class="gds-calendar__day"  role="gridcell">16</button><button type="button" class="gds-calendar__day"  role="gridcell">17</button><button type="button" class="gds-calendar__day"  role="gridcell">18</button><button type="button" class="gds-calendar__day"  role="gridcell">19</button><button type="button" class="gds-calendar__day"  role="gridcell">20</button><button type="button" class="gds-calendar__day"  role="gridcell">21</button><button type="button" class="gds-calendar__day"  role="gridcell">22</button><button type="button" class="gds-calendar__day"  role="gridcell">23</button><button type="button" class="gds-calendar__day"  role="gridcell">24</button><button type="button" class="gds-calendar__day"  role="gridcell">25<span class="gds-calendar__day-dot"></span></button><button type="button" class="gds-calendar__day"  role="gridcell">26</button><button type="button" class="gds-calendar__day"  role="gridcell">27</button><button type="button" class="gds-calendar__day"  role="gridcell">28</button><button type="button" class="gds-calendar__day"  role="gridcell">29</button><button type="button" class="gds-calendar__day"  role="gridcell">30</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">2</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">3</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">4</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">5</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">6</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">7</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">8</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">9</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">10</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">11</button></div>
           <div class="gds-calendar__time">
           <div class="gds-time-stepper">
-            <div class="gds-time-stepper__unit">
-              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
-              <input class="gds-time-stepper__field" value="10" aria-label="Hours" inputmode="numeric" />
-              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-            </div><span class="gds-time-stepper__separator">:</span>
-            <div class="gds-time-stepper__unit">
-              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
-              <input class="gds-time-stepper__field" value="02" aria-label="Minutes" inputmode="numeric" />
-              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-            </div></div>
+            <div class="gds-time-stepper__unit"><input class="gds-time-stepper__field" value="10" aria-label="Hours" inputmode="numeric" role="spinbutton" /><span class="gds-time-stepper__spin"><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--up" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--down" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></span></div><span class="gds-time-stepper__separator">:</span>
+            <div class="gds-time-stepper__unit"><input class="gds-time-stepper__field" value="02" aria-label="Minutes" inputmode="numeric" role="spinbutton" /><span class="gds-time-stepper__spin"><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--up" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button><button type="button" class="gds-time-stepper__btn gds-time-stepper__btn--down" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></span></div></div>
         </div>
           <div class="gds-calendar__footer">
           <button type="button" class="gds-btn gds-btn--ghost gds-btn--sm"><span class="gds-btn__label">Today</span></button>

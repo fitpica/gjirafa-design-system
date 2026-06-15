@@ -31,6 +31,7 @@ beforeEach(() => {
 
 afterEach(() => {
   document.body.innerHTML = '';
+  vi.restoreAllMocks(); // safety net so a spy can't leak across tests
 });
 
 describe('ARIA wiring', () => {
@@ -213,6 +214,38 @@ describe('modal', () => {
     expect(content.getAttribute('aria-modal')).toBe('true');
     p.close();
     expect(sibling.hasAttribute('aria-hidden')).toBe(false);
+    p.destroy();
+  });
+});
+
+describe('close→reopen race', () => {
+  it('reopening during fade-out cancels the pending detach (surface stays mounted)', () => {
+    // Force the transition path (jsdom reports no duration → would detach synchronously).
+    const spy = vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+      transitionDuration: '0.2s',
+      getPropertyValue: () => '',
+    } as unknown as CSSStyleDeclaration);
+
+    const p = createPopover(trigger, content);
+    p.open();
+    expect(content.parentElement).toBe(document.body);
+
+    p.close(); // schedules detach on transitionend (duration > 0), not immediate
+    expect(content.parentElement).toBe(document.body); // still mounted, mid-fade
+
+    p.open(); // reopen during fade-out → must cancel the pending detach
+    expect(p.isOpen).toBe(true);
+
+    // Fire the fade-in's transitionend. If the stale listener weren't cancelled,
+    // it would detach the now-open surface. It must NOT.
+    const ev = new Event('transitionend');
+    Object.defineProperty(ev, 'propertyName', { value: 'opacity' });
+    content.dispatchEvent(ev);
+
+    expect(content.parentElement).toBe(document.body); // survived ✓
+    expect(p.isOpen).toBe(true);
+
+    spy.mockRestore();
     p.destroy();
   });
 });

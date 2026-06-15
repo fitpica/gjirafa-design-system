@@ -171,6 +171,136 @@ describe('weekStartsOn', () => {
   });
 });
 
+describe('datetime mode', () => {
+  const fields = () => Array.from(document.querySelectorAll<HTMLInputElement>('.gds-time-stepper__field'));
+  const hourField = () => fields()[0]!;
+  const minuteField = () => fields()[1]!;
+  const tbtn = (label: string) => document.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!;
+
+  it('renders a compact time row with HH/MM segments + reflects the value', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:30', locale: 'en-GB' });
+    dp.open();
+    expect(fields()).toHaveLength(2);
+    expect(hourField().value).toBe('10');
+    expect(minuteField().value).toBe('30');
+    expect(input.value).toBe('15/06/2026 10:30');
+    dp.destroy();
+  });
+
+  it('does not close on date select (so the user can set the time)', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:30' });
+    dp.open();
+    dayByText('18')!.click();
+    expect(dp.isOpen).toBe(true);
+    dp.destroy();
+  });
+
+  it('date selection preserves the chosen time', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:30' });
+    dp.open();
+    dayByText('18')!.click();
+    const v = dp.getValue()!;
+    expect([v.getDate(), v.getHours(), v.getMinutes()]).toEqual([18, 10, 30]);
+    dp.destroy();
+  });
+
+  it('hour increment/decrement updates the full datetime value', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:30' });
+    dp.open();
+    dayByText('18')!.click();
+    tbtn('Increment hours').click();
+    expect(dp.getValue()!.getHours()).toBe(11);
+    tbtn('Decrement hours').click();
+    tbtn('Decrement hours').click();
+    expect(dp.getValue()!.getHours()).toBe(9);
+    dp.destroy();
+  });
+
+  it('minute increment/decrement updates the value', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:30' });
+    dp.open();
+    dayByText('18')!.click();
+    tbtn('Increment minutes').click();
+    expect(dp.getValue()!.getMinutes()).toBe(31);
+    dp.destroy();
+  });
+
+  it('minuteStep controls the minute increment', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:00', minuteStep: 15 });
+    dp.open();
+    dayByText('18')!.click();
+    tbtn('Increment minutes').click();
+    expect(dp.getValue()!.getMinutes()).toBe(15);
+    dp.destroy();
+  });
+
+  it('uncontrolled: defaultValue time reflected; selection updates internally', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T08:00' });
+    dp.open();
+    dayByText('20')!.click();
+    expect([dp.getValue()!.getDate(), dp.getValue()!.getHours()]).toEqual([20, 8]);
+    dp.destroy();
+  });
+
+  it('controlled: select fires onChange with full datetime but internal stays until setValue', () => {
+    const onChange = vi.fn();
+    const dp = createDatePicker(input, { mode: 'datetime', value: '2026-06-15T10:00', onChange });
+    dp.open();
+    dayByText('20')!.click();
+    expect(onChange).toHaveBeenCalledWith(expect.any(Date));
+    expect(onChange.mock.calls[0]![0].getHours()).toBe(10);
+    expect(dp.getValue()!.getDate()).toBe(15); // controlled — unchanged
+    dp.setValue('2026-06-20T10:00');
+    expect(dp.getValue()!.getDate()).toBe(20);
+    dp.destroy();
+  });
+
+  it('Clear empties date and time', () => {
+    const onChange = vi.fn();
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:30', onChange });
+    dp.open();
+    (Array.from(document.querySelectorAll('.gds-calendar__footer .gds-btn')).find(
+      (b) => b.textContent!.trim() === 'Clear',
+    ) as HTMLButtonElement).click();
+    expect(dp.getValue()).toBeNull();
+    expect(input.value).toBe('');
+    expect(onChange).toHaveBeenCalledWith(null);
+    dp.destroy();
+  });
+
+  it('Today sets today and keeps the current time', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-01-01T14:45' });
+    dp.open();
+    (Array.from(document.querySelectorAll('.gds-calendar__footer .gds-btn')).find(
+      (b) => b.textContent!.trim() === 'Today',
+    ) as HTMLButtonElement).click();
+    const v = dp.getValue()!;
+    const today = new Date();
+    expect(v.getDate()).toBe(today.getDate());
+    expect([v.getHours(), v.getMinutes()]).toEqual([14, 45]); // time preserved
+    dp.destroy();
+  });
+
+  it('min disables days before it (datetime, day granularity)', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:00', min: '2026-06-10' });
+    dp.open();
+    expect(dayByText('5')!.disabled).toBe(true);
+    expect(dayByText('12')!.disabled).toBe(false);
+    dp.destroy();
+  });
+
+  it('typing into the hour field clamps and updates', () => {
+    const dp = createDatePicker(input, { mode: 'datetime', defaultValue: '2026-06-15T10:00' });
+    dp.open();
+    dayByText('18')!.click();
+    const hf = hourField();
+    hf.value = '99';
+    hf.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(dp.getValue()!.getHours()).toBe(23); // clamped to max
+    dp.destroy();
+  });
+});
+
 describe('teardown', () => {
   it('destroy removes the surface and listeners', () => {
     const dp = createDatePicker(input, { defaultValue: '2026-06-15' });

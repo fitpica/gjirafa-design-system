@@ -4,6 +4,15 @@ import type { Weekday } from './dateUtils';
 export type { Weekday };
 
 export interface DatePickerOptions {
+  /** 'date' (default) or 'datetime' (calendar + compact time-below). */
+  mode?: 'date' | 'datetime';
+  /** datetime only: minute increment for the stepper. Default 1. */
+  minuteStep?: number;
+  /** datetime only: time format. Only '24h' is supported this phase. */
+  timeFormat?: '24h';
+  /** datetime only: time applied when none is selected yet. Default 00:00. */
+  defaultTime?: { hours: number; minutes: number };
+
   /** Controlled value. When set, the picker renders from it and selection only
    *  fires onChange — call setValue() (or update this + refresh) to move it. */
   value?: Date | string | null;
