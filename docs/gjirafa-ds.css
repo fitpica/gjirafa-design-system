@@ -1067,17 +1067,22 @@
   --calendar-dot-size: 4px;
   --calendar-dot-color: var(--gds-color-action-primary);
   --calendar-dot-offset: 2px;
+  --calendar-time-padding-y: 8px;
   --calendar-time-gap: 8px;
   --calendar-time-label-color: var(--gds-color-text-secondary);
+  --calendar-time-label-size: 12px;
   --calendar-time-separator-color: var(--gds-color-text-secondary);
-  --calendar-stepper-gap: 2px;
-  --calendar-stepper-field-width: 48px;
+  --calendar-stepper-gap: 4px;
+  --calendar-stepper-field-width: 40px;
   --calendar-stepper-field-height: 32px;
+  --calendar-stepper-field-bg: var(--gds-color-bg-primary);
+  --calendar-stepper-field-border: var(--gds-color-border-default);
+  --calendar-stepper-field-radius: 4px;
   --calendar-stepper-field-color: var(--gds-color-text-primary);
-  --calendar-stepper-field-size: 18px;
+  --calendar-stepper-field-size: 16px;
+  --calendar-stepper-spin-width: 16px;
   --calendar-stepper-btn-color: var(--gds-color-text-secondary);
   --calendar-stepper-btn-hover-bg: var(--gds-color-bg-secondary);
-  --calendar-stepper-btn-radius: 4px;
   --calendar-stepper-icon: 16px;
   --calendar-action-color: var(--gds-color-action-primary);
   --calendar-action-hover-color: var(--gds-color-action-primary-hover);
@@ -6449,7 +6454,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--calendar-time-gap);
-  padding-top: var(--calendar-section-gap);
+  padding-top: var(--calendar-time-padding-y);
   border-top: var(--calendar-divider-width) solid var(--calendar-divider-color);
 }
 
@@ -6460,7 +6465,7 @@
 
 .gds-calendar__time-label {
   font-family: inherit;
-  font-size: 12px;
+  font-size: var(--calendar-time-label-size);
   color: var(--calendar-time-label-color);
 }
 
@@ -6472,42 +6477,52 @@
 
 .gds-time-stepper__unit {
   display: inline-flex;
-  flex-direction: column;
   align-items: stretch;
-  gap: var(--calendar-stepper-gap);
+  height: var(--calendar-stepper-field-height);
+  background: var(--calendar-stepper-field-bg);
+  border: var(--gds-border-width-default) solid var(--calendar-stepper-field-border);
+  border-radius: var(--calendar-stepper-field-radius);
+  overflow: hidden;
+}
+.gds-time-stepper__unit:focus-within {
+  border-color: var(--calendar-focus-ring-color);
 }
 
 .gds-time-stepper__field {
   width: var(--calendar-stepper-field-width);
-  height: var(--calendar-stepper-field-height);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
   border: none;
-  border-radius: var(--calendar-title-radius);
+  background: transparent;
   font-family: inherit;
   font-size: var(--calendar-stepper-field-size);
   font-weight: var(--calendar-title-weight);
   font-variant-numeric: tabular-nums;
   color: var(--calendar-stepper-field-color);
   text-align: center;
+  padding: 0;
   outline: none;
   appearance: textfield;
 }
-.gds-time-stepper__field:focus-visible {
-  outline: var(--calendar-focus-ring-width) solid var(--calendar-focus-ring-color);
-  outline-offset: var(--calendar-focus-ring-offset);
+.gds-time-stepper__field::-webkit-inner-spin-button, .gds-time-stepper__field::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.gds-time-stepper__spin {
+  display: inline-flex;
+  flex-direction: column;
+  width: var(--calendar-stepper-spin-width);
+  border-inline-start: var(--gds-border-width-default) solid var(--calendar-stepper-field-border);
 }
 
 .gds-time-stepper__btn {
+  flex: 1 1 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 0;
   padding: 0;
   border: none;
   background: transparent;
-  border-radius: var(--calendar-stepper-btn-radius);
   color: var(--calendar-stepper-btn-color);
   cursor: pointer;
   transition: background-color var(--calendar-duration) var(--calendar-ease);
@@ -6522,17 +6537,16 @@
 }
 .gds-time-stepper__btn:focus-visible {
   outline: var(--calendar-focus-ring-width) solid var(--calendar-focus-ring-color);
-  outline-offset: var(--calendar-focus-ring-offset);
+  outline-offset: calc(var(--calendar-focus-ring-width) * -1);
 }
-.gds-time-stepper__btn:disabled {
-  opacity: var(--calendar-day-disabled-opacity);
-  pointer-events: none;
-  cursor: not-allowed;
+.gds-time-stepper__btn--up {
+  border-bottom: var(--gds-border-width-default) solid var(--calendar-stepper-field-border);
 }
 
 .gds-time-stepper__separator {
   font-family: inherit;
   font-size: var(--calendar-stepper-field-size);
+  font-weight: var(--calendar-title-weight);
   font-variant-numeric: tabular-nums;
   color: var(--calendar-time-separator-color);
 }

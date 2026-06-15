@@ -89,18 +89,27 @@
   --calendar-dot-color:  var(--gds-color-action-primary);
   --calendar-dot-offset: #{$space-2};
 
-  // --- Time stepper (HH : MM) ---
-  --calendar-time-gap:             #{$space-8};
+  // --- Time row (datetime) — compact, integrated; bordered HH/MM segments ---
+  --calendar-time-padding-y:       #{$space-8};   // tight top gap (was section-gap 12)
+  --calendar-time-gap:             #{$space-8};   // label ↔ stepper
   --calendar-time-label-color:     var(--gds-color-text-secondary);
+  --calendar-time-label-size:      #{$font-size-12};
   --calendar-time-separator-color: var(--gds-color-text-secondary);
-  --calendar-stepper-gap:          #{$space-2};
-  --calendar-stepper-field-width:  #{$space-48};
+  --calendar-stepper-gap:          #{$space-4};   // hour-unit ↔ separator ↔ minute-unit
+
+  // Bordered segment (reuses the .gds-input--sm recipe: 32px tall, radius-s)
+  --calendar-stepper-field-width:  #{$space-40};
   --calendar-stepper-field-height: #{$space-32};
+  --calendar-stepper-field-bg:     var(--gds-color-bg-primary);
+  --calendar-stepper-field-border: var(--gds-color-border-default);
+  --calendar-stepper-field-radius: #{$radius-s};
   --calendar-stepper-field-color:  var(--gds-color-text-primary);
-  --calendar-stepper-field-size:   #{$font-size-18};  // borderless, prominent HH : MM
-  --calendar-stepper-btn-color:    var(--gds-color-text-secondary);  // ≥3:1 for icon controls
+  --calendar-stepper-field-size:   #{$font-size-16};  // strong, not oversized
+
+  // Inline ▲/▼ spin column
+  --calendar-stepper-spin-width:   #{$space-16};
+  --calendar-stepper-btn-color:    var(--gds-color-text-secondary);
   --calendar-stepper-btn-hover-bg: var(--gds-color-bg-secondary);
-  --calendar-stepper-btn-radius:   #{$radius-s};
   --calendar-stepper-icon:         #{$icon-sm};
 
   // --- Footer actions (Today / Clear) — text-link style, action-themed ---

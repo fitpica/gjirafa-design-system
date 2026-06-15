@@ -5,11 +5,17 @@ import {
   addMonths,
   addDays,
   toDate,
+  toDateTime,
   formatISO,
   buildMonthMatrix,
   isDateDisabled,
   getWeekdayLabels,
   getMonthLabel,
+  setTime,
+  stepHour,
+  stepMinute,
+  clampInt,
+  formatDateTime,
 } from './dateUtils';
 
 describe('toDate', () => {
@@ -86,6 +92,44 @@ describe('isDateDisabled', () => {
     expect(isDateDisabled(base, { disabledDates: [new Date(2026, 5, 15)] })).toBe(true);
     expect(isDateDisabled(base, { disabledDates: (d) => d.getDate() === 15 })).toBe(true);
     expect(isDateDisabled(new Date(2026, 5, 16), { disabledDates: (d) => d.getDate() === 15 })).toBe(false);
+  });
+});
+
+describe('time helpers (datetime)', () => {
+  it('toDateTime preserves time from a string and a Date', () => {
+    const a = toDateTime('2026-06-15T10:30')!;
+    expect([a.getHours(), a.getMinutes()]).toEqual([10, 30]);
+    const b = toDateTime('2026-06-15')!; // no time → 00:00
+    expect([b.getHours(), b.getMinutes()]).toEqual([0, 0]);
+    const c = toDateTime(new Date(2026, 5, 15, 9, 5))!;
+    expect([c.getHours(), c.getMinutes()]).toEqual([9, 5]);
+  });
+  it('setTime keeps the day, sets h/m', () => {
+    const d = setTime(new Date(2026, 5, 15), 14, 45);
+    expect([d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes()]).toEqual([
+      2026, 5, 15, 14, 45,
+    ]);
+  });
+  it('stepHour wraps 0–23', () => {
+    expect(stepHour(23, 1)).toBe(0);
+    expect(stepHour(0, -1)).toBe(23);
+    expect(stepHour(10, 2)).toBe(12);
+  });
+  it('stepMinute wraps 0–59 with minuteStep (no hour carry)', () => {
+    expect(stepMinute(0, 1, 15)).toBe(15);
+    expect(stepMinute(45, 1, 15)).toBe(0); // 60 → wrap to 0, no carry
+    expect(stepMinute(0, -1, 5)).toBe(55);
+    expect(stepMinute(30, 1)).toBe(31); // default step 1
+  });
+  it('clampInt clamps and truncates', () => {
+    expect(clampInt(99, 23)).toBe(23);
+    expect(clampInt(-5, 59)).toBe(0);
+    expect(clampInt(7.9, 59)).toBe(7);
+    expect(clampInt(NaN, 59)).toBe(0);
+  });
+  it('formatDateTime outputs "DD/MM/YYYY HH:mm" (en-GB)', () => {
+    expect(formatDateTime(new Date(2026, 5, 15, 10, 0), 'en-GB')).toBe('15/06/2026 10:00');
+    expect(formatDateTime(new Date(2026, 5, 15, 9, 5), 'en-GB')).toBe('15/06/2026 09:05');
   });
 });
 
