@@ -140,6 +140,22 @@
   white-space: nowrap;
 }
 
+// --- Screen-reader only (visually hidden, still announced) ---
+// Standardises the clip-rect pattern already inlined in toggle/checkbox/radio.
+// Use for accessible names on icon-only controls (e.g. "Previous month") and
+// for aria-live regions that should not render visually.
+.gds-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 // ============================================================================
 // Responsive Typography
 // Pattern: .gds-text-{preset}\@{breakpoint}

@@ -1,0 +1,121 @@
+// ============================================================================
+// Component Tokens / Calendar + DatePicker
+// Maps foundation tokens → calendar-specific custom properties.
+// ZERO hardcoded values — every value references a foundation / semantic token.
+//
+// Scope: CSS skin only. Behaviour (open/close, keyboard grid nav, date math,
+// time stepping) is the future framework-agnostic TS core's responsibility —
+// this layer ships the visual language every adapter consumes.
+//
+// Day-cell default = 40px ($space-40, comfortable). Compact = 32px ($space-32)
+// via .gds-calendar--compact. 36px is intentionally NOT used — no token exists.
+// ============================================================================
+
+@use 'foundation-colors' as *;
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+@use 'foundation-motion' as *;
+@use 'foundation-zindex' as *;
+
+:root {
+  // --- Popover surface (composed from the verified dropdown panel recipe) ---
+  --calendar-popover-bg:           var(--gds-color-bg-primary);
+  --calendar-popover-border-color: var(--gds-color-border-default);
+  --calendar-popover-border-width: #{$border-width-default};
+  --calendar-popover-radius:       #{$radius-m};
+  --calendar-popover-shadow:       var(--gds-shadow-overlay);
+  --calendar-popover-offset:       #{$space-4};   // gap between trigger and popover
+  --calendar-z:                    var(--gds-z-dropdown);
+
+  // --- Body layout ---
+  --calendar-padding:      #{$space-12};
+  --calendar-section-gap:  #{$space-12};   // header ↔ grid ↔ time ↔ footer
+  --calendar-header-gap:   #{$space-8};
+  --calendar-footer-gap:   #{$space-8};
+
+  // --- Header / title ---
+  --calendar-title-size:        #{$font-size-16};
+  --calendar-title-weight:      #{$font-weight-medium};
+  --calendar-title-color:       var(--gds-color-text-primary);
+  --calendar-title-chevron:     #{$icon-sm};                    // month-select ▾ affordance
+  --calendar-title-hover-bg:    var(--gds-color-bg-secondary);  // month-select hover
+  --calendar-title-radius:      #{$radius-s};
+  --calendar-nav-color:         var(--gds-color-text-tertiary);
+
+  // --- Weekday header row ---
+  --calendar-weekday-color:     var(--gds-color-text-tertiary);
+  --calendar-weekday-size:      #{$font-size-11};        // caption
+  --calendar-weekday-weight:    #{$font-weight-medium};
+  --calendar-weekday-spacing:   #{$letter-spacing-wide};
+  --calendar-weekday-padding-y: #{$space-6};
+
+  // --- Day grid ---
+  --calendar-day-size:         #{$space-40};   // 40px comfortable (default)
+  --calendar-day-size-compact: #{$space-32};   // 32px compact density
+  --calendar-grid-gap:         #{$space-4};
+  --calendar-day-radius:       #{$radius-pill}; // circular days (hover / selected / today)
+  --calendar-day-font-size:    #{$font-size-14};
+  --calendar-day-font-weight:  #{$font-weight-regular};
+
+  // --- Day states ---
+  --calendar-day-color:            var(--gds-color-text-primary);
+  --calendar-day-hover-bg:         var(--gds-color-bg-secondary);
+  --calendar-day-outside-color:    var(--gds-color-text-tertiary);
+  --calendar-day-disabled-color:   var(--gds-color-text-disabled);
+  --calendar-day-disabled-opacity: #{$opacity-disabled};
+
+  // Selected — auto-themes blue (CODEX) → orange (VP Player) via action token
+  --calendar-day-selected-bg:       var(--gds-color-action-primary);
+  --calendar-day-selected-color:    var(--gds-color-action-on-primary);
+  --calendar-day-selected-hover-bg: var(--gds-color-action-primary-hover);
+
+  // Today — inset ring (mirrors the card --selected ring idiom)
+  --calendar-today-ring-color: var(--gds-color-border-focus);
+  --calendar-today-ring-width: #{$border-width-control};
+
+  // Range — theme-aware tint via color-mix (already used in tooltip tokens).
+  // A literal blue-50 would leak under the VP Player orange theme; this won't.
+  --calendar-range-bg:    color-mix(in srgb, var(--gds-color-action-primary) 12%, var(--gds-color-bg-primary));
+  --calendar-range-color: var(--gds-color-text-primary);
+
+  // --- Focus ring (matches pagination / card focus idiom) ---
+  --calendar-focus-ring-color:  var(--gds-color-border-focus);
+  --calendar-focus-ring-width:  #{$border-width-thick};
+  --calendar-focus-ring-offset: #{$space-2};
+
+  // --- Event / availability dot under a day number ---
+  --calendar-dot-size:   #{$space-4};
+  --calendar-dot-color:  var(--gds-color-action-primary);
+  --calendar-dot-offset: #{$space-2};
+
+  // --- Time stepper (HH : MM) ---
+  --calendar-time-gap:             #{$space-8};
+  --calendar-time-label-color:     var(--gds-color-text-secondary);
+  --calendar-time-separator-color: var(--gds-color-text-secondary);
+  --calendar-stepper-gap:          #{$space-2};
+  --calendar-stepper-field-width:  #{$space-48};
+  --calendar-stepper-field-height: #{$space-32};
+  --calendar-stepper-field-color:  var(--gds-color-text-primary);
+  --calendar-stepper-field-size:   #{$font-size-18};  // borderless, prominent HH : MM
+  --calendar-stepper-btn-color:    var(--gds-color-text-tertiary);
+  --calendar-stepper-btn-hover-bg: var(--gds-color-bg-secondary);
+  --calendar-stepper-btn-radius:   #{$radius-s};
+  --calendar-stepper-icon:         #{$icon-sm};
+
+  // --- Footer actions (Today / Clear) — text-link style, action-themed ---
+  --calendar-action-color:       var(--gds-color-action-primary);
+  --calendar-action-hover-color: var(--gds-color-action-primary-hover);
+  --calendar-action-radius:      #{$radius-s};
+
+  // --- Presets panel + advanced two-column layout ---
+  --calendar-presets-width:  calc(#{$space-160} + #{$space-48});   // 208px — fits "30 days from first upload"
+  --calendar-presets-gap:    #{$space-8};
+  --calendar-advanced-gap:   #{$space-16};
+  --calendar-divider-color:  var(--gds-color-border-subtle);
+  --calendar-divider-width:  #{$border-width-default};
+
+  // --- Motion ---
+  --calendar-duration:         #{$duration-fast};
+  --calendar-popover-duration: #{$duration-normal};
+  --calendar-ease:             #{$ease-default};
+}

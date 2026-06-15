@@ -929,6 +929,7 @@
         <button class="doc-nav-item" data-page="card">Card <span class="doc-nav-dot doc-nav-dot--new"></span></button>
         <button class="doc-nav-item" data-page="tooltip">Tooltip <span class="doc-nav-dot doc-nav-dot--new"></span></button>
         <button class="doc-nav-item" data-page="skeleton">Skeleton <span class="doc-nav-dot doc-nav-dot--new"></span></button>
+        <button class="doc-nav-item" data-page="calendar">Calendar <span class="doc-nav-dot doc-nav-dot--new"></span></button>
       </div>
       <div class="doc-nav-group">
         <div class="doc-nav-label">Utilities</div>
@@ -995,7 +996,8 @@
   <div class="doc-section-label">Theme Setup</div>
   <div class="doc-note">
     <strong>Theming is done via the <code>data-theme</code> attribute.</strong>
-    Set it on <code>&lt;html&gt;</code> or any parent element. CODEX is the default.
+    Set it on <code>&lt;html&gt;</code> or <code>&lt;body&gt;</code> (the document root). CODEX is the default.
+    <br><em>Note: per-section theming — the attribute on a nested element — is not currently supported. Component color tokens resolve at <code>:root</code>, so a nested override won't re-theme its subtree. Tracked in Known Issues.</em>
   </div>
   <div class="doc-gap-sm"></div>
   <div class="doc-preview">
@@ -1004,13 +1006,12 @@
       <pre class="doc-preview-code">&lt;!-- CODEX theme (default) --&gt;
 &lt;html data-theme="codex"&gt;
 
-&lt;!-- VP Player theme --&gt;
+&lt;!-- VP Player theme — set on the document root --&gt;
 &lt;html data-theme="vpplayer"&gt;
 
-&lt;!-- Mixed: VP Player for a section --&gt;
-&lt;div data-theme="vpplayer"&gt;
-  &lt;button class="gds-btn gds-btn--primary gds-btn--md"&gt;Orange button&lt;/button&gt;
-&lt;/div&gt;</pre>
+&lt;!-- Per-section theming is NOT yet supported: a nested
+     data-theme will not re-theme its subtree (tokens
+     resolve at :root). Set the theme on the root only. --&gt;</pre>
       <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
     </details>
   </div>
@@ -7487,6 +7488,331 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
       <div class="doc-token-row"><span class="doc-mono">--w-25 / --w-50 / --w-75</span><span>Width helper for varied text lengths</span><span>25% / 50% / 75%</span></div>
       <div class="doc-token-row"><span class="doc-mono">.gds-skeleton-group</span><span>Stack (default column, gap: 8px)</span><span>—</span></div>
       <div class="doc-token-row"><span class="doc-mono">.gds-skeleton-group--row</span><span>Horizontal cluster</span><span>—</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CALENDAR / DATEPICKER -->
+<!-- ============================================================ -->
+<section class="doc-section" id="page-calendar">
+  <div class="doc-page-header">
+    <div class="doc-eyebrow">Components</div>
+    <h1 class="doc-h1">Calendar / DatePicker <span class="doc-status doc-status--stable">v2.6 · CSS layer</span></h1>
+    <p class="doc-desc">The visual skin for date, date-time, time, and advanced preset pickers. Composed entirely from existing GDS primitives — the trigger reuses <code>.gds-input</code>, month nav reuses <code>.gds-btn-icon</code>, presets reuse <code>.gds-menu</code>, the footer reuses <code>.gds-btn</code>. Selected days auto-theme blue → orange. <strong>This release ships CSS only</strong> — open/close, keyboard grid nav, date math, and typed props arrive with the framework-agnostic TS core + Vue 3 wrapper.</p>
+    <div class="doc-tags"><span class="doc-tag">.gds-datepicker</span><span class="doc-tag">.gds-calendar-popover</span><span class="doc-tag">.gds-calendar</span><span class="doc-tag">__day --selected/--today/--outside/--disabled</span><span class="doc-tag">--range-start/--in-range/--range-end</span><span class="doc-tag">.gds-time-stepper</span><span class="doc-tag">--compact / --advanced</span></div>
+  </div>
+
+  <!-- STATUS callout -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gds-space-16);margin-bottom:var(--gds-space-32)">
+    <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
+      <div class="doc-state-label" style="color:var(--gds-color-success-text);margin-bottom:var(--gds-space-8)">✓ Covered by this CSS layer</div>
+      <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
+        <li>Full calendar grid + all day-cell states</li>
+        <li>Date, date-time, time-only, advanced layouts</li>
+        <li>Time stepper, preset panel, footer actions</li>
+        <li>Both themes (CODEX + VP Player), reduced-motion</li>
+        <li>New <code>.gds-sr-only</code> a11y utility</li>
+      </ul>
+    </div>
+    <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
+      <div class="doc-state-label" style="color:var(--gds-color-warning-text);margin-bottom:var(--gds-space-8)">⏳ Needs the component layer (TS core + Vue 3)</div>
+      <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
+        <li>Popover open/close + collision positioning</li>
+        <li>Arrow-key grid nav, Esc-close, focus return</li>
+        <li>Date/time math, locale, min/max, disabled rules</li>
+        <li>Time increment/decrement + wrap-around</li>
+        <li>Typed <code>&lt;DatePicker mode=…&gt;</code> props + Storybook</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 · DATE-ONLY (compact) -->
+  <div class="doc-section-label">1 · DATE-ONLY PICKER <span class="doc-state-label" style="text-transform:none">— compact density</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:flex-start;gap:var(--gds-space-12)">
+      <label class="gds-input gds-input--md" style="width:auto;min-width:calc(var(--gds-space-160) + var(--gds-space-64))">
+        <span class="gds-input__wrap">
+          <input class="gds-input__field" value="15/06/2026" readonly />
+          <span class="gds-input__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        </span>
+      </label>
+      <div class="gds-calendar-popover gds-calendar-popover--open" style="position:static">
+        <div class="gds-calendar gds-calendar--compact"><div class="gds-calendar__header">
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="gds-calendar__title">
+            <button type="button" class="gds-calendar__title-select" aria-label="Choose month">June <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+            <span class="gds-calendar__title-year">2026</span>
+          </div>
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <div class="gds-calendar__weekdays" role="row"><span class="gds-calendar__weekday" role="columnheader">Sun</span><span class="gds-calendar__weekday" role="columnheader">Mon</span><span class="gds-calendar__weekday" role="columnheader">Tue</span><span class="gds-calendar__weekday" role="columnheader">Wed</span><span class="gds-calendar__weekday" role="columnheader">Thu</span><span class="gds-calendar__weekday" role="columnheader">Fri</span><span class="gds-calendar__weekday" role="columnheader">Sat</span></div>
+        <div class="gds-calendar__grid" role="grid" aria-label="June 2026"><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">31</button><button type="button" class="gds-calendar__day gds-calendar__day--disabled" aria-disabled="true" tabindex="-1" role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--disabled" aria-disabled="true" tabindex="-1" role="gridcell">2</button><button type="button" class="gds-calendar__day"  role="gridcell">3</button><button type="button" class="gds-calendar__day"  role="gridcell">4</button><button type="button" class="gds-calendar__day"  role="gridcell">5</button><button type="button" class="gds-calendar__day"  role="gridcell">6</button><button type="button" class="gds-calendar__day"  role="gridcell">7</button><button type="button" class="gds-calendar__day"  role="gridcell">8</button><button type="button" class="gds-calendar__day"  role="gridcell">9</button><button type="button" class="gds-calendar__day"  role="gridcell">10</button><button type="button" class="gds-calendar__day"  role="gridcell">11</button><button type="button" class="gds-calendar__day"  role="gridcell">12</button><button type="button" class="gds-calendar__day"  role="gridcell">13</button><button type="button" class="gds-calendar__day"  role="gridcell">14</button><button type="button" class="gds-calendar__day gds-calendar__day--today" aria-current="date" role="gridcell">15</button><button type="button" class="gds-calendar__day"  role="gridcell">16</button><button type="button" class="gds-calendar__day"  role="gridcell">17</button><button type="button" class="gds-calendar__day"  role="gridcell">18</button><button type="button" class="gds-calendar__day"  role="gridcell">19</button><button type="button" class="gds-calendar__day"  role="gridcell">20</button><button type="button" class="gds-calendar__day"  role="gridcell">21</button><button type="button" class="gds-calendar__day"  role="gridcell">22</button><button type="button" class="gds-calendar__day"  role="gridcell">23</button><button type="button" class="gds-calendar__day"  role="gridcell">24</button><button type="button" class="gds-calendar__day"  role="gridcell">25<span class="gds-calendar__day-dot"></span></button><button type="button" class="gds-calendar__day"  role="gridcell">26</button><button type="button" class="gds-calendar__day"  role="gridcell">27</button><button type="button" class="gds-calendar__day"  role="gridcell">28</button><button type="button" class="gds-calendar__day"  role="gridcell">29</button><button type="button" class="gds-calendar__day"  role="gridcell">30</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">2</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">3</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">4</button></div>
+        </div>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-datepicker"&gt;
+  &lt;label class="gds-input gds-input--md"&gt;
+    &lt;span class="gds-input__wrap"&gt;
+      &lt;input class="gds-input__field" value="18/06/2026" readonly /&gt;
+      &lt;span class="gds-input__icon"&gt;&lt;!-- calendar svg --&gt;&lt;/span&gt;
+    &lt;/span&gt;
+  &lt;/label&gt;
+  &lt;div class="gds-calendar-popover gds-calendar-popover--open"&gt;
+    &lt;div class="gds-calendar gds-calendar--compact"&gt;
+      &lt;div class="gds-calendar__header"&gt;
+        &lt;button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm"&gt;‹&lt;/button&gt;
+        &lt;div class="gds-calendar__title"&gt;
+          &lt;button class="gds-calendar__title-select"&gt;June ▾&lt;/button&gt;
+          &lt;span class="gds-calendar__title-year"&gt;2026&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;button class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm"&gt;›&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="gds-calendar__weekdays" role="row"&gt;Sun … Sat&lt;/div&gt;
+      &lt;div class="gds-calendar__grid" role="grid"&gt;
+        &lt;button class="gds-calendar__day gds-calendar__day--today"&gt;15&lt;/button&gt;
+        &lt;button class="gds-calendar__day gds-calendar__day--outside"&gt;31&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <!-- 2 · DATE + TIME -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">2 · DATE + TIME PICKER <span class="doc-state-label" style="text-transform:none">— fits inside a modal/form</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:flex-start;gap:var(--gds-space-12)">
+      <label class="gds-input gds-input--md" style="width:auto;min-width:calc(var(--gds-space-160) + var(--gds-space-64))">
+        <span class="gds-input__label">Date</span><span class="gds-input__wrap">
+          <input class="gds-input__field" value="15/06/2026 10:00" readonly />
+          <span class="gds-input__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        </span>
+      </label>
+      <div class="gds-calendar-popover gds-calendar-popover--open" style="position:static">
+        <div class="gds-calendar"><div class="gds-calendar__header">
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="gds-calendar__title">
+            <button type="button" class="gds-calendar__title-select" aria-label="Choose month">June <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+            <span class="gds-calendar__title-year">2026</span>
+          </div>
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <div class="gds-calendar__weekdays" role="row"><span class="gds-calendar__weekday" role="columnheader">Sun</span><span class="gds-calendar__weekday" role="columnheader">Mon</span><span class="gds-calendar__weekday" role="columnheader">Tue</span><span class="gds-calendar__weekday" role="columnheader">Wed</span><span class="gds-calendar__weekday" role="columnheader">Thu</span><span class="gds-calendar__weekday" role="columnheader">Fri</span><span class="gds-calendar__weekday" role="columnheader">Sat</span></div>
+        <div class="gds-calendar__grid" role="grid" aria-label="June 2026"><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">31</button><button type="button" class="gds-calendar__day"  role="gridcell">1</button><button type="button" class="gds-calendar__day"  role="gridcell">2</button><button type="button" class="gds-calendar__day"  role="gridcell">3</button><button type="button" class="gds-calendar__day"  role="gridcell">4</button><button type="button" class="gds-calendar__day"  role="gridcell">5</button><button type="button" class="gds-calendar__day"  role="gridcell">6</button><button type="button" class="gds-calendar__day"  role="gridcell">7</button><button type="button" class="gds-calendar__day"  role="gridcell">8</button><button type="button" class="gds-calendar__day"  role="gridcell">9</button><button type="button" class="gds-calendar__day"  role="gridcell">10</button><button type="button" class="gds-calendar__day"  role="gridcell">11</button><button type="button" class="gds-calendar__day"  role="gridcell">12</button><button type="button" class="gds-calendar__day"  role="gridcell">13</button><button type="button" class="gds-calendar__day"  role="gridcell">14</button><button type="button" class="gds-calendar__day gds-calendar__day--selected" aria-selected="true" role="gridcell">15</button><button type="button" class="gds-calendar__day"  role="gridcell">16</button><button type="button" class="gds-calendar__day"  role="gridcell">17</button><button type="button" class="gds-calendar__day"  role="gridcell">18</button><button type="button" class="gds-calendar__day"  role="gridcell">19</button><button type="button" class="gds-calendar__day"  role="gridcell">20</button><button type="button" class="gds-calendar__day"  role="gridcell">21</button><button type="button" class="gds-calendar__day"  role="gridcell">22</button><button type="button" class="gds-calendar__day"  role="gridcell">23</button><button type="button" class="gds-calendar__day"  role="gridcell">24</button><button type="button" class="gds-calendar__day"  role="gridcell">25<span class="gds-calendar__day-dot"></span></button><button type="button" class="gds-calendar__day"  role="gridcell">26</button><button type="button" class="gds-calendar__day"  role="gridcell">27</button><button type="button" class="gds-calendar__day"  role="gridcell">28</button><button type="button" class="gds-calendar__day"  role="gridcell">29</button><button type="button" class="gds-calendar__day"  role="gridcell">30</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">2</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">3</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">4</button></div>
+        <div class="gds-calendar__time">
+          <div class="gds-time-stepper">
+            <div class="gds-time-stepper__unit">
+              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
+              <input class="gds-time-stepper__field" value="10" aria-label="Hours" inputmode="numeric" />
+              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+            </div><span class="gds-time-stepper__separator">:</span>
+            <div class="gds-time-stepper__unit">
+              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
+              <input class="gds-time-stepper__field" value="00" aria-label="Minutes" inputmode="numeric" />
+              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+            </div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-calendar"&gt;
+  …month grid…
+  &lt;div class="gds-calendar__time"&gt;
+    &lt;div class="gds-time-stepper"&gt; ▲ HH ▼ : ▲ MM ▼ &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <!-- 3 · TIME-ONLY -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">3 · TIME-ONLY PICKER <span class="doc-state-label" style="text-transform:none">— no calendar grid rendered</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:flex-start;gap:var(--gds-space-12)">
+      <label class="gds-input gds-input--md" style="width:auto;min-width:calc(var(--gds-space-160) + var(--gds-space-64))">
+        <span class="gds-input__label">Time</span><span class="gds-input__wrap">
+          <input class="gds-input__field" value="00:00" readonly />
+          <span class="gds-input__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+        </span>
+      </label>
+      <div class="gds-calendar-popover gds-calendar-popover--open" style="position:static" style="position:static;min-width:calc(var(--gds-space-160) + var(--gds-space-48))">
+        <div class="gds-calendar">
+        <div class="gds-calendar__time gds-calendar__time--bare">
+          <div class="gds-time-stepper">
+            <div class="gds-time-stepper__unit">
+              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
+              <input class="gds-time-stepper__field" value="00" aria-label="Hours" inputmode="numeric" />
+              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+            </div><span class="gds-time-stepper__separator">:</span>
+            <div class="gds-time-stepper__unit">
+              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
+              <input class="gds-time-stepper__field" value="00" aria-label="Minutes" inputmode="numeric" />
+              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+            </div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-calendar"&gt;
+  &lt;!-- mode="time": render the stepper only, omit the grid --&gt;
+  &lt;div class="gds-calendar__time gds-calendar__time--bare"&gt;
+    &lt;div class="gds-time-stepper"&gt;…HH : MM…&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre></details>
+  </div>
+
+  <!-- 4 · ADVANCED -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">4 · ADVANCED — CALENDAR + TIME + PRESETS</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="align-items:flex-start">
+      <div class="gds-calendar-popover gds-calendar-popover--open" style="position:static">
+        <div class="gds-calendar gds-calendar--advanced">
+          <div class="gds-calendar__main"><div class="gds-calendar__header">
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <h2 class="gds-calendar__title">June 2026</h2>
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <div class="gds-calendar__weekdays" role="row"><span class="gds-calendar__weekday" role="columnheader">Sun</span><span class="gds-calendar__weekday" role="columnheader">Mon</span><span class="gds-calendar__weekday" role="columnheader">Tue</span><span class="gds-calendar__weekday" role="columnheader">Wed</span><span class="gds-calendar__weekday" role="columnheader">Thu</span><span class="gds-calendar__weekday" role="columnheader">Fri</span><span class="gds-calendar__weekday" role="columnheader">Sat</span></div>
+        <div class="gds-calendar__grid" role="grid" aria-label="June 2026"><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">31</button><button type="button" class="gds-calendar__day"  role="gridcell">1</button><button type="button" class="gds-calendar__day"  role="gridcell">2</button><button type="button" class="gds-calendar__day"  role="gridcell">3</button><button type="button" class="gds-calendar__day"  role="gridcell">4</button><button type="button" class="gds-calendar__day"  role="gridcell">5</button><button type="button" class="gds-calendar__day"  role="gridcell">6</button><button type="button" class="gds-calendar__day"  role="gridcell">7</button><button type="button" class="gds-calendar__day"  role="gridcell">8</button><button type="button" class="gds-calendar__day"  role="gridcell">9</button><button type="button" class="gds-calendar__day"  role="gridcell">10</button><button type="button" class="gds-calendar__day"  role="gridcell">11</button><button type="button" class="gds-calendar__day"  role="gridcell">12</button><button type="button" class="gds-calendar__day"  role="gridcell">13</button><button type="button" class="gds-calendar__day"  role="gridcell">14</button><button type="button" class="gds-calendar__day gds-calendar__day--today" aria-current="date" role="gridcell">15</button><button type="button" class="gds-calendar__day"  role="gridcell">16</button><button type="button" class="gds-calendar__day"  role="gridcell">17</button><button type="button" class="gds-calendar__day"  role="gridcell">18</button><button type="button" class="gds-calendar__day"  role="gridcell">19</button><button type="button" class="gds-calendar__day"  role="gridcell">20</button><button type="button" class="gds-calendar__day"  role="gridcell">21</button><button type="button" class="gds-calendar__day"  role="gridcell">22</button><button type="button" class="gds-calendar__day"  role="gridcell">23</button><button type="button" class="gds-calendar__day"  role="gridcell">24</button><button type="button" class="gds-calendar__day"  role="gridcell">25<span class="gds-calendar__day-dot"></span></button><button type="button" class="gds-calendar__day"  role="gridcell">26</button><button type="button" class="gds-calendar__day"  role="gridcell">27</button><button type="button" class="gds-calendar__day"  role="gridcell">28</button><button type="button" class="gds-calendar__day"  role="gridcell">29</button><button type="button" class="gds-calendar__day"  role="gridcell">30</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">2</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">3</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">4</button></div>
+          <div class="gds-calendar__time">
+          <div class="gds-time-stepper">
+            <div class="gds-time-stepper__unit">
+              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
+              <input class="gds-time-stepper__field" value="10" aria-label="Hours" inputmode="numeric" />
+              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+            </div><span class="gds-time-stepper__separator">:</span>
+            <div class="gds-time-stepper__unit">
+              <button type="button" class="gds-time-stepper__btn" aria-label="Increment Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
+              <input class="gds-time-stepper__field" value="02" aria-label="Minutes" inputmode="numeric" />
+              <button type="button" class="gds-time-stepper__btn" aria-label="Decrement Minutes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+            </div></div>
+        </div>
+          <div class="gds-calendar__footer">
+          <button type="button" class="gds-btn gds-btn--ghost gds-btn--sm"><span class="gds-btn__label">Today</span></button>
+          <button type="button" class="gds-btn gds-btn--ghost gds-btn--sm"><span class="gds-btn__label">Clear</span></button>
+        </div>
+          </div><div class="gds-calendar__presets">
+          <p class="gds-calendar__presets-title">Defaults</p>
+          <div class="gds-menu" style="width:100%;box-shadow:none;border:none;padding:0">
+            <button type="button" class="gds-menu__item"><span class="gds-menu__label">1 day from first upload</span></button>
+            <button type="button" class="gds-menu__item"><span class="gds-menu__label">30 days from first upload</span></button>
+            <button type="button" class="gds-menu__item"><span class="gds-menu__label">90 days from first upload</span></button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <details class="doc-preview-code-wrap"><summary>Show code</summary><pre class="doc-preview-code">&lt;div class="gds-calendar gds-calendar--advanced"&gt;
+  &lt;div class="gds-calendar__main"&gt;
+    …header · grid · time · footer (Today / Clear)…
+  &lt;/div&gt;
+  &lt;div class="gds-calendar__presets"&gt;
+    &lt;p class="gds-calendar__presets-title"&gt;Defaults&lt;/p&gt;
+    &lt;div class="gds-menu"&gt; …preset .gds-menu__item rows… &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- stacks to one column below 640px --&gt;</pre></details>
+  </div>
+
+  <!-- DAY STATES -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">DAY-CELL STATES <span class="doc-state-label" style="text-transform:none">— circular by default</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-20);flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-6)"><span class="doc-state-label">default</span><button class="gds-calendar__day">15</button></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-6)"><span class="doc-state-label">hover</span><button class="gds-calendar__day is-hover-preview">15</button></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-6)"><span class="doc-state-label">focus</span><button class="gds-calendar__day is-focus-preview">15</button></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-6)"><span class="doc-state-label">selected</span><button class="gds-calendar__day gds-calendar__day--selected">15</button></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-6)"><span class="doc-state-label">today</span><button class="gds-calendar__day gds-calendar__day--today">15</button></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-6)"><span class="doc-state-label">outside</span><button class="gds-calendar__day gds-calendar__day--outside">15</button></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-6)"><span class="doc-state-label">disabled</span><button class="gds-calendar__day gds-calendar__day--disabled">15</button></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-6)"><span class="doc-state-label">with dot</span><button class="gds-calendar__day">15<span class="gds-calendar__day-dot"></span></button></div>
+    </div>
+  </div>
+
+  <!-- RANGE -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">RANGE-READY STATES <span class="doc-state-label" style="text-transform:none">— styling in place for a future range picker</span></div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas">
+      <div class="gds-calendar" style="position:static;padding:var(--gds-space-12);border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md)">
+        <div class="gds-calendar__weekdays"><span class="gds-calendar__weekday">Sun</span><span class="gds-calendar__weekday">Mon</span><span class="gds-calendar__weekday">Tue</span><span class="gds-calendar__weekday">Wed</span><span class="gds-calendar__weekday">Thu</span><span class="gds-calendar__weekday">Fri</span><span class="gds-calendar__weekday">Sat</span></div>
+        <div class="gds-calendar__grid"><button class="gds-calendar__day gds-calendar__day--outside">31</button><button class="gds-calendar__day">1</button><button class="gds-calendar__day">2</button><button class="gds-calendar__day">3</button><button class="gds-calendar__day">4</button><button class="gds-calendar__day">5</button><button class="gds-calendar__day">6</button><button class="gds-calendar__day">7</button><button class="gds-calendar__day">8</button><button class="gds-calendar__day gds-calendar__day--range-start">9</button><button class="gds-calendar__day gds-calendar__day--in-range">10</button><button class="gds-calendar__day gds-calendar__day--in-range">11</button><button class="gds-calendar__day gds-calendar__day--in-range">12</button><button class="gds-calendar__day gds-calendar__day--in-range">13</button><button class="gds-calendar__day gds-calendar__day--range-end">14</button><button class="gds-calendar__day">15</button><button class="gds-calendar__day">16</button><button class="gds-calendar__day">17</button><button class="gds-calendar__day">18</button><button class="gds-calendar__day">19</button><button class="gds-calendar__day">20</button><button class="gds-calendar__day">21</button><button class="gds-calendar__day">22</button><button class="gds-calendar__day">23</button><button class="gds-calendar__day">24</button><button class="gds-calendar__day">25</button><button class="gds-calendar__day">26</button><button class="gds-calendar__day">27</button><button class="gds-calendar__day">28</button><button class="gds-calendar__day">29</button><button class="gds-calendar__day">30</button><button class="gds-calendar__day gds-calendar__day--outside">1</button><button class="gds-calendar__day gds-calendar__day--outside">2</button><button class="gds-calendar__day gds-calendar__day--outside">3</button><button class="gds-calendar__day gds-calendar__day--outside">4</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DENSITY -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">DENSITY — DEFAULT (40px) vs --compact (32px)</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="gap:var(--gds-space-32);align-items:flex-start;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-8)">
+        <span class="doc-state-label">default · 40px</span>
+        <div class="gds-calendar" style="position:static;padding:var(--gds-space-12);border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);background:var(--gds-color-bg-primary)"><div class="gds-calendar__header">
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <h2 class="gds-calendar__title">June 2026</h2>
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <div class="gds-calendar__weekdays" role="row"><span class="gds-calendar__weekday" role="columnheader">Sun</span><span class="gds-calendar__weekday" role="columnheader">Mon</span><span class="gds-calendar__weekday" role="columnheader">Tue</span><span class="gds-calendar__weekday" role="columnheader">Wed</span><span class="gds-calendar__weekday" role="columnheader">Thu</span><span class="gds-calendar__weekday" role="columnheader">Fri</span><span class="gds-calendar__weekday" role="columnheader">Sat</span></div>
+        <div class="gds-calendar__grid" role="grid" aria-label="June 2026"><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">31</button><button type="button" class="gds-calendar__day"  role="gridcell">1</button><button type="button" class="gds-calendar__day"  role="gridcell">2</button><button type="button" class="gds-calendar__day"  role="gridcell">3</button><button type="button" class="gds-calendar__day"  role="gridcell">4</button><button type="button" class="gds-calendar__day"  role="gridcell">5</button><button type="button" class="gds-calendar__day"  role="gridcell">6</button><button type="button" class="gds-calendar__day"  role="gridcell">7</button><button type="button" class="gds-calendar__day"  role="gridcell">8</button><button type="button" class="gds-calendar__day"  role="gridcell">9</button><button type="button" class="gds-calendar__day"  role="gridcell">10</button><button type="button" class="gds-calendar__day"  role="gridcell">11</button><button type="button" class="gds-calendar__day"  role="gridcell">12</button><button type="button" class="gds-calendar__day"  role="gridcell">13</button><button type="button" class="gds-calendar__day"  role="gridcell">14</button><button type="button" class="gds-calendar__day gds-calendar__day--selected" aria-selected="true" role="gridcell">15</button><button type="button" class="gds-calendar__day"  role="gridcell">16</button><button type="button" class="gds-calendar__day"  role="gridcell">17</button><button type="button" class="gds-calendar__day"  role="gridcell">18</button><button type="button" class="gds-calendar__day"  role="gridcell">19</button><button type="button" class="gds-calendar__day"  role="gridcell">20</button><button type="button" class="gds-calendar__day"  role="gridcell">21</button><button type="button" class="gds-calendar__day"  role="gridcell">22</button><button type="button" class="gds-calendar__day"  role="gridcell">23</button><button type="button" class="gds-calendar__day"  role="gridcell">24</button><button type="button" class="gds-calendar__day"  role="gridcell">25</button><button type="button" class="gds-calendar__day"  role="gridcell">26</button><button type="button" class="gds-calendar__day"  role="gridcell">27</button><button type="button" class="gds-calendar__day"  role="gridcell">28</button><button type="button" class="gds-calendar__day"  role="gridcell">29</button><button type="button" class="gds-calendar__day"  role="gridcell">30</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">2</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">3</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">4</button></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gds-space-8)">
+        <span class="doc-state-label">--compact · 32px</span>
+        <div class="gds-calendar gds-calendar--compact" style="position:static;padding:var(--gds-space-12);border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);background:var(--gds-color-bg-primary)"><div class="gds-calendar__header">
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <h2 class="gds-calendar__title">June 2026</h2>
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <div class="gds-calendar__weekdays" role="row"><span class="gds-calendar__weekday" role="columnheader">Sun</span><span class="gds-calendar__weekday" role="columnheader">Mon</span><span class="gds-calendar__weekday" role="columnheader">Tue</span><span class="gds-calendar__weekday" role="columnheader">Wed</span><span class="gds-calendar__weekday" role="columnheader">Thu</span><span class="gds-calendar__weekday" role="columnheader">Fri</span><span class="gds-calendar__weekday" role="columnheader">Sat</span></div>
+        <div class="gds-calendar__grid" role="grid" aria-label="June 2026"><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">31</button><button type="button" class="gds-calendar__day"  role="gridcell">1</button><button type="button" class="gds-calendar__day"  role="gridcell">2</button><button type="button" class="gds-calendar__day"  role="gridcell">3</button><button type="button" class="gds-calendar__day"  role="gridcell">4</button><button type="button" class="gds-calendar__day"  role="gridcell">5</button><button type="button" class="gds-calendar__day"  role="gridcell">6</button><button type="button" class="gds-calendar__day"  role="gridcell">7</button><button type="button" class="gds-calendar__day"  role="gridcell">8</button><button type="button" class="gds-calendar__day"  role="gridcell">9</button><button type="button" class="gds-calendar__day"  role="gridcell">10</button><button type="button" class="gds-calendar__day"  role="gridcell">11</button><button type="button" class="gds-calendar__day"  role="gridcell">12</button><button type="button" class="gds-calendar__day"  role="gridcell">13</button><button type="button" class="gds-calendar__day"  role="gridcell">14</button><button type="button" class="gds-calendar__day gds-calendar__day--selected" aria-selected="true" role="gridcell">15</button><button type="button" class="gds-calendar__day"  role="gridcell">16</button><button type="button" class="gds-calendar__day"  role="gridcell">17</button><button type="button" class="gds-calendar__day"  role="gridcell">18</button><button type="button" class="gds-calendar__day"  role="gridcell">19</button><button type="button" class="gds-calendar__day"  role="gridcell">20</button><button type="button" class="gds-calendar__day"  role="gridcell">21</button><button type="button" class="gds-calendar__day"  role="gridcell">22</button><button type="button" class="gds-calendar__day"  role="gridcell">23</button><button type="button" class="gds-calendar__day"  role="gridcell">24</button><button type="button" class="gds-calendar__day"  role="gridcell">25</button><button type="button" class="gds-calendar__day"  role="gridcell">26</button><button type="button" class="gds-calendar__day"  role="gridcell">27</button><button type="button" class="gds-calendar__day"  role="gridcell">28</button><button type="button" class="gds-calendar__day"  role="gridcell">29</button><button type="button" class="gds-calendar__day"  role="gridcell">30</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">2</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">3</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">4</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEMING -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">THEMING — SELECTED / TODAY / FOCUS AUTO-THEME</div>
+  <div class="doc-preview">
+    <div class="doc-preview-canvas" style="flex-direction:column;align-items:flex-start;gap:var(--gds-space-12)">
+      <p class="doc-state-label" style="text-transform:none;max-width:calc(var(--gds-space-160) * 3)">Selected day, today ring, and footer actions all read from <code>--gds-color-action-primary</code> / <code>--gds-color-border-focus</code>. Flip the theme with the <strong>CODEX / VP Player</strong> toggle (top-right) to recolour the whole calendar blue&nbsp;→&nbsp;orange — same as every GDS component.</p>
+      <div class="gds-calendar gds-calendar--compact" style="position:static;padding:var(--gds-space-12);border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);background:var(--gds-color-bg-primary)"><div class="gds-calendar__header">
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <h2 class="gds-calendar__title">June 2026</h2>
+          <button type="button" class="gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <div class="gds-calendar__weekdays" role="row"><span class="gds-calendar__weekday" role="columnheader">Sun</span><span class="gds-calendar__weekday" role="columnheader">Mon</span><span class="gds-calendar__weekday" role="columnheader">Tue</span><span class="gds-calendar__weekday" role="columnheader">Wed</span><span class="gds-calendar__weekday" role="columnheader">Thu</span><span class="gds-calendar__weekday" role="columnheader">Fri</span><span class="gds-calendar__weekday" role="columnheader">Sat</span></div>
+        <div class="gds-calendar__grid" role="grid" aria-label="June 2026"><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">31</button><button type="button" class="gds-calendar__day"  role="gridcell">1</button><button type="button" class="gds-calendar__day"  role="gridcell">2</button><button type="button" class="gds-calendar__day"  role="gridcell">3</button><button type="button" class="gds-calendar__day"  role="gridcell">4</button><button type="button" class="gds-calendar__day"  role="gridcell">5</button><button type="button" class="gds-calendar__day"  role="gridcell">6</button><button type="button" class="gds-calendar__day"  role="gridcell">7</button><button type="button" class="gds-calendar__day"  role="gridcell">8</button><button type="button" class="gds-calendar__day"  role="gridcell">9</button><button type="button" class="gds-calendar__day"  role="gridcell">10</button><button type="button" class="gds-calendar__day"  role="gridcell">11</button><button type="button" class="gds-calendar__day"  role="gridcell">12</button><button type="button" class="gds-calendar__day"  role="gridcell">13</button><button type="button" class="gds-calendar__day"  role="gridcell">14</button><button type="button" class="gds-calendar__day gds-calendar__day--selected" aria-selected="true" role="gridcell">15</button><button type="button" class="gds-calendar__day"  role="gridcell">16</button><button type="button" class="gds-calendar__day"  role="gridcell">17</button><button type="button" class="gds-calendar__day gds-calendar__day--today" aria-current="date" role="gridcell">18</button><button type="button" class="gds-calendar__day"  role="gridcell">19</button><button type="button" class="gds-calendar__day"  role="gridcell">20</button><button type="button" class="gds-calendar__day"  role="gridcell">21</button><button type="button" class="gds-calendar__day"  role="gridcell">22</button><button type="button" class="gds-calendar__day"  role="gridcell">23</button><button type="button" class="gds-calendar__day"  role="gridcell">24</button><button type="button" class="gds-calendar__day"  role="gridcell">25</button><button type="button" class="gds-calendar__day"  role="gridcell">26</button><button type="button" class="gds-calendar__day"  role="gridcell">27</button><button type="button" class="gds-calendar__day"  role="gridcell">28</button><button type="button" class="gds-calendar__day"  role="gridcell">29</button><button type="button" class="gds-calendar__day"  role="gridcell">30</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">1</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">2</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">3</button><button type="button" class="gds-calendar__day gds-calendar__day--outside"  role="gridcell">4</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODIFIER REFERENCE -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">MODIFIER REFERENCE</div>
+  <div class="doc-preview">
+    <div class="doc-token-table">
+      <div class="doc-token-header"><span>Class</span><span>Applies to</span><span>Effect</span></div>
+      <div class="doc-token-row"><span><strong>.gds-calendar-popover--open</strong></span><span>popover</span><span>Consumer-toggled visibility (JS owns it)</span></div>
+      <div class="doc-token-row"><span><strong>.gds-calendar--advanced</strong></span><span>calendar</span><span>Two-column shell (calendar + presets); stacks &lt;640px</span></div>
+      <div class="doc-token-row"><span><strong>.gds-calendar--compact</strong></span><span>calendar</span><span>32px day cells instead of 40px</span></div>
+      <div class="doc-token-row"><span><strong>__day (default)</strong></span><span>day</span><span>Circular cell; hover = soft neutral circle</span></div>
+      <div class="doc-token-row"><span><strong>__day--selected</strong></span><span>day</span><span>Circular action-themed fill (blue → orange)</span></div>
+      <div class="doc-token-row"><span><strong>__day--today</strong></span><span>day</span><span>Circular focus-colored ring, no fill</span></div>
+      <div class="doc-token-row"><span><strong>__day--outside</strong></span><span>day</span><span>Adjacent-month day, dimmed</span></div>
+      <div class="doc-token-row"><span><strong>__day--disabled</strong></span><span>day</span><span>Dimmed + pointer-events:none</span></div>
+      <div class="doc-token-row"><span><strong>__day--range-start / --in-range / --range-end</strong></span><span>day</span><span>Range track styling (future range picker)</span></div>
+      <div class="doc-token-row"><span><strong>__time--bare</strong></span><span>time</span><span>Time-only mode — drops the divider above the stepper</span></div>
+    </div>
+  </div>
+
+  <!-- ACCESSIBILITY -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">ACCESSIBILITY RECIPE <span class="doc-state-label" style="text-transform:none">— markup hooks the JS layer must honour</span></div>
+  <div class="doc-preview">
+    <div class="doc-token-table">
+      <div class="doc-token-header"><span>Element</span><span>Role / ARIA</span><span>Why</span></div>
+      <div class="doc-token-row"><span><strong>.gds-calendar__grid</strong></span><span>role="grid"</span><span>Announces the day matrix to AT</span></div>
+      <div class="doc-token-row"><span><strong>.gds-calendar__day</strong></span><span>role="gridcell" + &lt;button&gt;</span><span>Each day is a focusable cell</span></div>
+      <div class="doc-token-row"><span><strong>--selected</strong></span><span>aria-selected="true"</span><span>Marks the chosen date</span></div>
+      <div class="doc-token-row"><span><strong>--today</strong></span><span>aria-current="date"</span><span>Marks today</span></div>
+      <div class="doc-token-row"><span><strong>--disabled</strong></span><span>aria-disabled + tabindex="-1"</span><span>Not selectable, skipped by keyboard</span></div>
+      <div class="doc-token-row"><span><strong>nav buttons</strong></span><span>aria-label + .gds-sr-only</span><span>"Previous / Next month" for icon-only buttons</span></div>
+      <div class="doc-token-row"><span><strong>live region</strong></span><span>aria-live="polite" .gds-sr-only</span><span>Announces focused/selected date on nav</span></div>
     </div>
   </div>
 </section>
