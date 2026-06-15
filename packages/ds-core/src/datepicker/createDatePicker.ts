@@ -1,6 +1,6 @@
 import { createPopover } from '../popover/createPopover';
 import type { PopoverInstance } from '../popover/types';
-import type { DatePickerInstance, DatePickerOptions, Weekday } from './types';
+import type { DatePickerInstance, DatePickerOptions, DatePickerPreset, PresetContext, Weekday } from './types';
 import {
   addDays,
   addMonths,
@@ -106,6 +106,11 @@ export function createDatePicker(
   const closeOnSelect = options.closeOnSelect ?? !hasTime;
   const defaultTime = options.defaultTime ?? { hours: 0, minutes: 0 };
 
+  // Presets (product-provided) — only in grid modes; render the advanced layout.
+  const baseDate = toDateTime(options.baseDate);
+  const presets = hasGrid ? (options.presets ?? []) : [];
+  const advanced = presets.length > 0;
+
   const controlled = options.value !== undefined;
   const parseValue = (v: Date | string | null | undefined): Date | null =>
     isTime ? toTime(v) : isDateTime ? toDateTime(v) : toDate(v);
@@ -137,9 +142,15 @@ export function createDatePicker(
   let focusedDate: Date = startOfDay(selected ?? new Date());
 
   // --- DOM: surface > calendar (header, weekdays, grid, [time], [footer]) ---
+  // Advanced (presets): calendar parts live in __main; presets render in an aside.
   const surface = el('div', 'gds-popover gds-datepicker__popover');
-  const calendar = el('div', `gds-calendar${compact ? ' gds-calendar--compact' : ''}`);
+  const calendar = el(
+    'div',
+    `gds-calendar${compact ? ' gds-calendar--compact' : ''}${advanced ? ' gds-calendar--advanced' : ''}`,
+  );
   surface.appendChild(calendar);
+  // Where the calendar parts (header/grid/time/footer) get appended.
+  const main = advanced ? el('div', 'gds-calendar__main') : calendar;
 
   const header = el('div', 'gds-calendar__header');
   const prevBtn = el('button', 'gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav', {
@@ -170,7 +181,7 @@ export function createDatePicker(
 
   // Time-only mode renders no calendar — only the time control + footer below.
   if (hasGrid) {
-    calendar.append(header, weekdaysRow, grid, liveRegion);
+    main.append(header, weekdaysRow, grid, liveRegion);
   }
 
   // --- Time row (datetime + time modes): bordered HH / MM segment spinners ---
@@ -240,7 +251,7 @@ export function createDatePicker(
 
     if (isTime) timeRow.append(stepper);
     else timeRow.append(label, stepper);
-    calendar.appendChild(timeRow);
+    main.appendChild(timeRow);
   }
 
   // --- Footer ---
@@ -281,7 +292,69 @@ export function createDatePicker(
       });
       footer.appendChild(clearBtn);
     }
-    calendar.appendChild(footer);
+    main.appendChild(footer);
+  }
+
+  // --- Presets aside (advanced layout) ---
+  function presetContext(): PresetContext {
+    return { baseDate, value: selected, mode, now: new Date() };
+  }
+  function resolvePresetValue(p: DatePickerPreset): Date | null {
+    const raw = typeof p.value === 'function' ? p.value(presetContext()) : p.value;
+    return raw == null ? null : parseValue(raw);
+  }
+  function presetDisabled(p: DatePickerPreset): boolean {
+    const explicit = typeof p.disabled === 'function' ? p.disabled(presetContext()) : !!p.disabled;
+    if (explicit) return true;
+    const v = resolvePresetValue(p);
+    return v == null || isDateDisabled(v, disableOpts);
+  }
+  function applyPreset(p: DatePickerPreset): void {
+    if (presetDisabled(p)) return;
+    const v = resolvePresetValue(p);
+    if (!v || isDateDisabled(v, disableOpts)) return;
+    focusedDate = startOfDay(v);
+    viewYear = v.getFullYear();
+    viewMonth = v.getMonth();
+    emit(v); // syncs timeH/timeM from v, re-renders, updates input + onChange
+    if (closeOnSelect) close();
+  }
+
+  if (advanced) {
+    const aside = el('div', 'gds-calendar__presets', { role: 'group', 'aria-label': 'Shortcuts' });
+    const presetsTitle = el('p', 'gds-calendar__presets-title');
+    presetsTitle.textContent = 'Shortcuts';
+    const menu = el('div', 'gds-menu');
+    for (const p of presets) {
+      const disabled = presetDisabled(p);
+      const rich = !!p.description;
+      const item = el('button', `gds-menu__item${rich ? ' gds-menu__item--rich' : ''}`, {
+        type: 'button',
+      });
+      if (rich) {
+        const content = el('span', 'gds-menu__content');
+        const lbl = el('span', 'gds-menu__label');
+        lbl.textContent = p.label;
+        const desc = el('span', 'gds-menu__desc');
+        desc.textContent = p.description!;
+        content.append(lbl, desc);
+        item.appendChild(content);
+      } else {
+        const lbl = el('span', 'gds-menu__label');
+        lbl.textContent = p.label;
+        item.appendChild(lbl);
+      }
+      if (disabled) {
+        item.classList.add('gds-menu__item--disabled');
+        item.disabled = true;
+        item.setAttribute('aria-disabled', 'true');
+      } else {
+        item.addEventListener('click', () => applyPreset(p));
+      }
+      menu.appendChild(item);
+    }
+    aside.append(presetsTitle, menu);
+    calendar.append(main, aside);
   }
 
   // --- Rendering ---

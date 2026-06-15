@@ -1,5 +1,11 @@
 export { createDatePicker } from './createDatePicker';
-export type { DatePickerOptions, DatePickerInstance, Weekday } from './types';
+export type {
+  DatePickerOptions,
+  DatePickerInstance,
+  DatePickerPreset,
+  PresetContext,
+  Weekday,
+} from './types';
 export {
   toDate,
   toDateTime,
