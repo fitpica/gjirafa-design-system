@@ -4,3 +4,9 @@ dist/
 *.log
 .claude/
 .vercel
+
+# Playwright QA harness (baselines under tests/visual/__screenshots__ ARE committed)
+test-results/
+playwright-report/
+blob-report/
+.playwright/

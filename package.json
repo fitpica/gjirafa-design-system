@@ -36,6 +36,9 @@
     "build": "node scripts/build.mjs",
     "figma:sync": "node scripts/figma-sync.mjs",
     "dev": "sass --watch src/index.scss:dist/gjirafa-ds.css",
+    "test:visual": "playwright test tests/visual/visual.spec.ts",
+    "test:visual:update": "playwright test tests/visual/visual.spec.ts --update-snapshots",
+    "test:a11y": "playwright test tests/visual/a11y.spec.ts",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -51,7 +54,9 @@
     "access": "public"
   },
   "devDependencies": {
-    "sass": "^1.77.0",
-    "clean-css": "^5.3.0"
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.49.0",
+    "clean-css": "^5.3.0",
+    "sass": "^1.77.0"
   }
 }

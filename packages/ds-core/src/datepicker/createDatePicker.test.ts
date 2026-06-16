@@ -404,16 +404,36 @@ describe('keyboard navigation + roving tabindex', () => {
 });
 
 describe('ARIA', () => {
-  it('grid has role=grid + month aria-label; rows/columnheaders/gridcells present', () => {
+  it('valid grid structure: role=grid wrapper + rowgroup, rows/columnheaders/gridcells, month label', () => {
     const dp = createDatePicker(input, { defaultValue: '2026-06-15', locale: 'en-GB' });
     dp.open();
-    const grid = document.querySelector('.gds-calendar__grid')!;
-    expect(grid.getAttribute('role')).toBe('grid');
-    expect(grid.getAttribute('aria-label')).toMatch(/June 2026/);
-    expect(grid.querySelectorAll('[role="row"]')).toHaveLength(6);
+    // role="grid" is on the wrapper; the day rows sit in a rowgroup so the
+    // weekday columnheader row and the day rows are both valid grid children.
+    const gridWrap = document.querySelector('.gds-calendar__grid-wrap')!;
+    expect(gridWrap.getAttribute('role')).toBe('grid');
+    expect(gridWrap.getAttribute('aria-label')).toMatch(/June 2026/);
+    expect(document.querySelector('.gds-calendar__grid')!.getAttribute('role')).toBe('rowgroup');
+    // 1 weekday row + 6 week rows, all inside the grid wrapper.
+    expect(gridWrap.querySelectorAll('[role="row"]')).toHaveLength(7);
     expect(document.querySelectorAll('.gds-calendar__weekday[role="columnheader"]')).toHaveLength(7);
-    expect(grid.querySelectorAll('[role="gridcell"]')).toHaveLength(42);
+    expect(gridWrap.querySelectorAll('[role="gridcell"]')).toHaveLength(42);
     dp.destroy();
+  });
+
+  it('trigger is a combobox and the dialog popover has an accessible name', () => {
+    const dp = createDatePicker(input, { defaultValue: '2026-06-15', mode: 'datetime' });
+    // Trigger adopts the combobox role so aria-expanded/haspopup/controls are valid.
+    expect(input.getAttribute('role')).toBe('combobox');
+    expect(input.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(input.getAttribute('aria-expanded')).toBe('false');
+    dp.open();
+    expect(input.getAttribute('aria-expanded')).toBe('true');
+    const s = surface()!;
+    expect(s.getAttribute('role')).toBe('dialog');
+    expect(s.getAttribute('aria-label')).toBe('Choose date and time');
+    dp.destroy();
+    // role is cleaned up on destroy (popover clears the rest).
+    expect(input.getAttribute('role')).toBeNull();
   });
 
   it('cells expose full label, selected, today, and disabled state', () => {

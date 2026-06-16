@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GdsDatePicker (Vue 3) parity fixture</title>
+    <link rel="stylesheet" href="/docs/gjirafa-ds.css" />
+    <!--
+      Import map: no bundler. `vue` resolves to its browser ESM build, and
+      `@gjirafa/ds-core` resolves to the self-contained docs vendor bundle
+      (ds-vue's dist externalizes both). Mounts the real GdsDatePicker.
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "/packages/ds-vue/node_modules/vue/dist/vue.esm-browser.prod.js",
+          "@gjirafa/ds-core": "/docs/vendor/ds-core-datepicker.js"
+        }
+      }
+    </script>
+    <style>
+      body {
+        margin: 0;
+        padding: var(--gds-space-40, 40px);
+        background: var(--gds-color-bg-primary, #fff);
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      #app { display: flex; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import { createApp, h } from 'vue';
+      import { GdsDatePicker } from '/packages/ds-vue/dist/index.mjs';
+
+      const app = createApp({
+        render: () =>
+          h(GdsDatePicker, {
+            modelValue: new Date(2026, 5, 15),
+            mode: 'date',
+            label: 'Pick a date',
+            locale: 'en-GB',
+          }),
+      });
+      app.mount('#app');
+
+      requestAnimationFrame(() => {
+        const input = document.querySelector('#app input.gds-input__field');
+        if (input) input.click();
+        document.documentElement.setAttribute('data-ready', '1');
+      });
+    </script>
+  </body>
+</html>

@@ -6335,6 +6335,10 @@
   display: contents;
 }
 
+.gds-calendar__grid-wrap {
+  display: contents;
+}
+
 .gds-calendar__weekday {
   display: flex;
   align-items: center;

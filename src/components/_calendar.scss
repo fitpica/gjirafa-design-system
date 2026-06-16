@@ -212,6 +212,13 @@
   display: contents;
 }
 
+// Grid wrapper carries role="grid" so the weekday columnheader row and the day
+// rowgroup are valid grid children (ARIA). `display: contents` promotes the
+// weekday row + day grid back to the calendar's column — layout unchanged.
+.gds-calendar__grid-wrap {
+  display: contents;
+}
+
 .gds-calendar__weekday {
   display: flex;
   align-items: center;
