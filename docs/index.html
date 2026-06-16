@@ -7500,7 +7500,7 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
   <div class="doc-page-header">
     <div class="doc-eyebrow">Components</div>
     <h1 class="doc-h1">Calendar / DatePicker <span class="doc-status doc-status--stable">v2.6 · CSS layer</span></h1>
-    <p class="doc-desc">The GDS calendar skin plus a <strong>functional, keyboard-accessible DatePicker</strong> (<code>@gjirafa/ds-core</code>). The visual layer composes existing GDS primitives — trigger reuses <code>.gds-input</code>, nav reuses <code>.gds-btn-icon</code>, footer reuses <code>.gds-btn</code>; selected days auto-theme blue → orange. <strong>Date, date-time, time-only, and advanced-presets</strong> all work end-to-end with full keyboard navigation + ARIA (see the live demos below). A Vue 3 wrapper is the next phase. The static examples further down illustrate the CSS skin only.</p>
+    <p class="doc-desc">The GDS calendar skin plus a <strong>functional, keyboard-accessible DatePicker</strong> (<code>@gjirafa/ds-core</code>). The visual layer composes existing GDS primitives — trigger reuses <code>.gds-input</code>, nav reuses <code>.gds-btn-icon</code>, footer reuses <code>.gds-btn</code>; selected days auto-theme blue → orange. <strong>Date, date-time, time-only, and advanced-presets</strong> all work end-to-end with full keyboard navigation + ARIA (see the live demos below). A <strong>Vue 3 wrapper</strong> (<code>@gjirafa/ds-vue</code>) is now available — see <strong>Vue 3 usage</strong> below. The static examples further down illustrate the CSS skin only.</p>
     <div class="doc-tags"><span class="doc-tag">.gds-datepicker</span><span class="doc-tag">.gds-calendar-popover</span><span class="doc-tag">.gds-calendar</span><span class="doc-tag">__day --selected/--today/--outside/--disabled</span><span class="doc-tag">--range-start/--in-range/--range-end</span><span class="doc-tag">.gds-time-stepper</span><span class="doc-tag">--compact / --advanced</span></div>
   </div>
 
@@ -7520,8 +7520,8 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
     <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
       <div class="doc-state-label" style="color:var(--gds-color-warning-text);margin-bottom:var(--gds-space-8)">⏳ Upcoming phases</div>
       <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
-        <li><strong>Vue 3 wrapper</strong> (typed props, v-model)</li>
         <li>Storybook + visual-regression + automated a11y tests</li>
+        <li>Date-range mode</li>
         <li>12-hour time format</li>
       </ul>
     </div>
@@ -7720,6 +7720,67 @@ createDatePicker(document.querySelector('#publish'), {
       <div class="doc-token-row"><span><strong>Escape</strong></span><span>Close the picker, return focus to the input</span></div>
       <div class="doc-token-row"><span><strong>↑ / ↓ (in time fields)</strong></span><span>Increment / decrement hours or minutes (datetime)</span></div>
       <div class="doc-token-row"><span><strong>Tab</strong></span><span>Move between input → grid → time → footer (logical order)</span></div>
+    </div>
+  </div>
+
+  <!-- VUE 3 USAGE -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">VUE 3 USAGE (@gjirafa/ds-vue) <span class="doc-status doc-status--stable">functional · code examples</span></div>
+  <div class="doc-preview">
+    <p class="doc-state-label" style="text-transform:none;padding:var(--gds-space-12) var(--gds-space-16) 0">
+      <code>&lt;GdsDatePicker&gt;</code> is a <strong>thin Vue 3 wrapper</strong> over the same <code>@gjirafa/ds-core</code> controller powering the live demos above — it renders only the GDS input and delegates all calendar behavior to the core (<strong>no date logic duplicated</strong>). Supports <code>v-model</code>, all four modes, presets, and typed props/events. The snippets below are <strong>code examples</strong>; the live demos on this page run the vanilla-JS core (a live Vue playground is a later phase). Vue 2 teams keep consuming the CSS layer + <code>@gjirafa/ds-core</code> directly.
+    </p>
+    <div style="padding:0 var(--gds-space-16) var(--gds-space-16)">
+      <div class="doc-state-label" style="text-transform:none;margin:var(--gds-space-12) 0 var(--gds-space-4)">Install</div>
+      <pre class="doc-preview-code">npm install @gjirafa/ds-vue @gjirafa/ds-core vue
+// once at your app entry:
+import '@gjirafa/design-system/dist/gjirafa-ds.css';</pre>
+
+      <div class="doc-state-label" style="text-transform:none;margin:var(--gds-space-16) 0 var(--gds-space-4)">Date-only</div>
+      <pre class="doc-preview-code">&lt;script setup lang="ts"&gt;
+import { ref } from 'vue';
+import { GdsDatePicker } from '@gjirafa/ds-vue';
+const value = ref&lt;Date | null&gt;(null);
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;GdsDatePicker v-model="value" label="Pick a date" locale="en-GB"
+    :week-starts-on="1" :disabled-weekdays="[0, 6]" /&gt;
+&lt;/template&gt;</pre>
+
+      <div class="doc-state-label" style="text-transform:none;margin:var(--gds-space-16) 0 var(--gds-space-4)">Date + time</div>
+      <pre class="doc-preview-code">&lt;GdsDatePicker v-model="value" mode="datetime" label="Publish at"
+  :minute-step="5" :default-time="{ hours: 9, minutes: 0 }" /&gt;</pre>
+
+      <div class="doc-state-label" style="text-transform:none;margin:var(--gds-space-16) 0 var(--gds-space-4)">Time-only</div>
+      <pre class="doc-preview-code">&lt;GdsDatePicker v-model="value" mode="time" label="Reminder time" :minute-step="15" /&gt;</pre>
+
+      <div class="doc-state-label" style="text-transform:none;margin:var(--gds-space-16) 0 var(--gds-space-4)">Advanced — presets (product-provided)</div>
+      <pre class="doc-preview-code">&lt;script setup lang="ts"&gt;
+import { ref } from 'vue';
+import { GdsDatePicker, type DatePickerPreset } from '@gjirafa/ds-vue';
+
+const value = ref&lt;Date | null&gt;(null);
+const firstUpload = new Date('2026-06-01T09:00');
+const addDays = (d: Date, n: number) =&gt; { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+
+// Presets are provided by your product — never hardcoded in the component.
+const presets: DatePickerPreset[] = [
+  { label: '1 day from first upload',   value: (c) =&gt; addDays(c.baseDate!, 1)  },
+  { label: '30 days from first upload', value: (c) =&gt; addDays(c.baseDate!, 30) },
+  { label: '90 days from first upload', value: (c) =&gt; addDays(c.baseDate!, 90) },
+];
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;GdsDatePicker v-model="value" mode="datetime" :base-date="firstUpload" :presets="presets" /&gt;
+&lt;/template&gt;</pre>
+
+      <div class="doc-state-label" style="text-transform:none;margin:var(--gds-space-16) 0 var(--gds-space-4)">Events &amp; methods</div>
+      <pre class="doc-preview-code">&lt;GdsDatePicker v-model="value"
+  @change="onChange"     /* (Date | null) — also @open @close @clear */
+  ref="picker" /&gt;
+// exposed: picker.open() / .close() / .clear() / .getValue()</pre>
+      <p class="doc-state-label" style="text-transform:none;margin-top:var(--gds-space-12)">Full props &amp; events live in the <code>@gjirafa/ds-vue</code> README. <code>v-model</code> updates in place; changing other props (mode, presets, min/maxDate…) rebuilds the controller automatically.</p>
     </div>
   </div>
 
