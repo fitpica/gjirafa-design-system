@@ -144,6 +144,9 @@ export function createDatePicker(
   // --- DOM: surface > calendar (header, weekdays, grid, [time], [footer]) ---
   // Advanced (presets): calendar parts live in __main; presets render in an aside.
   const surface = el('div', 'gds-popover gds-datepicker__popover');
+  // The popover is exposed as role="dialog" (by createPopover); give it an
+  // accessible name so AT announces it (axe: aria-dialog-name).
+  surface.setAttribute('aria-label', isTime ? 'Choose time' : isDateTime ? 'Choose date and time' : 'Choose date');
   const calendar = el(
     'div',
     `gds-calendar${compact ? ' gds-calendar--compact' : ''}${advanced ? ' gds-calendar--advanced' : ''}`,
@@ -173,7 +176,12 @@ export function createDatePicker(
     weekdaysRow.appendChild(cell);
   }
 
-  const grid = el('div', 'gds-calendar__grid', { role: 'grid' });
+  // ARIA grid: the role="grid" lives on a wrapper so the weekday row
+  // (columnheaders) and the day rows are both valid grid children — the day
+  // rows sit in a rowgroup (axe: aria-required-parent). The wrapper is
+  // `display: contents`, so layout is unchanged.
+  const gridWrap = el('div', 'gds-calendar__grid-wrap', { role: 'grid' });
+  const grid = el('div', 'gds-calendar__grid', { role: 'rowgroup' });
   grid.id = `gds-dp-grid-${++idCounter}`;
 
   // Visually-hidden polite live region — announces month changes to AT.
@@ -181,7 +189,8 @@ export function createDatePicker(
 
   // Time-only mode renders no calendar — only the time control + footer below.
   if (hasGrid) {
-    main.append(header, weekdaysRow, grid, liveRegion);
+    gridWrap.append(weekdaysRow, grid);
+    main.append(header, gridWrap, liveRegion);
   }
 
   // --- Time row (datetime + time modes): bordered HH / MM segment spinners ---
@@ -369,7 +378,7 @@ export function createDatePicker(
 
   function renderGrid(): void {
     grid.replaceChildren();
-    grid.setAttribute('aria-label', getMonthLabel(viewYear, viewMonth, locale));
+    gridWrap.setAttribute('aria-label', getMonthLabel(viewYear, viewMonth, locale));
     const today = startOfDay(new Date());
     const cells = buildMonthMatrix(viewYear, viewMonth, weekStartsOn as Weekday);
 
@@ -581,6 +590,11 @@ export function createDatePicker(
     onClose: () => onClose?.(),
   });
 
+  // createPopover put aria-haspopup/controls/expanded on the trigger; a plain
+  // textbox doesn't permit those, so adopt the combobox role (axe:
+  // aria-allowed-attr). Removed again on destroy.
+  input.setAttribute('role', 'combobox');
+
   function onInputActivate(): void {
     if (!popover.isOpen) popover.open();
   }
@@ -615,6 +629,7 @@ export function createDatePicker(
     },
     destroy() {
       popover.destroy();
+      input.removeAttribute('role');
       input.removeEventListener('click', onInputActivate);
       input.removeEventListener('keydown', onInputKeydown);
       if (surface.parentNode) surface.parentNode.removeChild(surface);

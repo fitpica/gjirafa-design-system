@@ -7520,7 +7520,7 @@ const pages = computed(() =&gt; buildRange(props.current, props.pagesCount));
     <div style="border:var(--gds-border-width-default) solid var(--gds-color-border-default);border-radius:var(--gds-radius-md);padding:var(--gds-space-16);background:var(--gds-color-bg-primary)">
       <div class="doc-state-label" style="color:var(--gds-color-warning-text);margin-bottom:var(--gds-space-8)">⏳ Upcoming phases</div>
       <ul style="margin:0;padding-left:var(--gds-space-16);font-size:var(--gds-font-size-body-sm);color:var(--gds-color-text-secondary);line-height:var(--gds-line-height-relaxed)">
-        <li>Storybook + visual-regression + automated a11y tests</li>
+        <li>Storybook catalog + CI gating (visual-regression &amp; axe a11y now automated locally — see QA above)</li>
         <li>Date-range mode</li>
         <li>12-hour time format</li>
       </ul>
@@ -7781,6 +7781,25 @@ const presets: DatePickerPreset[] = [
   ref="picker" /&gt;
 // exposed: picker.open() / .close() / .clear() / .getValue()</pre>
       <p class="doc-state-label" style="text-transform:none;margin-top:var(--gds-space-12)">Full props &amp; events live in the <code>@gjirafa/ds-vue</code> README. <code>v-model</code> updates in place; changing other props (mode, presets, min/maxDate…) rebuilds the controller automatically.</p>
+    </div>
+  </div>
+
+  <!-- QUALITY ASSURANCE -->
+  <div class="doc-section-label" style="margin-top:var(--gds-space-32)">QUALITY ASSURANCE (VISUAL + A11Y) <span class="doc-status doc-status--stable">automated · local</span></div>
+  <div class="doc-preview">
+    <p class="doc-state-label" style="text-transform:none;padding:var(--gds-space-12) var(--gds-space-16) 0">A local <strong>Playwright</strong> harness guards the picker's rendered output and accessibility against deterministic fixtures (frozen clock, fixed dates). It mounts the <em>real</em> <code>createDatePicker</code> and the Vue <code>GdsDatePicker</code>, reusing this site's CSS + bundle — no Storybook. Full guide: <code>tests/visual/README.md</code>.</p>
+    <div style="padding:0 var(--gds-space-16) var(--gds-space-16)">
+      <div class="doc-state-label" style="text-transform:none;margin:var(--gds-space-12) 0 var(--gds-space-4)">Commands (repo root)</div>
+      <pre class="doc-preview-code">npm run test:visual          # visual regression vs committed baselines
+npm run test:visual:update   # refresh baselines after an intended change
+npm run test:a11y            # axe checks (fails on serious/critical only)
+# one-time: npx playwright install chromium</pre>
+      <div class="doc-token-table" style="margin-top:var(--gds-space-12)">
+        <div class="doc-token-header"><span>Area</span><span>Coverage</span></div>
+        <div class="doc-token-row"><span><strong>Visual regression</strong></span><span>skin · date · datetime · time · presets · min/max (disabled cells) · disabled input · keyboard-focused day · Vue parity (same calendar DOM)</span></div>
+        <div class="doc-token-row"><span><strong>Automated a11y (axe)</strong></span><span>all open states + trigger; fails on serious/critical, logs moderate/minor</span></div>
+        <div class="doc-token-row"><span><strong>Still manual</strong></span><span>Real screen-reader passes (VoiceOver / NVDA) — axe is structural only and is <em>not</em> a screen-reader substitute</span></div>
+      </div>
     </div>
   </div>
 

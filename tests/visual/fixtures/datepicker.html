@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DatePicker visual fixture</title>
+    <link rel="stylesheet" href="/docs/gjirafa-ds.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: var(--gds-space-40, 40px);
+        background: var(--gds-color-bg-primary, #fff);
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      #stage { display: flex; gap: var(--gds-space-16, 16px); align-items: flex-start; flex-wrap: wrap; }
+    </style>
+  </head>
+  <body>
+    <!-- <main> landmark so axe's (moderate) region rule is satisfied for the fixture. -->
+    <main id="stage"></main>
+    <script type="module">
+      import { createDatePicker } from '/docs/vendor/ds-core-datepicker.js';
+
+      const CAL_ICON =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+
+      function trigger() {
+        const label = document.createElement('label');
+        label.className = 'gds-input gds-input--md';
+        label.style.width = '280px';
+        // aria-label gives the combobox an accessible name (real usage uses a
+        // visible .gds-input__label; the fixture keeps it minimal).
+        label.innerHTML =
+          '<span class="gds-input__wrap"><input class="gds-input__field" placeholder="Select" aria-label="Select date" readonly /><span class="gds-input__icon">' +
+          CAL_ICON +
+          '</span></span>';
+        document.getElementById('stage').appendChild(label);
+        return label.querySelector('input');
+      }
+
+      const addDays = (d, n) => {
+        const x = new Date(d);
+        x.setDate(x.getDate() + n);
+        return x;
+      };
+
+      // Deterministic inputs — fixed value/baseDate so the rendered month is
+      // stable. Playwright also freezes the clock (today-ring / "Now").
+      const FIXED = '2026-06-15';
+      const CONFIGS = {
+        skin: { mode: 'date', defaultValue: FIXED },
+        date: { mode: 'date', defaultValue: FIXED },
+        datetime: { mode: 'datetime', defaultValue: `${FIXED}T09:30` },
+        time: { mode: 'time', defaultValue: `${FIXED}T09:30` },
+        presets: {
+          mode: 'datetime',
+          baseDate: '2026-06-01T09:00',
+          defaultValue: '2026-06-01T09:00',
+          presets: [
+            { label: '1 day from first upload', value: (c) => addDays(c.baseDate, 1) },
+            { label: '30 days from first upload', value: (c) => addDays(c.baseDate, 30) },
+            { label: '90 days from first upload', value: (c) => addDays(c.baseDate, 90) },
+          ],
+        },
+        minmax: {
+          mode: 'date',
+          defaultValue: FIXED,
+          min: '2026-06-08',
+          max: '2026-06-24',
+          disabledWeekdays: [0, 6],
+        },
+        keyboard: { mode: 'date', defaultValue: FIXED },
+      };
+
+      const state = new URLSearchParams(location.search).get('state') || 'date';
+      const cfg = CONFIGS[state] || CONFIGS.date;
+
+      // Explicit locale → deterministic formatting (never the machine's navigator.language).
+      const input = trigger();
+      const dp = createDatePicker(input, { locale: 'en-GB', ...cfg });
+
+      // A disabled trigger alongside the min/max picker, for the disabled-input shot.
+      if (state === 'minmax') {
+        const d2 = trigger();
+        d2.disabled = true;
+        d2.value = '15/06/2026';
+      }
+
+      window.__dp = dp;
+      dp.open();
+      document.documentElement.setAttribute('data-ready', '1');
+    </script>
+  </body>
+</html>
