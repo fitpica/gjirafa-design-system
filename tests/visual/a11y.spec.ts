@@ -44,3 +44,24 @@ for (const state of STATES) {
     expect(blocking, blocking.map((v) => `${v.id} — ${v.help}`).join('\n')).toEqual([]);
   });
 }
+
+// Data table: guards the header contrast fix (--table-header-color must stay
+// on text-label; text-helper fails AA at 3.19:1) plus the toolbar on
+// action-primary. Static fixture, so no ready-gate beyond load.
+test('a11y: data table', async ({ page }) => {
+  await page.goto('/tests/visual/fixtures/datatable.html');
+  await expect(page.getByTestId('table')).toBeVisible();
+
+  const results = await new AxeBuilder({ page }).include('body').analyze();
+
+  if (results.violations.length) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[a11y:datatable] ${results.violations.length} violation(s): ` +
+        results.violations.map((v) => `${v.impact}:${v.id}`).join(', '),
+    );
+  }
+
+  const blocking = results.violations.filter((v) => BLOCKING.has(v.impact ?? ''));
+  expect(blocking, blocking.map((v) => `${v.id} — ${v.help}`).join('\n')).toEqual([]);
+});
