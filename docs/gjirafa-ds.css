@@ -801,7 +801,7 @@
   --table-font-family: var(--gds-font-family-base);
   --table-header-height: 32px;
   --table-header-bg: var(--gds-color-bg-tertiary);
-  --table-header-color: var(--gds-color-text-helper);
+  --table-header-color: var(--gds-color-text-label);
   --table-header-font-size: 12px;
   --table-header-font-weight: 600;
   --table-header-line-height: 1.5;
