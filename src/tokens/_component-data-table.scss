@@ -117,8 +117,11 @@ $table-bp-mobile: 640px;
   --table-toolbar-radius:       #{$radius-m};
   --table-toolbar-gap:          #{$space-8};
   --table-toolbar-btn-color:    #{$color-neutral-0};
-  --table-toolbar-btn-hover-bg: rgba(#{$color-neutral-0}, 0.15);  // overlay on action-primary
-  --table-toolbar-divider:      rgba(#{$color-neutral-0}, 0.25);  // divider on action-primary
+  // Sass must evaluate rgba() itself: inside a custom property, rgba(#{$c}, a)
+  // emits rgba(#ffffff, a) (invalid CSS) and an uninterpolated rgba($c, a) is
+  // passed through verbatim. Wrapping the whole call in #{} compiles to rgba(r, g, b, a).
+  --table-toolbar-btn-hover-bg: #{rgba($color-neutral-0, 0.15)};  // overlay on action-primary
+  --table-toolbar-divider:      #{rgba($color-neutral-0, 0.25)};  // divider on action-primary
   --table-toolbar-gap-bottom:   #{$space-8};
 
   // ---------------------------------------------------------------------------

@@ -854,8 +854,8 @@
   --table-toolbar-radius: 6px;
   --table-toolbar-gap: 8px;
   --table-toolbar-btn-color: #ffffff;
-  --table-toolbar-btn-hover-bg: rgba(#ffffff, 0.15);
-  --table-toolbar-divider: rgba(#ffffff, 0.25);
+  --table-toolbar-btn-hover-bg: rgba(255, 255, 255, 0.15);
+  --table-toolbar-divider: rgba(255, 255, 255, 0.25);
   --table-toolbar-gap-bottom: 8px;
   --table-skeleton-color: var(--gds-color-bg-tertiary);
   --table-skeleton-shine: var(--gds-color-bg-secondary);
