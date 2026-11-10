@@ -1,7 +1,7 @@
-# Calendar / DatePicker QA — visual regression + automated a11y
+# Component QA — visual regression + automated a11y
 
-A lean, **local-only** harness (no CI yet) that guards the Calendar/DatePicker's
-rendered output and accessibility. Built on [Playwright](https://playwright.dev)
+A lean, **local-only** harness (no CI yet) that guards the rendered output and
+accessibility of the Calendar/DatePicker and the Data table. Built on [Playwright](https://playwright.dev)
 + [`@axe-core/playwright`](https://github.com/dequelabs/axe-core-npm). It drives
 deterministic fixtures that mount the **real** `createDatePicker` (and the Vue
 `GdsDatePicker`), reusing the committed `docs/gjirafa-ds.css` and the pre-bundled
@@ -39,7 +39,14 @@ automatically.
 a disabled trigger input · a keyboard-focused day · **Vue parity** (asserts the
 `GdsDatePicker` wrapper renders the same calendar DOM as the core).
 
-**Automated a11y** (axe): the same open states + the trigger. **Fails only on
+**Data table** (`fixtures/datatable.html`): screenshots of the table, the
+toolbar, and the toolbar with Export hovered (also asserts the divider and hover
+background are visible). The table screenshot uses `maxDiffPixelRatio: 0.001`
+instead of the 1% default: a header colour regression changes only ~0.18% of
+the pixels, so 1% would let it pass.
+
+**Automated a11y** (axe): the same open states + the trigger, and the data
+table. **Fails only on
 `serious`/`critical` violations**; `moderate`/`minor` are logged, not failed.
 
 ## What remains MANUAL

@@ -73,3 +73,44 @@ test('vue parity: GdsDatePicker renders the same calendar as ds-core', async ({ 
 
   expect(norm(vueHtml)).toBe(norm(coreHtml));
 });
+
+// Data table: header row + body rows, and the bulk-actions toolbar at rest and
+// on hover. The toolbar overlay tokens were once emitted as invalid rgba(), which
+// made the divider and hover background silently invisible.
+const DATATABLE = '/tests/visual/fixtures/datatable.html';
+
+test('visual: data table', async ({ page }) => {
+  await page.goto(DATATABLE);
+  await page.evaluate(() => document.fonts.ready);
+  // Tighter than the global 1%: reverting the header to text-helper changes
+  // only ~0.18% of pixels (small 12px header text) and would slip through.
+  await expect(page.getByTestId('table')).toHaveScreenshot('datatable.png', {
+    maxDiffPixelRatio: 0.001,
+  });
+});
+
+test('visual: data table toolbar', async ({ page }) => {
+  await page.goto(DATATABLE);
+  await page.evaluate(() => document.fonts.ready);
+  const toolbar = page.getByTestId('toolbar');
+  await expect(toolbar).toHaveScreenshot('datatable-toolbar.png');
+});
+
+test('visual: data table toolbar hover', async ({ page }) => {
+  await page.goto(DATATABLE);
+  await page.evaluate(() => document.fonts.ready);
+  const toolbar = page.getByTestId('toolbar');
+  const btn = toolbar.getByRole('button', { name: 'Export' });
+  await btn.hover();
+
+  // Non-pixel guard: an invalid rgba() token resolves to a transparent
+  // background, so assert both overlays actually paint.
+  const transparent = 'rgba(0, 0, 0, 0)';
+  await expect(btn).not.toHaveCSS('background-color', transparent);
+  await expect(toolbar.locator('.gds-table__toolbar-divider')).not.toHaveCSS(
+    'background-color',
+    transparent,
+  );
+
+  await expect(toolbar).toHaveScreenshot('datatable-toolbar-hover.png');
+});
