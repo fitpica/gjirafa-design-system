@@ -3,26 +3,33 @@
 > Foundation tokens, components, and utilities for CODEX and VP Player.
 > Class-based SCSS/CSS — no framework lock-in. Two themes, one source of truth.
 
-**[Live docs →](https://design-system-ten-iota.vercel.app)**
+**[Live docs →](https://docs-phi-black.vercel.app)** · **[Install →](https://docs-phi-black.vercel.app/?page=install&lang=html)** · Current version: **v2.6.0**
 
 ---
 
-## Install
+## Install (CDN)
 
-```bash
-npm install @gjirafa/design-system
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.0/docs/gjirafa-ds.css">
 ```
+
+Or in a global stylesheet (Vue, React, any bundler):
+
+```css
+@import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.0/docs/gjirafa-ds.css');
+```
+
+Always pin the version (`@v2.6.0`). The Inter font loads automatically.
+
+> **NPM:** `@gjirafa/design-system` is not published yet — use the CDN link above.
 
 ## Use
 
 ```html
-<!-- 1. Import the stylesheet -->
-<link rel="stylesheet" href="node_modules/@gjirafa/design-system/dist/gjirafa-ds.css">
-
-<!-- 2. Pick a theme -->
+<!-- 1. Pick a theme -->
 <html data-theme="codex">  <!-- or "vpplayer" -->
 
-<!-- 3. Compose with classes -->
+<!-- 2. Compose with classes -->
 <button class="gds-btn gds-btn--primary gds-btn--md">Get started</button>
 
 <div class="gds-input gds-input--md">
@@ -30,12 +37,6 @@ npm install @gjirafa/design-system
     <input class="gds-input__field" placeholder="Email">
   </div>
 </div>
-```
-
-Or, with a bundler:
-
-```js
-import '@gjirafa/design-system/dist/gjirafa-ds.css';
 ```
 
 ## Themes
@@ -69,12 +70,13 @@ $color-blue-500               --gds-color-action-primary      --btn-primary-bg
 |---|---|---|
 | `.gds-alert` | `.gds-avatar` | `.gds-badge` |
 | `.gds-btn` | `.gds-card` | `.gds-checkbox` |
-| `.gds-chip` | `.gds-data-table` | `.gds-dropdown` |
+| `.gds-chip` | `.gds-table` (data table) | `.gds-dropdown` |
 | `.gds-filter-badge` | `.gds-input` | `.gds-menu` |
 | `.gds-modal` | `.gds-pagination` | `.gds-pct-badge` |
 | `.gds-pill` | `.gds-radio` | `.gds-sidepanel` |
 | `.gds-skeleton` | `.gds-status-dot` | `.gds-tabs` |
 | `.gds-toast` | `.gds-toggle` | `.gds-tooltip` |
+| `.gds-calendar` | `.gds-popover` | |
 
 Every component has sizes, states (hover, focus, disabled, current),
 and passes through `data-theme` automatically.
