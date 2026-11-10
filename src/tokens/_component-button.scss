@@ -47,11 +47,11 @@
   --btn-ghost-border:      transparent;
 
   // --- Critical ---
-  --btn-critical-bg:        #{$color-red-600};
-  --btn-critical-bg-hover:  #{$color-red-700};
+  --btn-critical-bg:        #{$color-red-700};
+  --btn-critical-bg-hover:  #{$color-red-900};
   --btn-critical-bg-active: #{$color-red-900};
   --btn-critical-text:      var(--gds-color-action-on-primary);
-  --btn-critical-border:    #{$color-red-600};
+  --btn-critical-border:    #{$color-red-700};
 
   // --- Positive ---
   --btn-positive-bg:        #{$color-green-600};
