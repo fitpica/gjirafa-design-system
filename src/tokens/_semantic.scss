@@ -40,6 +40,9 @@
   --gds-color-border-subtle:  #{$color-neutral-30};
 
   // --- Feedback ---
+  // error / success / warning are for fills, dots, icons and borders only:
+  // as text they fail WCAG AA on white (3.56 / 3.97 / 3.00 : 1).
+  // For text, always use the *-text tokens (6.31 / 6.86 / 4.67 : 1 on white).
   --gds-color-error:        #{$color-red-500};
   --gds-color-error-text:   #{$color-red-700};
   --gds-color-success:      #{$color-green-500};

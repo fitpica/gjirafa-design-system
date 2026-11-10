@@ -53,8 +53,8 @@
   --pagination-nav-radius:      #{$radius-m};
 
   // --- Colors / default ---
-  --pagination-color:           var(--gds-color-text-tertiary);
-  --pagination-icon-color:      var(--gds-color-text-tertiary);
+  --pagination-color:           var(--gds-color-text-secondary);
+  --pagination-icon-color:      var(--gds-color-text-secondary);
 
   // --- Colors / hover ---
   --pagination-hover-color:     var(--gds-color-text-primary);
@@ -88,10 +88,10 @@
   --pagination-full-radius:     #{$radius-m};
 
   // --- Summary text ("Viewing 1 to 10 of 52 Items") ---
-  --pagination-summary-color:   var(--gds-color-text-tertiary);
+  --pagination-summary-color:   var(--gds-color-text-secondary);
 
   // --- Page-size trigger ("10 Items per page ▾") ---
-  --pagination-select-color:    var(--gds-color-text-tertiary);
+  --pagination-select-color:    var(--gds-color-text-secondary);
   --pagination-select-gap:      #{$space-4};
   --pagination-select-icon:     #{$icon-sm};
 

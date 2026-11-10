@@ -92,3 +92,37 @@ evaluates it and the compiled output is `rgba(255, 255, 255, 0.15)` /
 `rgba(255, 255, 255, 0.25)`. The value still derives from the foundation token.
 Note that an uninterpolated `rgba($color-neutral-0, a)` also fails: Sass passes
 custom-property values through literally.
+
+---
+
+## GDS-4 · Component text tokens below WCAG AA contrast
+
+**Severity:** High · **Scope:** Pagination, Button, Badge, Chip, Input, Dropdown, Menu · **Status:** ✅ Fixed (v2.6, branch `fix/a11y-tokens-v2.6`)
+
+### Summary
+Found in a product accessibility audit. Several component tokens pointed text at
+colours that are below the WCAG 2.x AA minimum of **4.5:1** for normal text.
+
+### Fix
+| Component | Token(s) | Before | After |
+|---|---|---|---|
+| Pagination | `--pagination-color`, `-icon-color`, `-summary-color`, `-select-color` | `text-tertiary` 2.96:1 | `text-secondary` 6.96:1 |
+| Button critical | `--btn-critical-bg` / `-border` (hover → red-900) | red-600, white text 4.21:1 | red-700, 6.31:1 |
+| Badge warning | `--badge-warning-text` | orange-700 4.35:1 on orange-50 | orange-900 9.01:1 |
+| Chip warning | `--chip-warning-text` | orange-700 4.35:1 on orange-50 | orange-900 9.01:1 |
+| Input | `--input-helper` | `text-helper` 3.59:1 | `text-secondary` 6.96:1 |
+| Dropdown / Menu | `--dd-item-meta`, `--dd-group-text`, `--dd-empty-text` | `text-helper` 3.59:1 (3.19:1 on hover row) | `text-secondary` 6.96:1 (6.17:1) |
+| Menu danger item | `--dd-item-danger-text` (icon keeps `--dd-item-danger-icon`) | `error` 3.56:1 | `error-text` 6.31:1 |
+| Dropdown Create row | new `--dd-create-text-hover` on `:hover` | action-primary 4.38:1 on hover row | action-primary-hover 5.09:1 |
+
+`--gds-color-error / success / warning` fail as text on white (3.56 / 3.97 /
+3.00:1). They are now documented in `_semantic.scss` as fills, dots, icons and
+borders only; text must use the `*-text` tokens.
+
+Neither theme overrides these tokens.
+
+### Not fixed here
+`--gds-color-text-tertiary` (#9595a0, 2.96:1 on white) still fails as text.
+Components no longer use it for readable text, but the docs site does (section
+labels, nav labels, tags). Needs a separate decision: darken the token, or keep
+it decorative only.
