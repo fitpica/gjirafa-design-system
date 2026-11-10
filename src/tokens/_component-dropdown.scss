@@ -29,7 +29,7 @@
   --dd-item-radius:   var(--gds-radius-s);
   --dd-item-text:     var(--gds-color-text-primary);
   --dd-item-icon:     #{$color-neutral-100};
-  --dd-item-meta:     var(--gds-color-text-helper);
+  --dd-item-meta:     var(--gds-color-text-secondary);
 
   // --- Item: hover ---
   --dd-item-hover-bg: #{$color-neutral-25};
@@ -43,7 +43,7 @@
   --dd-item-disabled-opacity: 0.4;
 
   // --- Item: danger ---
-  --dd-item-danger-text: var(--gds-color-error);
+  --dd-item-danger-text: var(--gds-color-error-text);
   --dd-item-danger-icon: var(--gds-color-error);
 
   // --- Item: focus ---
@@ -54,17 +54,18 @@
   --dd-divider: var(--gds-color-border-subtle);
 
   // --- Group header ---
-  --dd-group-text: var(--gds-color-text-helper);
+  --dd-group-text: var(--gds-color-text-secondary);
 
   // --- Search ---
   --dd-search-border: #{$color-neutral-40};
   --dd-search-placeholder: var(--gds-color-text-placeholder);
 
   // --- Empty / Loading ---
-  --dd-empty-text: var(--gds-color-text-helper);
+  --dd-empty-text: var(--gds-color-text-secondary);
 
   // --- Create action ---
   --dd-create-text: var(--gds-color-action-primary);
+  --dd-create-text-hover: var(--gds-color-action-primary-hover);
 
   // --- Badge/tag ---
   --dd-badge-bg:   #{$color-blue-50};
