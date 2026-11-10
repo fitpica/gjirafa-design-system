@@ -242,7 +242,7 @@ Base grid: **4px**. Use `var(--gds-space-{n})`.
 
 ### Typography
 
-Font: `Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif`
+Font token: `--gds-font-family-base` = `Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif` (set it on `body`, see Setup step 3)
 
 | Token | Size |
 |-------|------|
@@ -376,8 +376,6 @@ Icon button uses same variants/sizes with `gds-btn-icon` prefix. Add `gds-btn-ic
 | `gds-input--sm` | Small size (32px) |
 | `gds-input--md` | Medium (40px), the usual choice |
 | `gds-input--lg` | Large size (48px) |
-
-> **A size modifier is required.** The height lives on the size class. A bare `gds-input` has no height, so always add `--sm`, `--md` or `--lg`.
 | `gds-input--error` | Red border + error styling |
 | `gds-input--warning` | Orange border |
 | `gds-input--success` | Green border |
@@ -385,6 +383,8 @@ Icon button uses same variants/sizes with `gds-btn-icon` prefix. Add `gds-btn-ic
 | `gds-input--textarea` | Multi-line textarea |
 | `gds-input--shadow` | Shadow style instead of outline |
 | `gds-input--full` | Full width |
+
+> **A size modifier is required.** The height lives on the size class. A bare `gds-input` has no height, so always add `--sm`, `--md` or `--lg`.
 
 ---
 
@@ -758,6 +758,8 @@ Tab elements: `__text`, `__icon`, `__badge`, `__status` (dot), `__close` (remove
 | `gds-table__cell--sortable` | Adds sort cursor + icon |
 | `gds-table__cell--sorted` | Active sort column (highlights the icon). Required for both directions |
 | `gds-table__cell--sorted-desc` | Add *on top of* `--sorted` for descending. It rotates the icon 180° |
+| `gds-table__cell--sticky-checkbox` | Sticky left checkbox |
+| `gds-table__cell--sticky-entry` | Sticky left entry column |
 
 **Sort icon rule:** unsorted columns use `arrow-up-down`. The sorted column always uses `arrow-up` and lets CSS flip it:
 ```html
@@ -771,8 +773,6 @@ Tab elements: `__text`, `__icon`, `__badge`, `__status` (dot), `__close` (remove
 </th>
 ```
 Never use an `arrow-down` icon with `--sorted-desc`, because it would point up.
-| `gds-table__cell--sticky-checkbox` | Sticky left checkbox |
-| `gds-table__cell--sticky-entry` | Sticky left entry column |
 
 Row states: `gds-table__row--selected`, `gds-table__row--hover`
 
