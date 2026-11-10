@@ -1,16 +1,20 @@
-# Gjirafa Design System (GDS) v2.2 — AI Integration Guide
+# Gjirafa Design System (GDS) v2.6 — AI Integration Guide
 
 > This document is the single source of truth for any AI tool (Claude, Cursor, Copilot, etc.)
 > building UI with GDS. Read this BEFORE generating any HTML or CSS.
+>
+> **Version:** 2.6.0 · **Live docs:** https://docs-phi-black.vercel.app
+> Every class and `--gds-*` token named here exists in the compiled CSS of v2.6.0.
+> If something you need is not in this file, **do not invent it**. Say it is missing and ask.
 
 ---
 
 ## How This Document Works
 
-GDS is a **CSS-only** design system distributed as an NPM package. It provides:
+GDS is a **CSS-only** design system distributed via CDN (NPM package coming later). It provides:
 - Foundation tokens (colors, spacing, typography, shadows, motion, z-index)
 - Semantic tokens (theme-aware: text, background, border, action, feedback)
-- 20 ready-to-use components via BEM class names
+- 26 ready-to-use components via BEM class names
 - Multi-theme support via `data-theme` attribute
 
 **Architecture: 3-layer token system**
@@ -27,15 +31,20 @@ Changing a theme swaps the semantic layer. All components update automatically.
 ## Setup
 
 ```html
-<!-- 1. Load GDS -->
-<link rel="stylesheet" href="node_modules/gjirafa-ds/dist/gjirafa-ds.css" />
+<!-- 1. Load GDS from the CDN, pinned to a version (fonts load automatically) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.0/docs/gjirafa-ds.css" />
 
-<!-- 2. Load your theme override (if not CODEX) -->
-<link rel="stylesheet" href="your-theme.css" />
-
-<!-- 3. Activate theme on body -->
+<!-- 2. Pick a theme: "codex" (default, blue) or "vpplayer" (orange) -->
 <body data-theme="codex">
 ```
+
+Vue / bundler (in a global stylesheet):
+```css
+@import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.0/docs/gjirafa-ds.css');
+```
+
+> **Do NOT use `npm install @gjirafa/design-system`** — the NPM package is not published yet (404).
+> Always pin the version (`@v2.6.0`), never `@latest` or `@main`.
 
 Icons: GDS uses [Lucide Icons](https://lucide.dev) via `data-lucide` attributes.
 ```html
@@ -53,6 +62,8 @@ Icons: GDS uses [Lucide Icons](https://lucide.dev) via `data-lucide` attributes.
 4. **ALWAYS use BEM naming.** Block: `gds-{component}`, Element: `__{element}`, Modifier: `--{modifier}`.
 5. **ALWAYS use semantic tokens for theming.** Components that need to respond to theme changes must use `--gds-color-action-*`, `--gds-color-text-*`, etc. — never foundation colors directly.
 6. **Prefix custom classes** with your product abbreviation (e.g., `hd-` for Helpdesk) to avoid collision with `gds-`.
+7. **Text must pass WCAG AA (4.5:1).** For readable text use only `text-primary`, `text-secondary`, `text-label`, or the `*-text` feedback tokens. See "Text contrast rules" below.
+8. **Never invent classes, variants or tokens.** If this file does not list it, it does not exist. Flag the gap instead.
 
 ---
 
@@ -140,11 +151,11 @@ These change per theme. Always use these for UI that must respond to theme switc
 | `--gds-color-action-on-primary` | Text on primary action background |
 | `--gds-color-text-primary` | Headings, main content |
 | `--gds-color-text-secondary` | Descriptions, metadata |
-| `--gds-color-text-tertiary` | Hints, placeholders |
+| `--gds-color-text-tertiary` | Decorative only — fails AA, never for information |
 | `--gds-color-text-disabled` | Disabled labels |
 | `--gds-color-text-placeholder` | Input placeholders |
 | `--gds-color-text-label` | Form labels |
-| `--gds-color-text-helper` | Helper text below inputs |
+| `--gds-color-text-helper` | Large text / icons only — fails AA for body text (input helper text uses `text-secondary` in v2.6) |
 | `--gds-color-text-inverse` | Text on dark backgrounds |
 | `--gds-color-bg-primary` | Page/card background (white) |
 | `--gds-color-bg-secondary` | Section backgrounds (light gray) |
@@ -154,12 +165,33 @@ These change per theme. Always use these for UI that must respond to theme switc
 | `--gds-color-border-strong` | Emphasized borders |
 | `--gds-color-border-focus` | Focus ring color |
 | `--gds-color-border-subtle` | Light dividers |
-| `--gds-color-error` | Error state (icon, border) |
+| `--gds-color-error` | Error fill, icon, border — not text |
 | `--gds-color-error-text` | Error message text |
-| `--gds-color-success` | Success state |
+| `--gds-color-success` | Success fill, icon, border — not text |
 | `--gds-color-success-text` | Success message text |
-| `--gds-color-warning` | Warning state |
+| `--gds-color-warning` | Warning fill, icon, border — not text |
 | `--gds-color-warning-text` | Warning message text |
+
+### Text contrast rules (v2.6)
+
+Contrast ratios for the CODEX theme, measured against `bg-primary` (white) and `bg-secondary` (`#F7F7F8`).
+WCAG AA needs **4.5:1** for normal text and **3:1** for large text (18px+, or 14px+ bold) and icons.
+
+| Token | On white | On bg-secondary | Use for |
+|-------|----------|-----------------|---------|
+| `text-primary` | 16.23 | 15.16 | ✅ Any text |
+| `text-label` | 8.50 | 7.94 | ✅ Labels, **table headers** |
+| `text-secondary` | 6.96 | 6.50 | ✅ Descriptions, metadata, helper text, pagination |
+| `error-text` | 6.31 | 5.89 | ✅ Error messages |
+| `success-text` | 6.86 | 6.40 | ✅ Success messages |
+| `warning-text` | 4.67 | 4.36 | ⚠️ On white only. On `bg-secondary` it fails AA |
+| `text-helper` | 3.59 | 3.36 | ❌ Not for text. Large text or icons only |
+| `text-tertiary` / `text-placeholder` | 2.96 | 2.77 | ❌ Placeholders and decorative only, never for information |
+| `text-disabled` | 2.13 | 1.99 | Disabled state only (exempt from WCAG) |
+| `error` / `success` / `warning` | 3.56 / 3.97 / 3.00 | — | ❌ Never as text. Fills, dots, icons, borders only |
+
+**VP Player theme:** `action-primary` (orange-500) on white is 2.49:1. Never use it as a text color on
+light backgrounds. This is a known open issue; if a VP Player design needs orange text, flag it instead of picking a value.
 
 ### Spacing
 
@@ -729,6 +761,15 @@ Toolbar (bulk actions):
 </div>
 ```
 
+**Data table rules (v2.6):**
+- The root class is `gds-table`. There is **no** `gds-data-table` class.
+- Give the `<table>` an accessible name (`aria-label="Entries"` or a `<caption>`).
+- Every header cell is `<th scope="col">`. Add `aria-sort="ascending"` / `"descending"` to the sorted header.
+- Header text uses `--table-header-color` (= `text-label`, 8.50:1). Do not override it with `text-helper` or `text-tertiary`.
+- Every row checkbox needs an `aria-label` (e.g. "Select row: Article Title").
+- For paging below the table, use the Pagination bar (see "More components"), not custom markup.
+- Visual + axe tests for this component: `tests/visual/fixtures/datatable.html`.
+
 ---
 
 ### Alert
@@ -825,6 +866,26 @@ Footer: `gds-sidepanel__footer--split`
 
 ---
 
+### More components (class reference)
+
+These components exist in v2.6 but have no full example in this file yet.
+The class names below are complete and verified against the CSS. **For markup, copy the example from the live docs page**,
+don't guess the structure.
+
+| Component | Classes | Docs |
+|-----------|---------|------|
+| Pagination | `gds-pagination`, `--sm`, `--lg`, `__item`, `__item--current`, `__item--disabled`, `__item--icon-only`, `__nav`, `__ellipsis` | [page=pagination](https://docs-phi-black.vercel.app/?page=pagination) |
+| Pagination bar | `gds-pagination-bar`, `--full`, `--sm`, `--lg`, `--no-border`, `--on-surface`, `__cluster`, `__divider`, `__select`, `__summary` | [page=pagination](https://docs-phi-black.vercel.app/?page=pagination) |
+| Card | `gds-card`, `--elevated`, `--flat`, `--interactive`, `--selected`, `--disabled`, `--padded-sm`, `--padded-lg`, `--padded-none`, `__header`, `__title`, `__subtitle`, `__media`, `__body`, `__footer` | [page=card](https://docs-phi-black.vercel.app/?page=card) |
+| Skeleton | `gds-skeleton`, `--text`, `--text-sm/md/lg/xl/2xl`, `--rect`, `--circle`, `--row`, `--avatar-sm/md/lg/xl`, `--w-25/50/75` | [page=skeleton](https://docs-phi-black.vercel.app/?page=skeleton) |
+| Tooltip | `gds-tooltip`, `__bubble`, `__bubble--top/bottom/left/right`, `__bubble--sm/md/lg`, `__bubble--multiline`, `__bubble--interactive`, `__kbd` | [page=tooltip](https://docs-phi-black.vercel.app/?page=tooltip) |
+| Popover | `gds-popover`, `--open`, `__arrow`, `__content` | [page=popover](https://docs-phi-black.vercel.app/?page=popover) |
+| Calendar | `gds-calendar`, `--compact`, `--advanced`, `__header`, `__nav`, `__title`, `__grid`, `__weekdays`, `__day`, `__day--today/selected/disabled/outside/in-range/range-start/range-end`, `__presets`, `__time`, `__footer` | [page=calendar](https://docs-phi-black.vercel.app/?page=calendar) |
+
+Every component also has a docs page with a live example: `https://docs-phi-black.vercel.app/?page=<component>`.
+
+---
+
 ## Accessibility
 
 GDS handles these automatically:
@@ -834,21 +895,23 @@ GDS handles these automatically:
 - All icon buttons MUST have `aria-label`
 - All checkboxes/radios MUST have associated labels
 - Modal/sidepanel must trap focus when open
+- Text color must follow the "Text contrast rules" table (WCAG AA 4.5:1)
+- GDS v2.6 runs automated axe + visual tests on its components (`tests/visual/`)
 
 ---
 
 ## File Structure
 
 ```
-gjirafa-ds/
-  dist/
-    gjirafa-ds.css          <-- compiled, import this
-    gjirafa-ds.min.css      <-- minified production
-    tokens.json             <-- all tokens as JSON
+gjirafa-design-system/
+  docs/
+    gjirafa-ds.css          <-- compiled CSS served by the CDN link above
+    index.html              <-- live docs
+  dist/                     <-- local build output (not published yet)
   src/
     tokens/                 <-- foundation + semantic + component tokens
     themes/                 <-- codex.scss, vpplayer.scss
-    components/             <-- 20 component SCSS files
+    components/             <-- 26 component SCSS files
     utilities/              <-- color, spacing, typography, shadow, radius classes
     index.scss              <-- main entry point
 ```
