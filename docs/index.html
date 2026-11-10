@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Gjirafa Design System v2.2 — Documentation</title>
+<title>Gjirafa Design System v2.6 — Documentation</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23206ed5'/><text x='8' y='23' font-size='20' fill='white' font-family='system-ui' font-weight='700'>G</text></svg>"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -850,7 +850,7 @@
       <a href="#" class="gds-docs-topbar__brand" onclick="navigateTo('install');return false;">
         <span class="gds-docs-topbar__logo">G</span>
         <span class="gds-docs-topbar__name">Gjirafa DS</span>
-        <span class="gds-docs-topbar__version">v2.2</span>
+        <span class="gds-docs-topbar__version">v2.6</span>
       </a>
       <nav class="gds-docs-topbar__nav" aria-label="Primary">
         <a href="#" class="gds-docs-topbar__link gds-docs-topbar__link--active" onclick="navigateTo('install');return false;">Docs</a>
@@ -886,7 +886,7 @@
     <div class="doc-sidebar-brand">
       <div class="doc-sidebar-logo">G</div>
       <span class="doc-sidebar-name">Gjirafa DS</span>
-      <span class="doc-sidebar-version">v2.2</span>
+      <span class="doc-sidebar-version">v2.6</span>
     </div>
 
     <nav class="doc-sidebar-nav">
@@ -957,39 +957,26 @@
     <p class="doc-desc">Install the Gjirafa Design System in your project. Works with React, Vue, and plain HTML.</p>
   </div>
 
-  <div class="doc-section-label">NPM</div>
+  <div class="doc-section-label">CDN (recommended)</div>
+  <div class="doc-note">
+    <strong>Add one stylesheet, pinned to a version.</strong>
+    It includes all components, tokens and the Inter font. Change <code>@v2.6.0</code> when you want to upgrade.
+  </div>
+  <div class="doc-gap-sm"></div>
   <div class="doc-preview">
     <details class="doc-preview-code-wrap" open>
       <summary>Hide code</summary>
-      <pre class="doc-preview-code">npm install @gjirafa/design-system</pre>
+      <pre class="doc-preview-code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.0/docs/gjirafa-ds.css" /&gt;</pre>
       <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
     </details>
   </div>
 
   <div class="doc-gap-md"></div>
   <div class="doc-divider"></div>
-  <div class="doc-section-label">Import in your project</div>
-  <div class="doc-preview">
-    <details class="doc-preview-code-wrap" open>
-      <summary>Hide code</summary>
-      <pre class="doc-preview-code">/* CSS — import the compiled stylesheet */
-@import '@gjirafa/design-system/dist/gjirafa-ds.css';
-
-/* SCSS — import source for access to variables and mixins */
-@use '@gjirafa/design-system/src/index' as *;</pre>
-      <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
-    </details>
-  </div>
-
-  <div class="doc-gap-md"></div>
-  <div class="doc-divider"></div>
-  <div class="doc-section-label">CDN (Quick Start)</div>
-  <div class="doc-preview">
-    <details class="doc-preview-code-wrap" open>
-      <summary>Hide code</summary>
-      <pre class="doc-preview-code">&lt;link rel="stylesheet" href="path/to/gjirafa-ds.min.css" /&gt;</pre>
-      <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
-    </details>
+  <div class="doc-section-label">NPM (coming soon)</div>
+  <div class="doc-note">
+    <strong>The npm packages are not published yet.</strong>
+    <code>@gjirafa/design-system</code>, <code>@gjirafa/ds-core</code> and <code>@gjirafa/ds-vue</code> will be available on npm later. Until then, use the CDN link above.
   </div>
 
   <div class="doc-gap-md"></div>
@@ -1023,7 +1010,7 @@
   <div class="doc-preview">
     <details class="doc-preview-code-wrap" open>
       <summary>Hide code</summary>
-      <pre class="doc-preview-code">import '@gjirafa/design-system/dist/gjirafa-ds.css';
+      <pre class="doc-preview-code">/* Add the CDN &lt;link&gt; from the top of this page to index.html */
 
 function App() {
   return (
@@ -1052,8 +1039,9 @@ function App() {
   &lt;/div&gt;
 &lt;/template&gt;
 
+&lt;!-- Or add the CDN &lt;link&gt; from the top of this page to index.html --&gt;
 &lt;style&gt;
-@import '@gjirafa/design-system/dist/gjirafa-ds.css';
+@import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.0/docs/gjirafa-ds.css');
 &lt;/style&gt;</pre>
       <button class="doc-copy-btn" aria-label="Copy code"><i data-lucide="copy" width="14" height="14"></i></button>
     </details>
