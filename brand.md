@@ -38,6 +38,16 @@ Changing a theme swaps the semantic layer. All components update automatically.
 <body data-theme="codex">
 ```
 
+**3. Set the base font yourself (required).** GDS has no reset and sets no font on `body`. Components use `font-family: inherit`, so without this rule everything renders in the browser's serif default:
+```css
+body {
+  font-family: var(--gds-font-family-base);
+  color: var(--gds-color-text-primary);
+  background: var(--gds-color-bg-primary);
+  margin: 0;
+}
+```
+
 Vue / bundler (in a global stylesheet):
 ```css
 @import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.0/docs/gjirafa-ds.css');
@@ -48,7 +58,7 @@ Vue / bundler (in a global stylesheet):
 
 Icons: GDS uses [Lucide Icons](https://lucide.dev) via `data-lucide` attributes.
 ```html
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
 <script>lucide.createIcons();</script>
 ```
 
@@ -232,7 +242,7 @@ Base grid: **4px**. Use `var(--gds-space-{n})`.
 
 ### Typography
 
-Font: `Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif`
+Font token: `--gds-font-family-base` = `Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif` (set it on `body`, see Setup step 3)
 
 | Token | Size |
 |-------|------|
@@ -363,9 +373,9 @@ Icon button uses same variants/sizes with `gds-btn-icon` prefix. Add `gds-btn-ic
 
 | Modifier | Effect |
 |----------|--------|
-| `gds-input--sm` | Small size |
-| `gds-input--md` | Medium (default) |
-| `gds-input--lg` | Large size |
+| `gds-input--sm` | Small size (32px) |
+| `gds-input--md` | Medium (40px), the usual choice |
+| `gds-input--lg` | Large size (48px) |
 | `gds-input--error` | Red border + error styling |
 | `gds-input--warning` | Orange border |
 | `gds-input--success` | Green border |
@@ -373,6 +383,8 @@ Icon button uses same variants/sizes with `gds-btn-icon` prefix. Add `gds-btn-ic
 | `gds-input--textarea` | Multi-line textarea |
 | `gds-input--shadow` | Shadow style instead of outline |
 | `gds-input--full` | Full width |
+
+> **A size modifier is required.** The height lives on the size class. A bare `gds-input` has no height, so always add `--sm`, `--md` or `--lg`.
 
 ---
 
@@ -702,7 +714,7 @@ Tab elements: `__text`, `__icon`, `__badge`, `__status` (dot), `__close` (remove
             </label>
           </th>
           <th class="gds-table__cell gds-table__cell--sortable">
-            Name <i data-lucide="arrow-up-down" class="gds-table__sort-icon"></i>
+            Name <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down"></i></span>
           </th>
           <th class="gds-table__cell">Status</th>
         </tr>
@@ -744,10 +756,23 @@ Tab elements: `__text`, `__icon`, `__badge`, `__status` (dot), `__close` (remove
 | `gds-table__cell--checkbox` | Checkbox column (narrow) |
 | `gds-table__cell--action` | Action column (narrow) |
 | `gds-table__cell--sortable` | Adds sort cursor + icon |
-| `gds-table__cell--sorted` | Active sort (ascending) |
-| `gds-table__cell--sorted-desc` | Active sort (descending) |
+| `gds-table__cell--sorted` | Active sort column (highlights the icon). Required for both directions |
+| `gds-table__cell--sorted-desc` | Add *on top of* `--sorted` for descending. It rotates the icon 180° |
 | `gds-table__cell--sticky-checkbox` | Sticky left checkbox |
 | `gds-table__cell--sticky-entry` | Sticky left entry column |
+
+**Sort icon rule:** unsorted columns use `arrow-up-down`. The sorted column always uses `arrow-up` and lets CSS flip it:
+```html
+<!-- ascending -->
+<th scope="col" class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted" aria-sort="ascending">
+  Name <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span>
+</th>
+<!-- descending: same icon, add --sorted-desc -->
+<th scope="col" class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc" aria-sort="descending">
+  Updated <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span>
+</th>
+```
+Never use an `arrow-down` icon with `--sorted-desc`, because it would point up.
 
 Row states: `gds-table__row--selected`, `gds-table__row--hover`
 
@@ -767,7 +792,28 @@ Toolbar (bulk actions):
 - Every header cell is `<th scope="col">`. Add `aria-sort="ascending"` / `"descending"` to the sorted header.
 - Header text uses `--table-header-color` (= `text-label`, 8.50:1). Do not override it with `text-helper` or `text-tertiary`.
 - Every row checkbox needs an `aria-label` (e.g. "Select row: Article Title").
-- For paging below the table, use the Pagination bar (see "More components"), not custom markup.
+- For paging below the table, use the Pagination bar, not custom markup. Copy this structure exactly:
+  ```html
+  <div class="gds-pagination-bar gds-pagination-bar--full">
+    <span class="gds-pagination-bar__summary">Viewing 1 to 10 of 397 Items</span>
+    <div class="gds-pagination-bar__cluster">
+      <button type="button" class="gds-pagination-bar__select" aria-haspopup="listbox">
+        <span>10 Items per page</span><i data-lucide="chevron-down"></i>
+      </button>
+      <nav class="gds-pagination" aria-label="Pagination">
+        <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+        <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">1</button>
+        <button class="gds-pagination__item">2</button>
+        <span class="gds-pagination__ellipsis" aria-hidden="true">…</span>
+        <button class="gds-pagination__item">40</button>
+        <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+      </nav>
+    </div>
+  </div>
+  ```
+  - Page items are `<button>` elements directly inside `<nav>`. **Never use `<ul>`/`<li>`**: GDS has no reset, so bullets and list padding will show.
+  - The page-size control is the `__select` button, not a native `<select>`.
+  - Arrow-only buttons use `__item--icon-only` with an `aria-label`. `__nav` is only for labelled "Previous" / "Next" text buttons.
 - Visual + axe tests for this component: `tests/visual/fixtures/datatable.html`.
 
 ---
