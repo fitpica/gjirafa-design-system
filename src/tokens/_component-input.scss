@@ -10,7 +10,7 @@
   // --- Base ---
   --input-bg:           var(--gds-color-bg-primary);
   --input-text:         var(--gds-color-text-primary);
-  --input-placeholder:  var(--gds-color-text-placeholder);
+  --input-placeholder:  var(--gds-color-text-secondary); // placeholder, prefix/suffix, icon: 6.96:1 (was 2.96)
   --input-border:       var(--gds-color-border-default);
   --input-border-hover: var(--gds-color-border-strong);
   --input-border-focus: var(--gds-color-border-focus);

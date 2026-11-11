@@ -37,7 +37,7 @@
 
   --card-subtitle-size:   #{$font-size-12};
   --card-subtitle-weight: #{$font-weight-regular};
-  --card-subtitle-color:  var(--gds-color-text-tertiary);
+  --card-subtitle-color:  var(--gds-color-text-secondary); // text, 6.96:1 (was 2.96)
 
   // --- Interactive ---
   --card-hover-lift: #{$space-2};   // translateY on hover
