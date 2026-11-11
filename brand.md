@@ -669,7 +669,7 @@ A small label that shows the status or category of something.
 | Class | On | Group | Effect |
 |---|---|---|---|
 | `gds-badge--neutral` | `gds-badge` | variant | Gray. |
-| `gds-badge--positive` | `gds-badge` | variant | Blue. |
+| `gds-badge--positive` | `gds-badge` | variant | Green. |
 | `gds-badge--warning` | `gds-badge` | variant | Orange. |
 | `gds-badge--critical` | `gds-badge` | variant | Red. |
 | `gds-badge--info` | `gds-badge` | variant | Blue. |
