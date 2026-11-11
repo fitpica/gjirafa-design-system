@@ -1,0 +1,113 @@
+// ============================================================================
+// Patterns / Page, Page header, Filter bar
+// Classes: .gds-page, .gds-page--narrow, .gds-page__section,
+//          .gds-page-header (+ __text, __breadcrumb, __title, __desc, __actions),
+//          .gds-filter-bar (+ __search, __clear)
+// Layout only: no new colours or type styles beyond the page title.
+// ============================================================================
+
+@use '../tokens/component-page' as *;
+
+// --- Page -------------------------------------------------------------------
+.gds-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-gap);
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: var(--page-padding);
+  background: var(--page-bg);
+}
+
+.gds-page--narrow {
+  max-width: var(--page-narrow-max-width);
+  margin-inline: auto;
+  width: 100%;
+}
+
+.gds-page__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-section-gap);
+  min-width: 0;
+}
+
+@media (max-width: $page-bp-mobile) {
+  .gds-page {
+    padding: var(--page-padding-mobile);
+  }
+}
+
+// --- Page header ---------------------------------------------------------------
+.gds-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--page-header-gap);
+}
+
+.gds-page-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-header-text-gap);
+  min-width: 0;
+}
+
+.gds-page-header__breadcrumb {
+  font-size: var(--page-breadcrumb-size);
+  color: var(--page-breadcrumb-color);
+}
+
+.gds-page-header__title {
+  margin: 0;
+  font-size: var(--page-title-size);
+  font-weight: var(--page-title-weight);
+  line-height: var(--page-title-line-height);
+  color: var(--page-title-color);
+}
+
+.gds-page-header__desc {
+  margin: 0;
+  font-size: var(--page-desc-size);
+  color: var(--page-desc-color);
+}
+
+.gds-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--page-header-actions-gap);
+}
+
+// --- Filter bar ------------------------------------------------------------------
+.gds-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--filter-bar-gap);
+}
+
+.gds-filter-bar__search {
+  flex: 1 1 var(--filter-bar-search-basis);
+  max-width: var(--filter-bar-search-max);
+  width: auto;
+}
+
+// The input wrap is width:100% + padding + border in the content-box model, so it
+// overflows its parent by ~22px and runs into the next control. Fix it here (border-box,
+// same 42px height as the triggers) until v3 makes the input border-box everywhere.
+.gds-filter-bar__search .gds-input__wrap {
+  box-sizing: border-box;
+  height: var(--filter-bar-control-height);
+}
+
+// Dropdown triggers in the bar match the md input height (they are shorter on their own).
+.gds-filter-bar .gds-dropdown__trigger {
+  min-height: var(--filter-bar-control-height);
+  box-sizing: border-box;
+}
+
+.gds-filter-bar__clear {
+  margin-left: auto;
+}

@@ -1,0 +1,43 @@
+// ============================================================================
+// Component Tokens / Page patterns (page, page header, filter bar)
+// Design decisions (11 Nov 2026): light grey page background with white
+// surfaces; page title 24px semibold; search in the filter bar is flexible
+// up to 360px; active filters show inside the dropdown trigger.
+// ZERO hardcoded values — every value references a foundation or semantic token
+// ============================================================================
+
+@use 'foundation-spacing' as *;
+@use 'foundation-typography' as *;
+
+// SCSS-only breakpoint (CSS @media can't use custom properties)
+$page-bp-mobile: 640px;
+
+:root {
+  // --- Page ---
+  --page-bg:              var(--gds-color-bg-secondary);
+  --page-padding:         #{$space-32};
+  --page-padding-mobile:  #{$space-16};
+  --page-gap:             #{$space-24};
+  --page-narrow-max-width: calc(#{$space-160} * 4);   // 640px, for forms
+  --page-section-gap:     #{$space-12};
+
+  // --- Page header ---
+  --page-header-gap:        #{$space-16};
+  --page-header-text-gap:   #{$space-4};
+  --page-header-actions-gap: #{$space-8};
+  --page-title-size:        #{$font-size-24};
+  --page-title-weight:      #{$font-weight-semibold};
+  --page-title-line-height: #{$line-height-tight};
+  --page-title-color:       var(--gds-color-text-primary);
+  --page-desc-size:         #{$font-size-14};
+  --page-desc-color:        var(--gds-color-text-secondary);
+  --page-breadcrumb-size:   #{$font-size-12};
+  --page-breadcrumb-color:  var(--gds-color-text-secondary);
+
+  // --- Filter bar ---
+  --filter-bar-gap:          #{$space-12};
+  --filter-bar-search-basis: calc(#{$space-160} + #{$space-80} + #{$space-40});  // 280px
+  --filter-bar-search-max:   calc(#{$space-160} * 2 + #{$space-40});             // 360px
+  // gds-input--md renders 40px + 1px border top and bottom (content-box), so match that.
+  --filter-bar-control-height: calc(#{$space-40} + #{$border-width-default} * 2);
+}

@@ -65,3 +65,15 @@ test('a11y: data table', async ({ page }) => {
   const blocking = results.violations.filter((v) => BLOCKING.has(v.impact ?? ''));
   expect(blocking, blocking.map((v) => `${v.id} — ${v.help}`).join('\n')).toEqual([]);
 });
+
+// Page patterns: a full list screen built only from GDS (gds-page, gds-page-header,
+// gds-filter-bar, table with keyboard sort buttons, pagination). Zero violations of
+// any impact: this is the reference screen AI agents are told to copy.
+test('a11y: list page pattern', async ({ page }) => {
+  await page.goto('/tests/visual/fixtures/list-page.html');
+  await expect(page.getByTestId('page')).toBeVisible();
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+    .analyze();
+  expect(results.violations, results.violations.map((v) => `${v.id} — ${v.help}`).join('\n')).toEqual([]);
+});

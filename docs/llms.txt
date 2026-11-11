@@ -23,9 +23,11 @@ Principles: 1) Accessible by default (every allowed combination passes WCAG AA).
 - [Data table](https://docs-phi-black.vercel.app/md/components/table.md): Rows of records with optional selection, sorting, bulk actions and pagination.
 - [Dropdown](https://docs-phi-black.vercel.app/md/components/dropdown.md): A trigger that opens a panel of options: single select, multi-select, searchable lists.
 - [Filter badge](https://docs-phi-black.vercel.app/md/components/filter-badge.md): A compact pill with a filter icon and the number of applied filters; it opens the filter panel.
+- [Filter bar](https://docs-phi-black.vercel.app/md/components/filter-bar.md): A row above a list with a search field and filter dropdowns; active filters show inside each dropdown trigger.
 - [Input](https://docs-phi-black.vercel.app/md/components/input.md): A text field with optional label, icon, prefix/suffix, helper text and character count.
 - [Menu](https://docs-phi-black.vercel.app/md/components/menu.md): A list of actions on demand: overflow ("more") menus, context menus, row actions.
 - [Modal](https://docs-phi-black.vercel.app/md/components/modal.md): A centred dialog over a dimmed page that blocks everything else until the user confirms, decides or cancels.
+- [Page layout and page header](https://docs-phi-black.vercel.app/md/components/page.md): The frame of a product screen: page background, padding and spacing, and the header with the page title and its main actions.
 - [Pagination](https://docs-phi-black.vercel.app/md/components/pagination.md): Moves through pages of a long list, with an optional summary and page-size control.
 - [Percentage badge](https://docs-phi-black.vercel.app/md/components/pct-badge.md): A pill that shows how much a metric changed, with an arrow for the direction and a colour for good or bad.
 - [Pill (number count)](https://docs-phi-black.vercel.app/md/components/pill.md): A small circle with a number: unread counts, items in a tab, or the number of a step.
@@ -38,6 +40,7 @@ Principles: 1) Accessible by default (every allowed combination passes WCAG AA).
 - [Toast](https://docs-phi-black.vercel.app/md/components/toast.md): A short, single-line floating message that confirms something just happened and goes away on its own.
 - [Toggle](https://docs-phi-black.vercel.app/md/components/toggle.md): An on/off switch for a setting that takes effect immediately.
 - [Tooltip](https://docs-phi-black.vercel.app/md/components/tooltip.md): A small dark label that appears on hover or keyboard focus of a control, CSS only.
+- [Visually hidden](https://docs-phi-black.vercel.app/md/components/visually-hidden.md): Hides text visually while keeping it for screen readers.
 
 ## Data
 

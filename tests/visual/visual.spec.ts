@@ -114,3 +114,23 @@ test('visual: data table toolbar hover', async ({ page }) => {
 
   await expect(toolbar).toHaveScreenshot('datatable-toolbar-hover.png');
 });
+
+// Page patterns: page frame, header, filter bar (controls aligned to 40px),
+// bulk bar, table and full-width pagination, with no product CSS.
+test('visual: list page pattern', async ({ page }) => {
+  await page.goto('/tests/visual/fixtures/list-page.html');
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page.getByTestId('page')).toHaveScreenshot('list-page.png');
+
+  // The filter-bar dropdown triggers match the md input height.
+  const input = await page.locator('.gds-filter-bar .gds-input__wrap').boundingBox();
+  const trigger = await page.locator('.gds-filter-bar .gds-dropdown__trigger').first().boundingBox();
+  expect(Math.round(trigger!.height)).toBe(Math.round(input!.height));
+});
+
+test('visual: filter bar search does not overlap the next control', async ({ page }) => {
+  await page.goto('/tests/visual/fixtures/list-page.html');
+  const search = await page.locator('.gds-filter-bar .gds-input__wrap').boundingBox();
+  const next = await page.locator('.gds-filter-bar .gds-dropdown__trigger').first().boundingBox();
+  expect(search!.x + search!.width).toBeLessThan(next!.x);
+});

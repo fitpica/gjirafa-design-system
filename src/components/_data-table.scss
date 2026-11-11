@@ -269,6 +269,29 @@
   }
 }
 
+// Sort button: makes a sortable header keyboard-reachable. A reset <button>
+// that inherits the header text style; the sort icon sits inside it.
+.gds-table__sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  border-radius: var(--table-sort-btn-radius);
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--table-sort-btn-focus-width) var(--table-sort-btn-focus-color);
+  }
+}
+
 .gds-table__cell--sorted {
   .gds-table__sort-icon {
     color: var(--table-sort-active-color);

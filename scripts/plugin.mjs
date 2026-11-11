@@ -10,6 +10,7 @@
  *   plugins/gds/scripts/gds-data.json               compiled gds-/is- classes + component contracts
  *   plugins/gds/skills/gds-ui/SKILL.md              from scripts/templates/gds-ui-skill.md
  *   plugins/gds/skills/gds-<id>/SKILL.md             one skill per contract, same text as brand.md
+ *   plugins/gds/skills/gds-list-page/SKILL.md        from scripts/templates/gds-list-page-skill.md
  * Hand-written: plugins/gds/hooks/hooks.json, plugins/gds/scripts/gds-lint.mjs, plugins/gds/README.md
  */
 
@@ -49,6 +50,8 @@ function outputs() {
   files['skills/gds-ui/SKILL.md'] = readFileSync(resolve(ROOT, 'scripts/templates/gds-ui-skill.md'), 'utf8')
     .replaceAll('{{version}}', pkg.version).replace('{{components}}', list);
 
+  files['skills/gds-list-page/SKILL.md'] = readFileSync(resolve(ROOT, 'scripts/templates/gds-list-page-skill.md'), 'utf8').replaceAll('{{version}}', pkg.version);
+
   for (const c of contracts) {
     const desc = `GDS ${c.name} contract: exact markup, anatomy, modifiers, accessibility and rules for ${c.owns.map(o => o + '*').join(', ')}. ${c.summary} Load before writing or editing ${c.name.toLowerCase()} markup with GDS.`;
     files[`skills/gds-${c.id}/SKILL.md`] = `---\nname: gds-${c.id}\ndescription: ${JSON.stringify(desc)}\n---\n\n` + render(c).replace(/^### /, '# ') + '\n';
@@ -68,7 +71,7 @@ for (const [rel, content] of Object.entries(files)) {
 }
 // component skills that no longer have a contract
 const skillDir = resolve(PLUGIN, 'skills');
-const orphans = existsSync(skillDir) ? readdirSync(skillDir).filter(d => d.startsWith('gds-') && d !== 'gds-ui' && !files[`skills/${d}/SKILL.md`]) : [];
+const orphans = existsSync(skillDir) ? readdirSync(skillDir).filter(d => d.startsWith('gds-') && !files[`skills/${d}/SKILL.md`]) : [];
 
 if (cmd === 'write') {
   if (orphans.length) console.warn(`! Remove orphaned component skills: ${orphans.join(', ')}`);

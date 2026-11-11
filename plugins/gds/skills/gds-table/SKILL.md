@@ -34,11 +34,11 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
           </label>
         </th>
         <th scope="col" class="gds-table__cell gds-table__cell--sortable">
-          Title <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down"></i></span>
+          <button type="button" class="gds-table__sort-btn">Title <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down"></i></span></button>
         </th>
         <th scope="col" class="gds-table__cell">Status</th>
         <th scope="col" class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc" aria-sort="descending">
-          Last updated <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span>
+          <button type="button" class="gds-table__sort-btn">Last updated <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span></button>
         </th>
       </tr>
     </thead>
@@ -93,7 +93,8 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 | `gds-table__body` | tbody | yes | `gds-table__table` | Body group. |
 | `gds-table__row` | tr | yes, repeats | `gds-table__head` or `gds-table__body` | One row. |
 | `gds-table__cell` | th \| td | yes, repeats | `gds-table__row` | One cell. Header cells are <th scope="col">. Attributes: `scope` (col (on every <th>)). |
-| `gds-table__sort-icon` | span | no | `gds-table__cell` | Wraps the sort icon inside a sortable header cell. Unsorted: arrow-up-down; sorted: arrow-up (CSS flips it for descending). |
+| `gds-table__sort-btn` | button | no | `gds-table__cell` | Reset button inside a sortable <th> holding the header text and the sort icon, so sorting works with Tab + Enter. Attributes: `type` (button). |
+| `gds-table__sort-icon` | span | no | `gds-table__sort-btn` or `gds-table__cell` | Wraps the sort icon, inside gds-table__sort-btn. Unsorted: arrow-up-down; sorted: arrow-up (CSS flips it for descending). |
 | `gds-table__cell-content` | div | no | `gds-table__cell` | Flex wrapper for icon + text combinations inside a cell. |
 | `gds-table__entry` | div | no | `gds-table__cell` | Entry cell layout: thumbnail + title + subtitle (mainly in the cards variant). |
 | `gds-table__entry-image` | img | no | `gds-table__entry` | Thumbnail. Not an avatar. Attributes: `alt` (Describe the image, or "" if decorative). |
@@ -141,7 +142,7 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 - Name the table with aria-label on <table> or a <caption>.
 - Every header cell is <th scope="col">.
 - The sorted header has aria-sort="ascending" or "descending"; others have none.
-- Sortable headers are not keyboard-reachable yet: GDS has no styled sort button. Flag this gap; do not add an unstyled <button>.
+- Put the header text and icon of a sortable column inside <button class="gds-table__sort-btn"> so it works with the keyboard.
 - The select-all checkbox has aria-label="Select all"; each row checkbox has aria-label="Select <row name>".
 - Header text uses --table-header-color (text-label, 8.50:1).
 
@@ -156,6 +157,7 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 - Paging below a table uses .gds-pagination-bar--full, never custom markup. *Why:* Custom pagination was the most broken part of the first AI test. (Reuse before you create · auto-checkable)
 - The bulk-action bar sits directly above .gds-table (or .gds-table-scroll) and is shown with is-visible only while rows are selected. *Why:* Consistent place for bulk actions. (Reuse before you create)
 - Cell content composes GDS components (checkbox, avatar-name, badge, button). Do not build one-off cell UI. *Why:* Keeps tables consistent and themeable. (Reuse before you create)
+- Every sortable header cell contains a gds-table__sort-btn button. *Why:* Sorting must work with the keyboard, not only the mouse. (Accessible by default · auto-checkable)
 
 **Do not use** (exist in the CSS for docs only):
 - `gds-table__row--hover`: Docs preview that forces the hover look. Real hover is native :hover.
@@ -163,10 +165,8 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 - `gds-table__cell--label`: Docs-only cell that labels demo rows ("Default", "Hovered").
 
 **Known issues** (flag them; work around one only where it says how, using GDS tokens):
-- Sortable header cells are clickable only with a mouse; there is no styled button element for keyboard users. *Planned fix:* v3: a gds-table__sort-btn element (reset button inside <th>) so sorting works with Tab + Enter.
 - The action-cell dropdown uses .gds-dropdown__menu and .is-open, while the Dropdown component uses .gds-dropdown__panel and .gds-dropdown--open. *Planned fix:* v3: one dropdown API everywhere (__panel / --open).
 - is-visible on the toolbar breaks the BEM naming rule. *Planned fix:* v3: gds-table__toolbar--visible.
 - Sorting needs two modifiers and one specific icon. *Planned fix:* v3: --sort-asc / --sort-desc.
-- GDS has no page header or filter bar yet. Until it does, follow Critical Rule 9 (layout-only CSS with a product prefix and GDS tokens, marked /* GDS gap */). *Planned fix:* v3 patterns: Page header, Filter bar, List page.
 
 *Generated from `components/table.json`. Edit that file, then run `npm run brand`.*

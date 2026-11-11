@@ -20,7 +20,7 @@
 Every rule in this file follows from these three. When a case is not covered, decide by them.
 
 1. **Accessible by default, not by effort.** Every combination GDS allows passes WCAG AA without anyone checking. Use only the text tokens that pass AA, never show status by colour alone (dot + label), and give tables `scope` and `aria-sort`.
-2. **Reuse before you create.** If GDS has it, use it. If GDS does not have it, do not invent a local version: say it is missing so it can become a GDS pattern. Custom CSS that duplicates a GDS component is a bug. (The one exception is layout-only CSS for missing page patterns, see Critical Rule 9.)
+2. **Reuse before you create.** If GDS has it, use it. If GDS does not have it, do not invent a local version: say it is missing so it can become a GDS pattern. Custom CSS that duplicates a GDS component is a bug. (For page layout use the GDS page patterns; for layouts GDS still lacks, see Critical Rule 9.)
 3. **Obvious over documented.** If a rule has to be explained, the system should change. Defaults must be safe, one modifier means one thing, and BEM has no exceptions. Report any rule in this file you think could be removed by changing the system.
 
 ---
@@ -90,7 +90,7 @@ Icons: GDS uses [Lucide Icons](https://lucide.dev) via `data-lucide` attributes.
 6. **Prefix custom classes** with your product abbreviation (e.g., `hd-` for Helpdesk) to avoid collision with `gds-`.
 7. **Text must pass WCAG AA (4.5:1).** For readable text use only `text-primary`, `text-secondary`, `text-label`, or the `*-text` feedback tokens. See "Text contrast rules" below.
 8. **Never invent classes, variants or tokens.** If this file does not list it, it does not exist. Flag the gap instead.
-9. **Layout-only exception (until GDS has the pattern).** GDS has no page header, filter bar or page layout yet. For those only, you may write layout CSS with your product prefix (e.g. `cx-page-header`). It may use only `display`, `flex`/`grid`, `gap`, alignment, width/max-width and padding/margin, with `--gds-*` tokens for every value. It must never set colours, borders, typography or shadows, and never restyle a `gds-` class. Add a comment `/* GDS gap: <pattern name> */` so it can be replaced when the pattern ships.
+9. **Page layout comes from GDS patterns.** Use `gds-page`, `gds-page-header` and `gds-filter-bar` (see Page patterns). For a layout GDS still lacks, you may write layout CSS with your product prefix (e.g. `cx-…`): only `display`, `flex`/`grid`, `gap`, alignment, width/max-width and padding/margin, with `--gds-*` tokens for every value. Never set colours, borders, typography or shadows, never restyle a `gds-` class, and add `/* GDS gap: <pattern name> */` so it can be replaced when the pattern ships.
 
 ---
 
@@ -330,6 +330,172 @@ Font token: `--gds-font-family-base` = `Inter, -apple-system, BlinkMacSystemFont
 
 ---
 
+## Page patterns
+
+Every screen is built from the same frame: `gds-page` (grey background, padding, spacing) → `gds-page-header` (title + main actions) → optional `gds-filter-bar` → content in white surfaces (table, cards). A list screen adds the bulk-action bar, `gds-table` and `gds-pagination-bar--full` inside one `gds-page__section`.
+
+<!-- gds:component:page:start -->
+### Page layout and page header
+
+The frame of a product screen: page background, padding and spacing, and the header with the page title and its main actions.
+
+**Use when:**
+- Every full screen in a product (lists, forms, settings).
+- A screen needs a title and one main action such as "New entry".
+
+**Don't use when:**
+- Content inside a modal or side panel → use the modal or side panel header
+- A small section inside a page → use a card header or gds-page__section
+
+**Example: List page header**
+```html
+<main class="gds-page">
+  <header class="gds-page-header">
+    <div class="gds-page-header__text">
+      <h1 class="gds-page-header__title">All Entries</h1>
+      <p class="gds-page-header__desc">124 entries</p>
+    </div>
+    <div class="gds-page-header__actions">
+      <button type="button" class="gds-btn gds-btn--secondary gds-btn--md"><span class="gds-btn__label">Import</span></button>
+      <button type="button" class="gds-btn gds-btn--primary gds-btn--md"><i data-lucide="plus" class="gds-btn__icon"></i><span class="gds-btn__label">New entry</span></button>
+    </div>
+  </header>
+</main>
+```
+
+**Example: Narrow form page**
+```html
+<main class="gds-page gds-page--narrow">
+  <header class="gds-page-header">
+    <div class="gds-page-header__text">
+      <nav class="gds-page-header__breadcrumb" aria-label="Breadcrumb">Entries / Edit</nav>
+      <h1 class="gds-page-header__title">Edit entry</h1>
+    </div>
+  </header>
+  <section class="gds-page__section" aria-label="Entry details"></section>
+</main>
+```
+
+**Anatomy** (the DOM structure is the API; keep this nesting):
+
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-page` | main | yes | top level | The page frame: light grey background, padding, vertical gap between its children. White surfaces (table, cards) sit on it. |
+| `gds-page-header` | header | no | `gds-page` | Title on the left, actions on the right. Wraps on narrow screens. |
+| `gds-page-header__text` | div | yes | `gds-page-header` | Stacks breadcrumb, title and description. |
+| `gds-page-header__breadcrumb` | nav | no | `gds-page-header__text` | Optional breadcrumb above the title. Attributes: `aria-label` (Breadcrumb). |
+| `gds-page-header__title` | h1 | yes | `gds-page-header__text` | The page title. One <h1> per page. 24px semibold. |
+| `gds-page-header__desc` | p | no | `gds-page-header__text` | Optional short description or count, e.g. "124 entries". |
+| `gds-page-header__actions` | div | no | `gds-page-header` | Buttons for the page. At most one primary, plus up to two others; put more in a menu. |
+| `gds-page__section` | section | no, repeats | `gds-page` | Groups related blocks with a smaller gap, e.g. bulk bar + table + pagination. |
+
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+| `gds-page--narrow` | `gds-page` | width | Centres the page at 640px max. Use for forms and settings. |
+
+**Accessibility:**
+- Use <main> for gds-page and exactly one <h1> (the page title).
+- Give a breadcrumb <nav> an aria-label.
+- If a section has no visible heading, give it aria-label.
+
+**Rules:**
+- A page has exactly one gds-page-header__title and it is an <h1>. *Why:* Screen reader users jump to the h1 to know where they are. (Accessible by default · auto-checkable)
+- gds-page-header__actions contains at most one gds-btn--primary. *Why:* One clear main action per screen. (Obvious over documented · auto-checkable)
+- Use gds-page, gds-page-header and gds-filter-bar for page layout instead of product CSS. *Why:* These were the most common custom CSS in AI tests; they now exist in GDS. (Reuse before you create)
+- Forms and settings pages use gds-page--narrow; lists and tables use the full width. *Why:* Long lines of form fields are hard to scan; tables need the width. (Obvious over documented)
+
+**Known issues** (flag them; work around one only where it says how, using GDS tokens):
+- No docs page yet; only this contract and the AI guide describe it. *Planned fix:* Add a Page patterns page to the docs site.
+- gds-page uses min-height: 100%, so the grey background only fills the viewport when html and body have height: 100% (or the app shell gives the page a height). *Planned fix:* Document html, body { height: 100% } in Setup, or use min-height: 100dvh when the page is the whole viewport.
+
+*Generated from `components/page.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:page:end -->
+
+---
+
+<!-- gds:component:filter-bar:start -->
+### Filter bar
+
+A row above a list with a search field and filter dropdowns; active filters show inside each dropdown trigger.
+
+**Use when:**
+- Above a table or list that people search and filter.
+
+**Don't use when:**
+- A single search field with no filters → use a gds-input on its own
+- Filters that need many fields → use a side panel with a form
+
+**Example: Search and two filters**
+```html
+<div class="gds-filter-bar" role="search" aria-label="Filter entries">
+  <div class="gds-input gds-input--md gds-filter-bar__search">
+    <div class="gds-input__wrap">
+      <i data-lucide="search" class="gds-input__icon"></i>
+      <input type="search" class="gds-input__field" placeholder="Search entries" aria-label="Search entries" />
+    </div>
+  </div>
+  <div class="gds-dropdown">
+    <button type="button" class="gds-dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+      <span class="gds-dropdown__value">Status: Published</span>
+      <span class="gds-dropdown__arrow"><i data-lucide="chevron-down" width="16" height="16"></i></span>
+    </button>
+    <div class="gds-dropdown__panel">
+      <div class="gds-dropdown__list" role="listbox" aria-label="Status">
+        <button type="button" class="gds-dropdown__item gds-dropdown__item--selected" role="option" aria-selected="true"><span class="gds-dropdown__label">Published</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="gds-dropdown">
+    <button type="button" class="gds-dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+      <span class="gds-dropdown__placeholder">Content type</span>
+      <span class="gds-dropdown__arrow"><i data-lucide="chevron-down" width="16" height="16"></i></span>
+    </button>
+    <div class="gds-dropdown__panel">
+      <div class="gds-dropdown__list" role="listbox" aria-label="Content type">
+        <button type="button" class="gds-dropdown__item" role="option" aria-selected="false"><span class="gds-dropdown__label">Article</span></button>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="gds-btn gds-btn--ghost gds-btn--md gds-filter-bar__clear"><span class="gds-btn__label">Clear filters</span></button>
+</div>
+```
+
+**Anatomy** (the DOM structure is the API; keep this nesting):
+
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-filter-bar` | div | yes | top level | Flex row that wraps on narrow screens. Dropdown triggers inside it match the 40px input height. Attributes: `role` (search), `aria-label` (e.g. "Filter entries"). |
+| `gds-filter-bar__search` | div | no | `gds-filter-bar` | Put this class on the gds-input wrapper of the search field: it grows up to 360px. |
+| `gds-filter-bar__clear` | button | no | `gds-filter-bar` | "Clear filters" ghost button, pushed to the right. Show it only when a filter is active. Attributes: `type` (button). |
+
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+
+**States:**
+- **filter active**: Show the choice in the trigger value ("Status: Published") and show gds-filter-bar__clear.
+
+**Accessibility:**
+- Give the bar role="search" and an aria-label.
+- The search input needs an aria-label (no visible label in a filter bar).
+- Each dropdown trigger names its filter and current value.
+
+**Rules:**
+- The search field uses gds-input gds-input--md together with gds-filter-bar__search. *Why:* The bar aligns controls to the md height. (Obvious over documented · auto-checkable)
+- Show an active filter inside its dropdown trigger ("Status: Published"), not as a separate row of badges. *Why:* Design decision (11 Nov 2026): keeps the bar to one row. (Reuse before you create)
+- The bar has role="search" and an aria-label. *Why:* Lets screen reader users find the filters. (Accessible by default · auto-checkable)
+
+**Known issues** (flag them; work around one only where it says how, using GDS tokens):
+- Outside the filter bar, dropdown triggers are still shorter than md inputs. *Planned fix:* v3: shared control heights for all components.
+
+*Generated from `components/filter-bar.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:filter-bar:end -->
+
+---
+
 ## Components — Full API Reference
 
 <!-- gds:component:button:start -->
@@ -550,6 +716,7 @@ A text field with optional label, icon, prefix/suffix, helper text and character
 
 **Known issues** (flag them; work around one only where it says how, using GDS tokens):
 - Older guides called --md the default although a bare .gds-input has no height. *Planned fix:* v3: md height by default.
+- gds-input--md renders 42px, not 40px: the wrap sets height 40px in the content-box model and adds a 1px border top and bottom (same for sm 34px and lg 50px). The same content-box model makes the wrap (width 100% + padding + border) about 22px wider than its parent, so it overlaps the next control in a row. *Planned fix:* v3: box-sizing: border-box on .gds-input__wrap so sizes are exactly 32/40/48 px; update the filter-bar control height with it.
 
 *Generated from `components/input.json`. Edit that file, then run `npm run brand`.*
 <!-- gds:component:input:end -->
@@ -1854,11 +2021,11 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
           </label>
         </th>
         <th scope="col" class="gds-table__cell gds-table__cell--sortable">
-          Title <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down"></i></span>
+          <button type="button" class="gds-table__sort-btn">Title <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down"></i></span></button>
         </th>
         <th scope="col" class="gds-table__cell">Status</th>
         <th scope="col" class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc" aria-sort="descending">
-          Last updated <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span>
+          <button type="button" class="gds-table__sort-btn">Last updated <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span></button>
         </th>
       </tr>
     </thead>
@@ -1913,7 +2080,8 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 | `gds-table__body` | tbody | yes | `gds-table__table` | Body group. |
 | `gds-table__row` | tr | yes, repeats | `gds-table__head` or `gds-table__body` | One row. |
 | `gds-table__cell` | th \| td | yes, repeats | `gds-table__row` | One cell. Header cells are <th scope="col">. Attributes: `scope` (col (on every <th>)). |
-| `gds-table__sort-icon` | span | no | `gds-table__cell` | Wraps the sort icon inside a sortable header cell. Unsorted: arrow-up-down; sorted: arrow-up (CSS flips it for descending). |
+| `gds-table__sort-btn` | button | no | `gds-table__cell` | Reset button inside a sortable <th> holding the header text and the sort icon, so sorting works with Tab + Enter. Attributes: `type` (button). |
+| `gds-table__sort-icon` | span | no | `gds-table__sort-btn` or `gds-table__cell` | Wraps the sort icon, inside gds-table__sort-btn. Unsorted: arrow-up-down; sorted: arrow-up (CSS flips it for descending). |
 | `gds-table__cell-content` | div | no | `gds-table__cell` | Flex wrapper for icon + text combinations inside a cell. |
 | `gds-table__entry` | div | no | `gds-table__cell` | Entry cell layout: thumbnail + title + subtitle (mainly in the cards variant). |
 | `gds-table__entry-image` | img | no | `gds-table__entry` | Thumbnail. Not an avatar. Attributes: `alt` (Describe the image, or "" if decorative). |
@@ -1961,7 +2129,7 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 - Name the table with aria-label on <table> or a <caption>.
 - Every header cell is <th scope="col">.
 - The sorted header has aria-sort="ascending" or "descending"; others have none.
-- Sortable headers are not keyboard-reachable yet: GDS has no styled sort button. Flag this gap; do not add an unstyled <button>.
+- Put the header text and icon of a sortable column inside <button class="gds-table__sort-btn"> so it works with the keyboard.
 - The select-all checkbox has aria-label="Select all"; each row checkbox has aria-label="Select <row name>".
 - Header text uses --table-header-color (text-label, 8.50:1).
 
@@ -1976,6 +2144,7 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 - Paging below a table uses .gds-pagination-bar--full, never custom markup. *Why:* Custom pagination was the most broken part of the first AI test. (Reuse before you create · auto-checkable)
 - The bulk-action bar sits directly above .gds-table (or .gds-table-scroll) and is shown with is-visible only while rows are selected. *Why:* Consistent place for bulk actions. (Reuse before you create)
 - Cell content composes GDS components (checkbox, avatar-name, badge, button). Do not build one-off cell UI. *Why:* Keeps tables consistent and themeable. (Reuse before you create)
+- Every sortable header cell contains a gds-table__sort-btn button. *Why:* Sorting must work with the keyboard, not only the mouse. (Accessible by default · auto-checkable)
 
 **Do not use** (exist in the CSS for docs only):
 - `gds-table__row--hover`: Docs preview that forces the hover look. Real hover is native :hover.
@@ -1983,11 +2152,9 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 - `gds-table__cell--label`: Docs-only cell that labels demo rows ("Default", "Hovered").
 
 **Known issues** (flag them; work around one only where it says how, using GDS tokens):
-- Sortable header cells are clickable only with a mouse; there is no styled button element for keyboard users. *Planned fix:* v3: a gds-table__sort-btn element (reset button inside <th>) so sorting works with Tab + Enter.
 - The action-cell dropdown uses .gds-dropdown__menu and .is-open, while the Dropdown component uses .gds-dropdown__panel and .gds-dropdown--open. *Planned fix:* v3: one dropdown API everywhere (__panel / --open).
 - is-visible on the toolbar breaks the BEM naming rule. *Planned fix:* v3: gds-table__toolbar--visible.
 - Sorting needs two modifiers and one specific icon. *Planned fix:* v3: --sort-asc / --sort-desc.
-- GDS has no page header or filter bar yet. Until it does, follow Critical Rule 9 (layout-only CSS with a product prefix and GDS tokens, marked /* GDS gap */). *Planned fix:* v3 patterns: Page header, Filter bar, List page.
 
 *Generated from `components/table.json`. Edit that file, then run `npm run brand`.*
 <!-- gds:component:table:end -->
@@ -3247,6 +3414,46 @@ A month grid for picking a date (and optionally a time), shown inline or in a po
 
 *Generated from `components/calendar.json`. Edit that file, then run `npm run brand`.*
 <!-- gds:component:calendar:end -->
+
+---
+
+<!-- gds:component:visually-hidden:start -->
+### Visually hidden
+
+Hides text visually while keeping it for screen readers.
+
+**Use when:**
+- A table caption you don't want to show.
+- Extra context for screen readers, e.g. "(opens in a new tab)" or the meaning behind a coloured count.
+
+**Don't use when:**
+- Hiding content from everyone → use the hidden attribute
+- Labelling an icon-only button → use aria-label on the button
+
+**Example: Hidden table caption**
+```html
+<span class="gds-visually-hidden">Sorted by last updated, newest first</span>
+```
+
+**Anatomy** (the DOM structure is the API; keep this nesting):
+
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-visually-hidden` | span \| caption | yes | top level | Any element whose text should be read but not seen. |
+
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+
+**Accessibility:**
+- Never put focusable elements inside it.
+
+**Rules:**
+- Do not put links, buttons or inputs inside gds-visually-hidden. *Why:* Keyboard users would focus something they cannot see. (Accessible by default · auto-checkable)
+
+*Generated from `components/visually-hidden.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:visually-hidden:end -->
 
 ---
 

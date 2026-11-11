@@ -117,11 +117,21 @@
       }
     },
     {
+      "class": "gds-table__sort-btn",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-table__cell",
+      "description": "Reset button inside a sortable <th> holding the header text and the sort icon, so sorting works with Tab + Enter.",
+      "attributes": {
+        "type": "button"
+      }
+    },
+    {
       "class": "gds-table__sort-icon",
       "tag": "span",
       "required": false,
-      "parent": "gds-table__cell",
-      "description": "Wraps the sort icon inside a sortable header cell. Unsorted: arrow-up-down; sorted: arrow-up (CSS flips it for descending)."
+      "parent": "gds-table__sort-btn | gds-table__cell",
+      "description": "Wraps the sort icon, inside gds-table__sort-btn. Unsorted: arrow-up-down; sorted: arrow-up (CSS flips it for descending)."
     },
     {
       "class": "gds-table__cell-content",
@@ -354,7 +364,7 @@
     "Name the table with aria-label on <table> or a <caption>.",
     "Every header cell is <th scope=\"col\">.",
     "The sorted header has aria-sort=\"ascending\" or \"descending\"; others have none.",
-    "Sortable headers are not keyboard-reachable yet: GDS has no styled sort button. Flag this gap; do not add an unstyled <button>.",
+    "Put the header text and icon of a sortable column inside <button class=\"gds-table__sort-btn\"> so it works with the keyboard.",
     "The select-all checkbox has aria-label=\"Select all\"; each row checkbox has aria-label=\"Select <row name>\".",
     "Header text uses --table-header-color (text-label, 8.50:1)."
   ],
@@ -430,6 +440,13 @@
       "why": "Keeps tables consistent and themeable.",
       "principle": 2,
       "autoCheck": false
+    },
+    {
+      "id": "table-sort-keyboard",
+      "rule": "Every sortable header cell contains a gds-table__sort-btn button.",
+      "why": "Sorting must work with the keyboard, not only the mouse.",
+      "principle": 1,
+      "autoCheck": true
     }
   ],
   "internal": [
@@ -456,10 +473,6 @@
   ],
   "knownIssues": [
     {
-      "issue": "Sortable header cells are clickable only with a mouse; there is no styled button element for keyboard users.",
-      "fix": "v3: a gds-table__sort-btn element (reset button inside <th>) so sorting works with Tab + Enter."
-    },
-    {
       "issue": "The action-cell dropdown uses .gds-dropdown__menu and .is-open, while the Dropdown component uses .gds-dropdown__panel and .gds-dropdown--open.",
       "fix": "v3: one dropdown API everywhere (__panel / --open)."
     },
@@ -470,16 +483,12 @@
     {
       "issue": "Sorting needs two modifiers and one specific icon.",
       "fix": "v3: --sort-asc / --sort-desc."
-    },
-    {
-      "issue": "GDS has no page header or filter bar yet. Until it does, follow Critical Rule 9 (layout-only CSS with a product prefix and GDS tokens, marked /* GDS gap */).",
-      "fix": "v3 patterns: Page header, Filter bar, List page."
     }
   ],
   "examples": [
     {
       "name": "Sortable table with selection and bulk actions",
-      "html": "<div class=\"gds-table__toolbar is-visible\">\n  <span class=\"gds-table__toolbar-count\">2 selected</span>\n  <div class=\"gds-table__toolbar-divider\" aria-hidden=\"true\"></div>\n  <button type=\"button\" class=\"gds-table__toolbar-btn\">Publish</button>\n  <button type=\"button\" class=\"gds-table__toolbar-btn\">Delete</button>\n</div>\n<div class=\"gds-table\">\n  <table class=\"gds-table__table\" aria-label=\"All entries\">\n    <thead class=\"gds-table__head\">\n      <tr class=\"gds-table__row\">\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--checkbox\">\n          <label class=\"gds-checkbox gds-checkbox--sm gds-checkbox--mixed\">\n            <input type=\"checkbox\" class=\"gds-checkbox__input\" aria-label=\"Select all\" />\n            <span class=\"gds-checkbox__control\"><i data-lucide=\"minus\"></i></span>\n          </label>\n        </th>\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--sortable\">\n          Title <span class=\"gds-table__sort-icon\"><i data-lucide=\"arrow-up-down\"></i></span>\n        </th>\n        <th scope=\"col\" class=\"gds-table__cell\">Status</th>\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc\" aria-sort=\"descending\">\n          Last updated <span class=\"gds-table__sort-icon\"><i data-lucide=\"arrow-up\"></i></span>\n        </th>\n      </tr>\n    </thead>\n    <tbody class=\"gds-table__body\">\n      <tr class=\"gds-table__row gds-table__row--selected\">\n        <td class=\"gds-table__cell gds-table__cell--checkbox\">\n          <label class=\"gds-checkbox gds-checkbox--sm\">\n            <input type=\"checkbox\" class=\"gds-checkbox__input\" checked aria-label=\"Select Winter travel guide\" />\n            <span class=\"gds-checkbox__control\"><i data-lucide=\"check\"></i></span>\n          </label>\n        </td>\n        <td class=\"gds-table__cell\">Winter travel guide</td>\n        <td class=\"gds-table__cell\"><span class=\"gds-badge gds-badge--neutral\"><span class=\"gds-badge__dot\"></span><span class=\"gds-badge__label\">Draft</span></span></td>\n        <td class=\"gds-table__cell gds-table__cell--secondary\">Today, 08:15</td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+      "html": "<div class=\"gds-table__toolbar is-visible\">\n  <span class=\"gds-table__toolbar-count\">2 selected</span>\n  <div class=\"gds-table__toolbar-divider\" aria-hidden=\"true\"></div>\n  <button type=\"button\" class=\"gds-table__toolbar-btn\">Publish</button>\n  <button type=\"button\" class=\"gds-table__toolbar-btn\">Delete</button>\n</div>\n<div class=\"gds-table\">\n  <table class=\"gds-table__table\" aria-label=\"All entries\">\n    <thead class=\"gds-table__head\">\n      <tr class=\"gds-table__row\">\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--checkbox\">\n          <label class=\"gds-checkbox gds-checkbox--sm gds-checkbox--mixed\">\n            <input type=\"checkbox\" class=\"gds-checkbox__input\" aria-label=\"Select all\" />\n            <span class=\"gds-checkbox__control\"><i data-lucide=\"minus\"></i></span>\n          </label>\n        </th>\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--sortable\">\n          <button type=\"button\" class=\"gds-table__sort-btn\">Title <span class=\"gds-table__sort-icon\"><i data-lucide=\"arrow-up-down\"></i></span></button>\n        </th>\n        <th scope=\"col\" class=\"gds-table__cell\">Status</th>\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc\" aria-sort=\"descending\">\n          <button type=\"button\" class=\"gds-table__sort-btn\">Last updated <span class=\"gds-table__sort-icon\"><i data-lucide=\"arrow-up\"></i></span></button>\n        </th>\n      </tr>\n    </thead>\n    <tbody class=\"gds-table__body\">\n      <tr class=\"gds-table__row gds-table__row--selected\">\n        <td class=\"gds-table__cell gds-table__cell--checkbox\">\n          <label class=\"gds-checkbox gds-checkbox--sm\">\n            <input type=\"checkbox\" class=\"gds-checkbox__input\" checked aria-label=\"Select Winter travel guide\" />\n            <span class=\"gds-checkbox__control\"><i data-lucide=\"check\"></i></span>\n          </label>\n        </td>\n        <td class=\"gds-table__cell\">Winter travel guide</td>\n        <td class=\"gds-table__cell\"><span class=\"gds-badge gds-badge--neutral\"><span class=\"gds-badge__dot\"></span><span class=\"gds-badge__label\">Draft</span></span></td>\n        <td class=\"gds-table__cell gds-table__cell--secondary\">Today, 08:15</td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
     },
     {
       "name": "Empty state",

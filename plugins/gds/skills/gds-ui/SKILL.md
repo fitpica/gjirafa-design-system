@@ -42,9 +42,11 @@ Icons are Lucide (`<i data-lucide="check"></i>`).
    - `gds-chip`: Chip. A compact token for a tag, a selected value or a toggleable filter, optionally removable, alone, in a group or inside a tag field.
    - `gds-dropdown`: Dropdown. A trigger that opens a panel of options: single select, multi-select, searchable lists.
    - `gds-filter-badge`: Filter badge. A compact pill with a filter icon and the number of applied filters; it opens the filter panel.
+   - `gds-filter-bar`: Filter bar. A row above a list with a search field and filter dropdowns; active filters show inside each dropdown trigger.
    - `gds-input`: Input. A text field with optional label, icon, prefix/suffix, helper text and character count.
    - `gds-menu`: Menu. A list of actions on demand: overflow ("more") menus, context menus, row actions.
    - `gds-modal`: Modal. A centred dialog over a dimmed page that blocks everything else until the user confirms, decides or cancels.
+   - `gds-page`: Page layout and page header. The frame of a product screen: page background, padding and spacing, and the header with the page title and its main actions.
    - `gds-pagination`: Pagination. Moves through pages of a long list, with an optional summary and page-size control.
    - `gds-pct-badge`: Percentage badge. A pill that shows how much a metric changed, with an arrow for the direction and a colour for good or bad.
    - `gds-pill`: Pill (number count). A small circle with a number: unread counts, items in a tab, or the number of a step.
@@ -58,9 +60,10 @@ Icons are Lucide (`<i data-lucide="check"></i>`).
    - `gds-toast`: Toast. A short, single-line floating message that confirms something just happened and goes away on its own.
    - `gds-toggle`: Toggle. An on/off switch for a setting that takes effect immediately.
    - `gds-tooltip`: Tooltip. A small dark label that appears on hover or keyboard focus of a control, CSS only.
+   - `gds-visually-hidden`: Visually hidden. Hides text visually while keeping it for screen readers.
 3. Copy the structure from the contract's example and anatomy: same elements, same nesting, required children, required modifiers.
 4. After you save a `.vue` or `.html` file, the **GDS lint hook** checks it. If it reports problems, fix every one, then continue. Its messages name the rule and often the correct class ("did you mean .gds-table?").
-5. Missing pattern (page header, filter bar, page layout): layout-only CSS with the product prefix (e.g. `cx-page-header`), only `display`/flex/grid/`gap`/alignment/width/padding with `--gds-*` tokens, never colours, borders, type or shadows, never restyling a `gds-` class, marked `/* GDS gap: <pattern> */`. Tell the user which gap you hit.
+5. Page layout: `gds-page` > `gds-page-header` > `gds-filter-bar` > content (load `gds-page`, `gds-filter-bar`; for a list screen load the `gds-list-page` recipe). For a layout GDS still lacks: layout-only CSS with the product prefix (e.g. `cx-…`), only `display`/flex/grid/`gap`/alignment/width/padding with `--gds-*` tokens, never colours, borders, type or shadows, never restyling a `gds-` class, marked `/* GDS gap: <pattern> */`. Tell the user which gap you hit.
 
 Every GDS component has a contract skill. If the screen needs something none of them covers, it is a GDS gap: follow step 5 and tell the user.
 

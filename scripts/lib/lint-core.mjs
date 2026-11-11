@@ -120,6 +120,16 @@ const RULE_CHECKS = {
     if (cur.length !== 1 && !dynamic) fail(p, `exactly one --current item (found ${cur.length})`);
     cur.forEach(c => { if (!attrOk(c, 'aria-current', 'page')) fail(c, 'current page needs aria-current="page"'); });
   }),
+  'table-sort-keyboard': (root, fail) => find(root, e => has(e, 'gds-table__cell--sortable')).forEach(c => { if (!find(c, e => has(e, 'gds-table__sort-btn') && e.tag === 'button').length) fail(c, 'put the header text and sort icon inside <button class="gds-table__sort-btn">'); }),
+  'page-one-h1': (root, fail) => {
+    const titles = find(root, e => has(e, 'gds-page-header__title'));
+    if (titles.length > 1) fail(titles[1], `a page has one gds-page-header__title (found ${titles.length})`);
+    titles.forEach(t => { if (t.tag !== 'h1') fail(t, 'the page title is an <h1>'); });
+  },
+  'page-header-one-primary': (root, fail) => find(root, e => has(e, 'gds-page-header__actions')).forEach(a => { const p = find(a, e => has(e, 'gds-btn--primary')); if (p.length > 1) fail(a, `at most one primary button in the page header (found ${p.length})`); }),
+  'filter-bar-search-input': (root, fail) => find(root, e => has(e, 'gds-filter-bar__search')).forEach(s => { if (!has(s, 'gds-input') || !has(s, 'gds-input--md')) fail(s, 'gds-filter-bar__search goes on a gds-input gds-input--md wrapper'); }),
+  'filter-bar-search-role': (root, fail) => find(root, e => has(e, 'gds-filter-bar')).forEach(b => { if (!attrOk(b, 'role', 'search') || !named(b)) fail(b, 'the filter bar needs role="search" and an aria-label'); }),
+  'visually-hidden-not-focusable': (root, fail) => find(root, e => has(e, 'gds-visually-hidden')).forEach(v => { if (find(v, e => ['a', 'button', 'input', 'select', 'textarea'].includes(e.tag)).length) fail(v, 'no focusable elements inside gds-visually-hidden'); }),
 };
 export const IMPLEMENTED_RULES = Object.keys(RULE_CHECKS);
 
