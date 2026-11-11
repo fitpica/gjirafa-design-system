@@ -1,0 +1,19 @@
+{
+  "name": "gds",
+  "displayName": "Gjirafa Design System",
+  "version": "2.6.2",
+  "description": "Build UI with GDS v2.6.2: component contracts as a skill, and a lint hook that checks every Vue/HTML edit against GDS.",
+  "author": {
+    "name": "Gjirafa Design System"
+  },
+  "homepage": "https://docs-phi-black.vercel.app",
+  "repository": "https://github.com/fitpica/gjirafa-design-system",
+  "license": "MIT",
+  "keywords": [
+    "design-system",
+    "gds",
+    "vue",
+    "css",
+    "lint"
+  ]
+}

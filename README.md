@@ -23,6 +23,16 @@ Always pin the version (`@v2.6.2`). The Inter font loads automatically.
 
 > **NPM:** `@gjirafa/design-system` is not published yet — use the CDN link above.
 
+## Claude Code plugin
+
+Developers who code with Claude Code can install the GDS plugin. It teaches Claude the GDS components and lints every Vue/HTML edit against them:
+
+```
+/plugin install gds --marketplace fitpica/gjirafa-design-system
+```
+
+Details: [plugins/gds/README.md](plugins/gds/README.md).
+
 ## Use
 
 ```html

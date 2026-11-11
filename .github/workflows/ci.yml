@@ -42,6 +42,10 @@ jobs:
         run: npm run test:components
       - name: brand.md matches the contracts
         run: npm run test:brand
+      - name: Claude Code plugin matches the GDS source
+        run: npm run test:plugin
+      - name: Plugin and marketplace are valid
+        run: npx --yes @anthropic-ai/claude-code@2.1.316 plugin validate .
 
   browser:
     name: Accessibility and visual tests

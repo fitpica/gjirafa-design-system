@@ -1,0 +1,12 @@
+{
+  "name": "gjirafa",
+  "description": "Gjirafa Design System tooling for Claude Code",
+  "owner": { "name": "Gjirafa Design System" },
+  "plugins": [
+    {
+      "name": "gds",
+      "source": "./plugins/gds",
+      "description": "Build UI with the Gjirafa Design System (GDS): component contracts as a skill, plus a lint hook that checks every Vue/HTML edit against GDS and tells Claude what to fix."
+    }
+  ]
+}
