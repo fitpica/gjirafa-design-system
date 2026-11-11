@@ -449,10 +449,6 @@
   ],
   "knownIssues": [
     {
-      "issue": "Fails principle 1: .gds-table__empty uses --gds-color-text-tertiary, 2.96:1 on white (axe, WCAG AA needs 4.5:1).",
-      "fix": "Point --table-empty-color at text-secondary (6.96:1)."
-    },
-    {
       "issue": "Sortable header cells are clickable only with a mouse; there is no styled button element for keyboard users.",
       "fix": "v3: a gds-table__sort-btn element (reset button inside <th>) so sorting works with Tab + Enter."
     },
