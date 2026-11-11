@@ -1,0 +1,486 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "table",
+  "name": "Data table",
+  "status": "stable",
+  "summary": "Rows of records with optional selection, sorting, bulk actions and pagination.",
+  "docs": "https://docs-phi-black.vercel.app/?page=data-table",
+  "source": "src/components/_data-table.scss",
+  "owns": [
+    "gds-table"
+  ],
+  "useWhen": [
+    "Showing many records that share the same fields (entries, assets, users, orders).",
+    "People need to compare, sort, select or act on several records at once."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "Fewer than about 5 records with no comparison needed",
+      "use": "card or a simple list"
+    },
+    {
+      "case": "Key/value details of a single record",
+      "use": "a description list inside a card"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-table__toolbar",
+      "tag": "div",
+      "required": false,
+      "parent": null,
+      "description": "Bulk-action bar. Sibling placed directly above .gds-table. Hidden until is-visible is added."
+    },
+    {
+      "class": "gds-table__toolbar-count",
+      "tag": "span",
+      "required": true,
+      "parent": "gds-table__toolbar",
+      "description": "Selection count, e.g. \"2 selected\"."
+    },
+    {
+      "class": "gds-table__toolbar-divider",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-table__toolbar",
+      "description": "Vertical separator between count and actions.",
+      "attributes": {
+        "aria-hidden": "true"
+      }
+    },
+    {
+      "class": "gds-table__toolbar-btn",
+      "tag": "button",
+      "required": true,
+      "parent": "gds-table__toolbar",
+      "repeat": true,
+      "description": "One bulk action.",
+      "attributes": {
+        "type": "button"
+      }
+    },
+    {
+      "class": "gds-table-scroll",
+      "tag": "div",
+      "required": false,
+      "parent": null,
+      "description": "Optional wrapper for horizontal scroll. Wraps .gds-table."
+    },
+    {
+      "class": "gds-table",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "Container (border, radius, background)."
+    },
+    {
+      "class": "gds-table__table",
+      "tag": "table",
+      "required": true,
+      "parent": "gds-table",
+      "description": "The native table.",
+      "attributes": {
+        "aria-label": "Name of the data, unless a <caption> is used"
+      }
+    },
+    {
+      "class": "gds-table__head",
+      "tag": "thead",
+      "required": true,
+      "parent": "gds-table__table",
+      "description": "Header group."
+    },
+    {
+      "class": "gds-table__body",
+      "tag": "tbody",
+      "required": true,
+      "parent": "gds-table__table",
+      "description": "Body group."
+    },
+    {
+      "class": "gds-table__row",
+      "tag": "tr",
+      "required": true,
+      "parent": "gds-table__head | gds-table__body",
+      "repeat": true,
+      "description": "One row."
+    },
+    {
+      "class": "gds-table__cell",
+      "tag": "th | td",
+      "required": true,
+      "parent": "gds-table__row",
+      "repeat": true,
+      "description": "One cell. Header cells are <th scope=\"col\">.",
+      "attributes": {
+        "scope": "col (on every <th>)"
+      }
+    },
+    {
+      "class": "gds-table__sort-icon",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-table__cell",
+      "description": "Wraps the sort icon inside a sortable header cell. Unsorted: arrow-up-down; sorted: arrow-up (CSS flips it for descending)."
+    },
+    {
+      "class": "gds-table__cell-content",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-table__cell",
+      "description": "Flex wrapper for icon + text combinations inside a cell."
+    },
+    {
+      "class": "gds-table__entry",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-table__cell",
+      "description": "Entry cell layout: thumbnail + title + subtitle (mainly in the cards variant)."
+    },
+    {
+      "class": "gds-table__entry-image",
+      "tag": "img",
+      "required": false,
+      "parent": "gds-table__entry",
+      "description": "Thumbnail. Not an avatar.",
+      "attributes": {
+        "alt": "Describe the image, or \"\" if decorative"
+      }
+    },
+    {
+      "class": "gds-table__entry-info",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-table__entry",
+      "description": "Stacks title and subtitle."
+    },
+    {
+      "class": "gds-table__entry-title",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-table__entry-info",
+      "description": "Primary text of the entry."
+    },
+    {
+      "class": "gds-table__entry-subtitle",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-table__entry-info",
+      "description": "Secondary text, e.g. slug or path."
+    },
+    {
+      "class": "gds-table__action-btn",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-table__cell",
+      "description": "Row overflow (⋯) button in the action cell.",
+      "attributes": {
+        "type": "button",
+        "aria-label": "e.g. \"Actions for <row name>\""
+      }
+    },
+    {
+      "class": "gds-table__empty",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-table__cell",
+      "description": "Empty-state message, inside a single full-width cell (colspan) in the body."
+    },
+    {
+      "class": "gds-table__skeleton",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-table__cell",
+      "description": "Loading placeholder bar inside a cell, used with gds-table--loading."
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-table--compact",
+      "on": "gds-table",
+      "group": "layout",
+      "description": "Denser rows."
+    },
+    {
+      "class": "gds-table--striped",
+      "on": "gds-table",
+      "group": "style",
+      "description": "Alternating row background."
+    },
+    {
+      "class": "gds-table--borderless",
+      "on": "gds-table",
+      "group": "style",
+      "description": "No container border."
+    },
+    {
+      "class": "gds-table--cards",
+      "on": "gds-table",
+      "group": "layout",
+      "description": "Each row is a separate card with shadow and gap."
+    },
+    {
+      "class": "gds-table--responsive",
+      "on": "gds-table",
+      "group": "layout",
+      "description": "Below the mobile breakpoint, rows stack as label/value pairs. Each <td> needs data-label."
+    },
+    {
+      "class": "gds-table--loading",
+      "on": "gds-table",
+      "group": "state",
+      "description": "Loading state with skeleton rows. Add aria-busy=\"true\" on the <table>."
+    },
+    {
+      "class": "gds-table__row--selected",
+      "on": "gds-table__row",
+      "group": "state",
+      "description": "Selected row background."
+    },
+    {
+      "class": "gds-table__cell--checkbox",
+      "on": "gds-table__cell",
+      "group": "content",
+      "description": "Narrow centered cell holding a .gds-checkbox."
+    },
+    {
+      "class": "gds-table__cell--action",
+      "on": "gds-table__cell",
+      "group": "content",
+      "description": "Narrow rightmost cell holding the row overflow button."
+    },
+    {
+      "class": "gds-table__cell--secondary",
+      "on": "gds-table__cell",
+      "group": "content",
+      "description": "Lighter, smaller text for dates and metadata columns."
+    },
+    {
+      "class": "gds-table__cell--header-action",
+      "on": "gds-table__cell",
+      "group": "content",
+      "description": "Header text for an action column (e.g. \"Edit\")."
+    },
+    {
+      "class": "gds-table__cell--sortable",
+      "on": "gds-table__cell",
+      "group": "state",
+      "description": "Header cell that can be sorted. Shows the sort icon."
+    },
+    {
+      "class": "gds-table__cell--sorted",
+      "on": "gds-table__cell",
+      "group": "state",
+      "description": "The active sort column (highlights the icon). Required for both directions.",
+      "requires": [
+        "gds-table__cell--sortable"
+      ]
+    },
+    {
+      "class": "gds-table__cell--sorted-desc",
+      "on": "gds-table__cell",
+      "group": "state",
+      "description": "Descending. Added on top of --sorted; rotates the arrow-up icon 180°.",
+      "requires": [
+        "gds-table__cell--sorted"
+      ]
+    },
+    {
+      "class": "gds-table__cell--sticky-checkbox",
+      "on": "gds-table__cell",
+      "group": "layout",
+      "description": "Freezes the checkbox column during horizontal scroll."
+    },
+    {
+      "class": "gds-table__cell--sticky-entry",
+      "on": "gds-table__cell",
+      "group": "layout",
+      "description": "Freezes the entry (second) column during horizontal scroll."
+    },
+    {
+      "class": "gds-table__skeleton--xs",
+      "on": "gds-table__skeleton",
+      "group": "width",
+      "description": "20% width placeholder."
+    },
+    {
+      "class": "gds-table__skeleton--short",
+      "on": "gds-table__skeleton",
+      "group": "width",
+      "description": "30% width placeholder."
+    },
+    {
+      "class": "gds-table__skeleton--medium",
+      "on": "gds-table__skeleton",
+      "group": "width",
+      "description": "50% width placeholder."
+    },
+    {
+      "class": "gds-table__skeleton--wide",
+      "on": "gds-table__skeleton",
+      "group": "width",
+      "description": "70% width placeholder."
+    },
+    {
+      "class": "is-visible",
+      "on": "gds-table__toolbar",
+      "group": "state",
+      "description": "Shows the bulk-action bar."
+    }
+  ],
+  "states": [
+    {
+      "name": "hover",
+      "how": "Native :hover on body rows. No class needed."
+    },
+    {
+      "name": "selected",
+      "how": "gds-table__row--selected on the row, plus a checked .gds-checkbox in its checkbox cell."
+    },
+    {
+      "name": "sorted",
+      "how": "gds-table__cell--sorted (+ --sorted-desc) and aria-sort on the <th>."
+    },
+    {
+      "name": "loading",
+      "how": "gds-table--loading on the container, aria-busy=\"true\" on the table, skeleton bars in cells."
+    },
+    {
+      "name": "empty",
+      "how": "One body row with a single cell (colspan = column count) containing .gds-table__empty."
+    }
+  ],
+  "a11y": [
+    "Name the table with aria-label on <table> or a <caption>.",
+    "Every header cell is <th scope=\"col\">.",
+    "The sorted header has aria-sort=\"ascending\" or \"descending\"; others have none.",
+    "Sortable headers are not keyboard-reachable yet: GDS has no styled sort button. Flag this gap; do not add an unstyled <button>.",
+    "The select-all checkbox has aria-label=\"Select all\"; each row checkbox has aria-label=\"Select <row name>\".",
+    "Header text uses --table-header-color (text-label, 8.50:1)."
+  ],
+  "rules": [
+    {
+      "id": "table-th-scope",
+      "rule": "Every <th> has scope=\"col\".",
+      "why": "Screen readers announce the column for each cell.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "table-label",
+      "rule": "The <table> has aria-label or a <caption>.",
+      "why": "A table without a name is announced only as \"table\".",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "table-sort-modifiers",
+      "rule": "A descending column has both --sorted and --sorted-desc, and uses the arrow-up icon.",
+      "why": "--sorted-desc rotates the icon; arrow-down would point up. Without --sorted the icon is not highlighted.",
+      "principle": 3,
+      "autoCheck": true,
+      "removeInV3": "One modifier per direction: --sort-asc / --sort-desc, each picking its own icon."
+    },
+    {
+      "id": "table-sort-aria",
+      "rule": "The sorted <th> has aria-sort matching the direction.",
+      "why": "Sort state must not be visual only.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "table-checkbox-label",
+      "rule": "Every checkbox inside the table has an aria-label.",
+      "why": "Checkboxes in cells have no visible label.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "table-status-badge",
+      "rule": "Status cells use .gds-badge with dot + label, following the content-status mapping in the badge contract.",
+      "why": "One status language across products; status is never colour alone.",
+      "principle": 2,
+      "autoCheck": true
+    },
+    {
+      "id": "table-pagination",
+      "rule": "Paging below a table uses .gds-pagination-bar--full, never custom markup.",
+      "why": "Custom pagination was the most broken part of the first AI test.",
+      "principle": 2,
+      "autoCheck": true
+    },
+    {
+      "id": "table-toolbar-placement",
+      "rule": "The bulk-action bar sits directly above .gds-table (or .gds-table-scroll) and is shown with is-visible only while rows are selected.",
+      "why": "Consistent place for bulk actions.",
+      "principle": 2,
+      "autoCheck": false,
+      "removeInV3": "Rename is-visible to gds-table__toolbar--visible (BEM, no exception)."
+    },
+    {
+      "id": "table-no-custom-cells",
+      "rule": "Cell content composes GDS components (checkbox, avatar-name, badge, button). Do not build one-off cell UI.",
+      "why": "Keeps tables consistent and themeable.",
+      "principle": 2,
+      "autoCheck": false
+    }
+  ],
+  "internal": [
+    {
+      "class": "gds-table__row--hover",
+      "why": "Docs preview that forces the hover look. Real hover is native :hover."
+    },
+    {
+      "class": "gds-table__row--striped",
+      "why": "Docs preview that forces a striped row. Use gds-table--striped."
+    },
+    {
+      "class": "gds-table__cell--label",
+      "why": "Docs-only cell that labels demo rows (\"Default\", \"Hovered\")."
+    }
+  ],
+  "composes": [
+    "checkbox",
+    "badge",
+    "pagination",
+    "avatar",
+    "button",
+    "dropdown"
+  ],
+  "knownIssues": [
+    {
+      "issue": "Fails principle 1: .gds-table__empty uses --gds-color-text-tertiary, 2.96:1 on white (axe, WCAG AA needs 4.5:1).",
+      "fix": "Point --table-empty-color at text-secondary (6.96:1)."
+    },
+    {
+      "issue": "Sortable header cells are clickable only with a mouse; there is no styled button element for keyboard users.",
+      "fix": "v3: a gds-table__sort-btn element (reset button inside <th>) so sorting works with Tab + Enter."
+    },
+    {
+      "issue": "The action-cell dropdown uses .gds-dropdown__menu and .is-open, while the Dropdown component uses .gds-dropdown__panel and .gds-dropdown--open.",
+      "fix": "v3: one dropdown API everywhere (__panel / --open)."
+    },
+    {
+      "issue": "is-visible on the toolbar breaks the BEM naming rule.",
+      "fix": "v3: gds-table__toolbar--visible."
+    },
+    {
+      "issue": "Sorting needs two modifiers and one specific icon.",
+      "fix": "v3: --sort-asc / --sort-desc."
+    },
+    {
+      "issue": "GDS has no page header or filter bar to place around the table, so screens build them with custom CSS.",
+      "fix": "v3 patterns: Page header, Filter bar, List page."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Sortable table with selection and bulk actions",
+      "html": "<div class=\"gds-table__toolbar is-visible\">\n  <span class=\"gds-table__toolbar-count\">2 selected</span>\n  <div class=\"gds-table__toolbar-divider\" aria-hidden=\"true\"></div>\n  <button type=\"button\" class=\"gds-table__toolbar-btn\">Publish</button>\n  <button type=\"button\" class=\"gds-table__toolbar-btn\">Delete</button>\n</div>\n<div class=\"gds-table\">\n  <table class=\"gds-table__table\" aria-label=\"All entries\">\n    <thead class=\"gds-table__head\">\n      <tr class=\"gds-table__row\">\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--checkbox\">\n          <label class=\"gds-checkbox gds-checkbox--sm gds-checkbox--mixed\">\n            <input type=\"checkbox\" class=\"gds-checkbox__input\" aria-label=\"Select all\" />\n            <span class=\"gds-checkbox__control\"><i data-lucide=\"minus\"></i></span>\n          </label>\n        </th>\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--sortable\">\n          Title <span class=\"gds-table__sort-icon\"><i data-lucide=\"arrow-up-down\"></i></span>\n        </th>\n        <th scope=\"col\" class=\"gds-table__cell\">Status</th>\n        <th scope=\"col\" class=\"gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc\" aria-sort=\"descending\">\n          Last updated <span class=\"gds-table__sort-icon\"><i data-lucide=\"arrow-up\"></i></span>\n        </th>\n      </tr>\n    </thead>\n    <tbody class=\"gds-table__body\">\n      <tr class=\"gds-table__row gds-table__row--selected\">\n        <td class=\"gds-table__cell gds-table__cell--checkbox\">\n          <label class=\"gds-checkbox gds-checkbox--sm\">\n            <input type=\"checkbox\" class=\"gds-checkbox__input\" checked aria-label=\"Select Winter travel guide\" />\n            <span class=\"gds-checkbox__control\"><i data-lucide=\"check\"></i></span>\n          </label>\n        </td>\n        <td class=\"gds-table__cell\">Winter travel guide</td>\n        <td class=\"gds-table__cell\"><span class=\"gds-badge gds-badge--neutral\"><span class=\"gds-badge__dot\"></span><span class=\"gds-badge__label\">Draft</span></span></td>\n        <td class=\"gds-table__cell gds-table__cell--secondary\">Today, 08:15</td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+    },
+    {
+      "name": "Empty state",
+      "html": "<div class=\"gds-table\">\n  <table class=\"gds-table__table\" aria-label=\"All entries\">\n    <thead class=\"gds-table__head\">\n      <tr class=\"gds-table__row\">\n        <th scope=\"col\" class=\"gds-table__cell\">Title</th>\n        <th scope=\"col\" class=\"gds-table__cell\">Status</th>\n      </tr>\n    </thead>\n    <tbody class=\"gds-table__body\">\n      <tr class=\"gds-table__row\">\n        <td class=\"gds-table__cell\" colspan=\"2\"><div class=\"gds-table__empty\">No entries yet</div></td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+    }
+  ]
+}

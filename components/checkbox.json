@@ -1,0 +1,69 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "checkbox",
+  "name": "Checkbox",
+  "status": "stable",
+  "summary": "Lets people turn one option on or off, or pick several options from a list.",
+  "docs": "https://docs-phi-black.vercel.app/?page=checkbox",
+  "source": "src/components/_checkbox.scss",
+  "owns": ["gds-checkbox"],
+  "useWhen": [
+    "Selecting rows in a table.",
+    "Choosing any number of options from a short list.",
+    "Agreeing to something before submitting a form."
+  ],
+  "dontUseWhen": [
+    { "case": "A setting that takes effect immediately", "use": "toggle" },
+    { "case": "Exactly one choice from a list", "use": "radio" }
+  ],
+  "anatomy": [
+    { "class": "gds-checkbox", "tag": "label", "required": true, "parent": null, "description": "Wrapper. A <label>, so clicking the text toggles the box." },
+    { "class": "gds-checkbox__input", "tag": "input", "required": true, "parent": "gds-checkbox", "description": "Native checkbox, visually hidden but focusable. Its :checked state drives the visual.", "attributes": { "type": "checkbox", "aria-label": "Required when there is no visible label (e.g. in table cells)" } },
+    { "class": "gds-checkbox__control", "tag": "span", "required": true, "parent": "gds-checkbox", "description": "The visible box. Must come after the input (CSS uses the ~ sibling selector). Contains the icon: <i data-lucide=\"check\"></i>, or \"minus\" for mixed." },
+    { "class": "gds-checkbox__label", "tag": "span", "required": false, "parent": "gds-checkbox", "description": "Visible label text." },
+    { "class": "gds-checkbox__helper", "tag": "span", "required": false, "parent": "gds-checkbox", "description": "Helper text under the label." }
+  ],
+  "modifiers": [
+    { "class": "gds-checkbox--sm", "on": "gds-checkbox", "group": "size", "description": "16px box. Use in tables." },
+    { "class": "gds-checkbox--md", "on": "gds-checkbox", "group": "size", "description": "20px box. Use in forms.", "default": true },
+    { "class": "gds-checkbox--lg", "on": "gds-checkbox", "group": "size", "description": "24px box." },
+    { "class": "gds-checkbox--checked", "on": "gds-checkbox", "group": "state", "description": "Forces the checked look. Prefer the native checked attribute, which works without this class." },
+    { "class": "gds-checkbox--mixed", "on": "gds-checkbox", "group": "state", "description": "Indeterminate (some, not all, selected). Use the minus icon and set input.indeterminate = true in JS." },
+    { "class": "gds-checkbox--disabled", "on": "gds-checkbox", "group": "state", "description": "Disabled look. Also set the disabled attribute on the input." }
+  ],
+  "states": [
+    { "name": "checked", "how": "checked attribute on .gds-checkbox__input (CSS reads :checked)." },
+    { "name": "mixed", "how": "gds-checkbox--mixed + minus icon + input.indeterminate = true." },
+    { "name": "disabled", "how": "gds-checkbox--disabled + disabled attribute on the input." },
+    { "name": "focus", "how": "Native :focus-visible on the input shows a ring on the control." }
+  ],
+  "a11y": [
+    "Keep the native input: it is what keyboards and screen readers use.",
+    "Without visible text, give the input an aria-label (\"Select all\", \"Select <row name>\").",
+    "For disabled, set the disabled attribute, not only the class."
+  ],
+  "rules": [
+    { "id": "checkbox-native-input", "rule": "Every .gds-checkbox contains an <input type=\"checkbox\" class=\"gds-checkbox__input\"> before .gds-checkbox__control.", "why": "The visual state comes from the input through the ~ selector; without it the box never changes.", "principle": 1, "autoCheck": true },
+    { "id": "checkbox-accessible-name", "rule": "A checkbox without .gds-checkbox__label has an aria-label on the input.", "why": "Otherwise it is announced as an unnamed checkbox.", "principle": 1, "autoCheck": true },
+    { "id": "checkbox-icon", "rule": "The control contains the Lucide check icon (or minus for mixed). Do not draw your own SVG.", "why": "Both AI tests drew their own tick because the guide showed <svg>...</svg>.", "principle": 2, "autoCheck": true },
+    { "id": "checkbox-size-in-table", "rule": "Checkboxes in table cells use gds-checkbox--sm.", "why": "Matches the 16px icon grid of table rows.", "principle": 2, "autoCheck": true }
+  ],
+  "composes": [],
+  "knownIssues": [
+    { "issue": "Checked can be shown two ways (native checked or gds-checkbox--checked), which can disagree.", "fix": "v3: drive the look only from the native state; keep --checked for docs previews." }
+  ],
+  "examples": [
+    {
+      "name": "With label",
+      "html": "<label class=\"gds-checkbox gds-checkbox--md\">\n  <input type=\"checkbox\" class=\"gds-checkbox__input\" />\n  <span class=\"gds-checkbox__control\"><i data-lucide=\"check\"></i></span>\n  <span class=\"gds-checkbox__label\">Send me updates</span>\n</label>"
+    },
+    {
+      "name": "In a table cell (no visible label)",
+      "html": "<label class=\"gds-checkbox gds-checkbox--sm\">\n  <input type=\"checkbox\" class=\"gds-checkbox__input\" checked aria-label=\"Select Winter travel guide\" />\n  <span class=\"gds-checkbox__control\"><i data-lucide=\"check\"></i></span>\n</label>"
+    },
+    {
+      "name": "Mixed (select all, some rows selected)",
+      "html": "<label class=\"gds-checkbox gds-checkbox--sm gds-checkbox--mixed\">\n  <input type=\"checkbox\" class=\"gds-checkbox__input\" aria-label=\"Select all\" />\n  <span class=\"gds-checkbox__control\"><i data-lucide=\"minus\"></i></span>\n</label>"
+    }
+  ]
+}

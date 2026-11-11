@@ -1,0 +1,64 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "badge",
+  "name": "Badge",
+  "status": "stable",
+  "summary": "A small label that shows the status or category of something.",
+  "docs": "https://docs-phi-black.vercel.app/?page=badge",
+  "source": "src/components/_badge.scss",
+  "owns": ["gds-badge"],
+  "useWhen": [
+    "Showing a status in a table cell or card (Published, Draft…).",
+    "Labelling a category or count next to an item."
+  ],
+  "dontUseWhen": [
+    { "case": "Something people can click to filter or remove", "use": "chip or filter-badge" },
+    { "case": "A percentage change", "use": "pct-badge" }
+  ],
+  "anatomy": [
+    { "class": "gds-badge", "tag": "span", "required": true, "parent": null, "description": "Wrapper." },
+    { "class": "gds-badge__dot", "tag": "span", "required": false, "parent": "gds-badge", "description": "Coloured dot. Use for statuses." },
+    { "class": "gds-badge__icon", "tag": "span", "required": false, "parent": "gds-badge", "description": "Icon slot (Lucide, 12px), instead of the dot." },
+    { "class": "gds-badge__label", "tag": "span", "required": true, "parent": "gds-badge", "description": "The text." },
+    { "class": "gds-badge__count", "tag": "span", "required": false, "parent": "gds-badge", "description": "Number after the label." }
+  ],
+  "modifiers": [
+    { "class": "gds-badge--neutral", "on": "gds-badge", "group": "variant", "description": "Gray." },
+    { "class": "gds-badge--positive", "on": "gds-badge", "group": "variant", "description": "Green." },
+    { "class": "gds-badge--warning", "on": "gds-badge", "group": "variant", "description": "Orange." },
+    { "class": "gds-badge--critical", "on": "gds-badge", "group": "variant", "description": "Red." },
+    { "class": "gds-badge--info", "on": "gds-badge", "group": "variant", "description": "Blue." },
+    { "class": "gds-badge--purple", "on": "gds-badge", "group": "variant", "description": "Purple. Categories only, no status meaning." },
+    { "class": "gds-badge--outline", "on": "gds-badge", "group": "style", "description": "Outlined instead of filled." },
+    { "class": "gds-badge--solid", "on": "gds-badge", "group": "style", "description": "Strong solid fill, for high emphasis." },
+    { "class": "gds-badge--text", "on": "gds-badge", "group": "style", "description": "Text only, no background." },
+    { "class": "gds-badge--sm", "on": "gds-badge", "group": "size", "description": "Small." },
+    { "class": "gds-badge--md", "on": "gds-badge", "group": "size", "description": "Medium.", "default": true },
+    { "class": "gds-badge--lg", "on": "gds-badge", "group": "size", "description": "Large." }
+  ],
+  "states": [],
+  "a11y": [
+    "Never show status by colour alone: always include .gds-badge__label text.",
+    "The dot and icon are decorative; the label carries the meaning."
+  ],
+  "rules": [
+    { "id": "badge-content-status", "rule": "Content status mapping: Published → positive, Draft → neutral, Scheduled → warning, Archived → neutral.", "why": "Design decision (11 Nov 2026). Scheduled changes state on its own, so it draws attention; Draft and Archived need no action.", "principle": 2, "autoCheck": true },
+    { "id": "badge-status-dot-label", "rule": "Status badges use the dot + label form.", "why": "Status is not shown by colour alone.", "principle": 1, "autoCheck": true },
+    { "id": "badge-one-variant", "rule": "A badge has exactly one colour variant.", "why": "Two variants on one badge produce an undefined colour.", "principle": 3, "autoCheck": true },
+    { "id": "badge-not-interactive", "rule": "A badge is never a button or link.", "why": "Badges have no hover or focus styles.", "principle": 1, "autoCheck": true }
+  ],
+  "composes": [],
+  "knownIssues": [
+    { "issue": "Without a variant class the badge has no defined colour.", "fix": "v3: neutral by default, so the variant becomes optional." }
+  ],
+  "examples": [
+    {
+      "name": "Content statuses",
+      "html": "<span class=\"gds-badge gds-badge--positive\"><span class=\"gds-badge__dot\"></span><span class=\"gds-badge__label\">Published</span></span>\n<span class=\"gds-badge gds-badge--neutral\"><span class=\"gds-badge__dot\"></span><span class=\"gds-badge__label\">Draft</span></span>\n<span class=\"gds-badge gds-badge--warning\"><span class=\"gds-badge__dot\"></span><span class=\"gds-badge__label\">Scheduled</span></span>\n<span class=\"gds-badge gds-badge--neutral\"><span class=\"gds-badge__dot\"></span><span class=\"gds-badge__label\">Archived</span></span>"
+    },
+    {
+      "name": "With icon and count",
+      "html": "<span class=\"gds-badge gds-badge--neutral\"><span class=\"gds-badge__icon\"><i data-lucide=\"minus-circle\" width=\"12\" height=\"12\"></i></span><span class=\"gds-badge__label\">Neutral</span><span class=\"gds-badge__count\">12</span></span>"
+    }
+  ]
+}
