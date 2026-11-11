@@ -338,10 +338,6 @@
   ],
   "knownIssues": [
     {
-      "issue": "Fails principle 1: .gds-dropdown__placeholder uses --gds-color-text-placeholder, 2.96:1 on white (axe, WCAG AA needs 4.5:1).",
-      "fix": "Point --dd-search-placeholder / the placeholder colour at text-secondary (6.96:1). Same check needed for the input ::placeholder."
-    },
-    {
       "issue": ".gds-dropdown has no CSS, so the panel is not positioned; docs examples use inline styles.",
       "fix": "v3: .gds-dropdown { position: relative } and an absolutely positioned panel by default."
     },
