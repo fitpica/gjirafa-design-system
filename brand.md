@@ -510,6 +510,17 @@ Sizes: `gds-toggle--sm`, `gds-toggle--md`, `gds-toggle--lg`
 | `gds-badge--md` | Medium (default) |
 | `gds-badge--lg` | Large |
 
+**Content status → badge (design decision, use exactly this):**
+
+| Status | Badge | Why |
+|--------|-------|-----|
+| Published | `gds-badge--positive` | Live and healthy |
+| Draft | `gds-badge--neutral` | Work in progress, no action needed |
+| Scheduled | `gds-badge--warning` | Will change state on its own, so it should draw attention |
+| Archived | `gds-badge--neutral` | No longer active |
+
+Always use the dot + label form (`gds-badge__dot` + `gds-badge__label`), so status is not shown by colour alone. Use `info` and `critical` for other meanings, not for these four statuses.
+
 ---
 
 ### Pill
