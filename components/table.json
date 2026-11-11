@@ -472,7 +472,7 @@
       "fix": "v3: --sort-asc / --sort-desc."
     },
     {
-      "issue": "GDS has no page header or filter bar yet. Until it does, lay them out with a product-prefixed class (e.g. cx-page-header) that uses only flex/gap and GDS tokens, never restyles GDS components, and is flagged as a gap.",
+      "issue": "GDS has no page header or filter bar yet. Until it does, follow Critical Rule 9 (layout-only CSS with a product prefix and GDS tokens, marked /* GDS gap */).",
       "fix": "v3 patterns: Page header, Filter bar, List page."
     }
   ],

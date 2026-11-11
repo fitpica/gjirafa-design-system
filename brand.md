@@ -16,7 +16,7 @@
 Every rule in this file follows from these three. When a case is not covered, decide by them.
 
 1. **Accessible by default, not by effort.** Every combination GDS allows passes WCAG AA without anyone checking. Use only the text tokens that pass AA, never show status by colour alone (dot + label), and give tables `scope` and `aria-sort`.
-2. **Reuse before you create.** If GDS has it, use it. If GDS does not have it, do not invent a local version: say it is missing so it can become a GDS pattern. Custom CSS that duplicates a GDS component is a bug.
+2. **Reuse before you create.** If GDS has it, use it. If GDS does not have it, do not invent a local version: say it is missing so it can become a GDS pattern. Custom CSS that duplicates a GDS component is a bug. (The one exception is layout-only CSS for missing page patterns, see Critical Rule 9.)
 3. **Obvious over documented.** If a rule has to be explained, the system should change. Defaults must be safe, one modifier means one thing, and BEM has no exceptions. Report any rule in this file you think could be removed by changing the system.
 
 ---
@@ -86,6 +86,7 @@ Icons: GDS uses [Lucide Icons](https://lucide.dev) via `data-lucide` attributes.
 6. **Prefix custom classes** with your product abbreviation (e.g., `hd-` for Helpdesk) to avoid collision with `gds-`.
 7. **Text must pass WCAG AA (4.5:1).** For readable text use only `text-primary`, `text-secondary`, `text-label`, or the `*-text` feedback tokens. See "Text contrast rules" below.
 8. **Never invent classes, variants or tokens.** If this file does not list it, it does not exist. Flag the gap instead.
+9. **Layout-only exception (until GDS has the pattern).** GDS has no page header, filter bar or page layout yet. For those only, you may write layout CSS with your product prefix (e.g. `cx-page-header`). It may use only `display`, `flex`/`grid`, `gap`, alignment, width/max-width and padding/margin, with `--gds-*` tokens for every value. It must never set colours, borders, typography or shadows, and never restyle a `gds-` class. Add a comment `/* GDS gap: <pattern name> */` so it can be replaced when the pattern ships.
 
 ---
 
@@ -1139,7 +1140,7 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 - The action-cell dropdown uses .gds-dropdown__menu and .is-open, while the Dropdown component uses .gds-dropdown__panel and .gds-dropdown--open. *Planned fix:* v3: one dropdown API everywhere (__panel / --open).
 - is-visible on the toolbar breaks the BEM naming rule. *Planned fix:* v3: gds-table__toolbar--visible.
 - Sorting needs two modifiers and one specific icon. *Planned fix:* v3: --sort-asc / --sort-desc.
-- GDS has no page header or filter bar yet. Until it does, lay them out with a product-prefixed class (e.g. cx-page-header) that uses only flex/gap and GDS tokens, never restyles GDS components, and is flagged as a gap. *Planned fix:* v3 patterns: Page header, Filter bar, List page.
+- GDS has no page header or filter bar yet. Until it does, follow Critical Rule 9 (layout-only CSS with a product prefix and GDS tokens, marked /* GDS gap */). *Planned fix:* v3 patterns: Page header, Filter bar, List page.
 
 *Generated from `components/table.json`. Edit that file, then run `npm run brand`.*
 <!-- gds:component:table:end -->
