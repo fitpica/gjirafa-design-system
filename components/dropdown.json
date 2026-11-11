@@ -311,8 +311,8 @@
     },
     {
       "id": "dropdown-trigger-size-matches",
-      "rule": "Next to a gds-input--md, use the default trigger size; next to --sm use __trigger--sm.",
-      "why": "In the second AI test the filters were shorter than the search box.",
+      "rule": "Next to a gds-input--md, use the default trigger size; next to --sm use __trigger--sm. Heights still differ slightly today (known issue).",
+      "why": "Closest available match; in the second AI test the filters were noticeably shorter than the search box.",
       "principle": 3,
       "autoCheck": false,
       "removeInV3": "Align trigger heights to the input sizes (sm 32 / md 40 / lg 48) with matching modifier names."

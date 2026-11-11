@@ -37,6 +37,8 @@
     "figma:sync": "node scripts/figma-sync.mjs",
     "tokens": "node scripts/tokens.mjs extract",
     "test:tokens": "node scripts/tokens.mjs check",
+    "brand": "node scripts/brand.mjs write",
+    "test:brand": "node scripts/brand.mjs check",
     "dev": "sass --watch src/index.scss:dist/gjirafa-ds.css",
     "test:visual": "playwright test tests/visual/visual.spec.ts",
     "test:visual:update": "playwright test tests/visual/visual.spec.ts --update-snapshots",

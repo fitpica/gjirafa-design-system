@@ -6,41 +6,185 @@
   "summary": "Moves through pages of a long list, with an optional summary and page-size control.",
   "docs": "https://docs-phi-black.vercel.app/?page=pagination",
   "source": "src/components/_pagination.scss",
-  "owns": ["gds-pagination"],
+  "owns": [
+    "gds-pagination"
+  ],
   "useWhen": [
     "Below a table or list that has more records than fit on one page."
   ],
   "dontUseWhen": [
-    { "case": "A feed people scroll through without needing a position", "use": "load more / infinite scroll (not in GDS yet)" },
-    { "case": "Steps of a process", "use": "tabs or a stepper (not in GDS yet)" }
+    {
+      "case": "A feed people scroll through without needing a position",
+      "use": "load more / infinite scroll (not in GDS yet)"
+    },
+    {
+      "case": "Steps of a process",
+      "use": "tabs or a stepper (not in GDS yet)"
+    }
   ],
   "anatomy": [
-    { "class": "gds-pagination-bar", "tag": "div", "required": false, "parent": null, "description": "Bar around the page numbers. Under a table, always use it with --full." },
-    { "class": "gds-pagination-bar__summary", "tag": "span", "required": false, "parent": "gds-pagination-bar", "description": "\"Viewing 1 to 10 of 397 Items\"." },
-    { "class": "gds-pagination-bar__cluster", "tag": "div", "required": false, "parent": "gds-pagination-bar", "description": "Groups the page-size control and the page numbers on the right." },
-    { "class": "gds-pagination-bar__select", "tag": "button", "required": false, "parent": "gds-pagination-bar__cluster", "description": "Page-size trigger: <span>10 Items per page</span> + chevron-down icon. Not a native <select>.", "attributes": { "type": "button", "aria-haspopup": "listbox" } },
-    { "class": "gds-pagination-bar__divider", "tag": "span", "required": false, "parent": "gds-pagination-bar", "description": "Vertical separator inside the compact bar.", "attributes": { "aria-hidden": "true" } },
-    { "class": "gds-pagination", "tag": "nav", "required": true, "parent": null, "description": "Row of page buttons. Page items are direct children; never a <ul>/<li> list.", "attributes": { "aria-label": "Pagination" } },
-    { "class": "gds-pagination__item", "tag": "button", "required": true, "parent": "gds-pagination", "repeat": true, "description": "A page number, or an arrow with --icon-only.", "attributes": { "type": "button" } },
-    { "class": "gds-pagination__ellipsis", "tag": "span", "required": false, "parent": "gds-pagination", "description": "\"…\" for skipped pages.", "attributes": { "aria-hidden": "true" } },
-    { "class": "gds-pagination__nav", "tag": "button", "required": false, "parent": "gds-pagination", "description": "Labelled \"Previous\" / \"Next\" text button. Only for buttons with visible text; arrow-only buttons use __item--icon-only.", "attributes": { "type": "button" } }
+    {
+      "class": "gds-pagination-bar",
+      "tag": "div",
+      "required": false,
+      "parent": null,
+      "description": "Bar around the page numbers. Under a table, always use it with --full."
+    },
+    {
+      "class": "gds-pagination-bar__summary",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-pagination-bar",
+      "description": "\"Viewing 1 to 10 of 397 Items\"."
+    },
+    {
+      "class": "gds-pagination-bar__cluster",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-pagination-bar",
+      "description": "Groups the page-size control and the page numbers on the right."
+    },
+    {
+      "class": "gds-pagination-bar__select",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-pagination-bar__cluster",
+      "description": "Page-size trigger: <span>10 Items per page</span> + chevron-down icon. Not a native <select>.",
+      "attributes": {
+        "type": "button",
+        "aria-haspopup": "listbox"
+      }
+    },
+    {
+      "class": "gds-pagination-bar__divider",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-pagination-bar",
+      "description": "Vertical separator between groups inside the bar. Not needed in the --full bar.",
+      "attributes": {
+        "aria-hidden": "true"
+      }
+    },
+    {
+      "class": "gds-pagination",
+      "tag": "nav",
+      "required": true,
+      "parent": null,
+      "description": "Row of page buttons. Page items are direct children; never a <ul>/<li> list.",
+      "attributes": {
+        "aria-label": "Pagination"
+      }
+    },
+    {
+      "class": "gds-pagination__item",
+      "tag": "button",
+      "required": true,
+      "parent": "gds-pagination",
+      "repeat": true,
+      "description": "A page number, or an arrow with --icon-only.",
+      "attributes": {
+        "type": "button"
+      }
+    },
+    {
+      "class": "gds-pagination__ellipsis",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-pagination",
+      "description": "\"…\" for skipped pages.",
+      "attributes": {
+        "aria-hidden": "true"
+      }
+    },
+    {
+      "class": "gds-pagination__nav",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-pagination",
+      "description": "Labelled \"Previous\" / \"Next\" text button. Only for buttons with visible text; arrow-only buttons use __item--icon-only.",
+      "attributes": {
+        "type": "button"
+      }
+    }
   ],
   "modifiers": [
-    { "class": "gds-pagination--sm", "on": "gds-pagination", "group": "size", "description": "Small." },
-    { "class": "gds-pagination--lg", "on": "gds-pagination", "group": "size", "description": "Large." },
-    { "class": "gds-pagination__item--current", "on": "gds-pagination__item", "group": "state", "description": "The current page. Add aria-current=\"page\"." },
-    { "class": "gds-pagination__item--disabled", "on": "gds-pagination__item", "group": "state", "description": "Previous/next at the first or last page. Also set the disabled attribute." },
-    { "class": "gds-pagination__item--icon-only", "on": "gds-pagination__item", "group": "content", "description": "Arrow-only item (chevron-left/right, chevrons-left/right). Needs aria-label." },
-    { "class": "gds-pagination-bar--full", "on": "gds-pagination-bar", "group": "layout", "description": "Full-width bar with summary on the left. The one to use below tables." },
-    { "class": "gds-pagination-bar--no-border", "on": "gds-pagination-bar", "group": "style", "description": "Drops the border of the full bar (e.g. inside a card).", "requires": ["gds-pagination-bar--full"] },
-    { "class": "gds-pagination-bar--on-surface", "on": "gds-pagination-bar", "group": "style", "description": "White pill bar for coloured backgrounds." },
-    { "class": "gds-pagination-bar--sm", "on": "gds-pagination-bar", "group": "size", "description": "Small bar." },
-    { "class": "gds-pagination-bar--lg", "on": "gds-pagination-bar", "group": "size", "description": "Large bar." }
+    {
+      "class": "gds-pagination--sm",
+      "on": "gds-pagination",
+      "group": "size",
+      "description": "Small."
+    },
+    {
+      "class": "gds-pagination--lg",
+      "on": "gds-pagination",
+      "group": "size",
+      "description": "Large."
+    },
+    {
+      "class": "gds-pagination__item--current",
+      "on": "gds-pagination__item",
+      "group": "state",
+      "description": "The current page. Add aria-current=\"page\"."
+    },
+    {
+      "class": "gds-pagination__item--disabled",
+      "on": "gds-pagination__item",
+      "group": "state",
+      "description": "Previous/next at the first or last page. Also set the disabled attribute."
+    },
+    {
+      "class": "gds-pagination__item--icon-only",
+      "on": "gds-pagination__item",
+      "group": "content",
+      "description": "Arrow-only item (chevron-left/right, chevrons-left/right). Needs aria-label."
+    },
+    {
+      "class": "gds-pagination-bar--full",
+      "on": "gds-pagination-bar",
+      "group": "layout",
+      "description": "Full-width bar with summary on the left. The one to use below tables."
+    },
+    {
+      "class": "gds-pagination-bar--no-border",
+      "on": "gds-pagination-bar",
+      "group": "style",
+      "description": "Drops the border of the full bar (e.g. inside a card).",
+      "requires": [
+        "gds-pagination-bar--full"
+      ]
+    },
+    {
+      "class": "gds-pagination-bar--on-surface",
+      "on": "gds-pagination-bar",
+      "group": "style",
+      "description": "White pill bar for coloured backgrounds."
+    },
+    {
+      "class": "gds-pagination-bar--sm",
+      "on": "gds-pagination-bar",
+      "group": "size",
+      "description": "Small bar."
+    },
+    {
+      "class": "gds-pagination-bar--lg",
+      "on": "gds-pagination-bar",
+      "group": "size",
+      "description": "Large bar."
+    }
   ],
   "states": [
-    { "name": "current page", "how": "gds-pagination__item--current + aria-current=\"page\"." },
-    { "name": "disabled arrow", "how": "gds-pagination__item--disabled + disabled attribute." },
-    { "name": "single page", "how": "Hide the number row when there is 1 page or less; keep the summary." }
+    {
+      "name": "current page",
+      "how": "gds-pagination__item--current + aria-current=\"page\"."
+    },
+    {
+      "name": "disabled arrow",
+      "how": "gds-pagination__item--disabled + disabled attribute."
+    },
+    {
+      "name": "single page",
+      "how": "Hide the number row when there is 1 page or less; keep the summary."
+    }
   ],
   "a11y": [
     "The <nav> has aria-label=\"Pagination\".",
@@ -49,19 +193,59 @@
     "Keyboard: ← → move one page, Home/End jump to first/last (implemented in JS by the product)."
   ],
   "rules": [
-    { "id": "pagination-no-list", "rule": "Page items are <button> elements directly inside <nav class=\"gds-pagination\">; never <ul>/<li>.", "why": "GDS has no CSS reset, so list bullets and padding show.", "principle": 3, "autoCheck": true, "removeInV3": "Reset list styles inside .gds-pagination so a list also renders correctly." },
-    { "id": "pagination-full-under-table", "rule": "Below a table use .gds-pagination-bar.gds-pagination-bar--full.", "why": "One consistent paging bar for lists.", "principle": 2, "autoCheck": true },
-    { "id": "pagination-select-is-button", "rule": "The page-size control is .gds-pagination-bar__select (a button), not a native <select>.", "why": "A native select does not match the bar and was a wrong guess in the first AI test.", "principle": 2, "autoCheck": true },
-    { "id": "pagination-nav-text-only", "rule": "__nav is only for buttons with visible \"Previous\"/\"Next\" text; arrow-only buttons use __item--icon-only with aria-label.", "why": "The two have different sizes and spacing.", "principle": 3, "autoCheck": true },
-    { "id": "pagination-current", "rule": "Exactly one item is --current and it has aria-current=\"page\".", "why": "Position must not be visual only.", "principle": 1, "autoCheck": true }
+    {
+      "id": "pagination-no-list",
+      "rule": "Page items are <button> elements directly inside <nav class=\"gds-pagination\">; never <ul>/<li>.",
+      "why": "GDS has no CSS reset, so list bullets and padding show.",
+      "principle": 3,
+      "autoCheck": true,
+      "removeInV3": "Reset list styles inside .gds-pagination so a list also renders correctly."
+    },
+    {
+      "id": "pagination-full-under-table",
+      "rule": "Below a table use .gds-pagination-bar.gds-pagination-bar--full.",
+      "why": "One consistent paging bar for lists.",
+      "principle": 2,
+      "autoCheck": true
+    },
+    {
+      "id": "pagination-select-is-button",
+      "rule": "The page-size control is .gds-pagination-bar__select (a button), not a native <select>.",
+      "why": "A native select does not match the bar and was a wrong guess in the first AI test.",
+      "principle": 2,
+      "autoCheck": true
+    },
+    {
+      "id": "pagination-nav-text-only",
+      "rule": "__nav is only for buttons with visible \"Previous\"/\"Next\" text; arrow-only buttons use __item--icon-only with aria-label.",
+      "why": "The two have different sizes and spacing.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "pagination-current",
+      "rule": "Exactly one item is --current and it has aria-current=\"page\".",
+      "why": "Position must not be visual only.",
+      "principle": 1,
+      "autoCheck": true
+    }
   ],
   "internal": [
-    { "class": "is-hover-preview", "why": "Docs preview that forces the hover look." },
-    { "class": "is-focus-preview", "why": "Docs preview that forces the focus ring." }
+    {
+      "class": "is-hover-preview",
+      "why": "Docs preview that forces the hover look."
+    },
+    {
+      "class": "is-focus-preview",
+      "why": "Docs preview that forces the focus ring."
+    }
   ],
   "composes": [],
   "knownIssues": [
-    { "issue": "The page-size menu has no GDS markup of its own; docs use a .gds-menu positioned by script.", "fix": "v3: document the page-size menu as part of this contract, or reuse dropdown." }
+    {
+      "issue": "The page-size menu has no GDS markup of its own; docs use a .gds-menu positioned by script.",
+      "fix": "v3: document the page-size menu as part of this contract, or reuse dropdown."
+    }
   ],
   "examples": [
     {

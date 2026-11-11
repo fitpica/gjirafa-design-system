@@ -60,4 +60,7 @@ for (const step of ['extract', 'check', 'bundle']) {
   execFileSync(process.execPath, [resolve(__dirname, 'tokens.mjs'), step], { stdio: 'inherit' });
 }
 
+// 6. AI guide: regenerate the component sections of brand.md from components/*.json
+execFileSync(process.execPath, [resolve(__dirname, 'brand.mjs'), 'write'], { stdio: 'inherit' });
+
 console.log('\nBuild complete.');
