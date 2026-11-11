@@ -3,6 +3,7 @@ import CleanCSS from 'clean-css';
 import { writeFileSync, mkdirSync, copyFileSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { execFileSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -51,46 +52,12 @@ for (const file of fontFiles) {
 }
 console.log(`  ✓ docs/gjirafa-ds.css + docs/fonts/ (copied)`);
 
-// 5. Extract tokens to JSON
-const tokens = extractTokens(css);
-writeFileSync(resolve(DIST, 'tokens.json'), JSON.stringify(tokens, null, 2));
-console.log(`  ✓ dist/tokens.json`);
+// 5. Design tokens (W3C DTCG 2025.10): regenerate tokens/ from SCSS, prove the
+//    JSON resolves to exactly the compiled CSS for every theme, then bundle
+//    dist/tokens.json. The old extractor matched no --gds-* names, so it wrote
+//    an empty file.
+for (const step of ['extract', 'check', 'bundle']) {
+  execFileSync(process.execPath, [resolve(__dirname, 'tokens.mjs'), step], { stdio: 'inherit' });
+}
 
 console.log('\nBuild complete.');
-
-// ---------------------------------------------------------------------------
-// Token extraction — parses :root block from compiled CSS
-// ---------------------------------------------------------------------------
-function extractTokens(cssText) {
-  const tokens = {
-    colors: { foundation: {}, semantic: {} },
-    spacing: {},
-    radius: {},
-    typography: {},
-    shadows: {},
-    components: { button: {}, input: {} },
-  };
-
-  // Match all custom properties from :root
-  const rootMatch = cssText.match(/:root\s*(?:,\s*\[data-theme="codex"\]\s*)?\{([^}]+)\}/);
-  if (!rootMatch) return tokens;
-
-  const props = rootMatch[1].matchAll(/--([^:]+):\s*([^;]+);/g);
-  for (const [, name, value] of props) {
-    const v = value.trim();
-
-    if (name.startsWith('color-'))       tokens.colors.foundation[`--${name}`] = v;
-    else if (name.startsWith('action-') || name.startsWith('text-') || name.startsWith('surface-') || name.startsWith('border-') || name.startsWith('status-'))
-      tokens.colors.semantic[`--${name}`] = v;
-    else if (name.startsWith('space-'))  tokens.spacing[`--${name}`] = v;
-    else if (name.startsWith('radius-')) tokens.radius[`--${name}`] = v;
-    else if (name.startsWith('font-') || name.startsWith('line-height-'))
-      tokens.typography[`--${name}`] = v;
-    else if (name.startsWith('shadow-')) tokens.shadows[`--${name}`] = v;
-    else if (name.startsWith('btn-'))    tokens.components.button[`--${name}`] = v;
-    else if (name.startsWith('input-'))  tokens.components.input[`--${name}`] = v;
-    else if (name.startsWith('icon-'))   tokens.spacing[`--${name}`] = v;
-  }
-
-  return tokens;
-}

@@ -1,0 +1,288 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "$description": "GDS semantic tokens, default theme (codex). Aliases point at foundation tokens. Generated from src/tokens/_semantic.scss.",
+  "color": {
+    "brand": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.blue.500}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-brand-primary",
+            "scss": "$color-blue-500"
+          }
+        }
+      }
+    },
+    "action": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.blue.500}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-action-primary",
+            "scss": "$color-blue-500"
+          }
+        }
+      },
+      "primary-hover": {
+        "$type": "color",
+        "$value": "{color.blue.600}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-action-primary-hover",
+            "scss": "$color-blue-600"
+          }
+        }
+      },
+      "primary-active": {
+        "$type": "color",
+        "$value": "{color.blue.700}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-action-primary-active",
+            "scss": "$color-blue-700"
+          }
+        }
+      },
+      "on-primary": {
+        "$type": "color",
+        "$value": "{color.neutral.0}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-action-on-primary",
+            "scss": "$color-neutral-0"
+          }
+        }
+      }
+    },
+    "text": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.neutral.700}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-text-primary",
+            "scss": "$color-neutral-700"
+          }
+        }
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.neutral.300}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-text-secondary",
+            "scss": "$color-neutral-300"
+          }
+        }
+      },
+      "tertiary": {
+        "$type": "color",
+        "$value": "{color.neutral.80}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-text-tertiary",
+            "scss": "$color-neutral-80"
+          }
+        }
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{color.neutral.60}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-text-disabled",
+            "scss": "$color-neutral-60"
+          }
+        }
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{color.neutral.80}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-text-placeholder",
+            "scss": "$color-neutral-80"
+          }
+        }
+      },
+      "label": {
+        "$type": "color",
+        "$value": "{color.neutral.400}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-text-label",
+            "scss": "$color-neutral-400"
+          }
+        }
+      },
+      "helper": {
+        "$type": "color",
+        "$value": "{color.neutral.90}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-text-helper",
+            "scss": "$color-neutral-90"
+          }
+        }
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": "{color.neutral.0}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-text-inverse",
+            "scss": "$color-neutral-0"
+          }
+        }
+      }
+    },
+    "bg": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.neutral.0}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-bg-primary",
+            "scss": "$color-neutral-0"
+          }
+        }
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.neutral.20}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-bg-secondary",
+            "scss": "$color-neutral-20"
+          }
+        }
+      },
+      "tertiary": {
+        "$type": "color",
+        "$value": "{color.neutral.25}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-bg-tertiary",
+            "scss": "$color-neutral-25"
+          }
+        }
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{color.neutral.30}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-bg-disabled",
+            "scss": "$color-neutral-30"
+          }
+        }
+      }
+    },
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "{color.neutral.40}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-border-default",
+            "scss": "$color-neutral-40"
+          }
+        }
+      },
+      "strong": {
+        "$type": "color",
+        "$value": "{color.neutral.80}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-border-strong",
+            "scss": "$color-neutral-80"
+          }
+        }
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.blue.500}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-border-focus",
+            "scss": "$color-blue-500"
+          }
+        }
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{color.neutral.30}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-border-subtle",
+            "scss": "$color-neutral-30"
+          }
+        }
+      }
+    },
+    "feedback": {
+      "error": {
+        "$type": "color",
+        "$value": "{color.red.500}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-error",
+            "scss": "$color-red-500"
+          }
+        }
+      },
+      "error-text": {
+        "$type": "color",
+        "$value": "{color.red.700}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-error-text",
+            "scss": "$color-red-700"
+          }
+        }
+      },
+      "success": {
+        "$type": "color",
+        "$value": "{color.green.500}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-success",
+            "scss": "$color-green-500"
+          }
+        }
+      },
+      "success-text": {
+        "$type": "color",
+        "$value": "{color.green.700}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-success-text",
+            "scss": "$color-green-700"
+          }
+        }
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "{color.orange.600}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-warning",
+            "scss": "$color-orange-600"
+          }
+        }
+      },
+      "warning-text": {
+        "$type": "color",
+        "$value": "{color.orange.700}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-warning-text",
+            "scss": "$color-orange-700"
+          }
+        }
+      }
+    }
+  }
+}
