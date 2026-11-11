@@ -1,10 +1,10 @@
-# Gjirafa Design System (GDS) v2.6 — AI Integration Guide
+# Gjirafa Design System (GDS) v2.7 — AI Integration Guide
 
 > This document is the single source of truth for any AI tool (Claude, Cursor, Copilot, etc.)
 > building UI with GDS. Read the setup, principles and rules, plus the sections for the components you use, BEFORE generating any HTML or CSS.
 >
-> **Version:** 2.6.2 · **Live docs:** https://docs-phi-black.vercel.app
-> Every class and `--gds-*` token named here exists in the compiled CSS of v2.6.2.
+> **Version:** 2.7.0 · **Live docs:** https://docs-phi-black.vercel.app
+> Every class and `--gds-*` token named here exists in the compiled CSS of v2.7.0.
 > If something you need is not in this file, **do not invent it**. Say it is missing and ask.
 >
 > **This is the complete reference (about 60k tokens). Don't load all of it into every session.**
@@ -48,7 +48,7 @@ Changing a theme swaps the semantic layer. All components update automatically.
 
 ```html
 <!-- 1. Load GDS from the CDN, pinned to a version (fonts load automatically) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.2/docs/gjirafa-ds.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.7.0/docs/gjirafa-ds.css" />
 
 <!-- 2. Pick a theme: "codex" (default, blue) or "vpplayer" (orange) -->
 <body data-theme="codex">
@@ -66,11 +66,11 @@ body {
 
 Vue / bundler (in a global stylesheet):
 ```css
-@import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.2/docs/gjirafa-ds.css');
+@import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.7.0/docs/gjirafa-ds.css');
 ```
 
 > **Do NOT use `npm install @gjirafa/design-system`** — the NPM package is not published yet (404).
-> Always pin the version (`@v2.6.2`), never `@latest` or `@main`.
+> Always pin the version (`@v2.7.0`), never `@latest` or `@main`.
 
 Icons: GDS uses [Lucide Icons](https://lucide.dev) via `data-lucide` attributes.
 ```html
