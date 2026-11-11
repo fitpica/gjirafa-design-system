@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Local-only QA harness for the Calendar/DatePicker (no CI). Visual-regression
+// QA harness: visual regression
 // + automated a11y against deterministic fixtures served from the repo root.
+// Runs locally and in CI (.github/workflows/ci.yml, macOS runner).
 const PORT = Number(process.env.QA_PORT) || 4317;
 
 export default defineConfig({
