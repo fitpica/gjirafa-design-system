@@ -16,7 +16,7 @@ const BRAND = resolve(ROOT, 'brand.md');
 const DIR = resolve(ROOT, 'components');
 const PRINCIPLE = { 1: 'Accessible by default', 2: 'Reuse before you create', 3: 'Obvious over documented' };
 
-const contracts = Object.fromEntries(readdirSync(DIR)
+export const contracts = Object.fromEntries(readdirSync(DIR)
   .filter(f => f.endsWith('.json') && f !== 'component.schema.json')
   .map(f => { const d = JSON.parse(readFileSync(resolve(DIR, f), 'utf8')); return [d.id, d]; }));
 
@@ -24,7 +24,7 @@ const code = s => `\`${s}\``;
 const cell = s => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
 const short = (cls, block) => (cls.startsWith(block) && cls !== block ? cls.slice(block.length) : cls);
 
-function render(c) {
+export function render(c) {
   const block = c.owns[0];
   const out = [];
   out.push(`### ${c.name}`, '', c.summary, '');
@@ -76,6 +76,10 @@ function build(text) {
   return result;
 }
 
+const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) main();
+
+function main() {
 const cmd = process.argv[2];
 const current = readFileSync(BRAND, 'utf8');
 const next = build(current);
@@ -86,3 +90,4 @@ if (cmd === 'write') {
   if (next !== current) { console.error('✗ brand.md is out of date with components/*.json. Run "npm run brand".'); process.exit(1); }
   console.log(`✓ brand.md component sections match components/*.json (${Object.keys(contracts).length})`);
 } else { console.error('Usage: node scripts/brand.mjs <write|check>'); process.exit(1); }
+}
