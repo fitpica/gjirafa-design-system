@@ -9,6 +9,16 @@
 
 ---
 
+## GDS Principles
+
+Every rule in this file follows from these three. When a case is not covered, decide by them.
+
+1. **Accessible by default, not by effort.** Every combination GDS allows passes WCAG AA without anyone checking. Use only the text tokens that pass AA, never show status by colour alone (dot + label), and give tables `scope` and `aria-sort`.
+2. **Reuse before you create.** If GDS has it, use it. If GDS does not have it, do not invent a local version: say it is missing so it can become a GDS pattern. Custom CSS that duplicates a GDS component is a bug.
+3. **Obvious over documented.** If a rule has to be explained, the system should change. Defaults must be safe, one modifier means one thing, and BEM has no exceptions. Report any rule in this file you think could be removed by changing the system.
+
+---
+
 ## How This Document Works
 
 GDS is a **CSS-only** design system distributed via CDN (NPM package coming later). It provides:
@@ -509,6 +519,17 @@ Sizes: `gds-toggle--sm`, `gds-toggle--md`, `gds-toggle--lg`
 | `gds-badge--sm` | Small |
 | `gds-badge--md` | Medium (default) |
 | `gds-badge--lg` | Large |
+
+**Content status → badge (design decision, use exactly this):**
+
+| Status | Badge | Why |
+|--------|-------|-----|
+| Published | `gds-badge--positive` | Live and healthy |
+| Draft | `gds-badge--neutral` | Work in progress, no action needed |
+| Scheduled | `gds-badge--warning` | Will change state on its own, so it should draw attention |
+| Archived | `gds-badge--neutral` | No longer active |
+
+Always use the dot + label form (`gds-badge__dot` + `gds-badge__label`), so status is not shown by colour alone. Use `info` and `critical` for other meanings, not for these four statuses.
 
 ---
 
