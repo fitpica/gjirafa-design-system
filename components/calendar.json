@@ -1,0 +1,528 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "calendar",
+  "name": "Calendar / Date picker",
+  "status": "beta",
+  "summary": "A month grid for picking a date (and optionally a time), shown inline or in a popover under a date field.",
+  "docs": "https://docs-phi-black.vercel.app/?page=calendar",
+  "source": "src/components/_calendar.scss",
+  "owns": [
+    "gds-calendar",
+    "gds-time",
+    "gds-datepicker"
+  ],
+  "useWhen": [
+    "Picking one date where the weekday or nearby dates matter (publish date, embargo date, report day).",
+    "Picking a date and time together (scheduled publish).",
+    "Offering product-defined shortcuts next to the grid (advanced layout with presets: \"30 days from first upload\")."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "A date people know by heart and type faster (date of birth)",
+      "use": "input with a date format hint"
+    },
+    {
+      "case": "A relative period for a report (Last 7 days, This month)",
+      "use": "dropdown with period options"
+    },
+    {
+      "case": "Showing scheduled content over weeks or months",
+      "use": "a dedicated schedule view, not the picker grid"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-datepicker",
+      "tag": "div",
+      "required": false,
+      "parent": null,
+      "description": "Wrapper for the CSS-only date picker: position: relative anchor for .gds-calendar-popover, full width. Holds a .gds-input trigger and the popover. Not used when the ds-core createDatePicker() renders the picker (it portals a .gds-popover instead)."
+    },
+    {
+      "class": "gds-calendar-popover",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-datepicker",
+      "description": "Floating surface under the trigger (bottom-start, absolute). Hidden until --open. The product toggles it and handles collisions.",
+      "attributes": {
+        "id": "Referenced by aria-controls on the trigger",
+        "role": "dialog",
+        "aria-label": "e.g. \"Choose publish date\""
+      }
+    },
+    {
+      "class": "gds-calendar",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "The calendar body: header → grid → time → footer in a column. Can sit in .gds-calendar-popover, in a .gds-popover, or inline on the page."
+    },
+    {
+      "class": "gds-calendar__main",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-calendar",
+      "description": "Advanced layout only: left column that holds header, grid, time and footer next to __presets."
+    },
+    {
+      "class": "gds-calendar__header",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-calendar | gds-calendar__main",
+      "description": "Row: previous button, title, next button. Present in date and date-time modes; left out in time-only mode."
+    },
+    {
+      "class": "gds-calendar__nav",
+      "tag": "button",
+      "required": true,
+      "parent": "gds-calendar__header",
+      "repeat": true,
+      "description": "Previous / next month. Put it on a .gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm with a chevron-left / chevron-right icon.",
+      "attributes": {
+        "type": "button",
+        "aria-label": "\"Previous month\" / \"Next month\""
+      }
+    },
+    {
+      "class": "gds-calendar__title",
+      "tag": "h2 | div",
+      "required": true,
+      "parent": "gds-calendar__header",
+      "description": "Month and year, e.g. \"November 2026\". Plain text, or __title-select + __title-year."
+    },
+    {
+      "class": "gds-calendar__title-select",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-calendar__title",
+      "description": "Month picker affordance (\"June\" + chevron). Looks like a select; the behaviour is the product's.",
+      "attributes": {
+        "type": "button",
+        "aria-label": "e.g. \"Choose month\""
+      }
+    },
+    {
+      "class": "gds-calendar__title-year",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-calendar__title",
+      "description": "Year next to __title-select."
+    },
+    {
+      "class": "gds-calendar__grid-wrap",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-calendar | gds-calendar__main",
+      "description": "Carries role=\"grid\" so the weekday row and the day rows are valid grid children. display: contents, so it does not affect layout. Required whenever the month grid is shown.",
+      "attributes": {
+        "role": "grid",
+        "aria-label": "Month and year, e.g. \"November 2026\""
+      }
+    },
+    {
+      "class": "gds-calendar__weekdays",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-calendar__grid-wrap",
+      "description": "Weekday header row, 7 columns.",
+      "attributes": {
+        "role": "row"
+      }
+    },
+    {
+      "class": "gds-calendar__weekday",
+      "tag": "span",
+      "required": true,
+      "parent": "gds-calendar__weekdays",
+      "repeat": true,
+      "description": "Short weekday name (uppercase). 7 of them, in the locale's week order.",
+      "attributes": {
+        "role": "columnheader",
+        "aria-label": "Full weekday name when the text is abbreviated"
+      }
+    },
+    {
+      "class": "gds-calendar__grid",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-calendar__grid-wrap",
+      "description": "7 × 6 grid of days. Always reserves 6 rows so the popover does not jump between months.",
+      "attributes": {
+        "role": "rowgroup"
+      }
+    },
+    {
+      "class": "gds-calendar__week",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-calendar__grid",
+      "repeat": true,
+      "description": "One week (6 per month). display: contents, so the days stay direct grid items.",
+      "attributes": {
+        "role": "row"
+      }
+    },
+    {
+      "class": "gds-calendar__day",
+      "tag": "button",
+      "required": true,
+      "parent": "gds-calendar__week",
+      "repeat": true,
+      "description": "One day: the day number. 7 per week; adjacent-month days fill the first and last weeks with --outside.",
+      "attributes": {
+        "type": "button",
+        "role": "gridcell",
+        "aria-label": "Full date, e.g. \"Wednesday, 18 November 2026\"",
+        "tabindex": "0 on exactly one day (selected, else focused / first enabled), -1 on the rest",
+        "aria-selected": "\"true\" on the selected day",
+        "aria-current": "\"date\" on today",
+        "aria-disabled": "\"true\" (plus disabled) on unavailable days"
+      }
+    },
+    {
+      "class": "gds-calendar__day-dot",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-calendar__day",
+      "description": "Small dot under the number: the day has events (e.g. scheduled articles). Decorative; say it in the day's aria-label too."
+    },
+    {
+      "class": "gds-calendar__time",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-calendar | gds-calendar__main",
+      "description": "Time row under the grid (date-time and time-only modes), with a divider on top."
+    },
+    {
+      "class": "gds-calendar__time-label",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-calendar__time",
+      "description": "\"Time\" label before the stepper (date-time mode)."
+    },
+    {
+      "class": "gds-time-stepper",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-calendar__time",
+      "description": "HH : MM control: two __unit segments and a __separator."
+    },
+    {
+      "class": "gds-time-stepper__unit",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-time-stepper",
+      "repeat": true,
+      "description": "Bordered segment: number field + spin column. Shows the focus colour on its border when the field is focused."
+    },
+    {
+      "class": "gds-time-stepper__field",
+      "tag": "input",
+      "required": true,
+      "parent": "gds-time-stepper__unit",
+      "description": "Two-digit hour or minute. Arrow Up / Down step the value (product or ds-core JS).",
+      "attributes": {
+        "type": "text",
+        "inputmode": "numeric",
+        "maxlength": "2",
+        "role": "spinbutton",
+        "aria-label": "\"Hours\" / \"Minutes\"",
+        "aria-valuemin": "0",
+        "aria-valuemax": "23 / 59",
+        "aria-valuenow": "Current value"
+      }
+    },
+    {
+      "class": "gds-time-stepper__spin",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-time-stepper__unit",
+      "description": "Column with the up and down buttons."
+    },
+    {
+      "class": "gds-time-stepper__btn",
+      "tag": "button",
+      "required": true,
+      "parent": "gds-time-stepper__spin",
+      "repeat": true,
+      "description": "Up (first, with --up) or down (second) step button with a chevron icon.",
+      "attributes": {
+        "type": "button",
+        "aria-label": "e.g. \"Increment hours\" / \"Decrement hours\""
+      }
+    },
+    {
+      "class": "gds-time-stepper__separator",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-time-stepper",
+      "description": "The \":\" between hours and minutes."
+    },
+    {
+      "class": "gds-calendar__footer",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-calendar | gds-calendar__main",
+      "description": "Bottom row with .gds-btn gds-btn--ghost gds-btn--sm actions (Today / Now, Clear, Apply). Ghost buttons here are recoloured to the action colour."
+    },
+    {
+      "class": "gds-calendar__presets",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-calendar",
+      "description": "Advanced layout only: right column with __presets-title and a .gds-menu of shortcuts. Stacks under the calendar below 640px.",
+      "attributes": {
+        "role": "group",
+        "aria-label": "e.g. \"Shortcuts\""
+      }
+    },
+    {
+      "class": "gds-calendar__presets-title",
+      "tag": "p",
+      "required": false,
+      "parent": "gds-calendar__presets",
+      "description": "Title of the presets column."
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-calendar-popover--open",
+      "on": "gds-calendar-popover",
+      "group": "state",
+      "description": "Shows the popover (fade + slide). Set aria-expanded=\"true\" on the trigger."
+    },
+    {
+      "class": "gds-calendar-popover--align-end",
+      "on": "gds-calendar-popover",
+      "group": "layout",
+      "description": "Aligns the popover to the end edge of the trigger instead of the start."
+    },
+    {
+      "class": "gds-calendar--compact",
+      "on": "gds-calendar",
+      "group": "size",
+      "description": "Smaller day cells (re-points --calendar-day-size)."
+    },
+    {
+      "class": "gds-calendar--advanced",
+      "on": "gds-calendar",
+      "group": "layout",
+      "description": "Two columns: __main (calendar) and __presets. Needs both children."
+    },
+    {
+      "class": "gds-calendar__day--outside",
+      "on": "gds-calendar__day",
+      "group": "state",
+      "description": "Day from the previous / next month. Muted colour."
+    },
+    {
+      "class": "gds-calendar__day--today",
+      "on": "gds-calendar__day",
+      "group": "state",
+      "description": "Today: inset ring + medium weight (not colour only). Add aria-current=\"date\"."
+    },
+    {
+      "class": "gds-calendar__day--selected",
+      "on": "gds-calendar__day",
+      "group": "state",
+      "description": "Selected day: action-colour fill. Add aria-selected=\"true\"."
+    },
+    {
+      "class": "gds-calendar__day--in-range",
+      "on": "gds-calendar__day",
+      "group": "state",
+      "description": "Day between range start and end: tinted band that bridges the grid gap."
+    },
+    {
+      "class": "gds-calendar__day--range-start",
+      "on": "gds-calendar__day",
+      "group": "state",
+      "description": "First day of a range: filled disc, band reaches inward."
+    },
+    {
+      "class": "gds-calendar__day--range-end",
+      "on": "gds-calendar__day",
+      "group": "state",
+      "description": "Last day of a range: filled disc, band reaches inward."
+    },
+    {
+      "class": "gds-calendar__day--disabled",
+      "on": "gds-calendar__day",
+      "group": "state",
+      "description": "Unavailable day (before min, after max, blocked). Wins over every other state. Also set disabled and aria-disabled=\"true\"."
+    },
+    {
+      "class": "gds-calendar__time--bare",
+      "on": "gds-calendar__time",
+      "group": "style",
+      "description": "No divider and no top padding: for a time-only panel."
+    },
+    {
+      "class": "gds-time-stepper__btn--up",
+      "on": "gds-time-stepper__btn",
+      "group": "layout",
+      "description": "The up button: adds the divider line under it. The down button has no modifier."
+    }
+  ],
+  "states": [
+    {
+      "name": "open",
+      "how": "gds-calendar-popover--open on the popover + aria-expanded=\"true\" on the trigger (or the ds-core controller adds gds-popover--open)."
+    },
+    {
+      "name": "selected",
+      "how": "gds-calendar__day--selected + aria-selected=\"true\" + tabindex=\"0\"."
+    },
+    {
+      "name": "today",
+      "how": "gds-calendar__day--today + aria-current=\"date\"."
+    },
+    {
+      "name": "disabled day",
+      "how": "gds-calendar__day--disabled + disabled + aria-disabled=\"true\"."
+    },
+    {
+      "name": "range",
+      "how": "--range-start, --in-range and --range-end on the days of the range (no ds-core support yet)."
+    },
+    {
+      "name": "focused day",
+      "how": "Native :focus ring on the day that has tabindex=\"0\"; arrow keys move it (JS)."
+    }
+  ],
+  "a11y": [
+    "Grid structure: __grid-wrap role=\"grid\" (aria-label = month) > __weekdays role=\"row\" > __weekday role=\"columnheader\", and __grid role=\"rowgroup\" > __week role=\"row\" > __day role=\"gridcell\".",
+    "Days are <button>s with a full-date aria-label. Exactly one day has tabindex=\"0\" (roving tabindex); arrow keys move by day / week, Page Up / Down by month (JS).",
+    "Selected: aria-selected=\"true\". Today: aria-current=\"date\". Disabled: disabled + aria-disabled=\"true\".",
+    "Prev / next buttons need aria-label. Announce month changes in a visually hidden aria-live=\"polite\" region (.gds-sr-only).",
+    "The popover is role=\"dialog\" with an aria-label; the trigger field gets role=\"combobox\", aria-haspopup=\"dialog\", aria-expanded and aria-controls. Escape closes and focus returns to the field.",
+    "Today is shown with a ring + bold number, not colour alone. Forced-colours mode maps states to system colours.",
+    "Time fields are role=\"spinbutton\" with aria-valuemin / max / now and an aria-label."
+  ],
+  "rules": [
+    {
+      "id": "calendar-grid-structure",
+      "rule": "Wrap weekdays and weeks in __grid-wrap role=\"grid\"; every __day sits in a __week role=\"row\" inside __grid role=\"rowgroup\".",
+      "why": "Gridcells outside a row are invalid ARIA, so screen readers lose row and column position. The static docs previews get this wrong; the ds-core output gets it right.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "calendar-day-is-button",
+      "rule": ".gds-calendar__day is a <button type=\"button\"> with role=\"gridcell\" and a full-date aria-label.",
+      "why": "A bare number like \"18\" says nothing to a screen reader; a button is focusable and clickable.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "calendar-day-state-aria",
+      "rule": "--selected has aria-selected=\"true\", --today has aria-current=\"date\", --disabled has disabled and aria-disabled=\"true\".",
+      "why": "The class only changes the look; the attribute is what assistive tech reads.",
+      "principle": 1,
+      "autoCheck": true,
+      "removeInV3": "Style the days from the ARIA attributes ([aria-selected], [aria-current], [aria-disabled]) so the class and the attribute cannot drift apart."
+    },
+    {
+      "id": "calendar-one-tabbable-day",
+      "rule": "Exactly one __day has tabindex=\"0\"; all others have tabindex=\"-1\".",
+      "why": "Tab should enter the grid once and leave it; 42 tab stops make the form unusable by keyboard.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "calendar-nav-label",
+      "rule": "Each __nav button has an aria-label (\"Previous month\" / \"Next month\").",
+      "why": "They are icon-only buttons.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "calendar-reuse-primitives",
+      "rule": "Build parts from existing components: __nav on .gds-btn-icon (ghost, sm), footer actions as .gds-btn--ghost --sm, the trigger as .gds-input, presets as .gds-menu.",
+      "why": "The calendar CSS only adds layout; colours, focus and sizes come from those components.",
+      "principle": 2,
+      "autoCheck": true
+    },
+    {
+      "id": "calendar-dot-has-text",
+      "rule": "When a day has __day-dot, add what it means to the day's aria-label (e.g. \", 2 articles scheduled\").",
+      "why": "The dot is a visual cue only.",
+      "principle": 1,
+      "autoCheck": false
+    },
+    {
+      "id": "calendar-full-weeks",
+      "rule": "Always render 6 full weeks (42 days); fill before and after the month with --outside days.",
+      "why": "Keeps the 7-column grid aligned and the popover height stable when paging months; matches ds-core.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "calendar-use-ds-core",
+      "rule": "For a working picker use createDatePicker() from @gjirafa/ds-core instead of writing open/close, keyboard and date logic again.",
+      "why": "The CSS ships no behaviour; ds-core already handles keyboard, ARIA, positioning and locale.",
+      "principle": 2,
+      "autoCheck": false
+    },
+    {
+      "id": "calendar-one-popover-surface",
+      "rule": "Use one floating surface per picker: .gds-calendar-popover (CSS only) or .gds-popover (ds-core), never both.",
+      "why": "Both draw a border, shadow and radius; nesting them doubles the frame.",
+      "principle": 3,
+      "autoCheck": true,
+      "removeInV3": "Rebuild .gds-calendar-popover on .gds-popover (planned in the popover docs) and remove it."
+    }
+  ],
+  "internal": [],
+  "composes": [
+    "input",
+    "button",
+    "button-icon",
+    "menu",
+    "popover"
+  ],
+  "knownIssues": [
+    {
+      "issue": "Fails principle 1 (WCAG 2.2, 2.5.8 target size): the time stepper up/down buttons are about 16×16px; the minimum is 24×24px (axe).",
+      "fix": "Give .gds-time-stepper buttons a 24px minimum hit area (padding or min-width/min-height), keeping the 16px icon."
+    },
+    {
+      "issue": "Two popover surfaces exist: .gds-calendar-popover (absolute, inside .gds-datepicker) and the generic .gds-popover that the ds-core date picker actually renders. Same look, two code paths.",
+      "fix": "Make .gds-calendar-popover compose .gds-popover (already planned in the popover docs), then deprecate it and .gds-datepicker."
+    },
+    {
+      "issue": "ds-core createDatePicker() renders classes that are not in the CSS: gds-datepicker__popover and gds-time-stepper__btn--down.",
+      "fix": "Remove them from ds-core, or add them to the CSS and this contract."
+    },
+    {
+      "issue": "The static docs previews put role=\"grid\" on __grid with gridcells as direct children (no __grid-wrap, no __week rows) and the weekday row outside the grid. That is invalid ARIA; only the ds-core output is correct.",
+      "fix": "Update the docs previews to the anatomy above (grid-wrap > weekdays + grid > week > day)."
+    },
+    {
+      "issue": "gds-time-stepper lives in _calendar.scss but uses its own prefix, so it reads like a separate component.",
+      "fix": "v3: rename to gds-calendar__stepper, or split it into its own component if other screens need a time field."
+    },
+    {
+      "issue": "Range modifiers (--range-start, --in-range, --range-end) are styled, but ds-core has no range mode yet. Products must write range logic themselves.",
+      "fix": "Add range mode to ds-core (listed as an upcoming phase) or mark the range modifiers beta."
+    },
+    {
+      "issue": "The presets column reuses .gds-menu, which brings its own border, shadow and min-width, so it may show a framed surface inside the calendar surface.",
+      "fix": "Add a flat menu variant (no border / shadow) or reset them under .gds-calendar__presets. Check visually first."
+    },
+    {
+      "issue": "The state preview helpers .is-hover-preview / .is-focus-preview are also defined for __day (docs only, documented as internal in pagination). They break the BEM naming rule.",
+      "fix": "v3: one shared preview mechanism (e.g. a data attribute) for all components."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Publish date picker (open, November 2026)",
+      "html": "<div class=\"gds-datepicker\">\n  <div class=\"gds-input gds-input--md\">\n    <label class=\"gds-input__label\" for=\"publish-date\">Publish date</label>\n    <div class=\"gds-input__wrap\">\n      <input id=\"publish-date\" class=\"gds-input__field\" value=\"18/11/2026\" readonly role=\"combobox\" aria-haspopup=\"dialog\" aria-expanded=\"true\" aria-controls=\"publish-date-cal\" />\n      <i data-lucide=\"calendar\" class=\"gds-input__icon\"></i>\n    </div>\n  </div>\n  <div id=\"publish-date-cal\" class=\"gds-calendar-popover gds-calendar-popover--open\" role=\"dialog\" aria-label=\"Choose publish date\">\n    <div class=\"gds-calendar\">\n      <div class=\"gds-calendar__header\">\n        <button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav\" aria-label=\"Previous month\"><i data-lucide=\"chevron-left\"></i></button>\n        <h2 class=\"gds-calendar__title\">November 2026</h2>\n        <button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-calendar__nav\" aria-label=\"Next month\"><i data-lucide=\"chevron-right\"></i></button>\n      </div>\n      <div class=\"gds-calendar__grid-wrap\" role=\"grid\" aria-label=\"November 2026\">\n        <div class=\"gds-calendar__weekdays\" role=\"row\"><span class=\"gds-calendar__weekday\" role=\"columnheader\" aria-label=\"Monday\">Mo</span><span class=\"gds-calendar__weekday\" role=\"columnheader\" aria-label=\"Tuesday\">Tu</span><span class=\"gds-calendar__weekday\" role=\"columnheader\" aria-label=\"Wednesday\">We</span><span class=\"gds-calendar__weekday\" role=\"columnheader\" aria-label=\"Thursday\">Th</span><span class=\"gds-calendar__weekday\" role=\"columnheader\" aria-label=\"Friday\">Fr</span><span class=\"gds-calendar__weekday\" role=\"columnheader\" aria-label=\"Saturday\">Sa</span><span class=\"gds-calendar__weekday\" role=\"columnheader\" aria-label=\"Sunday\">Su</span></div>\n        <div class=\"gds-calendar__grid\" role=\"rowgroup\">\n          <div class=\"gds-calendar__week\" role=\"row\">\n            <button class=\"gds-calendar__day gds-calendar__day--outside gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Monday, 26 October 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>26</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Tuesday, 27 October 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>27</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Wednesday, 28 October 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>28</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Thursday, 29 October 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>29</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Friday, 30 October 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>30</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Saturday, 31 October 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>31</button>\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Sunday, 1 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>1</button>\n          </div>\n          <div class=\"gds-calendar__week\" role=\"row\">\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Monday, 2 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>2</button>\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Tuesday, 3 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>3</button>\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Wednesday, 4 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>4</button>\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Thursday, 5 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>5</button>\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Friday, 6 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>6</button>\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Saturday, 7 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>7</button>\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Sunday, 8 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>8</button>\n          </div>\n          <div class=\"gds-calendar__week\" role=\"row\">\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Monday, 9 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>9</button>\n            <button class=\"gds-calendar__day gds-calendar__day--disabled\" type=\"button\" role=\"gridcell\" aria-label=\"Tuesday, 10 November 2026\" tabindex=\"-1\" aria-disabled=\"true\" disabled>10</button>\n            <button class=\"gds-calendar__day gds-calendar__day--today\" type=\"button\" role=\"gridcell\" aria-label=\"Wednesday, 11 November 2026\" tabindex=\"-1\" aria-current=\"date\">11</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Thursday, 12 November 2026\" tabindex=\"-1\">12</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Friday, 13 November 2026\" tabindex=\"-1\">13</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Saturday, 14 November 2026\" tabindex=\"-1\">14</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Sunday, 15 November 2026\" tabindex=\"-1\">15</button>\n          </div>\n          <div class=\"gds-calendar__week\" role=\"row\">\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Monday, 16 November 2026\" tabindex=\"-1\">16</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Tuesday, 17 November 2026\" tabindex=\"-1\">17</button>\n            <button class=\"gds-calendar__day gds-calendar__day--selected\" type=\"button\" role=\"gridcell\" aria-label=\"Wednesday, 18 November 2026\" tabindex=\"0\" aria-selected=\"true\">18</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Thursday, 19 November 2026\" tabindex=\"-1\">19</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Friday, 20 November 2026, 2 articles scheduled\" tabindex=\"-1\">20<span class=\"gds-calendar__day-dot\"></span></button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Saturday, 21 November 2026\" tabindex=\"-1\">21</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Sunday, 22 November 2026\" tabindex=\"-1\">22</button>\n          </div>\n          <div class=\"gds-calendar__week\" role=\"row\">\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Monday, 23 November 2026\" tabindex=\"-1\">23</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Tuesday, 24 November 2026\" tabindex=\"-1\">24</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Wednesday, 25 November 2026\" tabindex=\"-1\">25</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Thursday, 26 November 2026\" tabindex=\"-1\">26</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Friday, 27 November 2026\" tabindex=\"-1\">27</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Saturday, 28 November 2026\" tabindex=\"-1\">28</button>\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Sunday, 29 November 2026\" tabindex=\"-1\">29</button>\n          </div>\n          <div class=\"gds-calendar__week\" role=\"row\">\n            <button class=\"gds-calendar__day\" type=\"button\" role=\"gridcell\" aria-label=\"Monday, 30 November 2026\" tabindex=\"-1\">30</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside\" type=\"button\" role=\"gridcell\" aria-label=\"Tuesday, 1 December 2026\" tabindex=\"-1\">1</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside\" type=\"button\" role=\"gridcell\" aria-label=\"Wednesday, 2 December 2026\" tabindex=\"-1\">2</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside\" type=\"button\" role=\"gridcell\" aria-label=\"Thursday, 3 December 2026\" tabindex=\"-1\">3</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside\" type=\"button\" role=\"gridcell\" aria-label=\"Friday, 4 December 2026\" tabindex=\"-1\">4</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside\" type=\"button\" role=\"gridcell\" aria-label=\"Saturday, 5 December 2026\" tabindex=\"-1\">5</button>\n            <button class=\"gds-calendar__day gds-calendar__day--outside\" type=\"button\" role=\"gridcell\" aria-label=\"Sunday, 6 December 2026\" tabindex=\"-1\">6</button>\n          </div>\n        </div>\n      </div>\n      <div class=\"gds-sr-only\" aria-live=\"polite\" aria-atomic=\"true\"></div>\n      <div class=\"gds-calendar__footer\">\n        <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--sm\" aria-label=\"Select today's date\"><span class=\"gds-btn__label\">Today</span></button>\n        <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--sm\" aria-label=\"Clear selected date\"><span class=\"gds-btn__label\">Clear</span></button>\n      </div>\n    </div>\n  </div>\n</div>"
+    },
+    {
+      "name": "Time only (embargo time)",
+      "html": "<div class=\"gds-calendar\" role=\"group\" aria-label=\"Embargo time\">\n  <div class=\"gds-calendar__time gds-calendar__time--bare\">\n    <div class=\"gds-time-stepper\">\n      <div class=\"gds-time-stepper__unit\">\n        <input class=\"gds-time-stepper__field\" type=\"text\" inputmode=\"numeric\" maxlength=\"2\" value=\"09\" role=\"spinbutton\" aria-label=\"Hours\" aria-valuemin=\"0\" aria-valuemax=\"23\" aria-valuenow=\"9\" />\n        <span class=\"gds-time-stepper__spin\">\n          <button type=\"button\" class=\"gds-time-stepper__btn gds-time-stepper__btn--up\" aria-label=\"Increment hours\"><i data-lucide=\"chevron-up\"></i></button>\n          <button type=\"button\" class=\"gds-time-stepper__btn\" aria-label=\"Decrement hours\"><i data-lucide=\"chevron-down\"></i></button>\n        </span>\n      </div>\n      <span class=\"gds-time-stepper__separator\">:</span>\n      <div class=\"gds-time-stepper__unit\">\n        <input class=\"gds-time-stepper__field\" type=\"text\" inputmode=\"numeric\" maxlength=\"2\" value=\"30\" role=\"spinbutton\" aria-label=\"Minutes\" aria-valuemin=\"0\" aria-valuemax=\"59\" aria-valuenow=\"30\" />\n        <span class=\"gds-time-stepper__spin\">\n          <button type=\"button\" class=\"gds-time-stepper__btn gds-time-stepper__btn--up\" aria-label=\"Increment minutes\"><i data-lucide=\"chevron-up\"></i></button>\n          <button type=\"button\" class=\"gds-time-stepper__btn\" aria-label=\"Decrement minutes\"><i data-lucide=\"chevron-down\"></i></button>\n        </span>\n      </div>\n    </div>\n  </div>\n  <div class=\"gds-calendar__footer\">\n    <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--sm\" aria-label=\"Set the current time\"><span class=\"gds-btn__label\">Now</span></button>\n    <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--sm\" aria-label=\"Clear selected time\"><span class=\"gds-btn__label\">Clear</span></button>\n  </div>\n</div>"
+    }
+  ]
+}

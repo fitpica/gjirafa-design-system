@@ -1,0 +1,151 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "popover",
+  "name": "Popover",
+  "status": "beta",
+  "summary": "A generic floating surface anchored to a trigger, for interactive content such as a small form, a calendar or a menu.",
+  "docs": "https://docs-phi-black.vercel.app/?page=popover",
+  "source": "src/components/_popover.scss",
+  "owns": ["gds-popover"],
+  "useWhen": [
+    "Interactive content that belongs to one control and should not leave the page context (embed code with a Copy button, quick edit of a title, column settings).",
+    "Hosting another component that has to float: the date picker calendar.",
+    "Content that must escape a clipping container (table cell, modal, scrolling panel)."
+  ],
+  "dontUseWhen": [
+    { "case": "A short, non-interactive hint on hover or focus", "use": "tooltip" },
+    { "case": "A list of actions (Edit, Duplicate, Delete)", "use": "menu" },
+    { "case": "Choosing a value from a list", "use": "dropdown" },
+    { "case": "A task that needs full attention or a confirmation (Delete article?)", "use": "modal" }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-popover",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "The surface: light background, border, radius, shadow, max-height with scroll. position: fixed by default; the createPopover() controller writes top / left inline. Hidden (opacity + visibility) until --open.",
+      "attributes": {
+        "id": "Referenced by aria-controls on the trigger",
+        "role": "dialog (default) | menu | listbox | grid, set by the controller from its role option",
+        "aria-label": "Name of the surface, e.g. \"Embed code\" (or aria-labelledby a heading inside)",
+        "aria-modal": "\"true\" only in modal mode (controller)"
+      }
+    },
+    {
+      "class": "gds-popover__content",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-popover",
+      "description": "Padding wrapper (--popover-padding). Leave it out when the content brings its own spacing (e.g. .gds-calendar)."
+    },
+    {
+      "class": "gds-popover__arrow",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-popover",
+      "description": "Optional decorative diamond pointing at the trigger. The controller positions it (arrow option).",
+      "attributes": {
+        "aria-hidden": "true"
+      }
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-popover--open",
+      "on": "gds-popover",
+      "group": "state",
+      "description": "Visible. Toggled by the controller together with aria-expanded on the trigger."
+    }
+  ],
+  "states": [
+    { "name": "open", "how": "gds-popover--open on the surface + aria-expanded=\"true\" on the trigger (both set by createPopover())." },
+    { "name": "closed", "how": "No --open. The element stays in the DOM (it fades out and Floating UI can measure it)." }
+  ],
+  "a11y": [
+    "Trigger: a <button> with aria-haspopup (matching the role), aria-controls = popover id and aria-expanded. createPopover() sets all three.",
+    "Surface: a role (dialog by default) and an accessible name (aria-label or aria-labelledby).",
+    "Escape and outside click close it; focus moves into the surface on open and back to the trigger on close (controller).",
+    "Modal mode traps focus and makes the background inert; use it only when the popover must be finished before going on.",
+    "Reduced motion: the open / close transition snaps. Forced colours: the border stays visible."
+  ],
+  "rules": [
+    {
+      "id": "popover-trigger-aria",
+      "rule": "The trigger has aria-haspopup, aria-controls pointing to the popover id, and aria-expanded matching gds-popover--open.",
+      "why": "Screen readers announce that the button opens something and whether it is open.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "popover-accessible-name",
+      "rule": "A .gds-popover with role=\"dialog\" has aria-label or aria-labelledby.",
+      "why": "An unnamed dialog is announced as just \"dialog\".",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "popover-arrow-hidden",
+      "rule": ".gds-popover__arrow has aria-hidden=\"true\".",
+      "why": "It is decoration only.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "popover-use-controller",
+      "rule": "Position, open and dismiss the popover with createPopover() from @gjirafa/ds-core; do not hand-write top / left.",
+      "why": "The controller handles flip, shift, scroll, portal out of clipping parents, Escape and focus return; the CSS alone puts the surface at the top-left of the viewport.",
+      "principle": 2,
+      "autoCheck": false,
+      "removeInV3": "Use CSS anchor positioning once browser support allows, so a CSS-only popover can place itself."
+    },
+    {
+      "id": "popover-content-padding",
+      "rule": "Wrap plain content in __content; put components with their own padding (.gds-calendar) directly in .gds-popover.",
+      "why": "Otherwise the padding is doubled.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "popover-not-for-hints",
+      "rule": "Use a popover for interactive content opened by a click; use a tooltip for short text on hover or focus.",
+      "why": "A popover takes focus and needs a click to open; a tooltip must never hold controls.",
+      "principle": 2,
+      "autoCheck": false
+    }
+  ],
+  "internal": [],
+  "composes": ["calendar", "input", "button"],
+  "knownIssues": [
+    {
+      "issue": ".gds-calendar-popover duplicates this surface (same border, radius, shadow) with its own absolute positioning.",
+      "fix": "Rebuild .gds-calendar-popover on .gds-popover (already planned in the popover docs)."
+    },
+    {
+      "issue": ".gds-menu and .gds-dropdown__panel carry their own background, border and shadow. Putting them in a .gds-popover draws two frames.",
+      "fix": "v3: menu and dropdown panel take their surface from .gds-popover (or get a flat variant)."
+    },
+    {
+      "issue": "Without the controller the surface is position: fixed with no coordinates, so it shows at the top-left of the viewport.",
+      "fix": "Document the controller as required; later add CSS anchor positioning as a fallback."
+    },
+    {
+      "issue": "The arrow is a rotated square in the surface colour with no border, while the surface has a 1px border. The arrow may look cut off from the frame. Needs a visual check.",
+      "fix": "Give the arrow the same border on its two outer sides."
+    },
+    {
+      "issue": "Open state naming differs across overlays: gds-popover--open, gds-dropdown--open, gds-calendar-popover--open, and is-open on the tooltip and the table action menu.",
+      "fix": "v3: one convention for every overlay (e.g. --open on the surface)."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Embed code (open)",
+      "html": "<button type=\"button\" class=\"gds-btn gds-btn--secondary gds-btn--sm\" aria-haspopup=\"dialog\" aria-controls=\"embed-popover\" aria-expanded=\"true\"><span class=\"gds-btn__label\">Embed</span></button>\n<div id=\"embed-popover\" class=\"gds-popover gds-popover--open\" role=\"dialog\" aria-label=\"Embed code\">\n  <div class=\"gds-popover__content\">\n    <div class=\"gds-input gds-input--sm\">\n      <label class=\"gds-input__label\" for=\"embed-code\">Embed code</label>\n      <div class=\"gds-input__wrap\">\n        <input id=\"embed-code\" class=\"gds-input__field\" value=\"&lt;iframe src=&quot;https://vp.gjirafa.net/embed/8f3k2&quot;&gt;&lt;/iframe&gt;\" readonly />\n      </div>\n    </div>\n    <button type=\"button\" class=\"gds-btn gds-btn--secondary gds-btn--sm\"><span class=\"gds-btn__label\">Copy code</span></button>\n  </div>\n</div>"
+    },
+    {
+      "name": "Closed, with arrow",
+      "html": "<button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--sm\" aria-haspopup=\"dialog\" aria-controls=\"seo-popover\" aria-expanded=\"false\"><span class=\"gds-btn__label\">SEO preview</span></button>\n<div id=\"seo-popover\" class=\"gds-popover\" role=\"dialog\" aria-label=\"SEO preview\">\n  <div class=\"gds-popover__content\">\n    <p>Kosovo wins the regional cup | Gjirafa News</p>\n  </div>\n  <div class=\"gds-popover__arrow\" aria-hidden=\"true\"></div>\n</div>"
+    }
+  ]
+}

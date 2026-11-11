@@ -1,0 +1,305 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "modal",
+  "name": "Modal",
+  "status": "stable",
+  "summary": "A centred dialog over a dimmed page that blocks everything else until the user confirms, decides or cancels.",
+  "docs": "https://docs-phi-black.vercel.app/?page=modal",
+  "source": "src/components/_modal.scss",
+  "owns": [
+    "gds-modal"
+  ],
+  "useWhen": [
+    "A decision that must be made before going on: \"Publish now?\", \"Discard changes?\".",
+    "Irreversible or destructive actions (delete entry, unpublish, remove user): use --destructive.",
+    "Short, focused tasks with a few fields (rename a tag, merge tags) that make sense without seeing the page."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "Editing entry details while the list or page stays in view",
+      "use": "sidepanel"
+    },
+    {
+      "case": "Long forms or many sections",
+      "use": "sidepanel (--lg) or a full page"
+    },
+    {
+      "case": "Telling the user something happened",
+      "use": "toast"
+    },
+    {
+      "case": "A persistent problem on the page",
+      "use": "alert"
+    },
+    {
+      "case": "A confirmation started from inside a side panel",
+      "use": "a confirmation inside the panel (modal z-index is below the panel, known issue)"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-modal-overlay",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "Fixed full-screen backdrop that centres the modal. Hidden (opacity 0, visibility hidden) until --open. Product JS may close on backdrop click, except for destructive modals."
+    },
+    {
+      "class": "gds-modal",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-modal-overlay",
+      "description": "The dialog box: white, 640px (md) or 456px (sm), max height viewport minus 64px each side. Full-screen below 640px.",
+      "attributes": {
+        "role": "\"dialog\", or \"alertdialog\" for --destructive",
+        "aria-modal": "\"true\"",
+        "aria-labelledby": "id of .gds-modal__title",
+        "aria-describedby": "id of .gds-modal__desc (required for alertdialog)"
+      }
+    },
+    {
+      "class": "gds-modal__close",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-modal",
+      "description": "Close button, top-right, first child of the modal. Combine with gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle and a Lucide x icon.",
+      "attributes": {
+        "type": "button",
+        "aria-label": "\"Close\""
+      }
+    },
+    {
+      "class": "gds-modal__inner",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-modal",
+      "description": "Scroll container with side padding. Header and footer stick to its top and bottom."
+    },
+    {
+      "class": "gds-modal__header",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-modal__inner",
+      "description": "Sticky header with title and description."
+    },
+    {
+      "class": "gds-modal__title",
+      "tag": "h2",
+      "required": true,
+      "parent": "gds-modal__header",
+      "description": "Dialog title (16px medium). Give it an id for aria-labelledby.",
+      "attributes": {
+        "id": "referenced by aria-labelledby"
+      }
+    },
+    {
+      "class": "gds-modal__desc",
+      "tag": "p",
+      "required": false,
+      "parent": "gds-modal__header",
+      "description": "Supporting text (14px). For destructive modals, say what will be lost. Give it an id for aria-describedby."
+    },
+    {
+      "class": "gds-modal__body",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-modal__inner",
+      "description": "Content: text, form fields (gds-input, gds-dropdown, gds-checkbox…). Column with 20px gap."
+    },
+    {
+      "class": "gds-modal__footer",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-modal__inner",
+      "description": "Sticky footer with actions, right-aligned: secondary/ghost first, primary last."
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-modal-overlay--open",
+      "on": "gds-modal-overlay",
+      "group": "state",
+      "description": "Shows the overlay and animates the modal in (fade + scale)."
+    },
+    {
+      "class": "gds-modal--sm",
+      "on": "gds-modal",
+      "group": "size",
+      "description": "456px. Confirmations and one or two fields."
+    },
+    {
+      "class": "gds-modal--md",
+      "on": "gds-modal",
+      "group": "size",
+      "description": "640px. Short forms.",
+      "default": true
+    },
+    {
+      "class": "gds-modal--destructive",
+      "on": "gds-modal",
+      "group": "variant",
+      "description": "Turns the .gds-btn--primary in the footer red (critical colours). For irreversible actions."
+    },
+    {
+      "class": "gds-modal__header--scrolled",
+      "on": "gds-modal__header",
+      "group": "state",
+      "description": "Divider under the header. Product JS adds it when the body is scrolled away from the top."
+    },
+    {
+      "class": "gds-modal__footer--scrolled",
+      "on": "gds-modal__footer",
+      "group": "state",
+      "description": "Divider above the footer. Product JS adds it while there is more content below."
+    },
+    {
+      "class": "gds-modal__footer--split",
+      "on": "gds-modal__footer",
+      "group": "layout",
+      "description": "First action left, the rest right (e.g. \"Back\" left, \"Cancel / Next\" right)."
+    }
+  ],
+  "states": [
+    {
+      "name": "closed",
+      "how": "gds-modal-overlay without --open (stays in the DOM, invisible and hidden from assistive tech by visibility: hidden), or not rendered."
+    },
+    {
+      "name": "open",
+      "how": "Add gds-modal-overlay--open; then move focus into the modal."
+    },
+    {
+      "name": "scrolled",
+      "how": "Toggle __header--scrolled when __inner scrollTop > 0 and __footer--scrolled while it is not scrolled to the end."
+    }
+  ],
+  "a11y": [
+    "role=\"dialog\" (or \"alertdialog\" for destructive), aria-modal=\"true\" and aria-labelledby on .gds-modal, the element that contains the content.",
+    "Destructive modals: role=\"alertdialog\" with aria-describedby on the consequence text.",
+    "The close button has aria-label=\"Close\".",
+    "Product JS: on open move focus into the modal (first field, or Cancel in a destructive modal), keep Tab inside it, close on Escape, make the page behind inert, and return focus to the trigger on close.",
+    "Lock page scroll while open (product JS)."
+  ],
+  "rules": [
+    {
+      "id": "modal-dialog-role",
+      "rule": ".gds-modal has role=\"dialog\" or \"alertdialog\", aria-modal=\"true\" and aria-labelledby pointing to the id of .gds-modal__title.",
+      "why": "Screen readers then announce a dialog with its title and treat the page behind as unavailable.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "modal-close-label",
+      "rule": ".gds-modal__close is a <button type=\"button\"> with aria-label.",
+      "why": "It shows only an x icon.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "modal-destructive-alertdialog",
+      "rule": "A .gds-modal--destructive uses role=\"alertdialog\" and aria-describedby pointing to .gds-modal__desc, which says what will be lost.",
+      "why": "The consequence is read out together with the title.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "modal-destructive-label",
+      "rule": "In a destructive modal the confirm button names the action (\"Delete entry\", \"Unpublish\"), never \"OK\" or \"Yes\". Initial focus goes to Cancel; the backdrop does not close it.",
+      "why": "People confirm by habit; a specific label and a safe default prevent accidents.",
+      "principle": 3,
+      "autoCheck": false
+    },
+    {
+      "id": "modal-destructive-primary",
+      "rule": "In a .gds-modal--destructive, the confirm button is .gds-btn--primary (the modifier makes it red). Do not add a second primary.",
+      "why": "The modifier only recolours .gds-btn--primary inside the footer.",
+      "principle": 2,
+      "autoCheck": true,
+      "removeInV3": "Remove --destructive and use .gds-btn--critical in the footer directly."
+    },
+    {
+      "id": "modal-one-primary",
+      "rule": "The footer has at most one .gds-btn--primary, placed last. Cancel uses .gds-btn--ghost.",
+      "why": "One clear main action, same order in every dialog.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "modal-focus-management",
+      "rule": "Product JS: on open move focus into the modal (first field, or Cancel in a destructive modal), keep Tab inside it, close on Escape, make the page behind inert, and return focus to the trigger on close.",
+      "why": "Without it keyboard and screen reader users can reach the page behind or get lost after closing.",
+      "principle": 1,
+      "autoCheck": false
+    },
+    {
+      "id": "modal-size-choice",
+      "rule": "Use --sm for confirmations, --md (default) for short forms. Anything longer goes in a side panel or a page.",
+      "why": "A modal hides the context; long tasks in it are hard to check and easy to lose.",
+      "principle": 3,
+      "autoCheck": false
+    },
+    {
+      "id": "modal-scroll-dividers",
+      "rule": "Toggle __header--scrolled and __footer--scrolled from the scroll position of __inner.",
+      "why": "Shows that content continues under the sticky header or footer.",
+      "principle": 3,
+      "autoCheck": false,
+      "removeInV3": "Use CSS scroll-driven animations so no JS is needed."
+    },
+    {
+      "id": "modal-not-over-sidepanel",
+      "rule": "Do not open a modal from inside an open side panel.",
+      "why": "The modal overlay (z-index 1000) renders behind the side panel (1020).",
+      "principle": 3,
+      "autoCheck": false,
+      "removeInV3": "Put the modal above the side panel in the z-index scale."
+    }
+  ],
+  "internal": [],
+  "composes": [
+    "button",
+    "input",
+    "dropdown",
+    "checkbox"
+  ],
+  "knownIssues": [
+    {
+      "issue": "z-index: modal overlay is 1000, side panel is 1020. A modal opened from a side panel (delete, discard changes) appears behind it.",
+      "fix": "Raise --modal-z-index above --sidepanel-z-index (e.g. a $z-modal token at 1025)."
+    },
+    {
+      "issue": "--destructive re-implements critical button colours on .gds-btn--primary instead of using .gds-btn--critical.",
+      "fix": "v3: drop --destructive; footer uses .gds-btn--critical."
+    },
+    {
+      "issue": "Docs put role=\"dialog\" and aria-modal on the overlay, and the close buttons have no aria-label.",
+      "fix": "Move the role to .gds-modal and add aria-label=\"Close\" in the docs."
+    },
+    {
+      "issue": "__header--scrolled / __footer--scrolled need JS to work.",
+      "fix": "CSS scroll-driven animation or scroll shadows."
+    },
+    {
+      "issue": "Mobile rule uses width: 100% !important and max-height: 100vh (mobile browser bars can cover the footer).",
+      "fix": "Drop !important; use 100dvh."
+    },
+    {
+      "issue": "--modal-scroll-shadow token is defined but not used.",
+      "fix": "Remove it or use it for the scroll dividers."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Publish confirmation",
+      "html": "<div class=\"gds-modal-overlay gds-modal-overlay--open\">\n  <div class=\"gds-modal gds-modal--sm\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"publish-title\" aria-describedby=\"publish-desc\">\n    <button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle gds-modal__close\" aria-label=\"Close\"><i data-lucide=\"x\"></i></button>\n    <div class=\"gds-modal__inner\">\n      <div class=\"gds-modal__header\">\n        <h2 class=\"gds-modal__title\" id=\"publish-title\">Publish article?</h2>\n        <p class=\"gds-modal__desc\" id=\"publish-desc\">\"Election night: live results\" will be visible on the website and in the app right away.</p>\n      </div>\n      <div class=\"gds-modal__footer\">\n        <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--md\"><span class=\"gds-btn__label\">Cancel</span></button>\n        <button type=\"button\" class=\"gds-btn gds-btn--primary gds-btn--md\"><span class=\"gds-btn__label\">Publish now</span></button>\n      </div>\n    </div>\n  </div>\n</div>"
+    },
+    {
+      "name": "Delete entry (destructive)",
+      "html": "<div class=\"gds-modal-overlay gds-modal-overlay--open\">\n  <div class=\"gds-modal gds-modal--sm gds-modal--destructive\" role=\"alertdialog\" aria-modal=\"true\" aria-labelledby=\"delete-title\" aria-describedby=\"delete-desc\">\n    <button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle gds-modal__close\" aria-label=\"Close\"><i data-lucide=\"x\"></i></button>\n    <div class=\"gds-modal__inner\">\n      <div class=\"gds-modal__header\">\n        <h2 class=\"gds-modal__title\" id=\"delete-title\">Delete this entry?</h2>\n        <p class=\"gds-modal__desc\" id=\"delete-desc\">\"Summer festival guide\" and its 3 translations will be deleted. This cannot be undone.</p>\n      </div>\n      <div class=\"gds-modal__footer\">\n        <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--md\"><span class=\"gds-btn__label\">Cancel</span></button>\n        <button type=\"button\" class=\"gds-btn gds-btn--primary gds-btn--md\"><span class=\"gds-btn__label\">Delete entry</span></button>\n      </div>\n    </div>\n  </div>\n</div>"
+    },
+    {
+      "name": "Rename tag (short form)",
+      "html": "<div class=\"gds-modal-overlay gds-modal-overlay--open\">\n  <div class=\"gds-modal gds-modal--sm\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"rename-title\">\n    <button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm gds-btn-icon--circle gds-modal__close\" aria-label=\"Close\"><i data-lucide=\"x\"></i></button>\n    <div class=\"gds-modal__inner\">\n      <div class=\"gds-modal__header\">\n        <h2 class=\"gds-modal__title\" id=\"rename-title\">Rename tag</h2>\n      </div>\n      <div class=\"gds-modal__body\">\n        <div class=\"gds-input gds-input--md\">\n          <label class=\"gds-input__label\" for=\"tag-name\">Tag name</label>\n          <div class=\"gds-input__wrap\"><input type=\"text\" class=\"gds-input__field\" id=\"tag-name\" value=\"Elections 2026\" /></div>\n        </div>\n      </div>\n      <div class=\"gds-modal__footer\">\n        <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--md\"><span class=\"gds-btn__label\">Cancel</span></button>\n        <button type=\"button\" class=\"gds-btn gds-btn--primary gds-btn--md\"><span class=\"gds-btn__label\">Save</span></button>\n      </div>\n    </div>\n  </div>\n</div>"
+    }
+  ]
+}

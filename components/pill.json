@@ -1,0 +1,68 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "pill",
+  "name": "Pill (number count)",
+  "status": "stable",
+  "summary": "A small circle with a number: unread counts, items in a tab, or the number of a step.",
+  "docs": "https://docs-phi-black.vercel.app/?page=pill",
+  "source": "src/components/_pill.scss",
+  "owns": ["gds-pill"],
+  "useWhen": [
+    "Showing how many items are waiting: unread notifications, comments to review, failed uploads.",
+    "A count next to a tab or menu label (Drafts 4).",
+    "Numbering the steps of a short flow."
+  ],
+  "dontUseWhen": [
+    { "case": "Words, statuses or labels (Published, On track)", "use": "badge" },
+    { "case": "A count inside a badge or filter", "use": "badge (gds-badge__count) or filter-badge" },
+    { "case": "A percentage change", "use": "pct-badge" },
+    { "case": "Presence without a number", "use": "status-dot" }
+  ],
+  "anatomy": [
+    { "class": "gds-pill", "tag": "span", "required": true, "parent": null, "description": "The circle. Its text is the number (one or two characters). Fixed width per size: longer text is clipped.", "attributes": { "aria-hidden": "\"true\" when nearby text already says the count; otherwise add visually hidden context, e.g. \"3 unread notifications\"" } }
+  ],
+  "modifiers": [
+    { "class": "gds-pill--sm", "on": "gds-pill", "group": "size", "description": "16px. Next to icons (notification bell) and small labels." },
+    { "class": "gds-pill--md", "on": "gds-pill", "group": "size", "description": "20px. Tabs and menu items. Same as the base size.", "default": true },
+    { "class": "gds-pill--lg", "on": "gds-pill", "group": "size", "description": "24px. Step numbers." },
+    { "class": "gds-pill--neutral", "on": "gds-pill", "group": "variant", "description": "Gray. Passive counts. Same as the base colour.", "default": true },
+    { "class": "gds-pill--critical", "on": "gds-pill", "group": "variant", "description": "Red. Counts that need action: errors, failed items, urgent notifications." },
+    { "class": "gds-pill--positive", "on": "gds-pill", "group": "variant", "description": "Green. Completed steps or successful items." },
+    { "class": "gds-pill--warning", "on": "gds-pill", "group": "variant", "description": "Orange. Counts that need attention soon (items expiring, pending review)." },
+    { "class": "gds-pill--purple", "on": "gds-pill", "group": "variant", "description": "Purple. Category counts with no status meaning." },
+    { "class": "gds-pill--blank", "on": "gds-pill", "group": "variant", "description": "No background, gray number. Upcoming steps." },
+    { "class": "gds-pill--dark", "on": "gds-pill", "group": "style", "description": "Solid fill with white text instead of the light tint. Combine with a tone (alone it is dark gray). Do not combine with --blank: dark overrides it." }
+  ],
+  "states": [],
+  "a11y": [
+    "A number alone means nothing to a screen reader: either the visible label next to it says what is counted, or add visually hidden text such as \"3 unread notifications\".",
+    "When the count changes live (new notifications), announce the change in a polite live region elsewhere, not on every pill.",
+    "Do not show meaning by colour alone: the label or the step text must say it too.",
+    "Light tones meet text contrast except warning (just under 4.5:1); dark tones do not (see knownIssues)."
+  ],
+  "rules": [
+    { "id": "pill-numbers-only", "rule": "A .gds-pill contains a number of one or two characters (e.g. 3, 12, 9+). Never words.", "why": "The width is fixed, so longer text is cut off; words belong in a badge.", "principle": 2, "autoCheck": true, "removeInV3": "Give the pill a min-width and padding so longer counts (99+) grow instead of clipping." },
+    { "id": "pill-has-context", "rule": "Every pill sits next to text that says what is counted, or contains visually hidden text that does.", "why": "\"3\" alone does not tell anyone what there are three of.", "principle": 1, "autoCheck": false },
+    { "id": "pill-not-interactive", "rule": "A .gds-pill is never a <button> or <a>; make the parent tab, menu item or button clickable instead.", "why": "Pills have no hover or focus styles, and a 16–24px target is too small.", "principle": 1, "autoCheck": true },
+    { "id": "pill-one-tone", "rule": "A pill has at most one tone class; gds-pill--dark is not combined with gds-pill--blank.", "why": "Two tones give an undefined colour, and dark silently overrides blank.", "principle": 3, "autoCheck": true },
+    { "id": "pill-dark-for-action", "rule": "Use gds-pill--dark for counts that ask for action (unread, errors); use the light style for passive totals.", "why": "The solid fill pulls the eye; keep it for things people should act on.", "principle": 3, "autoCheck": false }
+  ],
+  "composes": [],
+  "knownIssues": [
+    { "issue": "Width is fixed per size and overflow is hidden, so three or more characters (100, 99+) are clipped.", "fix": "Use min-width plus horizontal padding instead of a fixed width." },
+    { "issue": "White text on the dark tones is below 4.5:1: warning about 2.5:1, purple and critical about 3.5:1, positive about 4:1.", "fix": "Use the 700 shades for dark backgrounds, or dark text on warning." },
+    { "issue": "Light warning (orange-700 on orange-50) is about 4.35:1, just under 4.5:1 for small text.", "fix": "Use orange-900 text, as the warning chip does." },
+    { "issue": "gds-pill--dark and gds-pill--blank have the same specificity and dark comes later, so blank + dark renders as dark gray.", "fix": "Scope --dark rules to exclude --blank, or document the pair as invalid (rule pill-one-tone)." },
+    { "issue": "The name collides with gds-btn--pill and \"pill shape\" chips, which mean rounded corners, while this component is a number count. brand.md even shows text like \"On Track\" in a pill, which gets clipped.", "fix": "v3: rename to gds-count. Now: fix the brand.md example." }
+  ],
+  "examples": [
+    {
+      "name": "Unread notifications on the header bell",
+      "html": "<button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--md\" aria-label=\"Notifications, 3 unread\">\n  <i data-lucide=\"bell\"></i>\n</button>\n<span class=\"gds-pill gds-pill--sm gds-pill--dark gds-pill--critical\" aria-hidden=\"true\">3</span>"
+    },
+    {
+      "name": "Count next to a list label",
+      "html": "<span>Waiting for review</span>\n<span class=\"gds-pill gds-pill--md gds-pill--warning\">12</span>"
+    }
+  ]
+}

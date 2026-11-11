@@ -1,0 +1,86 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "tabs",
+  "name": "Tabs",
+  "status": "stable",
+  "summary": "A row (or column) of tabs that switches between panels of related content on the same page.",
+  "docs": "https://docs-phi-black.vercel.app/?page=tabs",
+  "source": "src/components/_tabs.scss",
+  "owns": ["gds-tab", "gds-tabs"],
+  "useWhen": [
+    "Splitting one object into views of the same level (e.g. an entry's Content, SEO, Media, History).",
+    "Settings pages with a few sections, with --vertical.",
+    "Switching a view mode of the same data, with --filled (e.g. Grid / List)."
+  ],
+  "dontUseWhen": [
+    { "case": "Moving between pages of the app (the URL changes)", "use": "sidebar or navigation links with aria-current" },
+    { "case": "Steps that must be done in order", "use": "stepper" },
+    { "case": "Filtering a list by a value", "use": "chip or filter-badge" },
+    { "case": "More than about 7 sections, or content people need to compare side by side", "use": "a single page with headings" }
+  ],
+  "anatomy": [
+    { "class": "gds-tabs-wrap", "tag": "div", "required": false, "parent": null, "description": "Optional wrapper around a scrolling .gds-tabs. Shows fade edges when the fade modifiers are set by JS." },
+    { "class": "gds-tabs", "tag": "div", "required": true, "parent": null, "description": "The tab list. Horizontal with a bottom border by default; scrolls sideways when it overflows.", "attributes": { "role": "tablist", "aria-label": "What the tabs switch between, e.g. \"Entry sections\"", "aria-orientation": "\"vertical\" with gds-tabs--vertical" } },
+    { "class": "gds-tab", "tag": "button", "required": true, "parent": "gds-tabs", "repeat": true, "description": "One tab. A <button> (the CSS resets its button styles).", "attributes": { "type": "button", "role": "tab", "id": "Referenced by the panel's aria-labelledby", "aria-selected": "\"true\" on the active tab, \"false\" on the others", "aria-controls": "id of the tab panel", "tabindex": "0 on the active tab, -1 on the others (arrow keys move focus)", "aria-label": "Required on --icon-only tabs" } },
+    { "class": "gds-tab__icon", "tag": "span", "required": false, "parent": "gds-tab", "description": "Leading icon slot. Holds a Lucide <i>. Decorative.", "attributes": { "aria-hidden": "true" } },
+    { "class": "gds-tab__text", "tag": "span", "required": false, "parent": "gds-tab", "description": "Tab label. Required unless the tab is --icon-only." },
+    { "class": "gds-tab__badge", "tag": "span", "required": false, "parent": "gds-tab", "description": "Slot for a small gds-badge (e.g. a count) after the label." },
+    { "class": "gds-tab__status", "tag": "span", "required": false, "parent": "gds-tab", "description": "Red dot that means \"something new\". Add hidden text for screen readers next to it." },
+    { "class": "gds-tab__close", "tag": "button", "required": false, "parent": "gds-tab", "description": "Close button for closable tabs (12px Lucide x). See known issues: a button inside a tab is a nested control.", "attributes": { "type": "button", "aria-label": "\"Close <tab name>\"" } }
+  ],
+  "modifiers": [
+    { "class": "gds-tabs--filled", "on": "gds-tabs", "group": "variant", "description": "Segmented look: grey track, the active tab is a filled pill. Good for view switches." },
+    { "class": "gds-tabs--card", "on": "gds-tabs", "group": "variant", "description": "Folder-tab look: the active tab joins the panel below." },
+    { "class": "gds-tabs--vertical", "on": "gds-tabs", "group": "layout", "description": "Tabs in a column with a left indicator. Set the width (e.g. var(--tab-vertical-width)) and aria-orientation=\"vertical\"." },
+    { "class": "gds-tabs--sm", "on": "gds-tabs", "group": "size", "description": "Smaller tabs and text. Without it tabs are the normal size." },
+    { "class": "gds-tab--active", "on": "gds-tab", "group": "state", "description": "The selected tab. Always with aria-selected=\"true\"." },
+    { "class": "gds-tab--disabled", "on": "gds-tab", "group": "state", "description": "Dimmed and blocks the mouse. Also set aria-disabled=\"true\" (keyboard can still reach it)." },
+    { "class": "gds-tab--icon-only", "on": "gds-tab", "group": "content", "description": "Tab with only an icon, no gap. Needs aria-label on the tab." },
+    { "class": "gds-tabs-wrap--fade-left", "on": "gds-tabs-wrap", "group": "state", "description": "Shows the left fade. Set by JS when the list is scrolled away from the start." },
+    { "class": "gds-tabs-wrap--fade-right", "on": "gds-tabs-wrap", "group": "state", "description": "Shows the right fade. Set by JS when more tabs are hidden on the right." }
+  ],
+  "states": [
+    { "name": "selected", "how": "gds-tab--active + aria-selected=\"true\" + tabindex=\"0\"; its panel is visible, the other panels have the hidden attribute." },
+    { "name": "hover", "how": "Native :hover darkens the label and icon." },
+    { "name": "focus", "how": "Native :focus-visible: thicker indicator in the focus colour (bordered, vertical), inset outline (filled, card)." },
+    { "name": "disabled", "how": "gds-tab--disabled + aria-disabled=\"true\"." }
+  ],
+  "a11y": [
+    "Use the WAI-ARIA tabs pattern: role=\"tablist\" on .gds-tabs, role=\"tab\" on each .gds-tab, role=\"tabpanel\" on each panel.",
+    "Each tab has aria-selected and aria-controls; each panel has an id and aria-labelledby pointing back at its tab, plus tabindex=\"0\" when it has no focusable content.",
+    "Keyboard: Tab enters the list on the active tab; Left/Right (Up/Down when vertical) move between tabs; Home/End go to the first/last. The CSS does not do this; the product JS must.",
+    "Hide inactive panels with the hidden attribute so they are not read.",
+    "The status dot is colour only: add <span class=\"gds-sr-only\">new</span> next to it."
+  ],
+  "rules": [
+    { "id": "tabs-aria-roles", "rule": ".gds-tabs has role=\"tablist\" and every .gds-tab has role=\"tab\".", "why": "Without the roles, screen readers announce a row of unrelated buttons and the selected tab is not known.", "principle": 1, "autoCheck": true },
+    { "id": "tabs-selected-sync", "rule": "Exactly one .gds-tab has gds-tab--active, and it is the only tab with aria-selected=\"true\".", "why": "The class draws the selection, the attribute announces it; they must agree.", "principle": 1, "autoCheck": true, "removeInV3": "Style the active tab from [aria-selected=\"true\"], so the class is not needed." },
+    { "id": "tabs-controls-panel", "rule": "Every .gds-tab has aria-controls pointing to an element with role=\"tabpanel\".", "why": "Links each tab to the content it shows.", "principle": 1, "autoCheck": true },
+    { "id": "tabs-icon-only-label", "rule": "A gds-tab--icon-only tab has an aria-label.", "why": "An icon alone has no accessible name.", "principle": 1, "autoCheck": true },
+    { "id": "tabs-not-navigation", "rule": "Do not use tabs to link to other pages; use navigation with links and aria-current.", "why": "Tabs switch content in place; pages change the URL and need real links.", "principle": 3, "autoCheck": false },
+    { "id": "tabs-one-variant", "rule": "A .gds-tabs has at most one of --filled and --card.", "why": "The two looks override each other.", "principle": 3, "autoCheck": true }
+  ],
+  "composes": ["badge"],
+  "knownIssues": [
+    { "issue": "The docs build tabs as <nav> with plain buttons: no role=\"tablist\"/\"tab\", no aria-selected, no panels.", "fix": "Update all docs examples to the ARIA tabs pattern in this contract." },
+    { "issue": "The closable tab in the docs is a <div class=\"gds-tab\"> with a button inside. As role=\"tab\" this is a nested control, and the div is not focusable. .gds-tab__close also has no :focus-visible style.", "fix": "Support Delete to close on the focused tab and make the close button tabindex=\"-1\", or move the close button outside the tab element; add a focus style to __close." },
+    { "issue": "--active and --disabled are classes only; nothing ties them to aria-selected / aria-disabled. --disabled uses pointer-events: none, so keyboard users can still activate it.", "fix": "v3: style from [aria-selected=\"true\"] and [aria-disabled=\"true\"]." },
+    { "issue": "In --vertical the active tab text uses the hover colour (text-primary) while the other variants use action-primary.", "fix": "Confirm with design; if not intended, use --tab-color-active in vertical too." },
+    { "issue": ".gds-tabs-wrap and its fade modifiers are not shown in the docs and need JS that GDS does not ship.", "fix": "Add a docs example with the small scroll script, or remove the wrapper." },
+    { "issue": "--vertical combined with --filled or --card is not designed; the styles mix.", "fix": "Document as unsupported, or add a check." }
+  ],
+  "examples": [
+    {
+      "name": "Entry editor sections",
+      "html": "<div class=\"gds-tabs\" role=\"tablist\" aria-label=\"Entry sections\">\n  <button type=\"button\" class=\"gds-tab gds-tab--active\" role=\"tab\" id=\"tab-content\" aria-selected=\"true\" aria-controls=\"panel-content\" tabindex=\"0\"><span class=\"gds-tab__icon\" aria-hidden=\"true\"><i data-lucide=\"file-text\"></i></span><span class=\"gds-tab__text\">Content</span></button>\n  <button type=\"button\" class=\"gds-tab\" role=\"tab\" id=\"tab-seo\" aria-selected=\"false\" aria-controls=\"panel-seo\" tabindex=\"-1\"><span class=\"gds-tab__icon\" aria-hidden=\"true\"><i data-lucide=\"search\"></i></span><span class=\"gds-tab__text\">SEO</span></button>\n  <button type=\"button\" class=\"gds-tab\" role=\"tab\" id=\"tab-comments\" aria-selected=\"false\" aria-controls=\"panel-comments\" tabindex=\"-1\"><span class=\"gds-tab__text\">Comments</span><span class=\"gds-tab__badge\"><span class=\"gds-badge gds-badge--sm gds-badge--info\"><span class=\"gds-badge__label\">12</span></span></span></button>\n  <button type=\"button\" class=\"gds-tab gds-tab--disabled\" role=\"tab\" id=\"tab-history\" aria-selected=\"false\" aria-controls=\"panel-history\" aria-disabled=\"true\" tabindex=\"-1\"><span class=\"gds-tab__text\">History</span></button>\n</div>\n<div role=\"tabpanel\" id=\"panel-content\" aria-labelledby=\"tab-content\" tabindex=\"0\">…</div>\n<div role=\"tabpanel\" id=\"panel-seo\" aria-labelledby=\"tab-seo\" tabindex=\"0\" hidden>…</div>\n<div role=\"tabpanel\" id=\"panel-comments\" aria-labelledby=\"tab-comments\" tabindex=\"0\" hidden>…</div>\n<div role=\"tabpanel\" id=\"panel-history\" aria-labelledby=\"tab-history\" tabindex=\"0\" hidden>…</div>"
+    },
+    {
+      "name": "Media library view switch (filled, icon only)",
+      "html": "<div class=\"gds-tabs gds-tabs--filled gds-tabs--sm\" role=\"tablist\" aria-label=\"Media view\">\n  <button type=\"button\" class=\"gds-tab gds-tab--icon-only gds-tab--active\" role=\"tab\" id=\"view-grid\" aria-label=\"Grid\" aria-selected=\"true\" aria-controls=\"media-grid\" tabindex=\"0\"><span class=\"gds-tab__icon\" aria-hidden=\"true\"><i data-lucide=\"layout-grid\"></i></span></button>\n  <button type=\"button\" class=\"gds-tab gds-tab--icon-only\" role=\"tab\" id=\"view-list\" aria-label=\"List\" aria-selected=\"false\" aria-controls=\"media-list\" tabindex=\"-1\"><span class=\"gds-tab__icon\" aria-hidden=\"true\"><i data-lucide=\"list\"></i></span></button>\n</div>\n<div role=\"tabpanel\" id=\"media-grid\" aria-labelledby=\"view-grid\">…</div>\n<div role=\"tabpanel\" id=\"media-list\" aria-labelledby=\"view-list\" hidden>…</div>"
+    },
+    {
+      "name": "Vertical settings tabs with a status dot",
+      "html": "<div class=\"gds-tabs gds-tabs--vertical\" role=\"tablist\" aria-label=\"Site settings\" aria-orientation=\"vertical\" style=\"width:var(--tab-vertical-width)\">\n  <button type=\"button\" class=\"gds-tab gds-tab--active\" role=\"tab\" id=\"set-general\" aria-selected=\"true\" aria-controls=\"set-general-panel\" tabindex=\"0\"><span class=\"gds-tab__icon\" aria-hidden=\"true\"><i data-lucide=\"settings\"></i></span><span class=\"gds-tab__text\">General</span></button>\n  <button type=\"button\" class=\"gds-tab\" role=\"tab\" id=\"set-ads\" aria-selected=\"false\" aria-controls=\"set-ads-panel\" tabindex=\"-1\"><span class=\"gds-tab__icon\" aria-hidden=\"true\"><i data-lucide=\"megaphone\"></i></span><span class=\"gds-tab__text\">Ads</span><span class=\"gds-tab__status\"></span><span class=\"gds-sr-only\">new</span></button>\n</div>\n<div role=\"tabpanel\" id=\"set-general-panel\" aria-labelledby=\"set-general\" tabindex=\"0\">…</div>\n<div role=\"tabpanel\" id=\"set-ads-panel\" aria-labelledby=\"set-ads\" tabindex=\"0\" hidden>…</div>"
+    }
+  ]
+}

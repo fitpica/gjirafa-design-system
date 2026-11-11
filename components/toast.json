@@ -1,0 +1,314 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "toast",
+  "name": "Toast",
+  "status": "stable",
+  "summary": "A short, single-line floating message that confirms something just happened and goes away on its own.",
+  "docs": "https://docs-phi-black.vercel.app/?page=toast",
+  "source": "src/components/_toast.scss",
+  "owns": [
+    "gds-toast"
+  ],
+  "useWhen": [
+    "Confirming an action the user just took: \"Article published\", \"Entry deleted\", \"Link copied\".",
+    "Offering one quick follow-up such as Undo or View.",
+    "Background events that do not need action now (\"Draft auto-saved\")."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "An error the user must read or fix (failed publish, validation)",
+      "use": "alert (inline, persistent)"
+    },
+    {
+      "case": "A message longer than one short sentence, or with a title",
+      "use": "alert"
+    },
+    {
+      "case": "A decision the user must make",
+      "use": "modal"
+    },
+    {
+      "case": "The only way to reach an important action",
+      "use": "a button in the page; the toast can repeat it"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-toast-container",
+      "tag": "div",
+      "required": false,
+      "parent": null,
+      "description": "Fixed stack at a screen edge. Put it in the page once (empty) so it can act as a live region; toasts are added inside it. Needs one position modifier.",
+      "attributes": {
+        "role": "\"status\"",
+        "aria-live": "\"polite\"",
+        "aria-label": "e.g. \"Notifications\""
+      }
+    },
+    {
+      "class": "gds-toast",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "The toast. Flex row: icon block, body. Usually inside gds-toast-container.",
+      "attributes": {
+        "role": "\"alert\" only on --critical toasts; others rely on the container's role=\"status\"."
+      }
+    },
+    {
+      "class": "gds-toast__icon",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-toast",
+      "description": "Solid colour block on the left with a white 24px Lucide icon. Colour comes from the variant.",
+      "attributes": {
+        "aria-hidden": "\"true\""
+      }
+    },
+    {
+      "class": "gds-toast__body",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-toast",
+      "description": "Row with text, action and timer."
+    },
+    {
+      "class": "gds-toast__text",
+      "tag": "span",
+      "required": true,
+      "parent": "gds-toast__body",
+      "description": "The message. One line; longer text is cut with an ellipsis."
+    },
+    {
+      "class": "gds-toast__action",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-toast__body",
+      "description": "One text button (Undo, View, Retry).",
+      "attributes": {
+        "type": "button"
+      }
+    },
+    {
+      "class": "gds-toast__timer",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-toast__body",
+      "description": "Round countdown badge (26px). Contains a <span> with the seconds left and the __timer-ring SVG. Product JS updates both.",
+      "attributes": {
+        "role": "\"timer\"",
+        "aria-label": "e.g. \"Closes in 5 seconds\""
+      }
+    },
+    {
+      "class": "gds-toast__timer-ring",
+      "tag": "svg",
+      "required": false,
+      "parent": "gds-toast__timer",
+      "description": "Progress ring: <svg viewBox=\"0 0 29 29\"> with one <circle cx=\"14.5\" cy=\"14.5\" r=\"12.5\">. JS sets stroke-dasharray/offset (circumference ≈ 78.5).",
+      "attributes": {
+        "aria-hidden": "\"true\""
+      }
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-toast--info",
+      "on": "gds-toast",
+      "group": "variant",
+      "description": "Purple icon block and ring. Neutral events.",
+      "default": true
+    },
+    {
+      "class": "gds-toast--success",
+      "on": "gds-toast",
+      "group": "variant",
+      "description": "Green. Action completed."
+    },
+    {
+      "class": "gds-toast--warning",
+      "on": "gds-toast",
+      "group": "variant",
+      "description": "Orange. Completed, but with something to note."
+    },
+    {
+      "class": "gds-toast--critical",
+      "on": "gds-toast",
+      "group": "variant",
+      "description": "Red. Something failed in the background; keep it short and offer Retry."
+    },
+    {
+      "class": "gds-toast--dismissing",
+      "on": "gds-toast",
+      "group": "state",
+      "description": "Fades and slides out. Add with JS, then remove the element after the transition."
+    },
+    {
+      "class": "gds-toast-container--top-right",
+      "on": "gds-toast-container",
+      "group": "layout",
+      "description": "24px from the top and right edges."
+    },
+    {
+      "class": "gds-toast-container--top-left",
+      "on": "gds-toast-container",
+      "group": "layout",
+      "description": "24px from the top and left edges."
+    },
+    {
+      "class": "gds-toast-container--top-center",
+      "on": "gds-toast-container",
+      "group": "layout",
+      "description": "Top, centred."
+    },
+    {
+      "class": "gds-toast-container--bottom-right",
+      "on": "gds-toast-container",
+      "group": "layout",
+      "description": "24px from the bottom and right edges."
+    },
+    {
+      "class": "gds-toast-container--bottom-left",
+      "on": "gds-toast-container",
+      "group": "layout",
+      "description": "24px from the bottom and left edges."
+    },
+    {
+      "class": "gds-toast-container--bottom-center",
+      "on": "gds-toast-container",
+      "group": "layout",
+      "description": "Bottom, centred."
+    }
+  ],
+  "states": [
+    {
+      "name": "counting down",
+      "how": "Product JS updates the timer <span> text, its aria-label and the ring circle stroke-dashoffset each second."
+    },
+    {
+      "name": "dismissing",
+      "how": "Add gds-toast--dismissing, wait for the transition (normal duration), then remove the element."
+    }
+  ],
+  "a11y": [
+    "The container is in the DOM before any toast is added, with role=\"status\" and aria-live=\"polite\", so new toasts are announced.",
+    "--critical toasts get role=\"alert\" so they are announced at once.",
+    "Auto-dismiss timing is product JS: at least 5 seconds, longer with an action, and the timer pauses on hover and on focus inside the toast.",
+    "The action is a real <button>. Moving focus into a toast is never automatic; keyboard users must be able to reach it (e.g. a shortcut or it stays until focus leaves).",
+    "The icon is decorative; the text carries the meaning.",
+    "Timer: role=\"timer\" with an aria-label; the ring SVG is aria-hidden."
+  ],
+  "rules": [
+    {
+      "id": "toast-live-region",
+      "rule": "Toasts live inside a .gds-toast-container with role=\"status\" and aria-live=\"polite\" that exists before toasts are added. --critical toasts add role=\"alert\".",
+      "why": "A live region only announces content added after it exists.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "toast-container-position",
+      "rule": ".gds-toast-container has exactly one position modifier. Default choice: --top-right.",
+      "why": "Without one the fixed container has no offsets and lands in an arbitrary spot.",
+      "principle": 3,
+      "autoCheck": true,
+      "removeInV3": "Make --top-right the default position of .gds-toast-container."
+    },
+    {
+      "id": "toast-short-text",
+      "rule": "Toast text is one short sentence (about 60 characters or less), with no title and no links inside the text.",
+      "why": "__text never wraps; longer text is cut with an ellipsis and cannot be read.",
+      "principle": 3,
+      "autoCheck": false,
+      "removeInV3": "Allow two lines with line-clamp and expose the full text."
+    },
+    {
+      "id": "toast-timer-pauses",
+      "rule": "An auto-dismissing toast stays at least 5 seconds (10 with an action) and pauses on hover and focus.",
+      "why": "People need time to read and to reach the action (WCAG 2.2.1).",
+      "principle": 1,
+      "autoCheck": false
+    },
+    {
+      "id": "toast-action-is-button",
+      "rule": ".gds-toast__action is a <button type=\"button\">; at most one per toast.",
+      "why": "It must be reachable with the keyboard, and one action keeps the toast quick to read.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "toast-timer-label",
+      "rule": ".gds-toast__timer has role=\"timer\" and an aria-label; .gds-toast__timer-ring has aria-hidden=\"true\".",
+      "why": "The number alone has no context for screen readers, and the ring is decoration.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "toast-icon-decorative",
+      "rule": ".gds-toast__icon has aria-hidden=\"true\"; icons: info → info, success → check, warning → alert-triangle, critical → x-circle.",
+      "why": "The meaning is in the text; same icon for the same meaning, as in the docs.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "toast-one-variant",
+      "rule": "A toast has exactly one variant class. Write --info explicitly.",
+      "why": "Two variants give an undefined colour.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "toast-not-for-blocking-errors",
+      "rule": "Errors the user has to fix are shown as an inline alert, not a toast.",
+      "why": "Toasts disappear; an error that vanishes leaves the user without a way to fix it.",
+      "principle": 2,
+      "autoCheck": false
+    }
+  ],
+  "internal": [],
+  "composes": [],
+  "knownIssues": [
+    {
+      "issue": ".gds-toast-container is defined twice: in _alert.scss (max-width 400px) and _toast.scss (max-width 490px). The toast file wins only because it loads later.",
+      "fix": "Define the container once, in _toast.scss."
+    },
+    {
+      "issue": "The docs never show __timer / __timer-ring markup. The ring geometry exists only as a JS constant (r = 12.5) and the ring is offset to sit over the border. brand.md puts the timer outside __body, but __body's right padding suggests inside.",
+      "fix": "Document the SVG markup (viewBox, circle) in the docs, or replace the SVG with a CSS-only ring (conic-gradient + a registered custom property)."
+    },
+    {
+      "issue": "There is no close element. A toast without a timer (docs: \"Action without timer\") cannot be dismissed.",
+      "fix": "Add .gds-toast__close (24px+ icon button)."
+    },
+    {
+      "issue": "White icon on the warning block (orange-500) is 2.5:1, below the 3:1 non-text contrast minimum. Info 3.5:1, critical 3.6:1, success 4.0:1 pass.",
+      "fix": "Use a darker orange for --toast-warning-bg or a dark icon on warning."
+    },
+    {
+      "issue": "__text is nowrap with ellipsis; longer messages are cut with no way to read them.",
+      "fix": "Allow up to two lines (line-clamp) and keep the full text available."
+    },
+    {
+      "issue": ".gds-toast:hover changes the background, which suggests the whole toast is clickable. It is not.",
+      "fix": "Remove the hover background."
+    },
+    {
+      "issue": "Naming: toast uses --critical, alert uses --error. Toast info is purple, badge info is blue.",
+      "fix": "Align variant names and the info colour across components."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Article published (with action)",
+      "html": "<div class=\"gds-toast-container gds-toast-container--top-right\" role=\"status\" aria-live=\"polite\" aria-label=\"Notifications\">\n  <div class=\"gds-toast gds-toast--success\">\n    <div class=\"gds-toast__icon\" aria-hidden=\"true\"><i data-lucide=\"check\" width=\"24\" height=\"24\"></i></div>\n    <div class=\"gds-toast__body\">\n      <span class=\"gds-toast__text\">Article published</span>\n      <button type=\"button\" class=\"gds-toast__action\">View</button>\n    </div>\n  </div>\n</div>"
+    },
+    {
+      "name": "Entry deleted (undo + countdown)",
+      "html": "<div class=\"gds-toast-container gds-toast-container--bottom-right\" role=\"status\" aria-live=\"polite\" aria-label=\"Notifications\">\n  <div class=\"gds-toast gds-toast--info\">\n    <div class=\"gds-toast__icon\" aria-hidden=\"true\"><i data-lucide=\"info\" width=\"24\" height=\"24\"></i></div>\n    <div class=\"gds-toast__body\">\n      <span class=\"gds-toast__text\">Entry moved to trash</span>\n      <button type=\"button\" class=\"gds-toast__action\">Undo</button>\n      <div class=\"gds-toast__timer\" role=\"timer\" aria-label=\"Closes in 10 seconds\">\n        <span>10</span>\n        <svg class=\"gds-toast__timer-ring\" viewBox=\"0 0 29 29\" aria-hidden=\"true\"><circle cx=\"14.5\" cy=\"14.5\" r=\"12.5\"></circle></svg>\n      </div>\n    </div>\n  </div>\n</div>"
+    },
+    {
+      "name": "Background failure (critical)",
+      "html": "<div class=\"gds-toast-container gds-toast-container--top-right\" role=\"status\" aria-live=\"polite\" aria-label=\"Notifications\">\n  <div class=\"gds-toast gds-toast--critical\" role=\"alert\">\n    <div class=\"gds-toast__icon\" aria-hidden=\"true\"><i data-lucide=\"x-circle\" width=\"24\" height=\"24\"></i></div>\n    <div class=\"gds-toast__body\">\n      <span class=\"gds-toast__text\">Auto-save failed</span>\n      <button type=\"button\" class=\"gds-toast__action\">Retry</button>\n    </div>\n  </div>\n</div>"
+    }
+  ]
+}

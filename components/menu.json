@@ -1,0 +1,242 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "menu",
+  "name": "Menu",
+  "status": "stable",
+  "summary": "A list of actions on demand: overflow (\"more\") menus, context menus, row actions.",
+  "docs": "https://docs-phi-black.vercel.app/?page=menu",
+  "source": "src/components/_menu.scss",
+  "owns": ["gds-menu"],
+  "useWhen": [
+    "Actions on one item that do not fit as buttons (Edit, Duplicate, Move to, Archive, Delete on an article row).",
+    "A \"more\" (ellipsis) button in a toolbar or card.",
+    "Right-click / context actions."
+  ],
+  "dontUseWhen": [
+    { "case": "Choosing a value (status, author, category)", "use": "dropdown" },
+    { "case": "One or two main actions", "use": "buttons, visible on the page" },
+    { "case": "Navigation between pages or sections", "use": "sidebar, tabs or links" },
+    { "case": "A form or other interactive content", "use": "popover" }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-menu",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "The menu surface: background, border, shadow, column of items. Has no open state and no positioning: the product shows / hides it (hidden attribute) and places it next to its trigger.",
+      "attributes": {
+        "role": "menu",
+        "id": "Referenced by aria-controls on the trigger",
+        "aria-label": "e.g. \"Article actions\" (or aria-labelledby the trigger)"
+      }
+    },
+    {
+      "class": "gds-menu__group",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-menu",
+      "description": "Small uppercase heading above a set of items. A sibling of the items, not a wrapper.",
+      "attributes": {
+        "role": "presentation"
+      }
+    },
+    {
+      "class": "gds-menu__item",
+      "tag": "button",
+      "required": true,
+      "parent": "gds-menu",
+      "repeat": true,
+      "description": "One action. Full-width <button>.",
+      "attributes": {
+        "type": "button",
+        "role": "menuitem",
+        "tabindex": "-1 (roving: the focused item gets focus via JS)",
+        "aria-disabled": "\"true\" with --disabled",
+        "aria-haspopup": "\"menu\" when it opens a submenu (with __trailing)",
+        "aria-keyshortcuts": "When __shortcut is shown, e.g. \"Control+D\""
+      }
+    },
+    {
+      "class": "gds-menu__icon",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-menu__item",
+      "description": "Leading icon (16px; 20px in --rich). Decorative."
+    },
+    {
+      "class": "gds-menu__content",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-menu__item",
+      "description": "Rich items only: stacks __label and __desc."
+    },
+    {
+      "class": "gds-menu__label",
+      "tag": "span",
+      "required": true,
+      "parent": "gds-menu__item | gds-menu__content",
+      "description": "Action name. One line, truncated with ellipsis."
+    },
+    {
+      "class": "gds-menu__desc",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-menu__content",
+      "description": "Second line in rich items."
+    },
+    {
+      "class": "gds-menu__shortcut",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-menu__item",
+      "description": "Keyboard shortcut hint on the right (e.g. Ctrl+D)."
+    },
+    {
+      "class": "gds-menu__trailing",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-menu__item",
+      "description": "Trailing icon on the right, e.g. chevron-right for a submenu."
+    },
+    {
+      "class": "gds-menu__divider",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-menu",
+      "description": "1px line between groups of items.",
+      "attributes": {
+        "role": "separator"
+      }
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-menu__item--danger",
+      "on": "gds-menu__item",
+      "group": "variant",
+      "description": "Destructive action (Delete): red text and icon."
+    },
+    {
+      "class": "gds-menu__item--disabled",
+      "on": "gds-menu__item",
+      "group": "state",
+      "description": "Not available: faded (opacity), no pointer events. Also set aria-disabled=\"true\"."
+    },
+    {
+      "class": "gds-menu__item--rich",
+      "on": "gds-menu__item",
+      "group": "layout",
+      "description": "Two-line item: larger icon + __content with __label and __desc."
+    }
+  ],
+  "states": [
+    { "name": "open / closed", "how": "No class. The product toggles the hidden attribute (or wraps the menu in its own positioned layer) and sets aria-expanded on the trigger." },
+    { "name": "hover / focus", "how": "Native :hover and :focus-visible on the item." },
+    { "name": "disabled item", "how": "gds-menu__item--disabled + aria-disabled=\"true\"." }
+  ],
+  "a11y": [
+    "Container role=\"menu\" with a name; items role=\"menuitem\"; dividers role=\"separator\".",
+    "Trigger: <button> with aria-haspopup=\"menu\", aria-expanded and aria-controls.",
+    "Keyboard (product JS): Enter / Space / Arrow Down opens and focuses the first item; arrows move; Home / End jump; Escape closes and returns focus to the trigger.",
+    "Items use roving tabindex (tabindex=\"-1\", focus moved by JS). Disabled items stay focusable with aria-disabled=\"true\" so people can find them.",
+    "Icons are decorative: the label carries the meaning."
+  ],
+  "rules": [
+    {
+      "id": "menu-roles",
+      "rule": ".gds-menu has role=\"menu\" and an aria-label or aria-labelledby; every .gds-menu__item has role=\"menuitem\".",
+      "why": "Without roles a screen reader reads a pile of buttons with no menu context or arrow-key hint.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "menu-items-are-buttons",
+      "rule": ".gds-menu__item is a <button type=\"button\">, never a <div> or <li>.",
+      "why": "The item styles reset a button; other elements are not focusable or clickable by keyboard.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "menu-disabled-aria",
+      "rule": "--disabled items have aria-disabled=\"true\".",
+      "why": "The class only fades the item; the attribute tells assistive tech it is unavailable.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "menu-submenu-aria",
+      "rule": "An item with a chevron-right in __trailing has aria-haspopup=\"menu\" and aria-expanded.",
+      "why": "Announces that the item opens a submenu.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "menu-actions-not-values",
+      "rule": "Use menu for actions, dropdown for choosing values.",
+      "why": "Different semantics (menu vs listbox) and different keyboard models.",
+      "principle": 2,
+      "autoCheck": false
+    },
+    {
+      "id": "menu-danger-last",
+      "rule": "Put --danger items last, after a __divider.",
+      "why": "Separating destructive actions avoids accidental clicks; red text alone is not enough. The action itself should still ask for confirmation (modal) before deleting.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "menu-icons-all-or-none",
+      "rule": "Within a menu, give every item an icon or none.",
+      "why": "Mixed items make the labels start at different positions and look broken.",
+      "principle": 3,
+      "autoCheck": true
+    }
+  ],
+  "internal": [],
+  "composes": [],
+  "knownIssues": [
+    {
+      "issue": "No open state and no positioning, unlike gds-dropdown--open and gds-popover--open. Each product invents its own show / hide and placement.",
+      "fix": "v3: show menus inside .gds-popover (role \"menu\" on the controller) and drop the menu's own surface."
+    },
+    {
+      "issue": "The menu draws its own background, border and shadow, so inside a .gds-popover or the calendar presets column it gets a second frame.",
+      "fix": "Add a flat variant, or move the surface to .gds-popover."
+    },
+    {
+      "issue": "The menu uses the dropdown tokens (--dd-*) and has no component tokens of its own.",
+      "fix": "Add _component-menu.scss tokens that alias the dropdown ones."
+    },
+    {
+      "issue": "--disabled uses opacity 0.4. The calendar dropped opacity for disabled days because it cut contrast to about 1.4:1.",
+      "fix": "Use a muted text colour token for disabled items, like the calendar."
+    },
+    {
+      "issue": "--disabled sets pointer-events: none and the docs use the disabled attribute, which removes the item from keyboard focus. The ARIA menu pattern keeps disabled items focusable.",
+      "fix": "Document aria-disabled without the disabled attribute; keep pointer-events: none only for the mouse."
+    },
+    {
+      "issue": "The focus ring is a box-shadow, which disappears in Windows forced-colours mode.",
+      "fix": "Use outline (as the calendar does) or add a forced-colors fallback."
+    },
+    {
+      "issue": "__group is a sibling label, not a wrapper, so it cannot form an ARIA group; text directly inside role=\"menu\" is not an allowed child.",
+      "fix": "v3: add a __section wrapper with role=\"group\" and aria-labelledby pointing to __group."
+    },
+    {
+      "issue": "text-align: left and margin-left are physical properties, so items do not mirror in right-to-left layouts.",
+      "fix": "Use text-align: start and margin-inline-start."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Article row actions",
+      "html": "<button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--sm\" aria-label=\"Actions for Election results live\" aria-haspopup=\"menu\" aria-expanded=\"true\" aria-controls=\"article-actions\"><i data-lucide=\"more-horizontal\"></i></button>\n<div id=\"article-actions\" class=\"gds-menu\" role=\"menu\" aria-label=\"Article actions\">\n  <button type=\"button\" class=\"gds-menu__item\" role=\"menuitem\" tabindex=\"-1\">\n    <span class=\"gds-menu__icon\"><i data-lucide=\"pencil\" width=\"16\" height=\"16\"></i></span>\n    <span class=\"gds-menu__label\">Edit</span>\n  </button>\n  <button type=\"button\" class=\"gds-menu__item\" role=\"menuitem\" tabindex=\"-1\" aria-keyshortcuts=\"Control+D\">\n    <span class=\"gds-menu__icon\"><i data-lucide=\"copy\" width=\"16\" height=\"16\"></i></span>\n    <span class=\"gds-menu__label\">Duplicate</span>\n    <span class=\"gds-menu__shortcut\">Ctrl+D</span>\n  </button>\n  <button type=\"button\" class=\"gds-menu__item\" role=\"menuitem\" tabindex=\"-1\" aria-haspopup=\"menu\" aria-expanded=\"false\">\n    <span class=\"gds-menu__icon\"><i data-lucide=\"folder\" width=\"16\" height=\"16\"></i></span>\n    <span class=\"gds-menu__label\">Move to category</span>\n    <span class=\"gds-menu__trailing\"><i data-lucide=\"chevron-right\" width=\"16\" height=\"16\"></i></span>\n  </button>\n  <button type=\"button\" class=\"gds-menu__item gds-menu__item--disabled\" role=\"menuitem\" tabindex=\"-1\" aria-disabled=\"true\">\n    <span class=\"gds-menu__icon\"><i data-lucide=\"send\" width=\"16\" height=\"16\"></i></span>\n    <span class=\"gds-menu__label\">Push notification</span>\n  </button>\n  <div class=\"gds-menu__divider\" role=\"separator\"></div>\n  <button type=\"button\" class=\"gds-menu__item gds-menu__item--danger\" role=\"menuitem\" tabindex=\"-1\">\n    <span class=\"gds-menu__icon\"><i data-lucide=\"trash-2\" width=\"16\" height=\"16\"></i></span>\n    <span class=\"gds-menu__label\">Delete</span>\n  </button>\n</div>"
+    },
+    {
+      "name": "Export menu (grouped, rich items)",
+      "html": "<div class=\"gds-menu\" role=\"menu\" aria-label=\"Export\">\n  <div class=\"gds-menu__group\" role=\"presentation\">Export report</div>\n  <button type=\"button\" class=\"gds-menu__item gds-menu__item--rich\" role=\"menuitem\" tabindex=\"-1\">\n    <span class=\"gds-menu__icon\"><i data-lucide=\"file-spreadsheet\" width=\"20\" height=\"20\"></i></span>\n    <span class=\"gds-menu__content\">\n      <span class=\"gds-menu__label\">CSV</span>\n      <span class=\"gds-menu__desc\">Page views per article, for spreadsheets</span>\n    </span>\n  </button>\n  <button type=\"button\" class=\"gds-menu__item gds-menu__item--rich\" role=\"menuitem\" tabindex=\"-1\">\n    <span class=\"gds-menu__icon\"><i data-lucide=\"file-text\" width=\"20\" height=\"20\"></i></span>\n    <span class=\"gds-menu__content\">\n      <span class=\"gds-menu__label\">PDF</span>\n      <span class=\"gds-menu__desc\">Printable summary with charts</span>\n    </span>\n  </button>\n</div>"
+    }
+  ]
+}

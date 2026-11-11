@@ -1,0 +1,147 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "filter-badge",
+  "name": "Filter badge",
+  "status": "stable",
+  "summary": "A compact pill with a filter icon and the number of applied filters; it opens the filter panel.",
+  "docs": "https://docs-phi-black.vercel.app/?page=filter-badge",
+  "source": "src/components/_filter-badge.scss",
+  "owns": ["gds-filter-badge"],
+  "useWhen": [
+    "The entry point to filters in a list toolbar (Entries, Assets, Videos), showing how many filters are applied.",
+    "Tight spaces where a full \"Filters\" button does not fit."
+  ],
+  "dontUseWhen": [
+    { "case": "Showing each applied filter value so people can remove it (Status: Published ×)", "use": "chip" },
+    { "case": "Showing a status or category", "use": "badge" },
+    { "case": "A single filter with a few values", "use": "dropdown" }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-filter-badge",
+      "tag": "button",
+      "required": true,
+      "parent": null,
+      "description": "The pill: light blue background, 24px high, pointer cursor. A <button> that opens the filter panel.",
+      "attributes": {
+        "type": "button",
+        "aria-label": "Includes the count, e.g. \"Filters, 3 applied\" or \"Filters\"",
+        "aria-haspopup": "\"dialog\" when it opens a filter panel",
+        "aria-expanded": "\"true\" while the panel is open"
+      }
+    },
+    {
+      "class": "gds-filter-badge__icon",
+      "tag": "span",
+      "required": true,
+      "parent": "gds-filter-badge",
+      "description": "Round icon container with the Lucide filter icon (16px, blue)."
+    },
+    {
+      "class": "gds-filter-badge__count",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-filter-badge",
+      "description": "White circle with the number of applied filters (20px, fixed width). Hidden from screen readers because the button's aria-label says the count.",
+      "attributes": {
+        "aria-hidden": "true"
+      }
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-filter-badge--active",
+      "on": "gds-filter-badge",
+      "group": "state",
+      "description": "At least one filter is applied: adds a blue border."
+    }
+  ],
+  "states": [
+    { "name": "no filters", "how": "No --active and no __count; aria-label=\"Filters\"." },
+    { "name": "filters applied", "how": "gds-filter-badge--active + __count with the number; aria-label=\"Filters, N applied\"." },
+    { "name": "panel open", "how": "aria-expanded=\"true\" on the button (no visual class)." }
+  ],
+  "a11y": [
+    "Use a <button>, so it is focusable and works with Enter / Space.",
+    "The button's aria-label says the count (\"Filters, 3 applied\"); hide __count with aria-hidden so it is not read twice.",
+    "The active state is not colour-only: the count also shows that filters are applied.",
+    "There is no visible focus style in the CSS yet (known issue); the browser default outline must not be removed."
+  ],
+  "rules": [
+    {
+      "id": "filter-badge-is-button",
+      "rule": ".gds-filter-badge is a <button type=\"button\">, never a <span> or <div>.",
+      "why": "It is clickable (pointer cursor) but a span cannot be reached by keyboard. The docs examples use <span>.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "filter-badge-label",
+      "rule": "The button has an aria-label that includes the filter count when there is one.",
+      "why": "Icon plus a bare number is announced as \"button, 3\".",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "filter-badge-active-with-count",
+      "rule": "Show __count and --active together, only when at least one filter is applied; never show a count of 0.",
+      "why": "One clear meaning: border and number both mean \"filters are on\".",
+      "principle": 3,
+      "autoCheck": true,
+      "removeInV3": "Drive the border from the count (e.g. :has(.gds-filter-badge__count)) so --active is not needed."
+    },
+    {
+      "id": "filter-badge-count-cap",
+      "rule": "Show at most \"9+\" in __count.",
+      "why": "The count circle has a fixed 20px width; longer numbers overflow.",
+      "principle": 3,
+      "autoCheck": true,
+      "removeInV3": "Use min-width and inline padding on __count so any number fits."
+    },
+    {
+      "id": "filter-badge-with-chips",
+      "rule": "Show the applied filter values next to it as removable chips, not as badges.",
+      "why": "Badges are not interactive; chips are built for remove actions.",
+      "principle": 2,
+      "autoCheck": false
+    }
+  ],
+  "internal": [],
+  "composes": [],
+  "knownIssues": [
+    {
+      "issue": "The docs examples use a <span> (not focusable), and brand.md shows a different structure (<button> with a \"Filters\" text label and the icon class on the <i>). The CSS has no styles for a text label.",
+      "fix": "Update docs and brand.md to the anatomy here; add a __label element if a text version is wanted."
+    },
+    {
+      "issue": "No :hover, :focus-visible or disabled styles, although the pill is clickable.",
+      "fix": "Add hover background, a focus ring like other controls, and a disabled state."
+    },
+    {
+      "issue": "The active border (blue-200 #98bcec on blue-50 #e9f1fb) has about 1.7:1 contrast, below the 3:1 that WCAG 1.4.11 asks for UI states.",
+      "fix": "Use a darker border (e.g. blue-500) for --active."
+    },
+    {
+      "issue": "The base class does not reset font-family or color, so on a <button> the count may pick up the browser's button font.",
+      "fix": "Add font: inherit and color: inherit to .gds-filter-badge."
+    },
+    {
+      "issue": "__count has a fixed 20px width, so three-digit numbers overflow.",
+      "fix": "min-width instead of width, plus inline padding."
+    },
+    {
+      "issue": "__icon repeats the badge background (both blue-50), so the icon circle is invisible as a shape.",
+      "fix": "Drop the icon background or give it a distinct tint, if a visible circle was intended."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Filters applied (toolbar)",
+      "html": "<button type=\"button\" class=\"gds-filter-badge gds-filter-badge--active\" aria-label=\"Filters, 3 applied\" aria-haspopup=\"dialog\" aria-expanded=\"false\">\n  <span class=\"gds-filter-badge__icon\"><i data-lucide=\"filter\"></i></span>\n  <span class=\"gds-filter-badge__count\" aria-hidden=\"true\">3</span>\n</button>"
+    },
+    {
+      "name": "No filters applied",
+      "html": "<button type=\"button\" class=\"gds-filter-badge\" aria-label=\"Filters\" aria-haspopup=\"dialog\" aria-expanded=\"false\">\n  <span class=\"gds-filter-badge__icon\"><i data-lucide=\"filter\"></i></span>\n</button>"
+    }
+  ]
+}

@@ -66,4 +66,7 @@ execFileSync(process.execPath, [resolve(__dirname, 'brand.mjs'), 'write'], { std
 // 7. Claude Code plugin: regenerate version, lint copy, data and component docs
 execFileSync(process.execPath, [resolve(__dirname, 'plugin.mjs'), 'write'], { stdio: 'inherit' });
 
+// 8. Docs for AI agents: docs/llms.txt, docs/llms-full.txt, docs/md/components/*.md
+execFileSync(process.execPath, [resolve(__dirname, 'llms.mjs'), 'write'], { stdio: 'inherit' });
+
 console.log('\nBuild complete.');

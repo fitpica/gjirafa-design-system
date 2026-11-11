@@ -44,6 +44,8 @@ jobs:
         run: npm run test:brand
       - name: Claude Code plugin matches the GDS source
         run: npm run test:plugin
+      - name: llms.txt and Markdown docs match the source
+        run: npm run test:llms
       - name: Plugin and marketplace are valid
         run: npx --yes @anthropic-ai/claude-code@2.1.316 plugin validate .
 

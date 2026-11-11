@@ -37,4 +37,4 @@ It fails when:
 
 These contracts are written by hand: the design decisions (`useWhen`, `rules`, `why`) are the designer's. The check keeps them honest against the CSS.
 
-Covered so far: the six components of a list screen. Next: button, avatar, chip, menu.
+All 26 GDS components are covered. Utility classes (`gds-bg-*`, `gds-text-*`, spacing) are not components and have no contract.
