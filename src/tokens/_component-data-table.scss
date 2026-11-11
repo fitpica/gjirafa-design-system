@@ -96,6 +96,9 @@ $table-bp-mobile: 640px;
   // ---------------------------------------------------------------------------
   --table-sort-icon-size:      #{$space-12};
   --table-sort-icon-gap:       #{$space-4};
+  --table-sort-btn-radius:      #{$radius-s};
+  --table-sort-btn-focus-width: #{$space-2};
+  --table-sort-btn-focus-color: var(--gds-color-border-focus);
   --table-sort-color:          var(--gds-color-text-helper);    // icon, 3.59:1 (needs 3:1)
   --table-sort-active-color:   var(--gds-color-action-primary);
 

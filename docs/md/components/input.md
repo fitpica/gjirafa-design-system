@@ -86,5 +86,6 @@ A text field with optional label, icon, prefix/suffix, helper text and character
 
 **Known issues** (flag them; work around one only where it says how, using GDS tokens):
 - Older guides called --md the default although a bare .gds-input has no height. *Planned fix:* v3: md height by default.
+- gds-input--md renders 42px, not 40px: the wrap sets height 40px in the content-box model and adds a 1px border top and bottom (same for sm 34px and lg 50px). The same content-box model makes the wrap (width 100% + padding + border) about 22px wider than its parent, so it overlaps the next control in a row. *Planned fix:* v3: box-sizing: border-box on .gds-input__wrap so sizes are exactly 32/40/48 px; update the filter-bar control height with it.
 
 *Generated from `components/input.json`. Edit that file, then run `npm run brand`.*

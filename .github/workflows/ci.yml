@@ -46,6 +46,8 @@ jobs:
         run: npm run test:plugin
       - name: llms.txt and Markdown docs match the source
         run: npm run test:llms
+      - name: Reference list page follows the contracts
+        run: node scripts/components.mjs lint tests/visual/fixtures/list-page.html
       - name: Plugin and marketplace are valid
         run: npx --yes @anthropic-ai/claude-code@2.1.316 plugin validate .
 

@@ -842,6 +842,9 @@
   --table-row-selected-border: var(--gds-color-action-primary);
   --table-sort-icon-size: 12px;
   --table-sort-icon-gap: 4px;
+  --table-sort-btn-radius: 4px;
+  --table-sort-btn-focus-width: 2px;
+  --table-sort-btn-focus-color: var(--gds-color-border-focus);
   --table-sort-color: var(--gds-color-text-helper);
   --table-sort-active-color: var(--gds-color-action-primary);
   --table-text-secondary-color: var(--gds-color-text-secondary);
@@ -1118,6 +1121,30 @@
   --popover-z: var(--gds-z-popover);
   --popover-duration: 0.15s;
   --popover-ease: cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
+:root {
+  --page-bg: var(--gds-color-bg-secondary);
+  --page-padding: 32px;
+  --page-padding-mobile: 16px;
+  --page-gap: 24px;
+  --page-narrow-max-width: calc(160px * 4);
+  --page-section-gap: 12px;
+  --page-header-gap: 16px;
+  --page-header-text-gap: 4px;
+  --page-header-actions-gap: 8px;
+  --page-title-size: 24px;
+  --page-title-weight: 600;
+  --page-title-line-height: 1.25;
+  --page-title-color: var(--gds-color-text-primary);
+  --page-desc-size: 14px;
+  --page-desc-color: var(--gds-color-text-secondary);
+  --page-breadcrumb-size: 12px;
+  --page-breadcrumb-color: var(--gds-color-text-secondary);
+  --filter-bar-gap: 12px;
+  --filter-bar-search-basis: calc(160px + 80px + 40px);
+  --filter-bar-search-max: calc(160px * 2 + 40px);
+  --filter-bar-control-height: calc(40px + 1px * 2);
 }
 
 .gds-btn {
@@ -5202,6 +5229,26 @@
   color: var(--table-sort-active-color);
 }
 
+.gds-table__sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  border-radius: var(--table-sort-btn-radius);
+}
+.gds-table__sort-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--table-sort-btn-focus-width) var(--table-sort-btn-focus-color);
+}
+
 .gds-table__cell--sorted .gds-table__sort-icon {
   color: var(--table-sort-active-color);
 }
@@ -6729,6 +6776,102 @@
     border-color: CanvasText;
   }
 }
+.gds-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-gap);
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: var(--page-padding);
+  background: var(--page-bg);
+}
+
+.gds-page--narrow {
+  max-width: var(--page-narrow-max-width);
+  margin-inline: auto;
+  width: 100%;
+}
+
+.gds-page__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-section-gap);
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .gds-page {
+    padding: var(--page-padding-mobile);
+  }
+}
+.gds-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--page-header-gap);
+}
+
+.gds-page-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-header-text-gap);
+  min-width: 0;
+}
+
+.gds-page-header__breadcrumb {
+  font-size: var(--page-breadcrumb-size);
+  color: var(--page-breadcrumb-color);
+}
+
+.gds-page-header__title {
+  margin: 0;
+  font-size: var(--page-title-size);
+  font-weight: var(--page-title-weight);
+  line-height: var(--page-title-line-height);
+  color: var(--page-title-color);
+}
+
+.gds-page-header__desc {
+  margin: 0;
+  font-size: var(--page-desc-size);
+  color: var(--page-desc-color);
+}
+
+.gds-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--page-header-actions-gap);
+}
+
+.gds-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--filter-bar-gap);
+}
+
+.gds-filter-bar__search {
+  flex: 1 1 var(--filter-bar-search-basis);
+  max-width: var(--filter-bar-search-max);
+  width: auto;
+}
+
+.gds-filter-bar__search .gds-input__wrap {
+  box-sizing: border-box;
+  height: var(--filter-bar-control-height);
+}
+
+.gds-filter-bar .gds-dropdown__trigger {
+  min-height: var(--filter-bar-control-height);
+  box-sizing: border-box;
+}
+
+.gds-filter-bar__clear {
+  margin-left: auto;
+}
+
 .gds-bg-blue-50 {
   background-color: #e9f1fb;
 }
@@ -8955,4 +9098,16 @@
 
 .gds-rounded-full {
   border-radius: 50%;
+}
+
+.gds-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }

@@ -1,0 +1,156 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "page",
+  "name": "Page layout and page header",
+  "status": "beta",
+  "summary": "The frame of a product screen: page background, padding and spacing, and the header with the page title and its main actions.",
+  "docs": "https://docs-phi-black.vercel.app",
+  "source": "src/components/_page.scss",
+  "owns": [
+    "gds-page"
+  ],
+  "useWhen": [
+    "Every full screen in a product (lists, forms, settings).",
+    "A screen needs a title and one main action such as \"New entry\"."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "Content inside a modal or side panel",
+      "use": "the modal or side panel header"
+    },
+    {
+      "case": "A small section inside a page",
+      "use": "a card header or gds-page__section"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-page",
+      "tag": "main",
+      "required": true,
+      "parent": null,
+      "description": "The page frame: light grey background, padding, vertical gap between its children. White surfaces (table, cards) sit on it."
+    },
+    {
+      "class": "gds-page-header",
+      "tag": "header",
+      "required": false,
+      "parent": "gds-page",
+      "description": "Title on the left, actions on the right. Wraps on narrow screens."
+    },
+    {
+      "class": "gds-page-header__text",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-page-header",
+      "description": "Stacks breadcrumb, title and description."
+    },
+    {
+      "class": "gds-page-header__breadcrumb",
+      "tag": "nav",
+      "required": false,
+      "parent": "gds-page-header__text",
+      "description": "Optional breadcrumb above the title.",
+      "attributes": {
+        "aria-label": "Breadcrumb"
+      }
+    },
+    {
+      "class": "gds-page-header__title",
+      "tag": "h1",
+      "required": true,
+      "parent": "gds-page-header__text",
+      "description": "The page title. One <h1> per page. 24px semibold."
+    },
+    {
+      "class": "gds-page-header__desc",
+      "tag": "p",
+      "required": false,
+      "parent": "gds-page-header__text",
+      "description": "Optional short description or count, e.g. \"124 entries\"."
+    },
+    {
+      "class": "gds-page-header__actions",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-page-header",
+      "description": "Buttons for the page. At most one primary, plus up to two others; put more in a menu."
+    },
+    {
+      "class": "gds-page__section",
+      "tag": "section",
+      "required": false,
+      "parent": "gds-page",
+      "repeat": true,
+      "description": "Groups related blocks with a smaller gap, e.g. bulk bar + table + pagination."
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-page--narrow",
+      "on": "gds-page",
+      "group": "width",
+      "description": "Centres the page at 640px max. Use for forms and settings."
+    }
+  ],
+  "states": [],
+  "a11y": [
+    "Use <main> for gds-page and exactly one <h1> (the page title).",
+    "Give a breadcrumb <nav> an aria-label.",
+    "If a section has no visible heading, give it aria-label."
+  ],
+  "rules": [
+    {
+      "id": "page-one-h1",
+      "rule": "A page has exactly one gds-page-header__title and it is an <h1>.",
+      "why": "Screen reader users jump to the h1 to know where they are.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "page-header-one-primary",
+      "rule": "gds-page-header__actions contains at most one gds-btn--primary.",
+      "why": "One clear main action per screen.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "page-no-custom-layout",
+      "rule": "Use gds-page, gds-page-header and gds-filter-bar for page layout instead of product CSS.",
+      "why": "These were the most common custom CSS in AI tests; they now exist in GDS.",
+      "principle": 2,
+      "autoCheck": false
+    },
+    {
+      "id": "page-narrow-for-forms",
+      "rule": "Forms and settings pages use gds-page--narrow; lists and tables use the full width.",
+      "why": "Long lines of form fields are hard to scan; tables need the width.",
+      "principle": 3,
+      "autoCheck": false
+    }
+  ],
+  "composes": [
+    "button",
+    "menu"
+  ],
+  "knownIssues": [
+    {
+      "issue": "No docs page yet; only this contract and the AI guide describe it.",
+      "fix": "Add a Page patterns page to the docs site."
+    },
+    {
+      "issue": "gds-page uses min-height: 100%, so the grey background only fills the viewport when html and body have height: 100% (or the app shell gives the page a height).",
+      "fix": "Document html, body { height: 100% } in Setup, or use min-height: 100dvh when the page is the whole viewport."
+    }
+  ],
+  "examples": [
+    {
+      "name": "List page header",
+      "html": "<main class=\"gds-page\">\n  <header class=\"gds-page-header\">\n    <div class=\"gds-page-header__text\">\n      <h1 class=\"gds-page-header__title\">All Entries</h1>\n      <p class=\"gds-page-header__desc\">124 entries</p>\n    </div>\n    <div class=\"gds-page-header__actions\">\n      <button type=\"button\" class=\"gds-btn gds-btn--secondary gds-btn--md\"><span class=\"gds-btn__label\">Import</span></button>\n      <button type=\"button\" class=\"gds-btn gds-btn--primary gds-btn--md\"><i data-lucide=\"plus\" class=\"gds-btn__icon\"></i><span class=\"gds-btn__label\">New entry</span></button>\n    </div>\n  </header>\n</main>"
+    },
+    {
+      "name": "Narrow form page",
+      "html": "<main class=\"gds-page gds-page--narrow\">\n  <header class=\"gds-page-header\">\n    <div class=\"gds-page-header__text\">\n      <nav class=\"gds-page-header__breadcrumb\" aria-label=\"Breadcrumb\">Entries / Edit</nav>\n      <h1 class=\"gds-page-header__title\">Edit entry</h1>\n    </div>\n  </header>\n  <section class=\"gds-page__section\" aria-label=\"Entry details\"></section>\n</main>"
+    }
+  ]
+}

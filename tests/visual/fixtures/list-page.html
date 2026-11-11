@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>List page pattern fixture</title>
+    <link rel="stylesheet" href="/docs/gjirafa-ds.css" />
+    <style>
+      html, body { margin: 0; height: 100%; }
+      body { font-family: var(--gds-font-family-base); color: var(--gds-color-text-primary); }
+    </style>
+  </head>
+  <body>
+    <!-- Static, deterministic fixture for the page patterns (gds-page, gds-page-header,
+         gds-filter-bar) with a full list screen. No JS, no icon font, no custom layout CSS:
+         the only CSS above is the documented base font rule. -->
+    <main class="gds-page" data-testid="page">
+      <header class="gds-page-header">
+        <div class="gds-page-header__text">
+          <h1 class="gds-page-header__title">All Entries</h1>
+          <p class="gds-page-header__desc">124 entries</p>
+        </div>
+        <div class="gds-page-header__actions">
+          <button type="button" class="gds-btn gds-btn--secondary gds-btn--md"><span class="gds-btn__label">Import</span></button>
+          <button type="button" class="gds-btn gds-btn--primary gds-btn--md"><span class="gds-btn__label">New entry</span></button>
+        </div>
+      </header>
+
+      <div class="gds-filter-bar" role="search" aria-label="Filter entries">
+        <div class="gds-input gds-input--md gds-filter-bar__search">
+          <div class="gds-input__wrap">
+            <input type="search" class="gds-input__field" placeholder="Search entries" aria-label="Search entries" />
+          </div>
+        </div>
+        <div class="gds-dropdown">
+          <button type="button" class="gds-dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+            <span class="gds-dropdown__value">Status: Published</span>
+            <span class="gds-dropdown__arrow"></span>
+          </button>
+          <div class="gds-dropdown__panel">
+            <div class="gds-dropdown__list" role="listbox" aria-label="Status">
+              <button type="button" class="gds-dropdown__item gds-dropdown__item--selected" role="option" aria-selected="true"><span class="gds-dropdown__label">Published</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="gds-dropdown">
+          <button type="button" class="gds-dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+            <span class="gds-dropdown__placeholder">Content type</span>
+            <span class="gds-dropdown__arrow"></span>
+          </button>
+          <div class="gds-dropdown__panel">
+            <div class="gds-dropdown__list" role="listbox" aria-label="Content type">
+              <button type="button" class="gds-dropdown__item" role="option" aria-selected="false"><span class="gds-dropdown__label">Article</span></button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="gds-btn gds-btn--ghost gds-btn--md gds-filter-bar__clear"><span class="gds-btn__label">Clear filters</span></button>
+      </div>
+
+      <section class="gds-page__section" aria-label="Entries">
+        <div class="gds-table__toolbar is-visible">
+          <span class="gds-table__toolbar-count">2 selected</span>
+          <div class="gds-table__toolbar-divider" aria-hidden="true"></div>
+          <button type="button" class="gds-table__toolbar-btn">Publish</button>
+          <button type="button" class="gds-table__toolbar-btn">Delete</button>
+        </div>
+        <div class="gds-table">
+          <table class="gds-table__table" aria-label="All entries">
+            <thead class="gds-table__head">
+              <tr class="gds-table__row">
+                <th scope="col" class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm gds-checkbox--mixed"><input type="checkbox" class="gds-checkbox__input" aria-label="Select all" /><span class="gds-checkbox__control"><i data-lucide="minus"></i></span></label></th>
+                <th scope="col" class="gds-table__cell gds-table__cell--sortable"><button type="button" class="gds-table__sort-btn">Title <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down"></i></span></button></th>
+                <th scope="col" class="gds-table__cell">Content type</th>
+                <th scope="col" class="gds-table__cell">Status</th>
+                <th scope="col" class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc" aria-sort="descending"><button type="button" class="gds-table__sort-btn">Last updated <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span></button></th>
+              </tr>
+            </thead>
+            <tbody class="gds-table__body">
+            <tr class="gds-table__row gds-table__row--selected">
+              <td class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" checked aria-label="Select Winter travel guide" /><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+              <td class="gds-table__cell">Winter travel guide</td>
+              <td class="gds-table__cell">Article</td>
+              <td class="gds-table__cell"><span class="gds-badge gds-badge--neutral"><span class="gds-badge__dot"></span><span class="gds-badge__label">Draft</span></span></td>
+              <td class="gds-table__cell gds-table__cell--secondary">Today, 08:15</td>
+            </tr>
+            <tr class="gds-table__row gds-table__row--selected">
+              <td class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" checked aria-label="Select Election night live" /><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+              <td class="gds-table__cell">Election night live</td>
+              <td class="gds-table__cell">Live blog</td>
+              <td class="gds-table__cell"><span class="gds-badge gds-badge--warning"><span class="gds-badge__dot"></span><span class="gds-badge__label">Scheduled</span></span></td>
+              <td class="gds-table__cell gds-table__cell--secondary">Today, 07:40</td>
+            </tr>
+            <tr class="gds-table__row">
+              <td class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select Best cafés in Prishtina" /><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+              <td class="gds-table__cell">Best cafés in Prishtina</td>
+              <td class="gds-table__cell">Gallery</td>
+              <td class="gds-table__cell"><span class="gds-badge gds-badge--positive"><span class="gds-badge__dot"></span><span class="gds-badge__label">Published</span></span></td>
+              <td class="gds-table__cell gds-table__cell--secondary">Yesterday, 18:02</td>
+            </tr>
+            <tr class="gds-table__row">
+              <td class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select Interview with the coach" /><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+              <td class="gds-table__cell">Interview with the coach</td>
+              <td class="gds-table__cell">Video</td>
+              <td class="gds-table__cell"><span class="gds-badge gds-badge--positive"><span class="gds-badge__dot"></span><span class="gds-badge__label">Published</span></span></td>
+              <td class="gds-table__cell gds-table__cell--secondary">Yesterday, 14:30</td>
+            </tr>
+            <tr class="gds-table__row">
+              <td class="gds-table__cell gds-table__cell--checkbox"><label class="gds-checkbox gds-checkbox--sm"><input type="checkbox" class="gds-checkbox__input" aria-label="Select Privacy policy" /><span class="gds-checkbox__control"><i data-lucide="check"></i></span></label></td>
+              <td class="gds-table__cell">Privacy policy</td>
+              <td class="gds-table__cell">Page</td>
+              <td class="gds-table__cell"><span class="gds-badge gds-badge--neutral"><span class="gds-badge__dot"></span><span class="gds-badge__label">Archived</span></span></td>
+              <td class="gds-table__cell gds-table__cell--secondary">3 Nov 2026, 11:20</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="gds-pagination-bar gds-pagination-bar--full">
+          <span class="gds-pagination-bar__summary">Viewing 1 to 5 of 124 Items</span>
+          <div class="gds-pagination-bar__cluster">
+            <button type="button" class="gds-pagination-bar__select" aria-haspopup="listbox"><span>5 Items per page</span></button>
+            <nav class="gds-pagination" aria-label="Pagination">
+              <button type="button" class="gds-pagination__item gds-pagination__item--icon-only gds-pagination__item--disabled" aria-label="Previous page" disabled></button>
+              <button type="button" class="gds-pagination__item gds-pagination__item--current" aria-current="page">1</button>
+              <button type="button" class="gds-pagination__item">2</button>
+              <span class="gds-pagination__ellipsis" aria-hidden="true">…</span>
+              <button type="button" class="gds-pagination__item">25</button>
+              <button type="button" class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"></button>
+            </nav>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

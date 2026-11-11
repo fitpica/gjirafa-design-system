@@ -1,0 +1,107 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "filter-bar",
+  "name": "Filter bar",
+  "status": "beta",
+  "summary": "A row above a list with a search field and filter dropdowns; active filters show inside each dropdown trigger.",
+  "docs": "https://docs-phi-black.vercel.app",
+  "source": "src/components/_page.scss",
+  "owns": [
+    "gds-filter-bar"
+  ],
+  "useWhen": [
+    "Above a table or list that people search and filter."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "A single search field with no filters",
+      "use": "a gds-input on its own"
+    },
+    {
+      "case": "Filters that need many fields",
+      "use": "a side panel with a form"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-filter-bar",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "Flex row that wraps on narrow screens. Dropdown triggers inside it match the 40px input height.",
+      "attributes": {
+        "role": "search",
+        "aria-label": "e.g. \"Filter entries\""
+      }
+    },
+    {
+      "class": "gds-filter-bar__search",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-filter-bar",
+      "description": "Put this class on the gds-input wrapper of the search field: it grows up to 360px."
+    },
+    {
+      "class": "gds-filter-bar__clear",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-filter-bar",
+      "description": "\"Clear filters\" ghost button, pushed to the right. Show it only when a filter is active.",
+      "attributes": {
+        "type": "button"
+      }
+    }
+  ],
+  "modifiers": [],
+  "states": [
+    {
+      "name": "filter active",
+      "how": "Show the choice in the trigger value (\"Status: Published\") and show gds-filter-bar__clear."
+    }
+  ],
+  "a11y": [
+    "Give the bar role=\"search\" and an aria-label.",
+    "The search input needs an aria-label (no visible label in a filter bar).",
+    "Each dropdown trigger names its filter and current value."
+  ],
+  "rules": [
+    {
+      "id": "filter-bar-search-input",
+      "rule": "The search field uses gds-input gds-input--md together with gds-filter-bar__search.",
+      "why": "The bar aligns controls to the md height.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "filter-bar-active-in-trigger",
+      "rule": "Show an active filter inside its dropdown trigger (\"Status: Published\"), not as a separate row of badges.",
+      "why": "Design decision (11 Nov 2026): keeps the bar to one row.",
+      "principle": 2,
+      "autoCheck": false
+    },
+    {
+      "id": "filter-bar-search-role",
+      "rule": "The bar has role=\"search\" and an aria-label.",
+      "why": "Lets screen reader users find the filters.",
+      "principle": 1,
+      "autoCheck": true
+    }
+  ],
+  "composes": [
+    "input",
+    "dropdown",
+    "button"
+  ],
+  "knownIssues": [
+    {
+      "issue": "Outside the filter bar, dropdown triggers are still shorter than md inputs.",
+      "fix": "v3: shared control heights for all components."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Search and two filters",
+      "html": "<div class=\"gds-filter-bar\" role=\"search\" aria-label=\"Filter entries\">\n  <div class=\"gds-input gds-input--md gds-filter-bar__search\">\n    <div class=\"gds-input__wrap\">\n      <i data-lucide=\"search\" class=\"gds-input__icon\"></i>\n      <input type=\"search\" class=\"gds-input__field\" placeholder=\"Search entries\" aria-label=\"Search entries\" />\n    </div>\n  </div>\n  <div class=\"gds-dropdown\">\n    <button type=\"button\" class=\"gds-dropdown__trigger\" aria-haspopup=\"listbox\" aria-expanded=\"false\">\n      <span class=\"gds-dropdown__value\">Status: Published</span>\n      <span class=\"gds-dropdown__arrow\"><i data-lucide=\"chevron-down\" width=\"16\" height=\"16\"></i></span>\n    </button>\n    <div class=\"gds-dropdown__panel\">\n      <div class=\"gds-dropdown__list\" role=\"listbox\" aria-label=\"Status\">\n        <button type=\"button\" class=\"gds-dropdown__item gds-dropdown__item--selected\" role=\"option\" aria-selected=\"true\"><span class=\"gds-dropdown__label\">Published</span></button>\n      </div>\n    </div>\n  </div>\n  <div class=\"gds-dropdown\">\n    <button type=\"button\" class=\"gds-dropdown__trigger\" aria-haspopup=\"listbox\" aria-expanded=\"false\">\n      <span class=\"gds-dropdown__placeholder\">Content type</span>\n      <span class=\"gds-dropdown__arrow\"><i data-lucide=\"chevron-down\" width=\"16\" height=\"16\"></i></span>\n    </button>\n    <div class=\"gds-dropdown__panel\">\n      <div class=\"gds-dropdown__list\" role=\"listbox\" aria-label=\"Content type\">\n        <button type=\"button\" class=\"gds-dropdown__item\" role=\"option\" aria-selected=\"false\"><span class=\"gds-dropdown__label\">Article</span></button>\n      </div>\n    </div>\n  </div>\n  <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--md gds-filter-bar__clear\"><span class=\"gds-btn__label\">Clear filters</span></button>\n</div>"
+    }
+  ]
+}

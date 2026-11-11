@@ -35,7 +35,7 @@ Icons are Lucide (`<i data-lucide="check"></i>`).
 {{components}}
 3. Copy the structure from the contract's example and anatomy: same elements, same nesting, required children, required modifiers.
 4. After you save a `.vue` or `.html` file, the **GDS lint hook** checks it. If it reports problems, fix every one, then continue. Its messages name the rule and often the correct class ("did you mean .gds-table?").
-5. Missing pattern (page header, filter bar, page layout): layout-only CSS with the product prefix (e.g. `cx-page-header`), only `display`/flex/grid/`gap`/alignment/width/padding with `--gds-*` tokens, never colours, borders, type or shadows, never restyling a `gds-` class, marked `/* GDS gap: <pattern> */`. Tell the user which gap you hit.
+5. Page layout: `gds-page` > `gds-page-header` > `gds-filter-bar` > content (load `gds-page`, `gds-filter-bar`; for a list screen load the `gds-list-page` recipe). For a layout GDS still lacks: layout-only CSS with the product prefix (e.g. `cx-…`), only `display`/flex/grid/`gap`/alignment/width/padding with `--gds-*` tokens, never colours, borders, type or shadows, never restyling a `gds-` class, marked `/* GDS gap: <pattern> */`. Tell the user which gap you hit.
 
 Every GDS component has a contract skill. If the screen needs something none of them covers, it is a GDS gap: follow step 5 and tell the user.
 

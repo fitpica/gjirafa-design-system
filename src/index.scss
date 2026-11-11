@@ -45,6 +45,7 @@
 @use 'tokens/component-tooltip';
 @use 'tokens/component-calendar';
 @use 'tokens/component-popover';
+@use 'tokens/component-page';
 
 // --- Component styles ---
 @use 'components/button';
@@ -73,6 +74,7 @@
 @use 'components/tooltip';
 @use 'components/calendar';
 @use 'components/popover';
+@use 'components/page';
 
 // --- Utility classes ---
 @use 'utilities/colors';
@@ -80,3 +82,4 @@
 @use 'utilities/typography';
 @use 'utilities/shadows';
 @use 'utilities/radius';
+@use 'utilities/a11y';

@@ -1,0 +1,57 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "visually-hidden",
+  "name": "Visually hidden",
+  "status": "stable",
+  "summary": "Hides text visually while keeping it for screen readers.",
+  "docs": "https://docs-phi-black.vercel.app",
+  "source": "src/utilities/_a11y.scss",
+  "owns": [
+    "gds-visually-hidden"
+  ],
+  "useWhen": [
+    "A table caption you don't want to show.",
+    "Extra context for screen readers, e.g. \"(opens in a new tab)\" or the meaning behind a coloured count."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "Hiding content from everyone",
+      "use": "the hidden attribute"
+    },
+    {
+      "case": "Labelling an icon-only button",
+      "use": "aria-label on the button"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-visually-hidden",
+      "tag": "span | caption",
+      "required": true,
+      "parent": null,
+      "description": "Any element whose text should be read but not seen."
+    }
+  ],
+  "modifiers": [],
+  "states": [],
+  "a11y": [
+    "Never put focusable elements inside it."
+  ],
+  "rules": [
+    {
+      "id": "visually-hidden-not-focusable",
+      "rule": "Do not put links, buttons or inputs inside gds-visually-hidden.",
+      "why": "Keyboard users would focus something they cannot see.",
+      "principle": 1,
+      "autoCheck": true
+    }
+  ],
+  "composes": [],
+  "knownIssues": [],
+  "examples": [
+    {
+      "name": "Hidden table caption",
+      "html": "<span class=\"gds-visually-hidden\">Sorted by last updated, newest first</span>"
+    }
+  ]
+}
