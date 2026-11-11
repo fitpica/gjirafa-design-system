@@ -5665,6 +5665,7 @@
 
 .gds-pagination-bar--full {
   display: flex;
+  box-sizing: border-box;
   width: 100%;
   height: var(--pagination-full-height);
   padding: 0px var(--pagination-full-padding-x);

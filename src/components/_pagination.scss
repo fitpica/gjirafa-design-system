@@ -185,6 +185,7 @@
 
 .gds-pagination-bar--full {
   display: flex;
+  box-sizing: border-box; // width: 100% includes padding + border, so it never overflows its container
   width: 100%;
   height: var(--pagination-full-height);
   padding: $space-0 var(--pagination-full-padding-x);
