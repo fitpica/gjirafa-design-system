@@ -1,0 +1,76 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "input",
+  "name": "Input",
+  "status": "stable",
+  "summary": "A text field with optional label, icon, prefix/suffix, helper text and character count.",
+  "docs": "https://docs-phi-black.vercel.app/?page=input",
+  "source": "src/components/_input.scss",
+  "owns": ["gds-input"],
+  "useWhen": [
+    "Short free text: names, titles, emails, search.",
+    "Multi-line text with gds-input--textarea."
+  ],
+  "dontUseWhen": [
+    { "case": "Choosing from a known list of options", "use": "dropdown" },
+    { "case": "Picking a date", "use": "calendar" }
+  ],
+  "anatomy": [
+    { "class": "gds-input", "tag": "div", "required": true, "parent": null, "description": "Wrapper that stacks label, field and helper. Always has a size modifier." },
+    { "class": "gds-input__label", "tag": "label", "required": false, "parent": "gds-input", "description": "Visible label. Link it with for/id.", "attributes": { "for": "id of the field" } },
+    { "class": "gds-input__required", "tag": "span", "required": false, "parent": "gds-input__label", "description": "Required marker \"*\" inside the label." },
+    { "class": "gds-input__wrap", "tag": "div", "required": true, "parent": "gds-input", "description": "The bordered box. Its height comes from the size modifier." },
+    { "class": "gds-input__icon", "tag": "i | span", "required": false, "parent": "gds-input__wrap", "description": "Leading icon (e.g. search)." },
+    { "class": "gds-input__prefix", "tag": "span", "required": false, "parent": "gds-input__wrap", "description": "Fixed text before the value (e.g. https://)." },
+    { "class": "gds-input__field", "tag": "input | textarea", "required": true, "parent": "gds-input__wrap", "description": "The native field.", "attributes": { "id": "matches the label's for", "aria-label": "Required when there is no visible label (e.g. a search box)" } },
+    { "class": "gds-input__suffix", "tag": "span", "required": false, "parent": "gds-input__wrap", "description": "Fixed text after the value (e.g. .com)." },
+    { "class": "gds-input__helper", "tag": "span", "required": false, "parent": "gds-input", "description": "Helper or error text under the box." },
+    { "class": "gds-input__count", "tag": "span", "required": false, "parent": "gds-input", "description": "Character count, e.g. \"0 / 200\"." }
+  ],
+  "modifiers": [
+    { "class": "gds-input--sm", "on": "gds-input", "group": "size", "description": "32px high." },
+    { "class": "gds-input--md", "on": "gds-input", "group": "size", "description": "40px high. The usual choice." },
+    { "class": "gds-input--lg", "on": "gds-input", "group": "size", "description": "48px high." },
+    { "class": "gds-input--error", "on": "gds-input", "group": "state", "description": "Red border. Put the message in __helper and set aria-invalid=\"true\"." },
+    { "class": "gds-input--warning", "on": "gds-input", "group": "state", "description": "Orange border." },
+    { "class": "gds-input--success", "on": "gds-input", "group": "state", "description": "Green border." },
+    { "class": "gds-input--disabled", "on": "gds-input", "group": "state", "description": "Disabled look. Also set disabled on the field." },
+    { "class": "gds-input--textarea", "on": "gds-input", "group": "content", "description": "Multi-line: the field is a <textarea>." },
+    { "class": "gds-input--shadow", "on": "gds-input", "group": "style", "description": "Shadow instead of an outline border." },
+    { "class": "gds-input--full", "on": "gds-input", "group": "width", "description": "Fills the available width." }
+  ],
+  "states": [
+    { "name": "focus", "how": "Native :focus on the field highlights the wrap." },
+    { "name": "error", "how": "gds-input--error + message in __helper + aria-invalid=\"true\" + aria-describedby pointing at the helper." },
+    { "name": "disabled", "how": "gds-input--disabled + disabled on the field." }
+  ],
+  "a11y": [
+    "Every field has a name: a <label for> or, for search boxes, aria-label.",
+    "Placeholder is not a label.",
+    "Link helper and error text with aria-describedby."
+  ],
+  "rules": [
+    { "id": "input-size-required", "rule": "Every .gds-input has exactly one of --sm, --md, --lg.", "why": "The height lives on the size class; a bare .gds-input collapses.", "principle": 3, "autoCheck": true, "removeInV3": "Give .gds-input the md height by default, so the size class becomes optional." },
+    { "id": "input-accessible-name", "rule": "Every .gds-input__field has a linked <label> or an aria-label.", "why": "An unnamed field is announced as \"edit text\".", "principle": 1, "autoCheck": true },
+    { "id": "input-error-message", "rule": "--error always comes with a text message in __helper.", "why": "A red border alone does not say what is wrong.", "principle": 1, "autoCheck": true },
+    { "id": "input-wrap", "rule": "The field sits inside .gds-input__wrap, never directly in .gds-input.", "why": "The border, icon and prefix layout live on the wrap.", "principle": 3, "autoCheck": true }
+  ],
+  "composes": [],
+  "knownIssues": [
+    { "issue": "Older guides called --md the default although a bare .gds-input has no height.", "fix": "v3: md height by default." }
+  ],
+  "examples": [
+    {
+      "name": "Search box (no visible label)",
+      "html": "<div class=\"gds-input gds-input--md\">\n  <div class=\"gds-input__wrap\">\n    <i data-lucide=\"search\" class=\"gds-input__icon\"></i>\n    <input type=\"search\" class=\"gds-input__field\" placeholder=\"Search entries\" aria-label=\"Search entries\" />\n  </div>\n</div>"
+    },
+    {
+      "name": "With label, helper and error",
+      "html": "<div class=\"gds-input gds-input--md gds-input--error\">\n  <label class=\"gds-input__label\" for=\"entry-title\">Title <span class=\"gds-input__required\">*</span></label>\n  <div class=\"gds-input__wrap\"><input id=\"entry-title\" class=\"gds-input__field\" aria-invalid=\"true\" aria-describedby=\"entry-title-help\" /></div>\n  <span class=\"gds-input__helper\" id=\"entry-title-help\">Title is required</span>\n</div>"
+    },
+    {
+      "name": "Textarea with count",
+      "html": "<div class=\"gds-input gds-input--md gds-input--textarea\">\n  <label class=\"gds-input__label\" for=\"entry-summary\">Summary</label>\n  <div class=\"gds-input__wrap\"><textarea id=\"entry-summary\" class=\"gds-input__field\" rows=\"3\"></textarea></div>\n  <span class=\"gds-input__count\">0 / 200</span>\n</div>"
+    }
+  ]
+}

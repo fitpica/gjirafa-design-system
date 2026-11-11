@@ -1,0 +1,367 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "dropdown",
+  "name": "Dropdown",
+  "status": "stable",
+  "summary": "A trigger that opens a panel of options: single select, multi-select, searchable lists.",
+  "docs": "https://docs-phi-black.vercel.app/?page=dropdown",
+  "source": "src/components/_dropdown.scss",
+  "owns": [
+    "gds-dropdown"
+  ],
+  "useWhen": [
+    "Choosing one or several values from a list (status filter, content type, author).",
+    "Lists long enough to need search."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "2–4 options that should all stay visible",
+      "use": "radio or tabs"
+    },
+    {
+      "case": "Actions rather than values (Edit, Duplicate, Delete)",
+      "use": "menu"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-dropdown",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "Wrapper. Has no styles of its own: the product positions the panel (e.g. position: relative on the wrapper, absolute on the panel)."
+    },
+    {
+      "class": "gds-dropdown__trigger",
+      "tag": "button",
+      "required": true,
+      "parent": "gds-dropdown",
+      "description": "The closed control.",
+      "attributes": {
+        "type": "button",
+        "aria-haspopup": "listbox",
+        "aria-expanded": "true | false"
+      }
+    },
+    {
+      "class": "gds-dropdown__placeholder",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__trigger",
+      "description": "Shown when nothing is selected."
+    },
+    {
+      "class": "gds-dropdown__value",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__trigger",
+      "description": "The selected value."
+    },
+    {
+      "class": "gds-dropdown__tags",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-dropdown__trigger",
+      "description": "Multi-select: selected values as .gds-chip elements."
+    },
+    {
+      "class": "gds-dropdown__arrow",
+      "tag": "span",
+      "required": true,
+      "parent": "gds-dropdown__trigger",
+      "description": "Chevron-down icon. Rotates when open."
+    },
+    {
+      "class": "gds-dropdown__panel",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-dropdown",
+      "description": "The floating panel. Hidden until gds-dropdown--open.",
+      "attributes": {
+        "role": "listbox (or contains the list with role=listbox)"
+      }
+    },
+    {
+      "class": "gds-dropdown__search",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-dropdown__panel",
+      "description": "Search row at the top of the panel."
+    },
+    {
+      "class": "gds-dropdown__search-icon",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__search",
+      "description": "Search icon."
+    },
+    {
+      "class": "gds-dropdown__search-input",
+      "tag": "input",
+      "required": false,
+      "parent": "gds-dropdown__search",
+      "description": "Search field.",
+      "attributes": {
+        "aria-label": "e.g. \"Search authors\""
+      }
+    },
+    {
+      "class": "gds-dropdown__list",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-dropdown__panel",
+      "description": "Scrollable list of items."
+    },
+    {
+      "class": "gds-dropdown__group",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-dropdown__list",
+      "description": "Group heading (uppercase)."
+    },
+    {
+      "class": "gds-dropdown__item",
+      "tag": "button",
+      "required": true,
+      "parent": "gds-dropdown__list",
+      "repeat": true,
+      "description": "One option. A <button>, so it is focusable.",
+      "attributes": {
+        "type": "button",
+        "role": "option",
+        "aria-selected": "true | false"
+      }
+    },
+    {
+      "class": "gds-dropdown__icon",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__item",
+      "description": "Leading icon of an item."
+    },
+    {
+      "class": "gds-dropdown__content",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__item",
+      "description": "Rich items: stacks label and description."
+    },
+    {
+      "class": "gds-dropdown__label",
+      "tag": "span",
+      "required": true,
+      "parent": "gds-dropdown__item",
+      "description": "Item text."
+    },
+    {
+      "class": "gds-dropdown__desc",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__content",
+      "description": "Secondary line in rich items."
+    },
+    {
+      "class": "gds-dropdown__badge",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__item",
+      "description": "Small count or status on the right."
+    },
+    {
+      "class": "gds-dropdown__check",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__item",
+      "description": "Check icon, visible on the selected item (single select)."
+    },
+    {
+      "class": "gds-dropdown__divider",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-dropdown__list",
+      "description": "Separator between groups.",
+      "attributes": {
+        "role": "separator"
+      }
+    },
+    {
+      "class": "gds-dropdown__empty",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-dropdown__panel",
+      "description": "No-results message (with __empty-icon)."
+    },
+    {
+      "class": "gds-dropdown__empty-icon",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__empty",
+      "description": "Icon above the empty message."
+    },
+    {
+      "class": "gds-dropdown__loading",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-dropdown__panel",
+      "description": "Loading row (with __spinner)."
+    },
+    {
+      "class": "gds-dropdown__spinner",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__loading",
+      "description": "Spinner."
+    },
+    {
+      "class": "gds-dropdown__create",
+      "tag": "button",
+      "required": false,
+      "parent": "gds-dropdown__panel",
+      "description": "\"Create …\" action at the bottom (with __create-icon).",
+      "attributes": {
+        "type": "button"
+      }
+    },
+    {
+      "class": "gds-dropdown__create-icon",
+      "tag": "span",
+      "required": false,
+      "parent": "gds-dropdown__create",
+      "description": "Plus icon."
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-dropdown--open",
+      "on": "gds-dropdown",
+      "group": "state",
+      "description": "Shows the panel and rotates the arrow. Set aria-expanded=\"true\" on the trigger."
+    },
+    {
+      "class": "gds-dropdown__trigger--sm",
+      "on": "gds-dropdown__trigger",
+      "group": "size",
+      "description": "Small trigger."
+    },
+    {
+      "class": "gds-dropdown__trigger--lg",
+      "on": "gds-dropdown__trigger",
+      "group": "size",
+      "description": "Large trigger."
+    },
+    {
+      "class": "gds-dropdown__item--selected",
+      "on": "gds-dropdown__item",
+      "group": "state",
+      "description": "Selected (single select). Shows __check."
+    },
+    {
+      "class": "gds-dropdown__item--checked",
+      "on": "gds-dropdown__item",
+      "group": "state",
+      "description": "Checked (multi-select, with a .gds-checkbox__control inside)."
+    },
+    {
+      "class": "gds-dropdown__item--disabled",
+      "on": "gds-dropdown__item",
+      "group": "state",
+      "description": "Not selectable. Also set disabled."
+    },
+    {
+      "class": "gds-dropdown__item--rich",
+      "on": "gds-dropdown__item",
+      "group": "layout",
+      "description": "Icon/avatar + label + description layout."
+    }
+  ],
+  "states": [
+    {
+      "name": "open",
+      "how": "gds-dropdown--open on the wrapper + aria-expanded=\"true\" on the trigger."
+    },
+    {
+      "name": "selected",
+      "how": "gds-dropdown__item--selected + aria-selected=\"true\"."
+    },
+    {
+      "name": "empty / loading",
+      "how": "Show __empty or __loading inside the panel instead of the list."
+    }
+  ],
+  "a11y": [
+    "Trigger: <button> with aria-haspopup=\"listbox\" and aria-expanded.",
+    "Items: <button> elements (focusable), role=\"option\", aria-selected.",
+    "Escape closes the panel and returns focus to the trigger (product JS).",
+    "Arrow keys move between items (product JS)."
+  ],
+  "rules": [
+    {
+      "id": "dropdown-items-are-buttons",
+      "rule": ".gds-dropdown__item is a <button>, never a <li> or <div>.",
+      "why": "Non-button items cannot be reached with the keyboard; this was an unadmitted guess in the first AI test.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "dropdown-trigger-aria",
+      "rule": "The trigger has aria-haspopup and aria-expanded matching gds-dropdown--open.",
+      "why": "Screen readers announce whether the list is open.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "dropdown-trigger-size-matches",
+      "rule": "Next to a gds-input--md, use the default trigger size; next to --sm use __trigger--sm.",
+      "why": "In the second AI test the filters were shorter than the search box.",
+      "principle": 3,
+      "autoCheck": false,
+      "removeInV3": "Align trigger heights to the input sizes (sm 32 / md 40 / lg 48) with matching modifier names."
+    },
+    {
+      "id": "dropdown-not-for-actions",
+      "rule": "Use dropdown for choosing values, menu for actions.",
+      "why": "Different semantics (listbox vs menu).",
+      "principle": 2,
+      "autoCheck": false
+    }
+  ],
+  "internal": [
+    {
+      "class": "gds-dropdown__menu",
+      "why": "Only used by the table action cell (with .is-open). Not part of the dropdown API; use __panel."
+    }
+  ],
+  "composes": [
+    "checkbox",
+    "avatar",
+    "chip"
+  ],
+  "knownIssues": [
+    {
+      "issue": "Fails principle 1: .gds-dropdown__placeholder uses --gds-color-text-placeholder, 2.96:1 on white (axe, WCAG AA needs 4.5:1).",
+      "fix": "Point --dd-search-placeholder / the placeholder colour at text-secondary (6.96:1). Same check needed for the input ::placeholder."
+    },
+    {
+      "issue": ".gds-dropdown has no CSS, so the panel is not positioned; docs examples use inline styles.",
+      "fix": "v3: .gds-dropdown { position: relative } and an absolutely positioned panel by default."
+    },
+    {
+      "issue": ".gds-dropdown__menu exists only for the table action cell and is not part of this API.",
+      "fix": "v3: remove __menu; the table uses __panel."
+    },
+    {
+      "issue": "Trigger heights do not match input heights.",
+      "fix": "v3: shared control heights."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Status filter (single select, open)",
+      "html": "<div class=\"gds-dropdown gds-dropdown--open\">\n  <button type=\"button\" class=\"gds-dropdown__trigger\" aria-haspopup=\"listbox\" aria-expanded=\"true\">\n    <span class=\"gds-dropdown__value\">Status: All</span>\n    <span class=\"gds-dropdown__arrow\"><i data-lucide=\"chevron-down\" width=\"16\" height=\"16\"></i></span>\n  </button>\n  <div class=\"gds-dropdown__panel\">\n    <div class=\"gds-dropdown__list\" role=\"listbox\" aria-label=\"Status\">\n      <button type=\"button\" class=\"gds-dropdown__item gds-dropdown__item--selected\" role=\"option\" aria-selected=\"true\">\n        <span class=\"gds-dropdown__label\">All</span>\n        <span class=\"gds-dropdown__check\"><i data-lucide=\"check\" width=\"16\" height=\"16\"></i></span>\n      </button>\n      <button type=\"button\" class=\"gds-dropdown__item\" role=\"option\" aria-selected=\"false\">\n        <span class=\"gds-dropdown__label\">Published</span>\n        <span class=\"gds-dropdown__check\"><i data-lucide=\"check\" width=\"16\" height=\"16\"></i></span>\n      </button>\n    </div>\n  </div>\n</div>"
+    },
+    {
+      "name": "Closed, with placeholder",
+      "html": "<div class=\"gds-dropdown\">\n  <button type=\"button\" class=\"gds-dropdown__trigger\" aria-haspopup=\"listbox\" aria-expanded=\"false\">\n    <span class=\"gds-dropdown__placeholder\">Content type</span>\n    <span class=\"gds-dropdown__arrow\"><i data-lucide=\"chevron-down\" width=\"16\" height=\"16\"></i></span>\n  </button>\n  <div class=\"gds-dropdown__panel\">\n    <div class=\"gds-dropdown__list\" role=\"listbox\" aria-label=\"Content type\">\n      <button type=\"button\" class=\"gds-dropdown__item\" role=\"option\" aria-selected=\"false\">\n        <span class=\"gds-dropdown__label\">Article</span>\n      </button>\n    </div>\n  </div>\n</div>"
+    }
+  ]
+}

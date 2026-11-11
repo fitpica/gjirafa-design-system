@@ -1,0 +1,325 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/fitpica/gjirafa-design-system/components/component.schema.json",
+  "title": "GDS component contract",
+  "description": "Machine-readable description of one GDS component: its DOM anatomy, modifiers, states, accessibility, design rules and canonical examples. Read by AI agents, docs generators and the gds check tool.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "status",
+    "summary",
+    "owns",
+    "anatomy",
+    "modifiers",
+    "rules",
+    "examples"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "class": {
+      "type": "string",
+      "pattern": "^(gds-[a-z0-9-]+(__[a-z0-9-]+)?(--[a-z0-9-]+)?|is-[a-z-]+)$"
+    },
+    "classList": {
+      "type": "string",
+      "pattern": "^(gds-[a-z0-9-]+(__[a-z0-9-]+)?(--[a-z0-9-]+)?|is-[a-z-]+)( \\| (gds-[a-z0-9-]+(__[a-z0-9-]+)?(--[a-z0-9-]+)?|is-[a-z-]+))*$",
+      "description": "One class, or alternatives separated by \" | \"."
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z-]+$",
+      "description": "Stable id, used in docs URLs (?page=<id>)."
+    },
+    "name": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "stable",
+        "beta",
+        "deprecated"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "description": "One sentence: what it is for."
+    },
+    "docs": {
+      "type": "string",
+      "format": "uri"
+    },
+    "source": {
+      "type": "string",
+      "description": "SCSS file that defines it."
+    },
+    "owns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Class prefixes this component owns. Every compiled class with one of these prefixes must appear in anatomy, modifiers or internal."
+    },
+    "useWhen": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dontUseWhen": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "case",
+          "use"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "case": {
+            "type": "string"
+          },
+          "use": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "anatomy": {
+      "type": "array",
+      "description": "DOM structure, in document order. For a CSS-only system this is the API.",
+      "items": {
+        "type": "object",
+        "required": [
+          "class",
+          "tag",
+          "required",
+          "parent",
+          "description"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "class": {
+            "$ref": "#/definitions/class"
+          },
+          "tag": {
+            "type": "string",
+            "description": "Element(s) to use, e.g. \"button\" or \"div | nav\"."
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/classList"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Nearest GDS ancestor. null = top level."
+          },
+          "repeat": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Attributes this element needs, with a short note."
+          }
+        }
+      }
+    },
+    "modifiers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "class",
+          "on",
+          "group",
+          "description"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "class": {
+            "$ref": "#/definitions/class"
+          },
+          "on": {
+            "$ref": "#/definitions/class"
+          },
+          "group": {
+            "enum": [
+              "size",
+              "variant",
+              "style",
+              "state",
+              "layout",
+              "width",
+              "content"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "default": {
+            "type": "boolean",
+            "description": "Behaves as the default of its group (may still need to be written, see rules)."
+          },
+          "requires": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/class"
+            }
+          }
+        }
+      }
+    },
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "how"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "how": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "a11y": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "description": "Design rules. Each is tied to a GDS principle and says whether a tool can check it.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "rule",
+          "why",
+          "principle",
+          "autoCheck"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z]+(-[a-z0-9]+)+$"
+          },
+          "rule": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "principle": {
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "description": "1 Accessible by default · 2 Reuse before you create · 3 Obvious over documented"
+          },
+          "autoCheck": {
+            "type": "boolean",
+            "description": "Can gds check verify this from markup alone?"
+          },
+          "removeInV3": {
+            "type": "string",
+            "description": "Principle 3: how the system could change so this rule is no longer needed."
+          }
+        }
+      }
+    },
+    "internal": {
+      "type": "array",
+      "description": "Classes that exist in the CSS but must not be used in product code (docs previews, internal helpers).",
+      "items": {
+        "type": "object",
+        "required": [
+          "class",
+          "why"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "class": {
+            "$ref": "#/definitions/class"
+          },
+          "why": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "composes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Other component ids used inside this one."
+    },
+    "knownIssues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "issue",
+          "fix"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "issue": {
+            "type": "string"
+          },
+          "fix": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "html"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "html": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
