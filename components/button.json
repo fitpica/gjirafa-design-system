@@ -1,0 +1,107 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "button",
+  "name": "Button",
+  "status": "stable",
+  "summary": "Triggers an action: text buttons, icon-only buttons and joined button groups.",
+  "docs": "https://docs-phi-black.vercel.app/?page=button",
+  "source": "src/components/_button.scss",
+  "owns": ["gds-btn"],
+  "useWhen": [
+    "Running an action on the current page: Save, Publish, Delete, Create entry.",
+    "Opening a dialog, menu or panel.",
+    "An icon-only action in a dense toolbar or table row, when the icon is widely understood (more, close, edit)."
+  ],
+  "dontUseWhen": [
+    { "case": "Going to another page or URL", "use": "a link (<a href>); if it must look like a button, put .gds-btn on the <a>" },
+    { "case": "Switching a setting on or off", "use": "toggle" },
+    { "case": "Filtering a list by one or more values", "use": "chip (gds-chip--selectable) or filter-badge" },
+    { "case": "Choosing between views inside one panel", "use": "tabs" }
+  ],
+  "anatomy": [
+    { "class": "gds-btn-group", "tag": "div", "required": false, "parent": null, "description": "Joins adjacent .gds-btn elements into one bar with shared borders. Only direct .gds-btn children are joined.", "attributes": { "role": "group", "aria-label": "What the buttons control, e.g. \"Date range\"" } },
+    { "class": "gds-btn", "tag": "button | a", "required": true, "parent": null, "description": "Text button. Needs one size and one variant modifier: the base class has no height, padding or colour. Can sit alone or inside .gds-btn-group.", "attributes": { "type": "\"button\" unless it submits a form (on <button>)", "href": "Required when the element is an <a>" } },
+    { "class": "gds-btn__spinner", "tag": "i | svg", "required": false, "parent": "gds-btn", "description": "Loading spinner: <i data-lucide=\"loader-circle\" class=\"gds-btn__spinner\"></i>. Only with gds-btn--loading. Centred over the hidden label.", "attributes": { "aria-hidden": "true" } },
+    { "class": "gds-btn__icon", "tag": "span", "required": false, "parent": "gds-btn", "repeat": true, "description": "Icon slot before or after the label. Wraps one Lucide icon; the size modifier sets the icon size. Decorative: the label carries the meaning." },
+    { "class": "gds-btn__label", "tag": "span", "required": true, "parent": "gds-btn", "description": "The button text. Loading hides only this element, so all text must be inside it." },
+    { "class": "gds-btn-icon", "tag": "button | a", "required": false, "parent": null, "description": "Square icon-only button, used instead of .gds-btn. Contains one Lucide icon directly (no __icon wrapper). Needs one size and one variant modifier.", "attributes": { "type": "\"button\" unless it submits a form (on <button>)", "aria-label": "Required: the action, e.g. \"More actions\"" } }
+  ],
+  "modifiers": [
+    { "class": "gds-btn--primary", "on": "gds-btn", "group": "variant", "description": "Filled brand colour. The main action of a view." },
+    { "class": "gds-btn--secondary", "on": "gds-btn", "group": "variant", "description": "White with a border. Supporting actions." },
+    { "class": "gds-btn--ghost", "on": "gds-btn", "group": "variant", "description": "No background or border until hover. Low-emphasis actions in toolbars and cards." },
+    { "class": "gds-btn--critical", "on": "gds-btn", "group": "variant", "description": "Red fill. Destructive actions (delete, remove, revoke)." },
+    { "class": "gds-btn--positive", "on": "gds-btn", "group": "variant", "description": "Green fill. Confirming a positive outcome (approve, mark as done)." },
+    { "class": "gds-btn--xs", "on": "gds-btn", "group": "size", "description": "24px high, 12px icon." },
+    { "class": "gds-btn--sm", "on": "gds-btn", "group": "size", "description": "28px high, 14px icon. Toolbars, table rows, cards." },
+    { "class": "gds-btn--md", "on": "gds-btn", "group": "size", "description": "36px high, 16px icon. Forms, page headers, dialogs." },
+    { "class": "gds-btn--lg", "on": "gds-btn", "group": "size", "description": "44px high, 18px icon." },
+    { "class": "gds-btn--xl", "on": "gds-btn", "group": "size", "description": "52px high, 20px icon. Landing or onboarding screens only." },
+    { "class": "gds-btn--pill", "on": "gds-btn", "group": "style", "description": "Fully rounded corners." },
+    { "class": "gds-btn--full", "on": "gds-btn", "group": "width", "description": "Takes the full width of its container." },
+    { "class": "gds-btn--loading", "on": "gds-btn", "group": "state", "description": "Hides the label (keeps the width) and shows .gds-btn__spinner. Add aria-busy=\"true\". Does not block clicks on its own." },
+    { "class": "gds-btn--disabled", "on": "gds-btn", "group": "state", "description": "Disabled look for elements that cannot take the disabled attribute (<a>). On <button>, use the disabled attribute instead." },
+    { "class": "gds-btn-icon--primary", "on": "gds-btn-icon", "group": "variant", "description": "Filled brand colour." },
+    { "class": "gds-btn-icon--secondary", "on": "gds-btn-icon", "group": "variant", "description": "White with a border." },
+    { "class": "gds-btn-icon--ghost", "on": "gds-btn-icon", "group": "variant", "description": "Transparent until hover. The usual choice in toolbars, table rows and dialog headers." },
+    { "class": "gds-btn-icon--critical", "on": "gds-btn-icon", "group": "variant", "description": "Red fill. Destructive actions." },
+    { "class": "gds-btn-icon--positive", "on": "gds-btn-icon", "group": "variant", "description": "Green fill." },
+    { "class": "gds-btn-icon--xs", "on": "gds-btn-icon", "group": "size", "description": "24px square, 12px icon." },
+    { "class": "gds-btn-icon--sm", "on": "gds-btn-icon", "group": "size", "description": "28px square, 14px icon." },
+    { "class": "gds-btn-icon--md", "on": "gds-btn-icon", "group": "size", "description": "36px square, 16px icon." },
+    { "class": "gds-btn-icon--lg", "on": "gds-btn-icon", "group": "size", "description": "44px square, 18px icon." },
+    { "class": "gds-btn-icon--xl", "on": "gds-btn-icon", "group": "size", "description": "52px square, 20px icon." },
+    { "class": "gds-btn-icon--circle", "on": "gds-btn-icon", "group": "style", "description": "Round instead of square." }
+  ],
+  "states": [
+    { "name": "hover", "how": "Native :hover. Skipped when the button is disabled." },
+    { "name": "active", "how": "Native :active: darker fill and a slight press (scale)." },
+    { "name": "focus", "how": "Native :focus-visible shows a two-ring focus outline." },
+    { "name": "disabled", "how": "disabled attribute on <button>. On <a>: gds-btn--disabled + aria-disabled=\"true\" + remove href. .gds-btn-icon supports the attribute only." },
+    { "name": "loading", "how": "gds-btn--loading + .gds-btn__spinner + aria-busy=\"true\". Ignore clicks in JS while loading." }
+  ],
+  "a11y": [
+    "Use <button> for actions and <a href> for navigation, whatever it looks like.",
+    "Every .gds-btn-icon needs an aria-label that names the action.",
+    "Use the native disabled attribute on <button>; the class alone leaves it clickable and focusable.",
+    "While loading, keep the label in the DOM (it stays the accessible name) and set aria-busy=\"true\".",
+    "Give .gds-btn-group role=\"group\" and an aria-label. If the group works as a toggle, set aria-pressed on each button."
+  ],
+  "rules": [
+    { "id": "btn-size-variant-required", "rule": "Every .gds-btn and .gds-btn-icon has exactly one size and one variant modifier.", "why": "The base class has no height, padding or colours, so a bare button renders as an unstyled box.", "principle": 3, "autoCheck": true, "removeInV3": "Make md + secondary the built-in default so both modifiers become optional." },
+    { "id": "btn-icon-only-label", "rule": "Every .gds-btn-icon has an aria-label (or aria-labelledby).", "why": "An icon alone has no text, so screen readers announce just \"button\".", "principle": 1, "autoCheck": true },
+    { "id": "btn-label-wrapper", "rule": "All text inside .gds-btn sits in .gds-btn__label; icons sit in .gds-btn__icon.", "why": "Loading hides only the label element, and the icon size comes from the __icon wrapper.", "principle": 3, "autoCheck": true },
+    { "id": "btn-disabled-native", "rule": "A disabled <button> uses the disabled attribute. gds-btn--disabled is only for <a>, together with aria-disabled=\"true\".", "why": "The class only changes the look; the button would still be focusable and clickable.", "principle": 1, "autoCheck": true, "removeInV3": "Drop gds-btn--disabled and style only :disabled and [aria-disabled=\"true\"]." },
+    { "id": "btn-loading-busy", "rule": "A gds-btn--loading button has aria-busy=\"true\" and contains .gds-btn__spinner.", "why": "Without aria-busy, screen-reader users get no sign that something is happening; without the spinner the button just looks empty.", "principle": 1, "autoCheck": true },
+    { "id": "btn-type-attribute", "rule": "A <button class=\"gds-btn\"> or <button class=\"gds-btn-icon\"> inside a form has type=\"button\" unless it submits the form.", "why": "A button in a form submits it by default, which surprises people when the button only opens a menu.", "principle": 3, "autoCheck": true },
+    { "id": "btn-one-primary", "rule": "At most one gds-btn--primary per view or dialog.", "why": "One clear main action; two primaries compete and slow the decision.", "principle": 3, "autoCheck": false },
+    { "id": "btn-critical-destructive-only", "rule": "Use gds-btn--critical only for actions that delete or remove something, and gds-btn--positive only to confirm a good outcome.", "why": "Red and green carry meaning; using them for emphasis teaches people to ignore them.", "principle": 3, "autoCheck": false },
+    { "id": "btn-link-vs-button", "rule": "Navigation uses <a href class=\"gds-btn ...\">; actions use <button>.", "why": "Links and buttons behave differently for keyboards, new tabs and screen readers.", "principle": 1, "autoCheck": false },
+    { "id": "btn-group-children", "rule": "A .gds-btn-group contains only .gds-btn elements of one size.", "why": "The group only joins direct .gds-btn children and sets corner radius per size; icon buttons or mixed sizes break the joined edges.", "principle": 2, "autoCheck": true, "removeInV3": "Support .gds-btn-icon in groups and take the radius from the group, not each child." }
+  ],
+  "composes": [],
+  "knownIssues": [
+    { "issue": "Docs use gds-btn--icon-left, gds-btn--icon-right and gds-btn--icon-only, and the SCSS header lists --icon-left/--icon-right, but none of these classes exist in the CSS.", "fix": "Remove them from docs and the header comment. The gap already spaces icon and label; icon-only buttons use .gds-btn-icon." },
+    { "issue": "A bare .gds-btn or .gds-btn-icon has no size and no colours. brand.md says md is the default and shows buttons without a size class, which is wrong.", "fix": "v3: make md + secondary the default. Until then, fix brand.md."},
+    { "issue": "gds-btn--loading does not block clicks or hover, and a .gds-btn__icon stays visible next to the spinner.", "fix": "Add pointer-events: none and hide .gds-btn__icon while loading." },
+    { "issue": "On secondary and ghost, the loading colour (neutral-60) makes the spinner about 2.1:1 against white, below the 3:1 needed for non-text graphics.", "fix": "Use --gds-color-text-secondary for the spinner on light buttons." },
+    { "issue": ".gds-btn-icon has no disabled class and its variant hovers only check :disabled, so an <a class=\"gds-btn-icon\"> cannot look disabled.", "fix": "Add [aria-disabled=\"true\"] styling shared by both button types." },
+    { "issue": ".gds-btn-group only styles direct .gds-btn children; a .gds-btn-icon inside keeps its own radius and doubles borders.", "fix": "Extend the group selectors to .gds-btn-icon." },
+    { "issue": "There is no selected style for a button inside .gds-btn-group, yet docs show Day/Week/Month groups that read as a toggle.", "fix": "Add a pressed style driven by aria-pressed=\"true\", or point toggles to tabs." },
+    { "issue": "Docs token table lists --btn-critical-bg as red-600; the SCSS uses red-700.", "fix": "Regenerate the docs token table from the SCSS." }
+  ],
+  "examples": [
+    {
+      "name": "Entry editor header actions",
+      "html": "<button type=\"button\" class=\"gds-btn gds-btn--secondary gds-btn--md\">\n  <span class=\"gds-btn__label\">Save draft</span>\n</button>\n<button type=\"button\" class=\"gds-btn gds-btn--primary gds-btn--md\">\n  <span class=\"gds-btn__icon\"><i data-lucide=\"send\"></i></span>\n  <span class=\"gds-btn__label\">Publish</span>\n</button>\n<button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--md\" aria-label=\"More actions\">\n  <i data-lucide=\"ellipsis-vertical\"></i>\n</button>"
+    },
+    {
+      "name": "Loading while publishing",
+      "html": "<button type=\"button\" class=\"gds-btn gds-btn--primary gds-btn--md gds-btn--loading\" aria-busy=\"true\">\n  <i data-lucide=\"loader-circle\" class=\"gds-btn__spinner\" aria-hidden=\"true\"></i>\n  <span class=\"gds-btn__label\">Publishing</span>\n</button>"
+    },
+    {
+      "name": "Schedule navigation group",
+      "html": "<div class=\"gds-btn-group\" role=\"group\" aria-label=\"Schedule navigation\">\n  <button type=\"button\" class=\"gds-btn gds-btn--secondary gds-btn--sm\"><span class=\"gds-btn__label\">Previous week</span></button>\n  <button type=\"button\" class=\"gds-btn gds-btn--secondary gds-btn--sm\"><span class=\"gds-btn__label\">Today</span></button>\n  <button type=\"button\" class=\"gds-btn gds-btn--secondary gds-btn--sm\"><span class=\"gds-btn__label\">Next week</span></button>\n</div>"
+    }
+  ]
+}

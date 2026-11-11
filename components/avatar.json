@@ -1,0 +1,88 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "avatar",
+  "name": "Avatar",
+  "status": "stable",
+  "summary": "A photo, initials or icon that represents a person or an organisation, alone, stacked in a group or paired with a name.",
+  "docs": "https://docs-phi-black.vercel.app/?page=avatar",
+  "source": "src/components/_avatar.scss",
+  "owns": ["gds-avatar"],
+  "useWhen": [
+    "Showing who wrote, edited or owns an entry or asset.",
+    "Listing collaborators on an item (avatar group).",
+    "A user or author cell in a table, paired with the name (avatar name).",
+    "Representing an organisation, site or publication (square shape)."
+  ],
+  "dontUseWhen": [
+    { "case": "A removable person token in a field or filter", "use": "chip with a .gds-avatar inside" },
+    { "case": "A presence indicator without a picture", "use": "status-dot" },
+    { "case": "A thumbnail of an image or video asset", "use": "a plain <img> in a card or table cell" }
+  ],
+  "anatomy": [
+    { "class": "gds-avatar-group", "tag": "div", "required": false, "parent": null, "description": "Overlapping stack of avatars. Uses row-reverse: the first child in the DOM appears on the right, in front.", "attributes": { "role": "group", "aria-label": "Who is shown, e.g. \"Collaborators: 7 people\"" } },
+    { "class": "gds-avatar-group__counter", "tag": "span", "required": false, "parent": "gds-avatar-group", "description": "\"+N\" for people not shown. Must be the FIRST child of the group so it appears last (on the right). Fixed at 32px." },
+    { "class": "gds-avatar-name", "tag": "div", "required": false, "parent": null, "description": "Avatar + name pair. Contains one .gds-avatar followed by .gds-avatar-name__info." },
+    { "class": "gds-avatar", "tag": "div | span", "required": true, "parent": null, "description": "The avatar circle or square. 32px circle by default. Contains exactly one of __img, __text or __icon, plus an optional __status. Can sit alone, in .gds-avatar-group, in .gds-avatar-name or in a chip.", "attributes": { "role": "\"img\" when it shows initials or an icon and no name is visible next to it", "aria-label": "The full name of the person or organisation" } },
+    { "class": "gds-avatar__img", "tag": "img", "required": false, "parent": "gds-avatar", "description": "Photo or logo, cropped to fill.", "attributes": { "alt": "Required. The name when the avatar stands alone; alt=\"\" when the name is visible next to it" } },
+    { "class": "gds-avatar__text", "tag": "span", "required": false, "parent": "gds-avatar", "description": "Initials (one or two letters). Shown in upper case.", "attributes": { "aria-hidden": "\"true\"; the name comes from the avatar's aria-label or the visible name" } },
+    { "class": "gds-avatar__icon", "tag": "span", "required": false, "parent": "gds-avatar", "description": "Fallback icon when there is no photo or name: <i data-lucide=\"user\"></i> for people, \"building-2\" for organisations. Size follows the avatar size." },
+    { "class": "gds-avatar__status", "tag": "span", "required": false, "parent": "gds-avatar", "description": "Small green \"online\" dot in the bottom-right corner, with a white ring. Only one colour exists.", "attributes": { "role": "img", "aria-label": "\"Online\"" } },
+    { "class": "gds-avatar-name__info", "tag": "div", "required": true, "parent": "gds-avatar-name", "description": "Text column next to the avatar." },
+    { "class": "gds-avatar-name__label", "tag": "span", "required": true, "parent": "gds-avatar-name__info", "description": "The name. Truncates with an ellipsis." },
+    { "class": "gds-avatar-name__subtitle", "tag": "span", "required": false, "parent": "gds-avatar-name__info", "description": "Second line: role, email or team. Truncates with an ellipsis." }
+  ],
+  "modifiers": [
+    { "class": "gds-avatar--16", "on": "gds-avatar", "group": "size", "description": "16px. Inline in text or very dense lists." },
+    { "class": "gds-avatar--20", "on": "gds-avatar", "group": "size", "description": "20px." },
+    { "class": "gds-avatar--24", "on": "gds-avatar", "group": "size", "description": "24px. Table cells and compact lists." },
+    { "class": "gds-avatar--32", "on": "gds-avatar", "group": "size", "description": "32px. Same as the base size.", "default": true },
+    { "class": "gds-avatar--40", "on": "gds-avatar", "group": "size", "description": "40px. Comments, cards, panel headers." },
+    { "class": "gds-avatar--48", "on": "gds-avatar", "group": "size", "description": "48px." },
+    { "class": "gds-avatar--64", "on": "gds-avatar", "group": "size", "description": "64px. Profile headers." },
+    { "class": "gds-avatar--circle", "on": "gds-avatar", "group": "style", "description": "Round. For people. Same as the base shape.", "default": true },
+    { "class": "gds-avatar--square", "on": "gds-avatar", "group": "style", "description": "Rounded square. For organisations, sites and publications." },
+    { "class": "gds-avatar-name--sm", "on": "gds-avatar-name", "group": "size", "description": "Smaller name and subtitle text. Pair with a 32px avatar." },
+    { "class": "gds-avatar-name--xs", "on": "gds-avatar-name", "group": "size", "description": "Smallest text (both lines the same size). Pair with a 24px avatar." },
+    { "class": "gds-avatar-name--soft", "on": "gds-avatar-name", "group": "style", "description": "Muted name and subtitle colours, for secondary mentions." }
+  ],
+  "states": [],
+  "a11y": [
+    "Every .gds-avatar__img has alt. Use alt=\"\" when the name is already visible next to it (avatar name, table cell), so it is not read twice.",
+    "An initials or icon avatar with no visible name gets role=\"img\" and aria-label with the full name; initials alone mean nothing to a screen reader.",
+    "Status is not shown by colour alone: give .gds-avatar__status role=\"img\" and aria-label=\"Online\", or say it in text nearby.",
+    "In a group, each avatar needs a name (alt or aria-label) and the group an aria-label with the total count.",
+    "The group's DOM order is the reverse of what people see; keep groups non-interactive or see knownIssues."
+  ],
+  "rules": [
+    { "id": "avatar-img-alt", "rule": "Every .gds-avatar__img has an alt attribute (empty when the name is visible next to it).", "why": "Without alt, screen readers read the file name.", "principle": 1, "autoCheck": true },
+    { "id": "avatar-accessible-name", "rule": "An avatar with initials or an icon and no visible name next to it has role=\"img\" and aria-label with the full name.", "why": "\"FK\" or a generic person icon does not tell anyone who it is.", "principle": 1, "autoCheck": true },
+    { "id": "avatar-status-label", "rule": ".gds-avatar__status has role=\"img\" and aria-label, or the status is written in nearby text.", "why": "A green dot is colour only. aria-label on a plain span is ignored, so it needs the img role.", "principle": 1, "autoCheck": true },
+    { "id": "avatar-shape-meaning", "rule": "Circle for people, square for organisations, sites and publications.", "why": "The shape tells people at a glance whether it is a person or an entity.", "principle": 3, "autoCheck": false },
+    { "id": "avatar-initials-length", "rule": ".gds-avatar__text holds one or two letters.", "why": "More letters do not fit the circle at small sizes.", "principle": 3, "autoCheck": true },
+    { "id": "avatar-group-counter-first", "rule": ".gds-avatar-group__counter is the first child of .gds-avatar-group.", "why": "The group uses row-reverse, so the first child appears last; anywhere else the counter lands in the middle of the stack.", "principle": 3, "autoCheck": true, "removeInV3": "Use normal row order with z-index stacking so the counter goes last, where people expect it." },
+    { "id": "avatar-group-one-size", "rule": "All avatars in a .gds-avatar-group use the same size.", "why": "The overlap and the counter are tuned for one size; mixed sizes look broken.", "principle": 2, "autoCheck": true },
+    { "id": "avatar-name-pairing", "rule": "To show an avatar with a name, use .gds-avatar-name, not a custom flex row.", "why": "It already handles spacing, truncation and type sizes.", "principle": 2, "autoCheck": false }
+  ],
+  "composes": [],
+  "knownIssues": [
+    { "issue": ".gds-avatar-group uses flex-direction: row-reverse, so screen readers and keyboard focus go through the avatars in the opposite order to what people see, and the counter must come first in the DOM.", "fix": "v3: normal order, negative margin-left and z-index stacking." },
+    { "issue": ".gds-avatar-group__counter is fixed at 32px. Docs patch other sizes with inline styles, and gds-avatar--24 on the counter loses to the counter rule.", "fix": "Add group size modifiers (e.g. gds-avatar-group--24) that size both the avatars and the counter." },
+    { "issue": ".gds-avatar__status is always green (online) and duplicates status-dot, which has busy, away and offline.", "fix": "Allow a .gds-status-dot--ring inside .gds-avatar in the status position, and deprecate __status." },
+    { "issue": "gds-avatar-name--soft subtitle (neutral-80 on white) is about 3:1, below the 4.5:1 needed for small text.", "fix": "Use neutral-300 or the text-secondary token for the soft subtitle." },
+    { "issue": "At 16px, the icon size token is also 16px, so the fallback icon fills the whole avatar with no padding.", "fix": "Set --avatar-icon-16 to 10–12px." }
+  ],
+  "examples": [
+    {
+      "name": "Author cell in an entries table",
+      "html": "<div class=\"gds-avatar-name gds-avatar-name--sm\">\n  <div class=\"gds-avatar gds-avatar--32\">\n    <img class=\"gds-avatar__img\" src=\"/avatars/arta-berisha.jpg\" alt=\"\" />\n  </div>\n  <div class=\"gds-avatar-name__info\">\n    <span class=\"gds-avatar-name__label\">Arta Berisha</span>\n    <span class=\"gds-avatar-name__subtitle\">Senior editor</span>\n  </div>\n</div>"
+    },
+    {
+      "name": "Collaborators on an article",
+      "html": "<div class=\"gds-avatar-group\" role=\"group\" aria-label=\"Collaborators: 6 people\">\n  <span class=\"gds-avatar-group__counter\">+3</span>\n  <div class=\"gds-avatar gds-avatar--32\">\n    <img class=\"gds-avatar__img\" src=\"/avatars/dren-hoxha.jpg\" alt=\"Dren Hoxha\" />\n  </div>\n  <div class=\"gds-avatar gds-avatar--32\" role=\"img\" aria-label=\"Lirie Gashi\">\n    <span class=\"gds-avatar__text\" aria-hidden=\"true\">LG</span>\n  </div>\n  <div class=\"gds-avatar gds-avatar--32\">\n    <img class=\"gds-avatar__img\" src=\"/avatars/arta-berisha.jpg\" alt=\"Arta Berisha\" />\n  </div>\n</div>"
+    },
+    {
+      "name": "Publication with online editor",
+      "html": "<div class=\"gds-avatar gds-avatar--40 gds-avatar--square\" role=\"img\" aria-label=\"City Desk\">\n  <span class=\"gds-avatar__icon\"><i data-lucide=\"building-2\"></i></span>\n</div>\n<div class=\"gds-avatar gds-avatar--40\">\n  <img class=\"gds-avatar__img\" src=\"/avatars/dren-hoxha.jpg\" alt=\"Dren Hoxha\" />\n  <span class=\"gds-avatar__status\" role=\"img\" aria-label=\"Online\"></span>\n</div>"
+    }
+  ]
+}

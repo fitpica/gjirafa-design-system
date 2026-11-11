@@ -1,0 +1,96 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "chip",
+  "name": "Chip",
+  "status": "stable",
+  "summary": "A compact token for a tag, a selected value or a toggleable filter, optionally removable, alone, in a group or inside a tag field.",
+  "docs": "https://docs-phi-black.vercel.app/?page=chip",
+  "source": "src/components/_chip.scss",
+  "owns": ["gds-chip"],
+  "useWhen": [
+    "Showing tags, categories or people attached to an entry, with an optional remove button.",
+    "Quick filters above a list that people switch on and off (selectable chips).",
+    "Entering several values in one field: tags, recipients, keywords (chip input)."
+  ],
+  "dontUseWhen": [
+    { "case": "A read-only status such as Published or Draft", "use": "badge" },
+    { "case": "A count on its own", "use": "pill" },
+    { "case": "Opening a filter panel with a count of active filters", "use": "filter-badge" },
+    { "case": "A main action", "use": "button" }
+  ],
+  "anatomy": [
+    { "class": "gds-chip-group", "tag": "div", "required": false, "parent": null, "description": "Wrapping row of chips with even spacing. Can end with a +N counter." },
+    { "class": "gds-chip-input", "tag": "div", "required": false, "parent": null, "description": "Field that looks like an input and holds chips followed by a text field. Clicking it should focus the field (JS)." },
+    { "class": "gds-chip", "tag": "span | button", "required": true, "parent": null, "description": "The chip. A <span> for static or removable chips; a <button> only with gds-chip--selectable. Medium size by default. Can hold a .gds-avatar (sized automatically) before the label.", "attributes": { "type": "\"button\" (selectable chips only)", "aria-pressed": "\"true\" / \"false\" on selectable chips, matching gds-chip--active" } },
+    { "class": "gds-chip__icon", "tag": "span", "required": false, "parent": "gds-chip", "description": "Leading Lucide icon (e.g. tag, check). Decorative." },
+    { "class": "gds-chip__label", "tag": "span", "required": true, "parent": "gds-chip", "description": "The text. Truncates with an ellipsis." },
+    { "class": "gds-chip__close", "tag": "button", "required": false, "parent": "gds-chip", "description": "Remove button after the label: <i data-lucide=\"x\"></i>. Only on <span> chips, never inside a <button> chip.", "attributes": { "type": "button", "aria-label": "Required: \"Remove <label>\", e.g. \"Remove Politics\"" } },
+    { "class": "gds-chip-group__counter", "tag": "button", "required": false, "parent": "gds-chip-group", "description": "\"+N more\" at the end of a group. A button that reveals the hidden chips.", "attributes": { "type": "button" } },
+    { "class": "gds-chip-input__field", "tag": "input", "required": true, "parent": "gds-chip-input", "description": "Borderless text field after the chips.", "attributes": { "type": "text", "aria-label": "Required unless a <label for> points at it, e.g. \"Add tag\"" } }
+  ],
+  "modifiers": [
+    { "class": "gds-chip--sm", "on": "gds-chip", "group": "size", "description": "Small. Use inside .gds-chip-input and dense table cells." },
+    { "class": "gds-chip--lg", "on": "gds-chip", "group": "size", "description": "Large. Medium is the base size (there is no --md class)." },
+    { "class": "gds-chip--neutral", "on": "gds-chip", "group": "variant", "description": "Gray instead of the default blue." },
+    { "class": "gds-chip--success", "on": "gds-chip", "group": "variant", "description": "Green." },
+    { "class": "gds-chip--warning", "on": "gds-chip", "group": "variant", "description": "Orange." },
+    { "class": "gds-chip--error", "on": "gds-chip", "group": "variant", "description": "Red." },
+    { "class": "gds-chip--rounded", "on": "gds-chip", "group": "style", "description": "Fully rounded (pill shape) instead of small corners." },
+    { "class": "gds-chip--outline", "on": "gds-chip", "group": "style", "description": "Border and transparent background. Works with the colour variants." },
+    { "class": "gds-chip--selectable", "on": "gds-chip", "group": "style", "description": "Toggleable filter chip: gray with a border, pointer cursor and focus ring. Put it on a <button>." },
+    { "class": "gds-chip--active", "on": "gds-chip", "group": "state", "description": "Selected (brand fill, white text). Only works together with gds-chip--selectable. Set aria-pressed=\"true\" too.", "requires": ["gds-chip--selectable"] },
+    { "class": "gds-chip--disabled", "on": "gds-chip", "group": "state", "description": "Faded and ignores the mouse. Also set disabled on the button(s) inside, or on the chip if it is a button." },
+    { "class": "gds-chip-group--rounded", "on": "gds-chip-group", "group": "style", "description": "Makes the +N counter fully rounded. Add it when the chips use gds-chip--rounded." }
+  ],
+  "states": [
+    { "name": "hover", "how": "Native :hover darkens the background (on every chip, see knownIssues)." },
+    { "name": "focus", "how": "Selectable chips show a focus ring on :focus-visible. The close button uses the browser default." },
+    { "name": "selected", "how": "gds-chip--selectable + gds-chip--active + aria-pressed=\"true\"." },
+    { "name": "disabled", "how": "gds-chip--disabled + disabled attribute on the chip button or the close button." },
+    { "name": "field focus", "how": "Native :focus-within on .gds-chip-input changes its border colour." }
+  ],
+  "a11y": [
+    "The close button is a real <button type=\"button\"> with aria-label \"Remove <label>\"; \"Remove\" alone is ambiguous in a list of chips.",
+    "Selectable chips are <button> with aria-pressed reflecting the selected state.",
+    "Never put a close button inside a <button> chip or other button: nested interactive elements break keyboard and screen readers.",
+    "The chip input field needs an accessible name, and the container should move focus to the field when clicked.",
+    "After removing a chip, move focus to the next chip's close button or to the field, so keyboard users are not lost."
+  ],
+  "rules": [
+    { "id": "chip-close-label", "rule": "Every .gds-chip__close is a <button type=\"button\"> with an aria-label that names the chip.", "why": "An icon-only x is announced as \"button\"; with several chips people cannot tell which one it removes.", "principle": 1, "autoCheck": true },
+    { "id": "chip-selectable-pressed", "rule": "A gds-chip--selectable is a <button> with aria-pressed, \"true\" exactly when gds-chip--active is present.", "why": "The selected state must not be visual only.", "principle": 1, "autoCheck": true, "removeInV3": "Style the selected look from [aria-pressed=\"true\"] so the class and attribute cannot disagree." },
+    { "id": "chip-static-is-span", "rule": "A chip without gds-chip--selectable is a <span>, not a <button> or <a>. Removing happens on .gds-chip__close.", "why": "Only selectable chips have focus styles; a clickable static chip has no visible focus.", "principle": 1, "autoCheck": true },
+    { "id": "chip-no-nested-buttons", "rule": "A .gds-chip__close is never inside a <button> (a selectable chip, a dropdown trigger or any other).", "why": "Buttons inside buttons are invalid HTML and cannot be reached reliably by keyboard.", "principle": 1, "autoCheck": true },
+    { "id": "chip-input-field-label", "rule": "Every .gds-chip-input__field has an aria-label or a <label for>.", "why": "A placeholder is not a label and disappears once people type.", "principle": 1, "autoCheck": true },
+    { "id": "chip-disabled-native", "rule": "With gds-chip--disabled, buttons inside the chip (or the chip itself, if it is a button) have the disabled attribute.", "why": "The class only blocks the mouse; keyboard users could still remove or toggle it.", "principle": 1, "autoCheck": true },
+    { "id": "chip-input-small", "rule": "Chips inside .gds-chip-input use gds-chip--sm.", "why": "Medium chips make the field taller than a regular input.", "principle": 2, "autoCheck": true },
+    { "id": "chip-color-meaning", "rule": "Use the default blue for user tags and selected values; use success, warning and error only when the value itself has that meaning.", "why": "Colour suggests a status; random colours make tags look like warnings.", "principle": 3, "autoCheck": false },
+    { "id": "chip-group-counter-shape", "rule": "When the chips in a .gds-chip-group use gds-chip--rounded, the group has gds-chip-group--rounded.", "why": "Otherwise the +N counter has square corners next to round chips.", "principle": 3, "autoCheck": true, "removeInV3": "Round the counter automatically when the group contains rounded chips (:has)." }
+  ],
+  "composes": ["avatar"],
+  "knownIssues": [
+    { "issue": "The SCSS header lists gds-chip--md and gds-chip--avatar, which do not exist. Medium is the base size and avatar chips are a plain .gds-avatar inside .gds-chip.", "fix": "Update the header comment." },
+    { "issue": "Every chip gets a hover background, including static <span> chips, so read-only tags look clickable.", "fix": "Apply hover only to selectable chips and to the close button." },
+    { "issue": "gds-chip--active does nothing without gds-chip--selectable.", "fix": "v3: drive the selected look from aria-pressed=\"true\" on selectable chips and drop --active." },
+    { "issue": "gds-chip--disabled uses pointer-events: none only; the close button stays focusable and works by keyboard.", "fix": "Require the disabled attribute and style the chip from :disabled / :has(:disabled)." },
+    { "issue": "The rule .gds-chip--rounded .gds-chip-group__counter targets a counter inside a chip, which never happens. Docs also omit gds-chip-group--rounded, so the docs counter is square next to rounded chips.", "fix": "Remove the dead selector and fix the docs example." },
+    { "issue": "The close button is 12–16px with a 6–10px icon, below the 24px minimum target size (WCAG 2.2, 2.5.8).", "fix": "Keep the visual size but add an invisible 24px hit area (padding or ::before)." },
+    { "issue": ".gds-chip-input shows focus only as a border colour change and the field removes its outline; other inputs show a focus ring.", "fix": "Add the input focus ring on :focus-within." },
+    { "issue": "In the docs dropdown example, chips inside the <button> trigger use <span role=\"button\"> close controls, which nests interactive elements.", "fix": "Move the tags out of the trigger, or make the chips non-removable there." },
+    { "issue": "The selectable focus ring and the chip input borrow input tokens (--input-focus-ring, --input-border) with fallbacks instead of chip tokens.", "fix": "Add chip focus tokens, or a shared focus token used by all components." }
+  ],
+  "examples": [
+    {
+      "name": "Tags field on an article",
+      "html": "<label for=\"article-tags\">Tags</label>\n<div class=\"gds-chip-input\">\n  <span class=\"gds-chip gds-chip--sm\">\n    <span class=\"gds-chip__label\">Politics</span>\n    <button type=\"button\" class=\"gds-chip__close\" aria-label=\"Remove Politics\"><i data-lucide=\"x\"></i></button>\n  </span>\n  <span class=\"gds-chip gds-chip--sm\">\n    <span class=\"gds-chip__label\">Elections 2027</span>\n    <button type=\"button\" class=\"gds-chip__close\" aria-label=\"Remove Elections 2027\"><i data-lucide=\"x\"></i></button>\n  </span>\n  <input id=\"article-tags\" type=\"text\" class=\"gds-chip-input__field\" placeholder=\"Add tag\" />\n</div>"
+    },
+    {
+      "name": "Quick filters above the entries list",
+      "html": "<div class=\"gds-chip-group gds-chip-group--rounded\" role=\"group\" aria-label=\"Filter by content type\">\n  <button type=\"button\" class=\"gds-chip gds-chip--selectable gds-chip--rounded gds-chip--active\" aria-pressed=\"true\">\n    <span class=\"gds-chip__icon\"><i data-lucide=\"check\"></i></span>\n    <span class=\"gds-chip__label\">Articles</span>\n  </button>\n  <button type=\"button\" class=\"gds-chip gds-chip--selectable gds-chip--rounded\" aria-pressed=\"false\">\n    <span class=\"gds-chip__label\">Videos</span>\n  </button>\n  <button type=\"button\" class=\"gds-chip gds-chip--selectable gds-chip--rounded\" aria-pressed=\"false\">\n    <span class=\"gds-chip__label\">Galleries</span>\n  </button>\n  <button type=\"button\" class=\"gds-chip-group__counter\">+4 more</button>\n</div>"
+    },
+    {
+      "name": "Assigned reviewer",
+      "html": "<span class=\"gds-chip gds-chip--rounded gds-chip--neutral\">\n  <span class=\"gds-avatar\"><img class=\"gds-avatar__img\" src=\"/avatars/lirie-gashi.jpg\" alt=\"\" /></span>\n  <span class=\"gds-chip__label\">Lirie Gashi</span>\n  <button type=\"button\" class=\"gds-chip__close\" aria-label=\"Remove Lirie Gashi\"><i data-lucide=\"x\"></i></button>\n</span>"
+    }
+  ]
+}

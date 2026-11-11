@@ -34,7 +34,7 @@ Needs Node 18+. No dependencies.
 
 ## What it checks today
 
-Six components have contracts: table, pagination, checkbox, badge, input, dropdown. Their structure (classes exist, correct nesting, required children, required modifiers, one size/variant) and 19 design rules (accessible names, sort state, status colours, input size, pagination markup…). Other components are reported as "not covered yet" and are not checked.
+All 26 GDS components have contracts. Their structure (classes exist, correct nesting, required children, required modifiers, one size/variant) and 19 design rules for table, pagination, checkbox, badge, input and dropdown (accessible names, sort state, status colours, input size, pagination markup…). The other rules in the contracts guide Claude through the skills but are not linted yet.
 
 Only static `class="…"` attributes are checked; classes bound with `:class` are skipped.
 

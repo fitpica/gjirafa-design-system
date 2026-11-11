@@ -1,0 +1,50 @@
+# Gjirafa Design System (GDS)
+
+> CSS-only design system (gds-* classes, --gds-* tokens) for Gjirafa products. Version 2.6.2. Load the CSS from the CDN, write semantic HTML with GDS classes, and follow each component contract exactly: the DOM structure is the API. Never invent classes, variants or tokens.
+
+Principles: 1) Accessible by default (every allowed combination passes WCAG AA). 2) Reuse before you create (if GDS lacks something, say so). 3) Obvious over documented.
+
+## Start here
+
+- [AI guide (full)](https://docs-phi-black.vercel.app/llms-full.txt): setup, principles, rules, tokens and every component in one file
+- [CSS](https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.2/docs/gjirafa-ds.css): the only file a page needs; pin the version
+- [Claude Code plugin](https://github.com/fitpica/gjirafa-design-system/tree/main/plugins/gds): component skills plus a lint hook (`/plugin install gds --marketplace fitpica/gjirafa-design-system`)
+
+## Components
+
+- [Alert](https://docs-phi-black.vercel.app/md/components/alert.md): A persistent message inside the page that explains a state or problem and stays until the cause is gone or the user dismisses it.
+- [Avatar](https://docs-phi-black.vercel.app/md/components/avatar.md): A photo, initials or icon that represents a person or an organisation, alone, stacked in a group or paired with a name.
+- [Badge](https://docs-phi-black.vercel.app/md/components/badge.md): A small label that shows the status or category of something.
+- [Button](https://docs-phi-black.vercel.app/md/components/button.md): Triggers an action: text buttons, icon-only buttons and joined button groups.
+- [Calendar / Date picker](https://docs-phi-black.vercel.app/md/components/calendar.md): A month grid for picking a date (and optionally a time), shown inline or in a popover under a date field.
+- [Card](https://docs-phi-black.vercel.app/md/components/card.md): A container that groups related content and actions, with optional media, header, body and footer.
+- [Checkbox](https://docs-phi-black.vercel.app/md/components/checkbox.md): Lets people turn one option on or off, or pick several options from a list.
+- [Chip](https://docs-phi-black.vercel.app/md/components/chip.md): A compact token for a tag, a selected value or a toggleable filter, optionally removable, alone, in a group or inside a tag field.
+- [Data table](https://docs-phi-black.vercel.app/md/components/table.md): Rows of records with optional selection, sorting, bulk actions and pagination.
+- [Dropdown](https://docs-phi-black.vercel.app/md/components/dropdown.md): A trigger that opens a panel of options: single select, multi-select, searchable lists.
+- [Filter badge](https://docs-phi-black.vercel.app/md/components/filter-badge.md): A compact pill with a filter icon and the number of applied filters; it opens the filter panel.
+- [Input](https://docs-phi-black.vercel.app/md/components/input.md): A text field with optional label, icon, prefix/suffix, helper text and character count.
+- [Menu](https://docs-phi-black.vercel.app/md/components/menu.md): A list of actions on demand: overflow ("more") menus, context menus, row actions.
+- [Modal](https://docs-phi-black.vercel.app/md/components/modal.md): A centred dialog over a dimmed page that blocks everything else until the user confirms, decides or cancels.
+- [Pagination](https://docs-phi-black.vercel.app/md/components/pagination.md): Moves through pages of a long list, with an optional summary and page-size control.
+- [Percentage badge](https://docs-phi-black.vercel.app/md/components/pct-badge.md): A pill that shows how much a metric changed, with an arrow for the direction and a colour for good or bad.
+- [Pill (number count)](https://docs-phi-black.vercel.app/md/components/pill.md): A small circle with a number: unread counts, items in a tab, or the number of a step.
+- [Popover](https://docs-phi-black.vercel.app/md/components/popover.md): A generic floating surface anchored to a trigger, for interactive content such as a small form, a calendar or a menu.
+- [Radio](https://docs-phi-black.vercel.app/md/components/radio.md): Lets people pick exactly one option from a short, visible list.
+- [Side panel](https://docs-phi-black.vercel.app/md/components/sidepanel.md): A full-height panel that slides in from the right over a dimmed page, for editing or viewing details while the underlying list stays visible.
+- [Skeleton](https://docs-phi-black.vercel.app/md/components/skeleton.md): Grey shimmering shapes that stand in for content while it loads, so the layout does not jump.
+- [Status dot](https://docs-phi-black.vercel.app/md/components/status-dot.md): A small coloured dot that shows someone's presence (online, away, busy, offline), always next to text or with a label.
+- [Tabs](https://docs-phi-black.vercel.app/md/components/tabs.md): A row (or column) of tabs that switches between panels of related content on the same page.
+- [Toast](https://docs-phi-black.vercel.app/md/components/toast.md): A short, single-line floating message that confirms something just happened and goes away on its own.
+- [Toggle](https://docs-phi-black.vercel.app/md/components/toggle.md): An on/off switch for a setting that takes effect immediately.
+- [Tooltip](https://docs-phi-black.vercel.app/md/components/tooltip.md): A small dark label that appears on hover or keyboard focus of a control, CSS only.
+
+## Data
+
+- [Design tokens (DTCG 2025.10)](https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.6.2/tokens/gds.resolver.json): resolver with foundation, semantic and theme sets
+- [Component contracts (JSON)](https://github.com/fitpica/gjirafa-design-system/tree/main/components): anatomy, modifiers, a11y, rules and examples per component
+
+## Optional
+
+- [Live docs](https://docs-phi-black.vercel.app): interactive examples for every component (`?page=<component>`)
+- [Release notes](https://github.com/fitpica/gjirafa-design-system/releases)

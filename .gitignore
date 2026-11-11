@@ -10,3 +10,6 @@ test-results/
 playwright-report/
 blob-report/
 .playwright/
+
+# AI eval output (local runs)
+evals/results/

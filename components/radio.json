@@ -1,0 +1,72 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "radio",
+  "name": "Radio",
+  "status": "stable",
+  "summary": "Lets people pick exactly one option from a short, visible list.",
+  "docs": "https://docs-phi-black.vercel.app/?page=radio",
+  "source": "src/components/_radio.scss",
+  "owns": ["gds-radio"],
+  "useWhen": [
+    "Exactly one choice from 2 to about 6 options that people should see side by side (e.g. Visibility: Public / Unlisted / Private).",
+    "The options need a short explanation each (use __helper)."
+  ],
+  "dontUseWhen": [
+    { "case": "Any number of options can be chosen", "use": "checkbox" },
+    { "case": "A single on/off setting", "use": "toggle (immediate) or checkbox (submitted later)" },
+    { "case": "More than about 6 options, or the list is long", "use": "dropdown" },
+    { "case": "Switching between views of the same content", "use": "tabs" }
+  ],
+  "anatomy": [
+    { "class": "gds-radio", "tag": "label", "required": true, "parent": null, "repeat": true, "description": "One option. A <label>, so clicking the text selects it. Put all options of a group in a <fieldset> with a <legend> (or role=\"radiogroup\" with aria-labelledby); GDS has no class for the group." },
+    { "class": "gds-radio__input", "tag": "input", "required": true, "parent": "gds-radio", "description": "Native radio, visually hidden but focusable. Its :checked state drives the visual. Must come before the control (CSS uses ~).", "attributes": { "type": "radio", "name": "Same value for every option in the group", "value": "The option's value" } },
+    { "class": "gds-radio__control", "tag": "span", "required": true, "parent": "gds-radio", "description": "The visible circle." },
+    { "class": "gds-radio__dot", "tag": "span", "required": true, "parent": "gds-radio__control", "description": "Inner dot, shown when checked. Without it the checked radio is a filled circle with no dot." },
+    { "class": "gds-radio__label", "tag": "span", "required": false, "parent": "gds-radio", "description": "Visible label text. Stacks its children in a column, so the helper goes inside it." },
+    { "class": "gds-radio__helper", "tag": "span", "required": false, "parent": "gds-radio__label", "description": "Helper line under the label text (12px, text-secondary). Put it inside __label." }
+  ],
+  "modifiers": [
+    { "class": "gds-radio--sm", "on": "gds-radio", "group": "size", "description": "16px circle, 12px label. Use in dense panels and tables." },
+    { "class": "gds-radio--md", "on": "gds-radio", "group": "size", "description": "20px circle, 14px label. Use in forms.", "default": true },
+    { "class": "gds-radio--lg", "on": "gds-radio", "group": "size", "description": "24px circle, 16px label." },
+    { "class": "gds-radio--checked", "on": "gds-radio", "group": "state", "description": "Forces the checked look. Prefer the native checked attribute, which works without this class." },
+    { "class": "gds-radio--disabled", "on": "gds-radio", "group": "state", "description": "Disabled look. Also set the disabled attribute on the input." }
+  ],
+  "states": [
+    { "name": "checked", "how": "checked attribute on one .gds-radio__input of the group (CSS reads :checked)." },
+    { "name": "disabled", "how": "gds-radio--disabled + disabled attribute on the input (or on the <fieldset> for the whole group)." },
+    { "name": "focus", "how": "Native :focus-visible on the input shows a ring on the control." },
+    { "name": "hover", "how": "Native :hover on the wrapper darkens the circle border." }
+  ],
+  "a11y": [
+    "Keep the native input: browsers then give arrow-key movement inside the group for free.",
+    "All options in a group share one name, so only one can be checked.",
+    "Wrap the group in <fieldset> + <legend> (or role=\"radiogroup\" + aria-labelledby) so the question is read with each option.",
+    "Helper text inside __label becomes part of the option's name; keep it short."
+  ],
+  "rules": [
+    { "id": "radio-native-input", "rule": "Every .gds-radio contains <input type=\"radio\" class=\"gds-radio__input\"> before .gds-radio__control.", "why": "The visual state comes from the input through the ~ selector; without it the circle never changes.", "principle": 1, "autoCheck": true },
+    { "id": "radio-group-name", "rule": "Every radio input has a name, and the options of one group share it.", "why": "Without a shared name each radio acts alone: several can be checked and arrow keys do not move between them.", "principle": 1, "autoCheck": true },
+    { "id": "radio-group-label", "rule": "A group of .gds-radio sits in a <fieldset> with a <legend>, or in an element with role=\"radiogroup\" and an accessible name.", "why": "Screen readers read the question (\"Visibility\") with each option.", "principle": 1, "autoCheck": true },
+    { "id": "radio-one-checked", "rule": "Exactly one option in a group is checked by default, unless having no answer is meaningful.", "why": "A radio group cannot be cleared once picked; start from a sensible default.", "principle": 3, "autoCheck": false },
+    { "id": "radio-min-options", "rule": "A group has at least 2 options; for a single yes/no use a checkbox or toggle.", "why": "A single radio cannot be turned off.", "principle": 3, "autoCheck": true }
+  ],
+  "composes": [],
+  "knownIssues": [
+    { "issue": "Disabled + checked looks different depending on how checked is set: with the native :checked the circle stays primary blue and still changes colour on hover; with --checked alone it turns grey.", "fix": "v3: drive the look only from the native state and add .gds-radio__input:disabled styles that win over :checked." },
+    { "issue": "Disabled is class-only; a native disabled input (or disabled fieldset) without the class still looks enabled.", "fix": "v3: style from .gds-radio__input:disabled ~ .gds-radio__control and the label." },
+    { "issue": "__helper sits inside __label here (the label is a flex column), but the checkbox contract places __helper next to __label. The CSS is the same for both.", "fix": "Pick one structure (inside __label) and align the checkbox contract and docs." },
+    { "issue": "There is no class for the group (spacing, legend style). Each product builds its own wrapper.", "fix": "Add .gds-radio-group (and reuse it for checkbox groups) with gap and legend styles." },
+    { "issue": "__helper keeps text-secondary when the option is disabled, while the label turns text-disabled.", "fix": "Dim the helper in .gds-radio--disabled too." }
+  ],
+  "examples": [
+    {
+      "name": "Article visibility",
+      "html": "<fieldset>\n  <legend>Visibility</legend>\n  <label class=\"gds-radio gds-radio--md\">\n    <input type=\"radio\" class=\"gds-radio__input\" name=\"visibility\" value=\"public\" checked />\n    <span class=\"gds-radio__control\"><span class=\"gds-radio__dot\"></span></span>\n    <span class=\"gds-radio__label\">Public<span class=\"gds-radio__helper\">Anyone can find and read it</span></span>\n  </label>\n  <label class=\"gds-radio gds-radio--md\">\n    <input type=\"radio\" class=\"gds-radio__input\" name=\"visibility\" value=\"unlisted\" />\n    <span class=\"gds-radio__control\"><span class=\"gds-radio__dot\"></span></span>\n    <span class=\"gds-radio__label\">Unlisted<span class=\"gds-radio__helper\">Only people with the link</span></span>\n  </label>\n  <label class=\"gds-radio gds-radio--md\">\n    <input type=\"radio\" class=\"gds-radio__input\" name=\"visibility\" value=\"private\" />\n    <span class=\"gds-radio__control\"><span class=\"gds-radio__dot\"></span></span>\n    <span class=\"gds-radio__label\">Private<span class=\"gds-radio__helper\">Only editors of this site</span></span>\n  </label>\n</fieldset>"
+    },
+    {
+      "name": "Compact group with a disabled option",
+      "html": "<div role=\"radiogroup\" aria-labelledby=\"img-size-label\">\n  <span id=\"img-size-label\">Image size</span>\n  <label class=\"gds-radio gds-radio--sm\">\n    <input type=\"radio\" class=\"gds-radio__input\" name=\"img-size\" value=\"original\" checked />\n    <span class=\"gds-radio__control\"><span class=\"gds-radio__dot\"></span></span>\n    <span class=\"gds-radio__label\">Original</span>\n  </label>\n  <label class=\"gds-radio gds-radio--sm\">\n    <input type=\"radio\" class=\"gds-radio__input\" name=\"img-size\" value=\"wide\" />\n    <span class=\"gds-radio__control\"><span class=\"gds-radio__dot\"></span></span>\n    <span class=\"gds-radio__label\">Wide</span>\n  </label>\n  <label class=\"gds-radio gds-radio--sm gds-radio--disabled\">\n    <input type=\"radio\" class=\"gds-radio__input\" name=\"img-size\" value=\"full\" disabled />\n    <span class=\"gds-radio__control\"><span class=\"gds-radio__dot\"></span></span>\n    <span class=\"gds-radio__label\">Full bleed (needs a 2000px image)</span>\n  </label>\n</div>"
+    }
+  ]
+}

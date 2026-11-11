@@ -1,0 +1,305 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "sidepanel",
+  "name": "Side panel",
+  "status": "stable",
+  "summary": "A full-height panel that slides in from the right over a dimmed page, for editing or viewing details while the underlying list stays visible.",
+  "docs": "https://docs-phi-black.vercel.app/?page=sidepanel",
+  "source": "src/components/_sidepanel.scss",
+  "owns": [
+    "gds-sidepanel"
+  ],
+  "useWhen": [
+    "Editing the details of an item picked from a list (entry metadata, SEO fields, tag settings) while the list stays visible behind.",
+    "Viewing details of a row without leaving the page (author profile, asset info, version history).",
+    "Forms that are too long for a modal but do not need their own page.",
+    "Settings or filters that apply to the page behind (--default, 300px)."
+  ],
+  "dontUseWhen": [
+    {
+      "case": "A yes/no decision or confirmation",
+      "use": "modal"
+    },
+    {
+      "case": "Destructive confirmation started from the panel",
+      "use": "an inline confirmation inside the panel (a modal would open behind it, known issue)"
+    },
+    {
+      "case": "The main editing task of a page (writing the article body)",
+      "use": "a full page"
+    },
+    {
+      "case": "A short message",
+      "use": "toast or alert"
+    }
+  ],
+  "anatomy": [
+    {
+      "class": "gds-sidepanel-overlay",
+      "tag": "div",
+      "required": true,
+      "parent": null,
+      "description": "Fixed full-screen backdrop; aligns the panel to the right. Hidden until --open. Product JS may close on backdrop click when there are no unsaved changes."
+    },
+    {
+      "class": "gds-sidepanel",
+      "tag": "div | aside",
+      "required": true,
+      "parent": "gds-sidepanel-overlay",
+      "description": "The panel: full height, white, rounded left corners, slides in from the right. 500px unless a size modifier is set. Full width below 640px (and below its own width for --lg/--xl).",
+      "attributes": {
+        "role": "\"dialog\"",
+        "aria-modal": "\"true\"",
+        "aria-labelledby": "id of .gds-sidepanel__title (or of __topbar-title when there is no header)"
+      }
+    },
+    {
+      "class": "gds-sidepanel__topbar",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-sidepanel",
+      "description": "40px bar with a bottom border: __topbar-title on the left, close button on the right. The close button is a gds-btn-icon gds-btn-icon--ghost gds-btn-icon--xs with aria-label=\"Close\" (no element class of its own)."
+    },
+    {
+      "class": "gds-sidepanel__topbar-title",
+      "tag": "span",
+      "required": true,
+      "parent": "gds-sidepanel__topbar",
+      "description": "Small title (14px medium, one line, ellipsis). Names the object being viewed or edited, e.g. the entry title."
+    },
+    {
+      "class": "gds-sidepanel__content",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-sidepanel",
+      "description": "Scroll container (left padding only; children add right padding). Holds header, body and footer."
+    },
+    {
+      "class": "gds-sidepanel__header",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-sidepanel__content",
+      "description": "Sticky header with the task title and description."
+    },
+    {
+      "class": "gds-sidepanel__title",
+      "tag": "h2",
+      "required": false,
+      "parent": "gds-sidepanel__header",
+      "description": "Task title (16px medium). Give it an id for aria-labelledby.",
+      "attributes": {
+        "id": "referenced by aria-labelledby"
+      }
+    },
+    {
+      "class": "gds-sidepanel__desc",
+      "tag": "p",
+      "required": false,
+      "parent": "gds-sidepanel__header",
+      "description": "Supporting text (14px)."
+    },
+    {
+      "class": "gds-sidepanel__body",
+      "tag": "div",
+      "required": true,
+      "parent": "gds-sidepanel__content",
+      "description": "Content: fields, lists, details. Column with 20px gap."
+    },
+    {
+      "class": "gds-sidepanel__footer",
+      "tag": "div",
+      "required": false,
+      "parent": "gds-sidepanel__content",
+      "description": "Sticky footer with actions, right-aligned: ghost first, primary last. Must be inside __content (it relies on its left padding)."
+    }
+  ],
+  "modifiers": [
+    {
+      "class": "gds-sidepanel-overlay--open",
+      "on": "gds-sidepanel-overlay",
+      "group": "state",
+      "description": "Shows the overlay and slides the panel in."
+    },
+    {
+      "class": "gds-sidepanel--default",
+      "on": "gds-sidepanel",
+      "group": "size",
+      "description": "300px. Despite the name it is NOT the default; use for narrow filters or settings."
+    },
+    {
+      "class": "gds-sidepanel--normal",
+      "on": "gds-sidepanel",
+      "group": "size",
+      "description": "500px. Same as no modifier. Most edit forms.",
+      "default": true
+    },
+    {
+      "class": "gds-sidepanel--lg",
+      "on": "gds-sidepanel",
+      "group": "size",
+      "description": "850px. Rich details: media, previews, two-column forms."
+    },
+    {
+      "class": "gds-sidepanel--xl",
+      "on": "gds-sidepanel",
+      "group": "size",
+      "description": "1170px. Near full-screen work (comparing versions)."
+    },
+    {
+      "class": "gds-sidepanel__header--scrolled",
+      "on": "gds-sidepanel__header",
+      "group": "state",
+      "description": "Divider under the header. Product JS adds it when __content is scrolled."
+    },
+    {
+      "class": "gds-sidepanel__footer--scrolled",
+      "on": "gds-sidepanel__footer",
+      "group": "state",
+      "description": "Divider above the footer. Product JS adds it while there is more content below."
+    },
+    {
+      "class": "gds-sidepanel__footer--split",
+      "on": "gds-sidepanel__footer",
+      "group": "layout",
+      "description": "First action left, the rest right (e.g. \"Delete\" left, \"Cancel / Save\" right)."
+    }
+  ],
+  "states": [
+    {
+      "name": "closed",
+      "how": "gds-sidepanel-overlay without --open (invisible and hidden from assistive tech by visibility: hidden), or not rendered."
+    },
+    {
+      "name": "open",
+      "how": "Add gds-sidepanel-overlay--open; then move focus into the panel."
+    },
+    {
+      "name": "scrolled",
+      "how": "Toggle __header--scrolled when __content scrollTop > 0 and __footer--scrolled while it is not scrolled to the end."
+    }
+  ],
+  "a11y": [
+    "role=\"dialog\", aria-modal=\"true\" and aria-labelledby on .gds-sidepanel. The overlay blocks the page, so the panel is modal.",
+    "The topbar close button is an icon button with aria-label=\"Close\".",
+    "Product JS: on open move focus to the first field (or the panel title), keep Tab inside the panel, close on Escape, make the page behind inert, and return focus to the trigger on close.",
+    "If there are unsaved changes, ask before closing (product JS); do not lose input on Escape or backdrop click."
+  ],
+  "rules": [
+    {
+      "id": "sidepanel-dialog-role",
+      "rule": ".gds-sidepanel has role=\"dialog\", aria-modal=\"true\" and aria-labelledby pointing to the panel title.",
+      "why": "Screen readers announce a dialog with its name and ignore the page behind.",
+      "principle": 1,
+      "autoCheck": true
+    },
+    {
+      "id": "sidepanel-close-label",
+      "rule": "The close button in .gds-sidepanel__topbar is a <button type=\"button\"> with aria-label.",
+      "why": "It shows only an x icon.",
+      "principle": 1,
+      "autoCheck": true,
+      "removeInV3": "Add a .gds-sidepanel__close element like .gds-modal__close."
+    },
+    {
+      "id": "sidepanel-footer-inside-content",
+      "rule": ".gds-sidepanel__footer is inside .gds-sidepanel__content.",
+      "why": "The footer has only right padding; outside __content it touches the left edge and does not stick.",
+      "principle": 3,
+      "autoCheck": true,
+      "removeInV3": "Give the footer its own full padding so it can be a direct child of the panel."
+    },
+    {
+      "id": "sidepanel-size-choice",
+      "rule": "Leave the size as default (--normal, 500px) for edit forms; --lg/--xl only for media or side-by-side content; --default (300px) only for filters or settings.",
+      "why": "Wider panels hide more of the list the user wants to keep in view.",
+      "principle": 3,
+      "autoCheck": false,
+      "removeInV3": "Rename sizes to sm/md/lg/xl with md as the default."
+    },
+    {
+      "id": "sidepanel-titles",
+      "rule": "__topbar-title names the object (\"Summer festival guide\"); __title names the task (\"Edit details\"). If you show only one, label the dialog with it.",
+      "why": "Two similar titles stacked read as a repeat; distinct roles make each useful.",
+      "principle": 3,
+      "autoCheck": false
+    },
+    {
+      "id": "sidepanel-one-primary",
+      "rule": "The footer has at most one .gds-btn--primary, placed last. Cancel uses .gds-btn--ghost.",
+      "why": "One clear main action, same order as in modals.",
+      "principle": 3,
+      "autoCheck": true
+    },
+    {
+      "id": "sidepanel-focus-management",
+      "rule": "Product JS: on open move focus to the first field (or the panel title), keep Tab inside the panel, close on Escape, make the page behind inert, and return focus to the trigger on close.",
+      "why": "Without it keyboard and screen reader users can reach the page behind or get lost after closing.",
+      "principle": 1,
+      "autoCheck": false
+    },
+    {
+      "id": "sidepanel-no-modal-on-top",
+      "rule": "Do not open a modal from inside the panel; confirm inside the panel instead.",
+      "why": "The modal (z-index 1000) renders behind the panel (1020).",
+      "principle": 3,
+      "autoCheck": false,
+      "removeInV3": "Put the modal above the side panel in the z-index scale."
+    }
+  ],
+  "internal": [],
+  "composes": [
+    "button",
+    "input",
+    "dropdown",
+    "checkbox",
+    "alert"
+  ],
+  "knownIssues": [
+    {
+      "issue": "--default is 300px, but the real default (no modifier) is 500px (= --normal).",
+      "fix": "v3: sizes sm 300 / md 500 / lg 850 / xl 1170, md default; keep old names as aliases for one release."
+    },
+    {
+      "issue": "Footer placement differs: the SCSS comment and live docs put __footer inside __content; the docs \"Show code\" puts it after __content, where it has no left padding.",
+      "fix": "Fix the docs snippet, or give the footer full padding so both work."
+    },
+    {
+      "issue": "No close element class (modal has __close); docs use gds-btn-icon--xs without aria-label, while the modal uses --sm --circle.",
+      "fix": "Add .gds-sidepanel__close and use the same button style as the modal."
+    },
+    {
+      "issue": "Two titles (__topbar-title and __title) with no guidance; docs examples use different text in each.",
+      "fix": "Agree on their roles (see rule sidepanel-titles) or drop one."
+    },
+    {
+      "issue": "z-index 1020 is above the modal (1000), so modals opened from a panel are hidden.",
+      "fix": "Modal above side panel in the z-index scale."
+    },
+    {
+      "issue": "Docs put role=\"dialog\" on the overlay instead of the panel.",
+      "fix": "Move role/aria-modal/aria-labelledby to .gds-sidepanel in the docs."
+    },
+    {
+      "issue": "Always modal (backdrop blocks the list); there is no docked, non-modal variant for editing while still using the list.",
+      "fix": "v3: optional non-modal panel without overlay."
+    },
+    {
+      "issue": "height: 100vh can be covered by mobile browser bars; width: 100% !important on mobile.",
+      "fix": "Use 100dvh; drop !important."
+    },
+    {
+      "issue": "--sidepanel-footer-padding and --sidepanel-scroll-shadow tokens are defined but not used.",
+      "fix": "Remove them or use them."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Edit entry details",
+      "html": "<div class=\"gds-sidepanel-overlay gds-sidepanel-overlay--open\">\n  <div class=\"gds-sidepanel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"entry-panel-title\">\n    <div class=\"gds-sidepanel__topbar\">\n      <span class=\"gds-sidepanel__topbar-title\">Summer festival guide</span>\n      <button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--xs\" aria-label=\"Close\"><i data-lucide=\"x\"></i></button>\n    </div>\n    <div class=\"gds-sidepanel__content\">\n      <div class=\"gds-sidepanel__header\">\n        <h2 class=\"gds-sidepanel__title\" id=\"entry-panel-title\">Edit details</h2>\n        <p class=\"gds-sidepanel__desc\">Changes are saved to the draft. Publish to make them live.</p>\n      </div>\n      <div class=\"gds-sidepanel__body\">\n        <div class=\"gds-input gds-input--md\">\n          <label class=\"gds-input__label\" for=\"entry-title\">Title</label>\n          <div class=\"gds-input__wrap\"><input type=\"text\" class=\"gds-input__field\" id=\"entry-title\" value=\"Summer festival guide\" /></div>\n        </div>\n        <div class=\"gds-input gds-input--md\">\n          <label class=\"gds-input__label\" for=\"entry-slug\">Slug</label>\n          <div class=\"gds-input__wrap\"><input type=\"text\" class=\"gds-input__field\" id=\"entry-slug\" value=\"summer-festival-guide\" /></div>\n          <span class=\"gds-input__helper\">Used in the article URL.</span>\n        </div>\n      </div>\n      <div class=\"gds-sidepanel__footer\">\n        <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--md\"><span class=\"gds-btn__label\">Cancel</span></button>\n        <button type=\"button\" class=\"gds-btn gds-btn--primary gds-btn--md\"><span class=\"gds-btn__label\">Save</span></button>\n      </div>\n    </div>\n  </div>\n</div>"
+    },
+    {
+      "name": "Asset details (large, split footer, no header)",
+      "html": "<div class=\"gds-sidepanel-overlay gds-sidepanel-overlay--open\">\n  <aside class=\"gds-sidepanel gds-sidepanel--lg\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"asset-panel-title\">\n    <div class=\"gds-sidepanel__topbar\">\n      <span class=\"gds-sidepanel__topbar-title\" id=\"asset-panel-title\">stadium-night.jpg</span>\n      <button type=\"button\" class=\"gds-btn-icon gds-btn-icon--ghost gds-btn-icon--xs\" aria-label=\"Close\"><i data-lucide=\"x\"></i></button>\n    </div>\n    <div class=\"gds-sidepanel__content\">\n      <div class=\"gds-sidepanel__body\">\n        <div class=\"gds-input gds-input--md\">\n          <label class=\"gds-input__label\" for=\"asset-alt\">Alt text</label>\n          <div class=\"gds-input__wrap\"><input type=\"text\" class=\"gds-input__field\" id=\"asset-alt\" value=\"Fans in the stadium at night\" /></div>\n        </div>\n      </div>\n      <div class=\"gds-sidepanel__footer gds-sidepanel__footer--split\">\n        <button type=\"button\" class=\"gds-btn gds-btn--ghost gds-btn--md\"><span class=\"gds-btn__label\">Replace file</span></button>\n        <button type=\"button\" class=\"gds-btn gds-btn--primary gds-btn--md\"><span class=\"gds-btn__label\">Save</span></button>\n      </div>\n    </div>\n  </aside>\n</div>"
+    }
+  ]
+}
