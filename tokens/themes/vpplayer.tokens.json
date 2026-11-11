@@ -1,0 +1,62 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "$description": "VP Player theme: only the tokens that differ from codex. Generated from src/themes/_vpplayer.scss.",
+  "color": {
+    "brand": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.orange.500}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-brand-primary",
+            "scss": "$color-orange-500"
+          }
+        }
+      }
+    },
+    "action": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.orange.500}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-action-primary",
+            "scss": "$color-orange-500"
+          }
+        }
+      },
+      "primary-hover": {
+        "$type": "color",
+        "$value": "{color.orange.600}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-action-primary-hover",
+            "scss": "$color-orange-600"
+          }
+        }
+      },
+      "primary-active": {
+        "$type": "color",
+        "$value": "{color.orange.700}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-action-primary-active",
+            "scss": "$color-orange-700"
+          }
+        }
+      }
+    },
+    "border": {
+      "focus": {
+        "$type": "color",
+        "$value": "{color.orange.500}",
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-border-focus",
+            "scss": "$color-orange-500"
+          }
+        }
+      }
+    }
+  }
+}

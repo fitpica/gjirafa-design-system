@@ -1,0 +1,47 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+  "name": "Gjirafa Design System",
+  "version": "2025.10",
+  "description": "Foundation + semantic tokens, with a theme modifier. codex is the default theme.",
+  "sets": {
+    "foundation": {
+      "sources": [
+        {
+          "$ref": "foundation.tokens.json"
+        }
+      ]
+    },
+    "semantic": {
+      "sources": [
+        {
+          "$ref": "semantic.tokens.json"
+        }
+      ]
+    }
+  },
+  "modifiers": {
+    "theme": {
+      "description": "Product theme. codex = blue (default), vpplayer = orange.",
+      "contexts": {
+        "codex": [],
+        "vpplayer": [
+          {
+            "$ref": "themes/vpplayer.tokens.json"
+          }
+        ]
+      },
+      "default": "codex"
+    }
+  },
+  "resolutionOrder": [
+    {
+      "$ref": "#/sets/foundation"
+    },
+    {
+      "$ref": "#/sets/semantic"
+    },
+    {
+      "$ref": "#/modifiers/theme"
+    }
+  ]
+}
