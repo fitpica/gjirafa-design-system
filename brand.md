@@ -6,6 +6,8 @@
 > **Version:** 2.6.0 · **Live docs:** https://docs-phi-black.vercel.app
 > Every class and `--gds-*` token named here exists in the compiled CSS of v2.6.0.
 > If something you need is not in this file, **do not invent it**. Say it is missing and ask.
+>
+> Sections between `<!-- gds:component:… -->` markers are generated from `components/*.json` (the component contracts). Those contracts are the source; this file is their readable form.
 
 ---
 
@@ -14,7 +16,7 @@
 Every rule in this file follows from these three. When a case is not covered, decide by them.
 
 1. **Accessible by default, not by effort.** Every combination GDS allows passes WCAG AA without anyone checking. Use only the text tokens that pass AA, never show status by colour alone (dot + label), and give tables `scope` and `aria-sort`.
-2. **Reuse before you create.** If GDS has it, use it. If GDS does not have it, do not invent a local version: say it is missing so it can become a GDS pattern. Custom CSS that duplicates a GDS component is a bug.
+2. **Reuse before you create.** If GDS has it, use it. If GDS does not have it, do not invent a local version: say it is missing so it can become a GDS pattern. Custom CSS that duplicates a GDS component is a bug. (The one exception is layout-only CSS for missing page patterns, see Critical Rule 9.)
 3. **Obvious over documented.** If a rule has to be explained, the system should change. Defaults must be safe, one modifier means one thing, and BEM has no exceptions. Report any rule in this file you think could be removed by changing the system.
 
 ---
@@ -84,6 +86,7 @@ Icons: GDS uses [Lucide Icons](https://lucide.dev) via `data-lucide` attributes.
 6. **Prefix custom classes** with your product abbreviation (e.g., `hd-` for Helpdesk) to avoid collision with `gds-`.
 7. **Text must pass WCAG AA (4.5:1).** For readable text use only `text-primary`, `text-secondary`, `text-label`, or the `*-text` feedback tokens. See "Text contrast rules" below.
 8. **Never invent classes, variants or tokens.** If this file does not list it, it does not exist. Flag the gap instead.
+9. **Layout-only exception (until GDS has the pattern).** GDS has no page header, filter bar or page layout yet. For those only, you may write layout CSS with your product prefix (e.g. `cx-page-header`). It may use only `display`, `flex`/`grid`, `gap`, alignment, width/max-width and padding/margin, with `--gds-*` tokens for every value. It must never set colours, borders, typography or shadows, and never restyle a `gds-` class. Add a comment `/* GDS gap: <pattern name> */` so it can be replaced when the pattern ships.
 
 ---
 
@@ -367,49 +370,183 @@ Icon button uses same variants/sizes with `gds-btn-icon` prefix. Add `gds-btn-ic
 
 ---
 
+<!-- gds:component:input:start -->
 ### Input
 
+A text field with optional label, icon, prefix/suffix, helper text and character count.
+
+**Use when:**
+- Short free text: names, titles, emails, search.
+- Multi-line text with gds-input--textarea.
+
+**Don't use when:**
+- Choosing from a known list of options → use dropdown
+- Picking a date → use calendar
+
+**Example: Search box (no visible label)**
 ```html
-<div class="gds-input">
-  <label class="gds-input__label">Email <span class="gds-input__required">*</span></label>
+<div class="gds-input gds-input--md">
   <div class="gds-input__wrap">
-    <i data-lucide="mail" class="gds-input__icon"></i>
-    <input type="email" class="gds-input__field" placeholder="Enter email" />
-    <span class="gds-input__suffix">.com</span>
+    <i data-lucide="search" class="gds-input__icon"></i>
+    <input type="search" class="gds-input__field" placeholder="Search entries" aria-label="Search entries" />
   </div>
-  <span class="gds-input__helper">We'll never share your email</span>
 </div>
 ```
 
-| Modifier | Effect |
-|----------|--------|
-| `gds-input--sm` | Small size (32px) |
-| `gds-input--md` | Medium (40px), the usual choice |
-| `gds-input--lg` | Large size (48px) |
-| `gds-input--error` | Red border + error styling |
-| `gds-input--warning` | Orange border |
-| `gds-input--success` | Green border |
-| `gds-input--disabled` | Disabled state |
-| `gds-input--textarea` | Multi-line textarea |
-| `gds-input--shadow` | Shadow style instead of outline |
-| `gds-input--full` | Full width |
+**Example: With label, helper and error**
+```html
+<div class="gds-input gds-input--md gds-input--error">
+  <label class="gds-input__label" for="entry-title">Title <span class="gds-input__required">*</span></label>
+  <div class="gds-input__wrap"><input id="entry-title" class="gds-input__field" aria-invalid="true" aria-describedby="entry-title-help" /></div>
+  <span class="gds-input__helper" id="entry-title-help">Title is required</span>
+</div>
+```
 
-> **A size modifier is required.** The height lives on the size class. A bare `gds-input` has no height, so always add `--sm`, `--md` or `--lg`.
+**Example: Textarea with count**
+```html
+<div class="gds-input gds-input--md gds-input--textarea">
+  <label class="gds-input__label" for="entry-summary">Summary</label>
+  <div class="gds-input__wrap"><textarea id="entry-summary" class="gds-input__field" rows="3"></textarea></div>
+  <span class="gds-input__count">0 / 200</span>
+</div>
+```
+
+**Anatomy** (the DOM structure is the API; keep this nesting):
+
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-input` | div | yes | top level | Wrapper that stacks label, field and helper. Always has a size modifier. |
+| `gds-input__label` | label | no | `gds-input` | Visible label. Link it with for/id. Attributes: `for` (id of the field). |
+| `gds-input__required` | span | no | `gds-input__label` | Required marker "*" inside the label. |
+| `gds-input__wrap` | div | yes | `gds-input` | The bordered box. Its height comes from the size modifier. |
+| `gds-input__icon` | i \| span | no | `gds-input__wrap` | Leading icon (e.g. search). |
+| `gds-input__prefix` | span | no | `gds-input__wrap` | Fixed text before the value (e.g. https://). |
+| `gds-input__field` | input \| textarea | yes | `gds-input__wrap` | The native field. Attributes: `id` (matches the label's for), `aria-label` (Required when there is no visible label (e.g. a search box)). |
+| `gds-input__suffix` | span | no | `gds-input__wrap` | Fixed text after the value (e.g. .com). |
+| `gds-input__helper` | span | no | `gds-input` | Helper or error text under the box. |
+| `gds-input__count` | span | no | `gds-input` | Character count, e.g. "0 / 200". |
+
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+| `gds-input--sm` | `gds-input` | size | 32px high. |
+| `gds-input--md` | `gds-input` | size | 40px high. The usual choice. |
+| `gds-input--lg` | `gds-input` | size | 48px high. |
+| `gds-input--error` | `gds-input` | state | Red border. Put the message in __helper and set aria-invalid="true". |
+| `gds-input--warning` | `gds-input` | state | Orange border. |
+| `gds-input--success` | `gds-input` | state | Green border. |
+| `gds-input--disabled` | `gds-input` | state | Disabled look. Also set disabled on the field. |
+| `gds-input--textarea` | `gds-input` | content | Multi-line: the field is a <textarea>. |
+| `gds-input--shadow` | `gds-input` | style | Shadow instead of an outline border. |
+| `gds-input--full` | `gds-input` | width | Fills the available width. |
+
+**States:**
+- **focus**: Native :focus on the field highlights the wrap.
+- **error**: gds-input--error + message in __helper + aria-invalid="true" + aria-describedby pointing at the helper.
+- **disabled**: gds-input--disabled + disabled on the field.
+
+**Accessibility:**
+- Every field has a name: a <label for> or, for search boxes, aria-label.
+- Placeholder is not a label.
+- Link helper and error text with aria-describedby.
+
+**Rules:**
+- Every .gds-input has exactly one of --sm, --md, --lg. *Why:* The height lives on the size class; a bare .gds-input collapses. (Obvious over documented · auto-checkable)
+- Every .gds-input__field has a linked <label> or an aria-label. *Why:* An unnamed field is announced as "edit text". (Accessible by default · auto-checkable)
+- --error always comes with a text message in __helper. *Why:* A red border alone does not say what is wrong. (Accessible by default · auto-checkable)
+- The field sits inside .gds-input__wrap, never directly in .gds-input. *Why:* The border, icon and prefix layout live on the wrap. (Obvious over documented · auto-checkable)
+
+**Known issues** (flag them; work around one only where it says how, using GDS tokens):
+- Older guides called --md the default although a bare .gds-input has no height. *Planned fix:* v3: md height by default.
+
+*Generated from `components/input.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:input:end -->
 
 ---
 
+<!-- gds:component:checkbox:start -->
 ### Checkbox
 
+Lets people turn one option on or off, or pick several options from a list.
+
+**Use when:**
+- Selecting rows in a table.
+- Choosing any number of options from a short list.
+- Agreeing to something before submitting a form.
+
+**Don't use when:**
+- A setting that takes effect immediately → use toggle
+- Exactly one choice from a list → use radio
+
+**Example: With label**
 ```html
-<label class="gds-checkbox">
+<label class="gds-checkbox gds-checkbox--md">
   <input type="checkbox" class="gds-checkbox__input" />
-  <span class="gds-checkbox__control"><svg>...</svg></span>
-  <span class="gds-checkbox__label">Accept terms</span>
+  <span class="gds-checkbox__control"><i data-lucide="check"></i></span>
+  <span class="gds-checkbox__label">Send me updates</span>
 </label>
 ```
 
-Sizes: `gds-checkbox--sm`, `gds-checkbox--md`, `gds-checkbox--lg`
-States: `:checked` (via native), `gds-checkbox--mixed` (indeterminate), `gds-checkbox--disabled`
+**Example: In a table cell (no visible label)**
+```html
+<label class="gds-checkbox gds-checkbox--sm">
+  <input type="checkbox" class="gds-checkbox__input" checked aria-label="Select Winter travel guide" />
+  <span class="gds-checkbox__control"><i data-lucide="check"></i></span>
+</label>
+```
+
+**Example: Mixed (select all, some rows selected)**
+```html
+<label class="gds-checkbox gds-checkbox--sm gds-checkbox--mixed">
+  <input type="checkbox" class="gds-checkbox__input" aria-label="Select all" />
+  <span class="gds-checkbox__control"><i data-lucide="minus"></i></span>
+</label>
+```
+
+**Anatomy** (the DOM structure is the API; keep this nesting):
+
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-checkbox` | label | yes | top level | Wrapper. A <label>, so clicking the text toggles the box. |
+| `gds-checkbox__input` | input | yes | `gds-checkbox` | Native checkbox, visually hidden but focusable. Its :checked state drives the visual. Attributes: `type` (checkbox), `aria-label` (Required when there is no visible label (e.g. in table cells)). |
+| `gds-checkbox__control` | span | yes | `gds-checkbox` | The visible box. Must come after the input (CSS uses the ~ sibling selector). Contains the icon: <i data-lucide="check"></i>, or "minus" for mixed. |
+| `gds-checkbox__label` | span | no | `gds-checkbox` | Visible label text. |
+| `gds-checkbox__helper` | span | no | `gds-checkbox` | Helper text under the label. |
+
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+| `gds-checkbox--sm` | `gds-checkbox` | size | 16px box. Use in tables. |
+| `gds-checkbox--md` | `gds-checkbox` | size (default) | 20px box. Use in forms. |
+| `gds-checkbox--lg` | `gds-checkbox` | size | 24px box. |
+| `gds-checkbox--checked` | `gds-checkbox` | state | Forces the checked look. Prefer the native checked attribute, which works without this class. |
+| `gds-checkbox--mixed` | `gds-checkbox` | state | Indeterminate (some, not all, selected). Use the minus icon and set input.indeterminate = true in JS. |
+| `gds-checkbox--disabled` | `gds-checkbox` | state | Disabled look. Also set the disabled attribute on the input. |
+
+**States:**
+- **checked**: checked attribute on .gds-checkbox__input (CSS reads :checked).
+- **mixed**: gds-checkbox--mixed + minus icon + input.indeterminate = true.
+- **disabled**: gds-checkbox--disabled + disabled attribute on the input.
+- **focus**: Native :focus-visible on the input shows a ring on the control.
+
+**Accessibility:**
+- Keep the native input: it is what keyboards and screen readers use.
+- Without visible text, give the input an aria-label ("Select all", "Select <row name>").
+- For disabled, set the disabled attribute, not only the class.
+
+**Rules:**
+- Every .gds-checkbox contains an <input type="checkbox" class="gds-checkbox__input"> before .gds-checkbox__control. *Why:* The visual state comes from the input through the ~ selector; without it the box never changes. (Accessible by default · auto-checkable)
+- A checkbox without .gds-checkbox__label has an aria-label on the input. *Why:* Otherwise it is announced as an unnamed checkbox. (Accessible by default · auto-checkable)
+- The control contains the Lucide check icon (or minus for mixed). Do not draw your own SVG. *Why:* Both AI tests drew their own tick because the guide showed <svg>...</svg>. (Reuse before you create · auto-checkable)
+- Checkboxes in table cells use gds-checkbox--sm. *Why:* Matches the 16px icon grid of table rows. (Reuse before you create · auto-checkable)
+
+**Known issues** (flag them; work around one only where it says how, using GDS tokens):
+- Checked can be shown two ways (native checked or gds-checkbox--checked), which can disagree. *Planned fix:* v3: drive the look only from the native state; keep --checked for docs previews.
+
+*Generated from `components/checkbox.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:checkbox:end -->
 
 ---
 
@@ -491,45 +628,74 @@ Sizes: `gds-toggle--sm`, `gds-toggle--md`, `gds-toggle--lg`
 
 ---
 
+<!-- gds:component:badge:start -->
 ### Badge
 
-```html
-<span class="gds-badge gds-badge--positive">
-  <span class="gds-badge__dot"></span>
-  <span class="gds-badge__label">Active</span>
-</span>
+A small label that shows the status or category of something.
 
-<span class="gds-badge gds-badge--critical gds-badge--solid">
-  <i data-lucide="alert-circle" width="12" height="12" class="gds-badge__icon"></i>
-  <span class="gds-badge__label">Error</span>
-</span>
+**Use when:**
+- Showing a status in a table cell or card (Published, Draft…).
+- Labelling a category or count next to an item.
+
+**Don't use when:**
+- Something people can click to filter or remove → use chip or filter-badge
+- A percentage change → use pct-badge
+
+**Example: Content statuses**
+```html
+<span class="gds-badge gds-badge--positive"><span class="gds-badge__dot"></span><span class="gds-badge__label">Published</span></span>
+<span class="gds-badge gds-badge--neutral"><span class="gds-badge__dot"></span><span class="gds-badge__label">Draft</span></span>
+<span class="gds-badge gds-badge--warning"><span class="gds-badge__dot"></span><span class="gds-badge__label">Scheduled</span></span>
+<span class="gds-badge gds-badge--neutral"><span class="gds-badge__dot"></span><span class="gds-badge__label">Archived</span></span>
 ```
 
-| Modifier | Effect |
-|----------|--------|
-| `gds-badge--neutral` | Gray |
-| `gds-badge--positive` | Green |
-| `gds-badge--critical` | Red |
-| `gds-badge--warning` | Orange |
-| `gds-badge--info` | Blue |
-| `gds-badge--purple` | Purple |
-| `gds-badge--outline` | Outlined style |
-| `gds-badge--solid` | Solid fill |
-| `gds-badge--text` | Text only (no background) |
-| `gds-badge--sm` | Small |
-| `gds-badge--md` | Medium (default) |
-| `gds-badge--lg` | Large |
+**Example: With icon and count**
+```html
+<span class="gds-badge gds-badge--neutral"><span class="gds-badge__icon"><i data-lucide="minus-circle" width="12" height="12"></i></span><span class="gds-badge__label">Neutral</span><span class="gds-badge__count">12</span></span>
+```
 
-**Content status → badge (design decision, use exactly this):**
+**Anatomy** (the DOM structure is the API; keep this nesting):
 
-| Status | Badge | Why |
-|--------|-------|-----|
-| Published | `gds-badge--positive` | Live and healthy |
-| Draft | `gds-badge--neutral` | Work in progress, no action needed |
-| Scheduled | `gds-badge--warning` | Will change state on its own, so it should draw attention |
-| Archived | `gds-badge--neutral` | No longer active |
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-badge` | span | yes | top level | Wrapper. |
+| `gds-badge__dot` | span | no | `gds-badge` | Coloured dot. Use for statuses. |
+| `gds-badge__icon` | span | no | `gds-badge` | Icon slot (Lucide, 12px), instead of the dot. |
+| `gds-badge__label` | span | yes | `gds-badge` | The text. |
+| `gds-badge__count` | span | no | `gds-badge` | Number after the label. |
 
-Always use the dot + label form (`gds-badge__dot` + `gds-badge__label`), so status is not shown by colour alone. Use `info` and `critical` for other meanings, not for these four statuses.
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+| `gds-badge--neutral` | `gds-badge` | variant | Gray. |
+| `gds-badge--positive` | `gds-badge` | variant | Green. |
+| `gds-badge--warning` | `gds-badge` | variant | Orange. |
+| `gds-badge--critical` | `gds-badge` | variant | Red. |
+| `gds-badge--info` | `gds-badge` | variant | Blue. |
+| `gds-badge--purple` | `gds-badge` | variant | Purple. Categories only, no status meaning. |
+| `gds-badge--outline` | `gds-badge` | style | Outlined instead of filled. |
+| `gds-badge--solid` | `gds-badge` | style | Strong solid fill, for high emphasis. |
+| `gds-badge--text` | `gds-badge` | style | Text only, no background. |
+| `gds-badge--sm` | `gds-badge` | size | Small. |
+| `gds-badge--md` | `gds-badge` | size (default) | Medium. |
+| `gds-badge--lg` | `gds-badge` | size | Large. |
+
+**Accessibility:**
+- Never show status by colour alone: always include .gds-badge__label text.
+- The dot and icon are decorative; the label carries the meaning.
+
+**Rules:**
+- Content status mapping: Published → positive, Draft → neutral, Scheduled → warning, Archived → neutral. *Why:* Design decision (11 Nov 2026). Scheduled changes state on its own, so it draws attention; Draft and Archived need no action. (Reuse before you create · auto-checkable)
+- Status badges use the dot + label form. *Why:* Status is not shown by colour alone. (Accessible by default · auto-checkable)
+- A badge has exactly one colour variant. *Why:* Two variants on one badge produce an undefined colour. (Obvious over documented · auto-checkable)
+- A badge is never a button or link. *Why:* Badges have no hover or focus styles. (Accessible by default · auto-checkable)
+
+**Known issues** (flag them; work around one only where it says how, using GDS tokens):
+- Without a variant class the badge has no defined colour. *Planned fix:* v3: neutral by default, so the variant becomes optional.
+
+*Generated from `components/badge.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:badge:end -->
 
 ---
 
@@ -630,39 +796,128 @@ Avatar-name style: `gds-avatar-name--soft` (muted colors)
 
 ---
 
+<!-- gds:component:dropdown:start -->
 ### Dropdown
 
+A trigger that opens a panel of options: single select, multi-select, searchable lists.
+
+**Use when:**
+- Choosing one or several values from a list (status filter, content type, author).
+- Lists long enough to need search.
+
+**Don't use when:**
+- 2–4 options that should all stay visible → use radio or tabs
+- Actions rather than values (Edit, Duplicate, Delete) → use menu
+
+**Example: Status filter (single select, open)**
 ```html
 <div class="gds-dropdown gds-dropdown--open">
-  <button class="gds-dropdown__trigger">
-    <span class="gds-dropdown__value">Selected item</span>
-    <i data-lucide="chevron-down" class="gds-dropdown__arrow"></i>
+  <button type="button" class="gds-dropdown__trigger" aria-haspopup="listbox" aria-expanded="true">
+    <span class="gds-dropdown__value">Status: All</span>
+    <span class="gds-dropdown__arrow"><i data-lucide="chevron-down" width="16" height="16"></i></span>
   </button>
   <div class="gds-dropdown__panel">
-    <div class="gds-dropdown__search">
-      <i data-lucide="search" class="gds-dropdown__search-icon"></i>
-      <input class="gds-dropdown__search-input" placeholder="Search..." />
+    <div class="gds-dropdown__list" role="listbox" aria-label="Status">
+      <button type="button" class="gds-dropdown__item gds-dropdown__item--selected" role="option" aria-selected="true">
+        <span class="gds-dropdown__label">All</span>
+        <span class="gds-dropdown__check"><i data-lucide="check" width="16" height="16"></i></span>
+      </button>
+      <button type="button" class="gds-dropdown__item" role="option" aria-selected="false">
+        <span class="gds-dropdown__label">Published</span>
+        <span class="gds-dropdown__check"><i data-lucide="check" width="16" height="16"></i></span>
+      </button>
     </div>
-    <ul class="gds-dropdown__list">
-      <li class="gds-dropdown__item gds-dropdown__item--selected">
-        <span class="gds-dropdown__label">Option 1</span>
-        <i data-lucide="check" class="gds-dropdown__check"></i>
-      </li>
-      <li class="gds-dropdown__item">
-        <span class="gds-dropdown__label">Option 2</span>
-      </li>
-      <li class="gds-dropdown__divider"></li>
-      <li class="gds-dropdown__item gds-dropdown__item--disabled">
-        <span class="gds-dropdown__label">Disabled</span>
-      </li>
-    </ul>
   </div>
 </div>
 ```
 
-Trigger sizes: `gds-dropdown__trigger--sm`, `--lg`
-Item states: `--selected`, `--checked`, `--disabled`, `--rich` (two-line)
-Open: add `gds-dropdown--open` to container
+**Example: Closed, with placeholder**
+```html
+<div class="gds-dropdown">
+  <button type="button" class="gds-dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+    <span class="gds-dropdown__placeholder">Content type</span>
+    <span class="gds-dropdown__arrow"><i data-lucide="chevron-down" width="16" height="16"></i></span>
+  </button>
+  <div class="gds-dropdown__panel">
+    <div class="gds-dropdown__list" role="listbox" aria-label="Content type">
+      <button type="button" class="gds-dropdown__item" role="option" aria-selected="false">
+        <span class="gds-dropdown__label">Article</span>
+      </button>
+    </div>
+  </div>
+</div>
+```
+
+**Anatomy** (the DOM structure is the API; keep this nesting):
+
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-dropdown` | div | yes | top level | Wrapper. Has no styles of its own: the product positions the panel (e.g. position: relative on the wrapper, absolute on the panel). |
+| `gds-dropdown__trigger` | button | yes | `gds-dropdown` | The closed control. Attributes: `type` (button), `aria-haspopup` (listbox), `aria-expanded` (true \| false). |
+| `gds-dropdown__placeholder` | span | no | `gds-dropdown__trigger` | Shown when nothing is selected. |
+| `gds-dropdown__value` | span | no | `gds-dropdown__trigger` | The selected value. |
+| `gds-dropdown__tags` | div | no | `gds-dropdown__trigger` | Multi-select: selected values as .gds-chip elements. |
+| `gds-dropdown__arrow` | span | yes | `gds-dropdown__trigger` | Chevron-down icon. Rotates when open. |
+| `gds-dropdown__panel` | div | yes | `gds-dropdown` | The floating panel. Hidden until gds-dropdown--open. Attributes: `role` (listbox (or contains the list with role=listbox)). |
+| `gds-dropdown__search` | div | no | `gds-dropdown__panel` | Search row at the top of the panel. |
+| `gds-dropdown__search-icon` | span | no | `gds-dropdown__search` | Search icon. |
+| `gds-dropdown__search-input` | input | no | `gds-dropdown__search` | Search field. Attributes: `aria-label` (e.g. "Search authors"). |
+| `gds-dropdown__list` | div | yes | `gds-dropdown__panel` | Scrollable list of items. |
+| `gds-dropdown__group` | div | no | `gds-dropdown__list` | Group heading (uppercase). |
+| `gds-dropdown__item` | button | yes, repeats | `gds-dropdown__list` | One option. A <button>, so it is focusable. Attributes: `type` (button), `role` (option), `aria-selected` (true \| false). |
+| `gds-dropdown__icon` | span | no | `gds-dropdown__item` | Leading icon of an item. |
+| `gds-dropdown__content` | span | no | `gds-dropdown__item` | Rich items: stacks label and description. |
+| `gds-dropdown__label` | span | yes | `gds-dropdown__item` | Item text. |
+| `gds-dropdown__desc` | span | no | `gds-dropdown__content` | Secondary line in rich items. |
+| `gds-dropdown__badge` | span | no | `gds-dropdown__item` | Small count or status on the right. |
+| `gds-dropdown__check` | span | no | `gds-dropdown__item` | Check icon, visible on the selected item (single select). |
+| `gds-dropdown__divider` | div | no | `gds-dropdown__list` | Separator between groups. Attributes: `role` (separator). |
+| `gds-dropdown__empty` | div | no | `gds-dropdown__panel` | No-results message (with __empty-icon). |
+| `gds-dropdown__empty-icon` | span | no | `gds-dropdown__empty` | Icon above the empty message. |
+| `gds-dropdown__loading` | div | no | `gds-dropdown__panel` | Loading row (with __spinner). |
+| `gds-dropdown__spinner` | span | no | `gds-dropdown__loading` | Spinner. |
+| `gds-dropdown__create` | button | no | `gds-dropdown__panel` | "Create …" action at the bottom (with __create-icon). Attributes: `type` (button). |
+| `gds-dropdown__create-icon` | span | no | `gds-dropdown__create` | Plus icon. |
+
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+| `gds-dropdown--open` | `gds-dropdown` | state | Shows the panel and rotates the arrow. Set aria-expanded="true" on the trigger. |
+| `gds-dropdown__trigger--sm` | `__trigger` | size | Small trigger. |
+| `gds-dropdown__trigger--lg` | `__trigger` | size | Large trigger. |
+| `gds-dropdown__item--selected` | `__item` | state | Selected (single select). Shows __check. |
+| `gds-dropdown__item--checked` | `__item` | state | Checked (multi-select, with a .gds-checkbox__control inside). |
+| `gds-dropdown__item--disabled` | `__item` | state | Not selectable. Also set disabled. |
+| `gds-dropdown__item--rich` | `__item` | layout | Icon/avatar + label + description layout. |
+
+**States:**
+- **open**: gds-dropdown--open on the wrapper + aria-expanded="true" on the trigger.
+- **selected**: gds-dropdown__item--selected + aria-selected="true".
+- **empty / loading**: Show __empty or __loading inside the panel instead of the list.
+
+**Accessibility:**
+- Trigger: <button> with aria-haspopup="listbox" and aria-expanded.
+- Items: <button> elements (focusable), role="option", aria-selected.
+- Escape closes the panel and returns focus to the trigger (product JS).
+- Arrow keys move between items (product JS).
+
+**Rules:**
+- .gds-dropdown__item is a <button>, never a <li> or <div>. *Why:* Non-button items cannot be reached with the keyboard; this was an unadmitted guess in the first AI test. (Accessible by default · auto-checkable)
+- The trigger has aria-haspopup and aria-expanded matching gds-dropdown--open. *Why:* Screen readers announce whether the list is open. (Accessible by default · auto-checkable)
+- Next to a gds-input--md, use the default trigger size; next to --sm use __trigger--sm. Heights still differ slightly today (known issue). *Why:* Closest available match; in the second AI test the filters were noticeably shorter than the search box. (Obvious over documented)
+- Use dropdown for choosing values, menu for actions. *Why:* Different semantics (listbox vs menu). (Reuse before you create)
+
+**Do not use** (exist in the CSS for docs only):
+- `gds-dropdown__menu`: Only used by the table action cell (with .is-open). Not part of the dropdown API; use __panel.
+
+**Known issues** (flag them; work around one only where it says how, using GDS tokens):
+- .gds-dropdown has no CSS, so the panel is not positioned; docs examples use inline styles. *Planned fix:* v3: .gds-dropdown { position: relative } and an absolutely positioned panel by default.
+- .gds-dropdown__menu exists only for the table action cell and is not part of this API. *Planned fix:* v3: remove __menu; the table uses __panel.
+- Trigger heights do not match input heights. *Planned fix:* v3: shared control heights.
+
+*Generated from `components/dropdown.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:dropdown:end -->
 
 ---
 
@@ -720,122 +975,266 @@ Tab elements: `__text`, `__icon`, `__badge`, `__status` (dot), `__close` (remove
 
 ---
 
-### Data Table
+<!-- gds:component:table:start -->
+### Data table
 
-```html
-<div class="gds-table-scroll">
-  <div class="gds-table gds-table--cards">
-    <table class="gds-table__table">
-      <thead class="gds-table__head">
-        <tr class="gds-table__row">
-          <th class="gds-table__cell gds-table__cell--checkbox">
-            <label class="gds-checkbox gds-checkbox--sm">
-              <input type="checkbox" class="gds-checkbox__input" aria-label="Select all" />
-              <span class="gds-checkbox__control"><svg>...</svg></span>
-            </label>
-          </th>
-          <th class="gds-table__cell gds-table__cell--sortable">
-            Name <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down"></i></span>
-          </th>
-          <th class="gds-table__cell">Status</th>
-        </tr>
-      </thead>
-      <tbody class="gds-table__body">
-        <tr class="gds-table__row">
-          <td class="gds-table__cell gds-table__cell--checkbox">
-            <label class="gds-checkbox gds-checkbox--sm">...</label>
-          </td>
-          <td class="gds-table__cell">
-            <div class="gds-table__entry">
-              <img class="gds-table__entry-image" src="thumb.jpg" alt="" />
-              <div class="gds-table__entry-info">
-                <span class="gds-table__entry-title">Article Title</span>
-                <span class="gds-table__entry-subtitle">Subtitle</span>
-              </div>
-            </div>
-          </td>
-          <td class="gds-table__cell">
-            <span class="gds-badge gds-badge--positive">Active</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-```
+Rows of records with optional selection, sorting, bulk actions and pagination.
 
-| Table modifier | Effect |
-|----------------|--------|
-| `gds-table--cards` | Card-style with rounded corners and shadows |
-| `gds-table--striped` | Alternating row colors |
-| `gds-table--compact` | Reduced row padding |
-| `gds-table--loading` | Shows skeleton animation |
-| `gds-table--borderless` | No row borders |
+**Use when:**
+- Showing many records that share the same fields (entries, assets, users, orders).
+- People need to compare, sort, select or act on several records at once.
 
-| Cell modifier | Effect |
-|---------------|--------|
-| `gds-table__cell--checkbox` | Checkbox column (narrow) |
-| `gds-table__cell--action` | Action column (narrow) |
-| `gds-table__cell--sortable` | Adds sort cursor + icon |
-| `gds-table__cell--sorted` | Active sort column (highlights the icon). Required for both directions |
-| `gds-table__cell--sorted-desc` | Add *on top of* `--sorted` for descending. It rotates the icon 180° |
-| `gds-table__cell--sticky-checkbox` | Sticky left checkbox |
-| `gds-table__cell--sticky-entry` | Sticky left entry column |
+**Don't use when:**
+- Fewer than about 5 records with no comparison needed → use card or a simple list
+- Key/value details of a single record → use a description list inside a card
 
-**Sort icon rule:** unsorted columns use `arrow-up-down`. The sorted column always uses `arrow-up` and lets CSS flip it:
-```html
-<!-- ascending -->
-<th scope="col" class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted" aria-sort="ascending">
-  Name <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span>
-</th>
-<!-- descending: same icon, add --sorted-desc -->
-<th scope="col" class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc" aria-sort="descending">
-  Updated <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span>
-</th>
-```
-Never use an `arrow-down` icon with `--sorted-desc`, because it would point up.
-
-Row states: `gds-table__row--selected`, `gds-table__row--hover`
-
-Toolbar (bulk actions):
+**Example: Sortable table with selection and bulk actions**
 ```html
 <div class="gds-table__toolbar is-visible">
-  <span class="gds-table__toolbar-count">3 selected</span>
-  <div class="gds-table__toolbar-divider"></div>
-  <button class="gds-table__toolbar-btn">Delete</button>
-  <button class="gds-table__toolbar-btn">Export</button>
+  <span class="gds-table__toolbar-count">2 selected</span>
+  <div class="gds-table__toolbar-divider" aria-hidden="true"></div>
+  <button type="button" class="gds-table__toolbar-btn">Publish</button>
+  <button type="button" class="gds-table__toolbar-btn">Delete</button>
+</div>
+<div class="gds-table">
+  <table class="gds-table__table" aria-label="All entries">
+    <thead class="gds-table__head">
+      <tr class="gds-table__row">
+        <th scope="col" class="gds-table__cell gds-table__cell--checkbox">
+          <label class="gds-checkbox gds-checkbox--sm gds-checkbox--mixed">
+            <input type="checkbox" class="gds-checkbox__input" aria-label="Select all" />
+            <span class="gds-checkbox__control"><i data-lucide="minus"></i></span>
+          </label>
+        </th>
+        <th scope="col" class="gds-table__cell gds-table__cell--sortable">
+          Title <span class="gds-table__sort-icon"><i data-lucide="arrow-up-down"></i></span>
+        </th>
+        <th scope="col" class="gds-table__cell">Status</th>
+        <th scope="col" class="gds-table__cell gds-table__cell--sortable gds-table__cell--sorted gds-table__cell--sorted-desc" aria-sort="descending">
+          Last updated <span class="gds-table__sort-icon"><i data-lucide="arrow-up"></i></span>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="gds-table__body">
+      <tr class="gds-table__row gds-table__row--selected">
+        <td class="gds-table__cell gds-table__cell--checkbox">
+          <label class="gds-checkbox gds-checkbox--sm">
+            <input type="checkbox" class="gds-checkbox__input" checked aria-label="Select Winter travel guide" />
+            <span class="gds-checkbox__control"><i data-lucide="check"></i></span>
+          </label>
+        </td>
+        <td class="gds-table__cell">Winter travel guide</td>
+        <td class="gds-table__cell"><span class="gds-badge gds-badge--neutral"><span class="gds-badge__dot"></span><span class="gds-badge__label">Draft</span></span></td>
+        <td class="gds-table__cell gds-table__cell--secondary">Today, 08:15</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 ```
 
-**Data table rules (v2.6):**
-- The root class is `gds-table`. There is **no** `gds-data-table` class.
-- Give the `<table>` an accessible name (`aria-label="Entries"` or a `<caption>`).
-- Every header cell is `<th scope="col">`. Add `aria-sort="ascending"` / `"descending"` to the sorted header.
-- Header text uses `--table-header-color` (= `text-label`, 8.50:1). Do not override it with `text-helper` or `text-tertiary`.
-- Every row checkbox needs an `aria-label` (e.g. "Select row: Article Title").
-- For paging below the table, use the Pagination bar, not custom markup. Copy this structure exactly:
-  ```html
-  <div class="gds-pagination-bar gds-pagination-bar--full">
-    <span class="gds-pagination-bar__summary">Viewing 1 to 10 of 397 Items</span>
-    <div class="gds-pagination-bar__cluster">
-      <button type="button" class="gds-pagination-bar__select" aria-haspopup="listbox">
-        <span>10 Items per page</span><i data-lucide="chevron-down"></i>
-      </button>
-      <nav class="gds-pagination" aria-label="Pagination">
-        <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
-        <button class="gds-pagination__item gds-pagination__item--current" aria-current="page">1</button>
-        <button class="gds-pagination__item">2</button>
-        <span class="gds-pagination__ellipsis" aria-hidden="true">…</span>
-        <button class="gds-pagination__item">40</button>
-        <button class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
-      </nav>
-    </div>
+**Example: Empty state**
+```html
+<div class="gds-table">
+  <table class="gds-table__table" aria-label="All entries">
+    <thead class="gds-table__head">
+      <tr class="gds-table__row">
+        <th scope="col" class="gds-table__cell">Title</th>
+        <th scope="col" class="gds-table__cell">Status</th>
+      </tr>
+    </thead>
+    <tbody class="gds-table__body">
+      <tr class="gds-table__row">
+        <td class="gds-table__cell" colspan="2"><div class="gds-table__empty">No entries yet</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+**Anatomy** (the DOM structure is the API; keep this nesting):
+
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-table__toolbar` | div | no | top level | Bulk-action bar. Sibling placed directly above .gds-table. Hidden until is-visible is added. |
+| `gds-table__toolbar-count` | span | yes | `gds-table__toolbar` | Selection count, e.g. "2 selected". |
+| `gds-table__toolbar-divider` | div | no | `gds-table__toolbar` | Vertical separator between count and actions. Attributes: `aria-hidden` (true). |
+| `gds-table__toolbar-btn` | button | yes, repeats | `gds-table__toolbar` | One bulk action. Attributes: `type` (button). |
+| `gds-table-scroll` | div | no | top level | Optional wrapper for horizontal scroll. Wraps .gds-table. |
+| `gds-table` | div | yes | top level | Container (border, radius, background). |
+| `gds-table__table` | table | yes | `gds-table` | The native table. Attributes: `aria-label` (Name of the data, unless a <caption> is used). |
+| `gds-table__head` | thead | yes | `gds-table__table` | Header group. |
+| `gds-table__body` | tbody | yes | `gds-table__table` | Body group. |
+| `gds-table__row` | tr | yes, repeats | `gds-table__head` or `gds-table__body` | One row. |
+| `gds-table__cell` | th \| td | yes, repeats | `gds-table__row` | One cell. Header cells are <th scope="col">. Attributes: `scope` (col (on every <th>)). |
+| `gds-table__sort-icon` | span | no | `gds-table__cell` | Wraps the sort icon inside a sortable header cell. Unsorted: arrow-up-down; sorted: arrow-up (CSS flips it for descending). |
+| `gds-table__cell-content` | div | no | `gds-table__cell` | Flex wrapper for icon + text combinations inside a cell. |
+| `gds-table__entry` | div | no | `gds-table__cell` | Entry cell layout: thumbnail + title + subtitle (mainly in the cards variant). |
+| `gds-table__entry-image` | img | no | `gds-table__entry` | Thumbnail. Not an avatar. Attributes: `alt` (Describe the image, or "" if decorative). |
+| `gds-table__entry-info` | div | no | `gds-table__entry` | Stacks title and subtitle. |
+| `gds-table__entry-title` | span | no | `gds-table__entry-info` | Primary text of the entry. |
+| `gds-table__entry-subtitle` | span | no | `gds-table__entry-info` | Secondary text, e.g. slug or path. |
+| `gds-table__action-btn` | button | no | `gds-table__cell` | Row overflow (⋯) button in the action cell. Attributes: `type` (button), `aria-label` (e.g. "Actions for <row name>"). |
+| `gds-table__empty` | div | no | `gds-table__cell` | Empty-state message, inside a single full-width cell (colspan) in the body. |
+| `gds-table__skeleton` | span | no | `gds-table__cell` | Loading placeholder bar inside a cell, used with gds-table--loading. |
+
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+| `gds-table--compact` | `gds-table` | layout | Denser rows. |
+| `gds-table--striped` | `gds-table` | style | Alternating row background. |
+| `gds-table--borderless` | `gds-table` | style | No container border. |
+| `gds-table--cards` | `gds-table` | layout | Each row is a separate card with shadow and gap. |
+| `gds-table--responsive` | `gds-table` | layout | Below the mobile breakpoint, rows stack as label/value pairs. Each <td> needs data-label. |
+| `gds-table--loading` | `gds-table` | state | Loading state with skeleton rows. Add aria-busy="true" on the <table>. |
+| `gds-table__row--selected` | `__row` | state | Selected row background. |
+| `gds-table__cell--checkbox` | `__cell` | content | Narrow centered cell holding a .gds-checkbox. |
+| `gds-table__cell--action` | `__cell` | content | Narrow rightmost cell holding the row overflow button. |
+| `gds-table__cell--secondary` | `__cell` | content | Lighter, smaller text for dates and metadata columns. |
+| `gds-table__cell--header-action` | `__cell` | content | Header text for an action column (e.g. "Edit"). |
+| `gds-table__cell--sortable` | `__cell` | state | Header cell that can be sorted. Shows the sort icon. |
+| `gds-table__cell--sorted` | `__cell` | state | The active sort column (highlights the icon). Required for both directions. Requires `gds-table__cell--sortable`. |
+| `gds-table__cell--sorted-desc` | `__cell` | state | Descending. Added on top of --sorted; rotates the arrow-up icon 180°. Requires `gds-table__cell--sorted`. |
+| `gds-table__cell--sticky-checkbox` | `__cell` | layout | Freezes the checkbox column during horizontal scroll. |
+| `gds-table__cell--sticky-entry` | `__cell` | layout | Freezes the entry (second) column during horizontal scroll. |
+| `gds-table__skeleton--xs` | `__skeleton` | width | 20% width placeholder. |
+| `gds-table__skeleton--short` | `__skeleton` | width | 30% width placeholder. |
+| `gds-table__skeleton--medium` | `__skeleton` | width | 50% width placeholder. |
+| `gds-table__skeleton--wide` | `__skeleton` | width | 70% width placeholder. |
+| `is-visible` | `__toolbar` | state | Shows the bulk-action bar. |
+
+**States:**
+- **hover**: Native :hover on body rows. No class needed.
+- **selected**: gds-table__row--selected on the row, plus a checked .gds-checkbox in its checkbox cell.
+- **sorted**: gds-table__cell--sorted (+ --sorted-desc) and aria-sort on the <th>.
+- **loading**: gds-table--loading on the container, aria-busy="true" on the table, skeleton bars in cells.
+- **empty**: One body row with a single cell (colspan = column count) containing .gds-table__empty.
+
+**Accessibility:**
+- Name the table with aria-label on <table> or a <caption>.
+- Every header cell is <th scope="col">.
+- The sorted header has aria-sort="ascending" or "descending"; others have none.
+- Sortable headers are not keyboard-reachable yet: GDS has no styled sort button. Flag this gap; do not add an unstyled <button>.
+- The select-all checkbox has aria-label="Select all"; each row checkbox has aria-label="Select <row name>".
+- Header text uses --table-header-color (text-label, 8.50:1).
+
+**Rules:**
+- The root class is gds-table. There is no gds-data-table class. *Why:* AI tools often guess gds-data-table from the component name. (Reuse before you create · auto-checkable)
+- Every <th> has scope="col". *Why:* Screen readers announce the column for each cell. (Accessible by default · auto-checkable)
+- The <table> has aria-label or a <caption>. *Why:* A table without a name is announced only as "table". (Accessible by default · auto-checkable)
+- A descending column has both --sorted and --sorted-desc, and uses the arrow-up icon. *Why:* --sorted-desc rotates the icon; arrow-down would point up. Without --sorted the icon is not highlighted. (Obvious over documented · auto-checkable)
+- The sorted <th> has aria-sort matching the direction. *Why:* Sort state must not be visual only. (Accessible by default · auto-checkable)
+- Every checkbox inside the table has an aria-label. *Why:* Checkboxes in cells have no visible label. (Accessible by default · auto-checkable)
+- Status cells use .gds-badge with dot + label, following the content-status mapping in the badge contract. *Why:* One status language across products; status is never colour alone. (Reuse before you create · auto-checkable)
+- Paging below a table uses .gds-pagination-bar--full, never custom markup. *Why:* Custom pagination was the most broken part of the first AI test. (Reuse before you create · auto-checkable)
+- The bulk-action bar sits directly above .gds-table (or .gds-table-scroll) and is shown with is-visible only while rows are selected. *Why:* Consistent place for bulk actions. (Reuse before you create)
+- Cell content composes GDS components (checkbox, avatar-name, badge, button). Do not build one-off cell UI. *Why:* Keeps tables consistent and themeable. (Reuse before you create)
+
+**Do not use** (exist in the CSS for docs only):
+- `gds-table__row--hover`: Docs preview that forces the hover look. Real hover is native :hover.
+- `gds-table__row--striped`: Docs preview that forces a striped row. Use gds-table--striped.
+- `gds-table__cell--label`: Docs-only cell that labels demo rows ("Default", "Hovered").
+
+**Known issues** (flag them; work around one only where it says how, using GDS tokens):
+- Sortable header cells are clickable only with a mouse; there is no styled button element for keyboard users. *Planned fix:* v3: a gds-table__sort-btn element (reset button inside <th>) so sorting works with Tab + Enter.
+- The action-cell dropdown uses .gds-dropdown__menu and .is-open, while the Dropdown component uses .gds-dropdown__panel and .gds-dropdown--open. *Planned fix:* v3: one dropdown API everywhere (__panel / --open).
+- is-visible on the toolbar breaks the BEM naming rule. *Planned fix:* v3: gds-table__toolbar--visible.
+- Sorting needs two modifiers and one specific icon. *Planned fix:* v3: --sort-asc / --sort-desc.
+- GDS has no page header or filter bar yet. Until it does, follow Critical Rule 9 (layout-only CSS with a product prefix and GDS tokens, marked /* GDS gap */). *Planned fix:* v3 patterns: Page header, Filter bar, List page.
+
+*Generated from `components/table.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:table:end -->
+
+---
+
+<!-- gds:component:pagination:start -->
+### Pagination
+
+Moves through pages of a long list, with an optional summary and page-size control.
+
+**Use when:**
+- Below a table or list that has more records than fit on one page.
+
+**Don't use when:**
+- A feed people scroll through without needing a position → use load more / infinite scroll (not in GDS yet)
+- Steps of a process → use tabs or a stepper (not in GDS yet)
+
+**Example: Full bar below a table**
+```html
+<div class="gds-pagination-bar gds-pagination-bar--full">
+  <span class="gds-pagination-bar__summary">Viewing 1 to 10 of 397 Items</span>
+  <div class="gds-pagination-bar__cluster">
+    <button type="button" class="gds-pagination-bar__select" aria-haspopup="listbox">
+      <span>10 Items per page</span><i data-lucide="chevron-down"></i>
+    </button>
+    <nav class="gds-pagination" aria-label="Pagination">
+      <button type="button" class="gds-pagination__item gds-pagination__item--icon-only gds-pagination__item--disabled" aria-label="Previous page" disabled><i data-lucide="chevron-left"></i></button>
+      <button type="button" class="gds-pagination__item gds-pagination__item--current" aria-current="page">1</button>
+      <button type="button" class="gds-pagination__item">2</button>
+      <span class="gds-pagination__ellipsis" aria-hidden="true">…</span>
+      <button type="button" class="gds-pagination__item">40</button>
+      <button type="button" class="gds-pagination__item gds-pagination__item--icon-only" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+    </nav>
   </div>
-  ```
-  - Page items are `<button>` elements directly inside `<nav>`. **Never use `<ul>`/`<li>`**: GDS has no reset, so bullets and list padding will show.
-  - The page-size control is the `__select` button, not a native `<select>`.
-  - Arrow-only buttons use `__item--icon-only` with an `aria-label`. `__nav` is only for labelled "Previous" / "Next" text buttons.
-- Visual + axe tests for this component: `tests/visual/fixtures/datatable.html`.
+</div>
+```
+
+**Anatomy** (the DOM structure is the API; keep this nesting):
+
+| Element | Tag | Required | Inside | Notes |
+|---|---|---|---|---|
+| `gds-pagination-bar` | div | no | top level | Bar around the page numbers. Under a table, always use it with --full. |
+| `gds-pagination-bar__summary` | span | no | `gds-pagination-bar` | "Viewing 1 to 10 of 397 Items". |
+| `gds-pagination-bar__cluster` | div | no | `gds-pagination-bar` | Groups the page-size control and the page numbers on the right. |
+| `gds-pagination-bar__select` | button | no | `gds-pagination-bar__cluster` | Page-size trigger: <span>10 Items per page</span> + chevron-down icon. Not a native <select>. Attributes: `type` (button), `aria-haspopup` (listbox). |
+| `gds-pagination-bar__divider` | span | no | `gds-pagination-bar` | Vertical separator between groups inside the bar. Not needed in the --full bar. Attributes: `aria-hidden` (true). |
+| `gds-pagination` | nav | yes | top level | Row of page buttons. Page items are direct children; never a <ul>/<li> list. Attributes: `aria-label` (Pagination). |
+| `gds-pagination__item` | button | yes, repeats | `gds-pagination` | A page number, or an arrow with --icon-only. Attributes: `type` (button). |
+| `gds-pagination__ellipsis` | span | no | `gds-pagination` | "…" for skipped pages. Attributes: `aria-hidden` (true). |
+| `gds-pagination__nav` | button | no | `gds-pagination` | Labelled "Previous" / "Next" text button. Only for buttons with visible text; arrow-only buttons use __item--icon-only. Attributes: `type` (button). |
+
+**Modifiers:**
+
+| Class | On | Group | Effect |
+|---|---|---|---|
+| `gds-pagination--sm` | `gds-pagination` | size | Small. |
+| `gds-pagination--lg` | `gds-pagination` | size | Large. |
+| `gds-pagination__item--current` | `__item` | state | The current page. Add aria-current="page". |
+| `gds-pagination__item--disabled` | `__item` | state | Previous/next at the first or last page. Also set the disabled attribute. |
+| `gds-pagination__item--icon-only` | `__item` | content | Arrow-only item (chevron-left/right, chevrons-left/right). Needs aria-label. |
+| `gds-pagination-bar--full` | `-bar` | layout | Full-width bar with summary on the left. The one to use below tables. |
+| `gds-pagination-bar--no-border` | `-bar` | style | Drops the border of the full bar (e.g. inside a card). Requires `gds-pagination-bar--full`. |
+| `gds-pagination-bar--on-surface` | `-bar` | style | White pill bar for coloured backgrounds. |
+| `gds-pagination-bar--sm` | `-bar` | size | Small bar. |
+| `gds-pagination-bar--lg` | `-bar` | size | Large bar. |
+
+**States:**
+- **current page**: gds-pagination__item--current + aria-current="page".
+- **disabled arrow**: gds-pagination__item--disabled + disabled attribute.
+- **single page**: Hide the number row when there is 1 page or less; keep the summary.
+
+**Accessibility:**
+- The <nav> has aria-label="Pagination".
+- The current page has aria-current="page".
+- Arrow-only buttons have aria-label ("Previous page", "Next page", "First page", "Last page").
+- Keyboard: ← → move one page, Home/End jump to first/last (implemented in JS by the product).
+
+**Rules:**
+- Page items are <button> elements directly inside <nav class="gds-pagination">; never <ul>/<li>. *Why:* GDS has no CSS reset, so list bullets and padding show. (Obvious over documented · auto-checkable)
+- Below a table use .gds-pagination-bar.gds-pagination-bar--full. *Why:* One consistent paging bar for lists. (Reuse before you create · auto-checkable)
+- The page-size control is .gds-pagination-bar__select (a button), not a native <select>. *Why:* A native select does not match the bar and was a wrong guess in the first AI test. (Reuse before you create · auto-checkable)
+- __nav is only for buttons with visible "Previous"/"Next" text; arrow-only buttons use __item--icon-only with aria-label. *Why:* The two have different sizes and spacing. (Obvious over documented · auto-checkable)
+- Exactly one item is --current and it has aria-current="page". *Why:* Position must not be visual only. (Accessible by default · auto-checkable)
+
+**Do not use** (exist in the CSS for docs only):
+- `is-hover-preview`: Docs preview that forces the hover look.
+- `is-focus-preview`: Docs preview that forces the focus ring.
+
+**Known issues** (flag them; work around one only where it says how, using GDS tokens):
+- The page-size menu has no GDS markup of its own; docs use a .gds-menu positioned by script. *Planned fix:* v3: document the page-size menu as part of this contract, or reuse dropdown.
+
+*Generated from `components/pagination.json`. Edit that file, then run `npm run brand`.*
+<!-- gds:component:pagination:end -->
 
 ---
 
@@ -941,8 +1340,6 @@ don't guess the structure.
 
 | Component | Classes | Docs |
 |-----------|---------|------|
-| Pagination | `gds-pagination`, `--sm`, `--lg`, `__item`, `__item--current`, `__item--disabled`, `__item--icon-only`, `__nav`, `__ellipsis` | [page=pagination](https://docs-phi-black.vercel.app/?page=pagination) |
-| Pagination bar | `gds-pagination-bar`, `--full`, `--sm`, `--lg`, `--no-border`, `--on-surface`, `__cluster`, `__divider`, `__select`, `__summary` | [page=pagination](https://docs-phi-black.vercel.app/?page=pagination) |
 | Card | `gds-card`, `--elevated`, `--flat`, `--interactive`, `--selected`, `--disabled`, `--padded-sm`, `--padded-lg`, `--padded-none`, `__header`, `__title`, `__subtitle`, `__media`, `__body`, `__footer` | [page=card](https://docs-phi-black.vercel.app/?page=card) |
 | Skeleton | `gds-skeleton`, `--text`, `--text-sm/md/lg/xl/2xl`, `--rect`, `--circle`, `--row`, `--avatar-sm/md/lg/xl`, `--w-25/50/75` | [page=skeleton](https://docs-phi-black.vercel.app/?page=skeleton) |
 | Tooltip | `gds-tooltip`, `__bubble`, `__bubble--top/bottom/left/right`, `__bubble--sm/md/lg`, `__bubble--multiline`, `__bubble--interactive`, `__kbd` | [page=tooltip](https://docs-phi-black.vercel.app/?page=tooltip) |
