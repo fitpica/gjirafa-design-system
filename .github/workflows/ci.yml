@@ -54,7 +54,17 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            packages/ds-core/package-lock.json
+            packages/ds-vue/package-lock.json
       - run: npm ci
+      # The Vue parity test mounts packages/ds-vue/dist, which links to ds-core.
+      # Both are build output (not committed), so build them here.
+      - name: Build ds-core and ds-vue
+        run: |
+          (cd packages/ds-core && npm ci && npm run build)
+          (cd packages/ds-vue && npm ci && npm run build)
       - run: npx playwright install chromium
       - name: Accessibility (axe)
         run: npm run test:a11y
