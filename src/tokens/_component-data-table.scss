@@ -80,7 +80,7 @@ $table-bp-mobile: 640px;
   // ---------------------------------------------------------------------------
   --table-action-cell-width:   #{$space-40};
   --table-action-icon-size:    #{$icon-sm};
-  --table-action-color:        var(--gds-color-text-tertiary);
+  --table-action-color:        var(--gds-color-text-helper);    // icon, 3.59:1 (needs 3:1)
   --table-action-hover-color:  var(--gds-color-text-primary);
 
   // ---------------------------------------------------------------------------
@@ -96,7 +96,7 @@ $table-bp-mobile: 640px;
   // ---------------------------------------------------------------------------
   --table-sort-icon-size:      #{$space-12};
   --table-sort-icon-gap:       #{$space-4};
-  --table-sort-color:          var(--gds-color-text-tertiary);
+  --table-sort-color:          var(--gds-color-text-helper);    // icon, 3.59:1 (needs 3:1)
   --table-sort-active-color:   var(--gds-color-action-primary);
 
   // ---------------------------------------------------------------------------
@@ -148,6 +148,6 @@ $table-bp-mobile: 640px;
   // Empty state
   // ---------------------------------------------------------------------------
   --table-empty-padding:       #{$space-48};
-  --table-empty-color:         var(--gds-color-text-tertiary);
+  --table-empty-color:         var(--gds-color-text-secondary); // text, 6.96:1 (was 2.96)
   --table-empty-font-size:     #{$font-size-14};
 }

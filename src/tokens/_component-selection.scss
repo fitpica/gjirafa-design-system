@@ -25,7 +25,7 @@
 
   // --- Label ---
   --sel-label:          var(--gds-color-text-primary);
-  --sel-label-helper:   var(--gds-color-text-helper);
+  --sel-label-helper:   var(--gds-color-text-secondary); // helper text, 6.96:1 (was 3.59)
 
   // --- Toggle track ---
   --sel-track-off:      var(--gds-color-bg-tertiary);

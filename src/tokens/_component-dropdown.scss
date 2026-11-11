@@ -58,7 +58,7 @@
 
   // --- Search ---
   --dd-search-border: #{$color-neutral-40};
-  --dd-search-placeholder: var(--gds-color-text-placeholder);
+  --dd-search-placeholder: var(--gds-color-text-secondary); // placeholder text, 6.96:1 (was 2.96)
 
   // --- Empty / Loading ---
   --dd-empty-text: var(--gds-color-text-secondary);

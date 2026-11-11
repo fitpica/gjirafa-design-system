@@ -258,7 +258,7 @@
 :root {
   --input-bg: var(--gds-color-bg-primary);
   --input-text: var(--gds-color-text-primary);
-  --input-placeholder: var(--gds-color-text-placeholder);
+  --input-placeholder: var(--gds-color-text-secondary);
   --input-border: var(--gds-color-border-default);
   --input-border-hover: var(--gds-color-border-strong);
   --input-border-focus: var(--gds-color-border-focus);
@@ -290,7 +290,7 @@
   --sel-disabled-bg: #b1b1b9;
   --sel-disabled-icon: var(--gds-color-bg-primary);
   --sel-label: var(--gds-color-text-primary);
-  --sel-label-helper: var(--gds-color-text-helper);
+  --sel-label-helper: var(--gds-color-text-secondary);
   --sel-track-off: var(--gds-color-bg-tertiary);
   --sel-track-off-hover: var(--gds-color-border-subtle);
   --sel-focus-ring: var(--gds-color-border-focus);
@@ -326,7 +326,7 @@
   --dd-divider: var(--gds-color-border-subtle);
   --dd-group-text: var(--gds-color-text-secondary);
   --dd-search-border: #dedee2;
-  --dd-search-placeholder: var(--gds-color-text-placeholder);
+  --dd-search-placeholder: var(--gds-color-text-secondary);
   --dd-empty-text: var(--gds-color-text-secondary);
   --dd-create-text: var(--gds-color-action-primary);
   --dd-create-text-hover: var(--gds-color-action-primary-hover);
@@ -834,7 +834,7 @@
   --table-checkbox-cell-width: 40px;
   --table-action-cell-width: 40px;
   --table-action-icon-size: 16px;
-  --table-action-color: var(--gds-color-text-tertiary);
+  --table-action-color: var(--gds-color-text-helper);
   --table-action-hover-color: var(--gds-color-text-primary);
   --table-row-hover-bg: var(--gds-color-bg-secondary);
   --table-row-striped-bg: var(--gds-color-bg-tertiary);
@@ -842,7 +842,7 @@
   --table-row-selected-border: var(--gds-color-action-primary);
   --table-sort-icon-size: 12px;
   --table-sort-icon-gap: 4px;
-  --table-sort-color: var(--gds-color-text-tertiary);
+  --table-sort-color: var(--gds-color-text-helper);
   --table-sort-active-color: var(--gds-color-action-primary);
   --table-text-secondary-color: var(--gds-color-text-secondary);
   --table-text-secondary-size: 12px;
@@ -867,7 +867,7 @@
   --table-transition-easing: cubic-bezier(0.2, 0, 0.38, 0.9);
   --table-scroll-shadow: -4px 0 20px 0 rgba(30, 30, 54, 0.05);
   --table-empty-padding: 48px;
-  --table-empty-color: var(--gds-color-text-tertiary);
+  --table-empty-color: var(--gds-color-text-secondary);
   --table-empty-font-size: 14px;
 }
 
@@ -978,7 +978,7 @@
   --card-title-color: var(--gds-color-text-primary);
   --card-subtitle-size: 12px;
   --card-subtitle-weight: 400;
-  --card-subtitle-color: var(--gds-color-text-tertiary);
+  --card-subtitle-color: var(--gds-color-text-secondary);
   --card-hover-lift: 2px;
   --card-focus-ring-width: 2px;
   --card-focus-ring: var(--gds-color-border-focus);
