@@ -498,6 +498,9 @@
 .gds-table__cell--secondary {
   color: var(--table-text-secondary-color);
   font-size: var(--table-text-secondary-size);
+  // Dates and short metadata stay on one line ("13/11/2026 08:47" must not break
+  // into two). A table wider than its space scrolls inside .gds-table-scroll instead.
+  white-space: nowrap;
 }
 
 // =============================================================================
@@ -628,6 +631,7 @@
 
 .gds-table__skeleton {
   display: block; // an empty <span> is inline and would ignore height and width
+  min-width: var(--table-skeleton-min-width); // percentage widths stay visible in narrow cells
   height: var(--table-skeleton-height);
   background: var(--table-skeleton-color);
   border-radius: var(--table-skeleton-radius);

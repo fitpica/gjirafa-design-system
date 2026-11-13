@@ -135,6 +135,7 @@ $table-bp-mobile: 640px;
   --table-skeleton-shine:       var(--gds-color-bg-secondary);
   --table-skeleton-radius:      #{$radius-s};
   --table-skeleton-height:      #{$space-12};
+  --table-skeleton-min-width:   #{$space-16}; // xs bars in checkbox / action cells were 3px
   --table-skeleton-duration:    #{$duration-slow * 6};
 
   // ---------------------------------------------------------------------------

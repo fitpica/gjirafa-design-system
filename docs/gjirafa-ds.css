@@ -868,6 +868,7 @@
   --table-skeleton-shine: var(--gds-color-bg-secondary);
   --table-skeleton-radius: 4px;
   --table-skeleton-height: 12px;
+  --table-skeleton-min-width: 16px;
   --table-skeleton-duration: 1.5s;
   --table-transition-duration: 0.1s;
   --table-transition-easing: cubic-bezier(0.2, 0, 0.38, 0.9);
@@ -5402,6 +5403,7 @@
 .gds-table__cell--secondary {
   color: var(--table-text-secondary-color);
   font-size: var(--table-text-secondary-size);
+  white-space: nowrap;
 }
 
 .gds-table__cell--header-action {
@@ -5499,6 +5501,7 @@
 
 .gds-table__skeleton {
   display: block;
+  min-width: var(--table-skeleton-min-width);
   height: var(--table-skeleton-height);
   background: var(--table-skeleton-color);
   border-radius: var(--table-skeleton-radius);

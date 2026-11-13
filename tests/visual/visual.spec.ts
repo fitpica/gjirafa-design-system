@@ -162,4 +162,19 @@ test.describe('data table at phone width', () => {
     expect(box!.height).toBeGreaterThan(0);
     expect(box!.width).toBeGreaterThan(0);
   });
+
+  test('date cells stay on one line', async ({ page }) => {
+    await page.goto('/tests/visual/fixtures/table-overflow.html');
+    const lines = await page.getByTestId('date').evaluate(el => {
+      const r = document.createRange(); r.selectNodeContents(el);
+      return new Set([...r.getClientRects()].map(x => Math.round(x.top))).size;
+    });
+    expect(lines).toBe(1);
+  });
+
+  test('xs skeletons stay visible in narrow cells', async ({ page }) => {
+    await page.goto('/tests/visual/fixtures/table-overflow.html');
+    const box = await page.getByTestId('skeleton-xs').boundingBox();
+    expect(box!.width).toBeGreaterThanOrEqual(16);
+  });
 });

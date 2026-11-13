@@ -12,7 +12,8 @@ Full notes for each version are on the [Releases page](https://github.com/fitpic
 
 ## Unreleased
 
-_Nothing yet._
+- **Fixed** dates in `.gds-table__cell--secondary` broke onto two lines when the table was tight; secondary cells now stay on one line (`white-space: nowrap`).
+- **Fixed** `.gds-table__skeleton--xs` bars were 3px wide in checkbox and action cells; skeletons are now at least 16px wide (`--table-skeleton-min-width`).
 
 ## 2.9.1 (2026-11-13)
 

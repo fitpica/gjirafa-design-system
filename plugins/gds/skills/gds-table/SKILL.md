@@ -119,14 +119,14 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 | `gds-table__row--selected` | `__row` | state | Selected row background. |
 | `gds-table__cell--checkbox` | `__cell` | content | Narrow centered cell holding a .gds-checkbox. |
 | `gds-table__cell--action` | `__cell` | content | Narrow rightmost cell holding the row overflow button. |
-| `gds-table__cell--secondary` | `__cell` | content | Lighter, smaller text for dates and metadata columns. |
+| `gds-table__cell--secondary` | `__cell` | content | Lighter, smaller text for dates and metadata columns. Stays on one line (white-space: nowrap); put long free text in a normal cell. |
 | `gds-table__cell--header-action` | `__cell` | content | Header text for an action column (e.g. "Edit"). |
 | `gds-table__cell--sortable` | `__cell` | state | Header cell that can be sorted. Shows the sort icon. |
 | `gds-table__cell--sorted` | `__cell` | state | The active sort column (highlights the icon). Required for both directions. Requires `gds-table__cell--sortable`. |
 | `gds-table__cell--sorted-desc` | `__cell` | state | Descending. Added on top of --sorted; rotates the arrow-up icon 180°. Requires `gds-table__cell--sorted`. |
 | `gds-table__cell--sticky-checkbox` | `__cell` | layout | Freezes the checkbox column during horizontal scroll. |
 | `gds-table__cell--sticky-entry` | `__cell` | layout | Freezes the entry (second) column during horizontal scroll. |
-| `gds-table__skeleton--xs` | `__skeleton` | width | 20% width placeholder. |
+| `gds-table__skeleton--xs` | `__skeleton` | width | 20% width placeholder, at least 16px (--table-skeleton-min-width) so it stays visible in checkbox and action cells. |
 | `gds-table__skeleton--short` | `__skeleton` | width | 30% width placeholder. |
 | `gds-table__skeleton--medium` | `__skeleton` | width | 50% width placeholder. |
 | `gds-table__skeleton--wide` | `__skeleton` | width | 70% width placeholder. |
