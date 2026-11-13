@@ -1,13 +1,13 @@
 # Gjirafa Design System (GDS)
 
-> CSS-only design system (gds-* classes, --gds-* tokens) for Gjirafa products. Version 2.8.1. Load the CSS from the CDN, write semantic HTML with GDS classes, and follow each component contract exactly: the DOM structure is the API. Never invent classes, variants or tokens.
+> CSS-only design system (gds-* classes, --gds-* tokens) for Gjirafa products. Version 2.9.0. Load the CSS from the CDN, write semantic HTML with GDS classes, and follow each component contract exactly: the DOM structure is the API. Never invent classes, variants or tokens.
 
 Principles: 1) Accessible by default (every allowed combination passes WCAG AA). 2) Reuse before you create (if GDS lacks something, say so). 3) Obvious over documented.
 
 ## Start here
 
 - [AI guide (full)](https://docs-phi-black.vercel.app/llms-full.txt): setup, principles, rules, tokens and every component in one file
-- [CSS](https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.8.1/docs/gjirafa-ds.css): the only file a page needs; pin the version
+- [CSS](https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.9.0/docs/gjirafa-ds.css): the only file a page needs; pin the version
 - [Claude Code plugin](https://github.com/fitpica/gjirafa-design-system/tree/main/plugins/gds): component skills plus a lint hook (`/plugin install gds --marketplace fitpica/gjirafa-design-system`)
 
 ## Components
@@ -44,7 +44,7 @@ Principles: 1) Accessible by default (every allowed combination passes WCAG AA).
 
 ## Data
 
-- [Design tokens (DTCG 2025.10)](https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.8.1/tokens/gds.resolver.json): resolver with foundation, semantic and theme sets
+- [Design tokens (DTCG 2025.10)](https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.9.0/tokens/gds.resolver.json): resolver with foundation, semantic and theme sets
 - [Component contracts (JSON)](https://github.com/fitpica/gjirafa-design-system/tree/main/components): anatomy, modifiers, a11y, rules and examples per component
 
 ## Optional
