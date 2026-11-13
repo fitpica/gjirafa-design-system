@@ -895,6 +895,24 @@
           }
         }
       },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.423529,
+            0.423529,
+            0.486275
+          ],
+          "hex": "#6c6c7c"
+        },
+        "$extensions": {
+          "com.gjirafa.gds": {
+            "cssVar": "--gds-color-neutral-200",
+            "scss": "$color-neutral-200"
+          }
+        }
+      },
       "300": {
         "$type": "color",
         "$value": {

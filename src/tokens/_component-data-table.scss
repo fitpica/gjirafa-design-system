@@ -80,7 +80,7 @@ $table-bp-mobile: 640px;
   // ---------------------------------------------------------------------------
   --table-action-cell-width:   #{$space-40};
   --table-action-icon-size:    #{$icon-sm};
-  --table-action-color:        var(--gds-color-text-helper);    // icon, 3.59:1 (needs 3:1)
+  --table-action-color:        var(--gds-color-text-helper);    // icon, 5.16:1 (needs 3:1)
   --table-action-hover-color:  var(--gds-color-text-primary);
 
   // ---------------------------------------------------------------------------
@@ -99,7 +99,7 @@ $table-bp-mobile: 640px;
   --table-sort-btn-radius:      #{$radius-s};
   --table-sort-btn-focus-width: #{$space-2};
   --table-sort-btn-focus-color: var(--gds-color-border-focus);
-  --table-sort-color:          var(--gds-color-text-helper);    // icon, 3.59:1 (needs 3:1)
+  --table-sort-color:          var(--gds-color-text-helper);    // icon, 5.16:1 (needs 3:1)
   --table-sort-active-color:   var(--gds-color-action-primary);
 
   // ---------------------------------------------------------------------------

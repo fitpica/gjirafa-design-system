@@ -20,11 +20,11 @@
   // --- Text ---
   --gds-color-text-primary:     #{$color-neutral-700};
   --gds-color-text-secondary:   #{$color-neutral-300};
-  --gds-color-text-tertiary:    #{$color-neutral-80};
+  --gds-color-text-tertiary:    #{$color-neutral-200}; // 5.16:1 (was neutral-80, 2.96:1)
   --gds-color-text-disabled:    #{$color-neutral-60};
-  --gds-color-text-placeholder: #{$color-neutral-80};
+  --gds-color-text-placeholder: #{$color-neutral-200}; // 5.16:1 (was neutral-80, 2.96:1)
   --gds-color-text-label:       #{$color-neutral-400};
-  --gds-color-text-helper:      #{$color-neutral-90};
+  --gds-color-text-helper:      #{$color-neutral-200}; // 5.16:1 (was neutral-90, 3.59:1)
   --gds-color-text-inverse:     #{$color-neutral-0};
 
   // --- Background ---

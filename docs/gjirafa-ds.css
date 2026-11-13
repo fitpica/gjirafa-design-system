@@ -55,6 +55,7 @@
   --gds-color-neutral-80: #9595a0;
   --gds-color-neutral-90: #868693;
   --gds-color-neutral-100: #767685;
+  --gds-color-neutral-200: #6c6c7c;
   --gds-color-neutral-300: #58586a;
   --gds-color-neutral-400: #4b4b5f;
   --gds-color-neutral-700: #1e1e36;
@@ -165,11 +166,11 @@
   --gds-color-action-on-primary: #ffffff;
   --gds-color-text-primary: #1e1e36;
   --gds-color-text-secondary: #58586a;
-  --gds-color-text-tertiary: #9595a0;
+  --gds-color-text-tertiary: #6c6c7c;
   --gds-color-text-disabled: #b1b1b9;
-  --gds-color-text-placeholder: #9595a0;
+  --gds-color-text-placeholder: #6c6c7c;
   --gds-color-text-label: #4b4b5f;
-  --gds-color-text-helper: #868693;
+  --gds-color-text-helper: #6c6c7c;
   --gds-color-text-inverse: #ffffff;
   --gds-color-bg-primary: #ffffff;
   --gds-color-bg-secondary: #F7F7F8;
@@ -7458,6 +7459,18 @@
 
 .gds-border-neutral-100 {
   border-color: #767685;
+}
+
+.gds-bg-neutral-200 {
+  background-color: #6c6c7c;
+}
+
+.gds-text-neutral-200 {
+  color: #6c6c7c;
+}
+
+.gds-border-neutral-200 {
+  border-color: #6c6c7c;
 }
 
 .gds-bg-neutral-300 {
