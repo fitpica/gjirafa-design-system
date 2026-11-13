@@ -11,6 +11,8 @@ Machine-readable tokens for tools and AI agents, in the [Design Tokens Community
 
 Every token carries `$extensions["com.gjirafa.gds"]` with its CSS custom property (`cssVar`) and SCSS source variable (`scss`).
 
+Every semantic token has a `$description`: when to use it, and its contrast on white where that matters. The text lives in `src/tokens/semantic-descriptions.json` (hand-written; figma-sync does not touch it). `npm run test:tokens` fails if a semantic token has no description.
+
 ## Source of truth
 
 For now **SCSS is the source** (`src/tokens`, `src/themes`, written by `npm run figma:sync`). These files are generated from it:
