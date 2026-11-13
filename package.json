@@ -1,6 +1,6 @@
 {
   "name": "@gjirafa/design-system",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "Gjirafa Design System — CSS/SCSS tokens, components, and utilities for CODEX and VP Player",
   "author": "Gjirafa",
   "license": "MIT",

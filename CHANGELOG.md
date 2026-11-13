@@ -5,12 +5,18 @@ All notable changes to GDS. Versions follow [Semantic Versioning](https://semver
 To update, change the version in your CDN link:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.8.0/docs/gjirafa-ds.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.8.1/docs/gjirafa-ds.css" />
 ```
 
 Full notes for each version are on the [Releases page](https://github.com/fitpica/gjirafa-design-system/releases).
 
 ## Unreleased
+
+_Nothing yet._
+
+## 2.8.1 (2026-11-13)
+
+No class or token was renamed or removed.
 
 Fixes from the first product pilot (an All Entries page built with GDS inside an existing app).
 
