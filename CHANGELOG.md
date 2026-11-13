@@ -12,7 +12,12 @@ Full notes for each version are on the [Releases page](https://github.com/fitpic
 
 ## Unreleased
 
-_Nothing yet._
+Table fixes from the first product pilot. No class or token was renamed or removed.
+
+- **Fixed** a table wider than its space was clipped inside `.gds-table-scroll` instead of scrolling (on a phone only the first column was reachable). The frame now grows to the table's width inside the scroll wrapper, and clips its corners with `overflow: clip`, so sticky cells work too.
+- **Fixed** loading skeletons (`.gds-table__skeleton`) rendered 0×0 because the `<span>` had no `display`; their width modifiers work now too.
+- **Fixed** a `.gds-visually-hidden` label in a table header could widen the whole page on small screens; `.gds-table` is now its containing block.
+- **Tests:** phone-width regression tests for all three.
 
 ## 2.9.0 (2026-11-13)
 

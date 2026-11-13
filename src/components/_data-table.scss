@@ -16,12 +16,18 @@
 // Container
 // =============================================================================
 .gds-table {
+  // Containing block for absolutely positioned content (e.g. a .gds-visually-hidden
+  // header label), so it is clipped here instead of widening the whole page.
+  position: relative;
   width: 100%;
   border: var(--table-border-width) solid var(--table-border-color);
   border-radius: var(--table-border-radius);
   background: var(--table-bg);
   font-family: var(--table-font-family);
+  // Clip to the rounded corners. clip (not hidden) does not make the frame a scroll
+  // container, so sticky cells stick to .gds-table-scroll. hidden is the fallback.
   overflow: hidden;
+  overflow: clip;
 }
 
 // Optional: scroll wrapper for horizontal overflow
@@ -29,6 +35,13 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+// Inside the scroll wrapper the frame grows to the table's width, so a wide table
+// scrolls instead of being clipped at the frame edge. Narrow tables still fill 100%.
+.gds-table-scroll > .gds-table {
+  width: fit-content;
+  min-width: 100%;
 }
 
 // =============================================================================
@@ -614,6 +627,7 @@
 }
 
 .gds-table__skeleton {
+  display: block; // an empty <span> is inline and would ignore height and width
   height: var(--table-skeleton-height);
   background: var(--table-skeleton-color);
   border-radius: var(--table-skeleton-radius);

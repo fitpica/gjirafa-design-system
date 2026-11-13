@@ -134,3 +134,32 @@ test('visual: filter bar search does not overlap the next control', async ({ pag
   const next = await page.locator('.gds-filter-bar .gds-dropdown__trigger').first().boundingBox();
   expect(search!.x + search!.width).toBeLessThan(next!.x);
 });
+
+// Regressions from the first product pilot (Nov 2026): on a phone-width screen a wide
+// table inside .gds-table-scroll must scroll (not be clipped), a visually hidden header
+// label must not widen the page, and loading skeletons must be visible.
+test.describe('data table at phone width', () => {
+  test.use({ viewport: { width: 375, height: 700 } });
+
+  test('a wide table scrolls inside .gds-table-scroll', async ({ page }) => {
+    await page.goto('/tests/visual/fixtures/table-overflow.html');
+    const scroll = page.getByTestId('scroll');
+    const { scrollWidth, clientWidth } = await scroll.evaluate(el => ({ scrollWidth: el.scrollWidth, clientWidth: el.clientWidth }));
+    expect(scrollWidth).toBeGreaterThan(clientWidth);
+    await scroll.evaluate(el => { el.scrollLeft = el.scrollWidth; });
+    await expect(page.getByTestId('last-cell')).toBeInViewport();
+  });
+
+  test('a visually hidden header label does not widen the page', async ({ page }) => {
+    await page.goto('/tests/visual/fixtures/table-overflow.html');
+    const width = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(width).toBeLessThanOrEqual(375);
+  });
+
+  test('loading skeletons are visible', async ({ page }) => {
+    await page.goto('/tests/visual/fixtures/table-overflow.html');
+    const box = await page.getByTestId('skeleton').boundingBox();
+    expect(box!.height).toBeGreaterThan(0);
+    expect(box!.width).toBeGreaterThan(0);
+  });
+});

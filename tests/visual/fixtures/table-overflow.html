@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Table overflow and loading fixture</title>
+    <link rel="stylesheet" href="/docs/gjirafa-ds.css" />
+    <style>
+      html, body { margin: 0; }
+      body { font-family: var(--gds-font-family-base); color: var(--gds-color-text-primary); padding: 16px; }
+    </style>
+  </head>
+  <body>
+    <!-- A table wider than a phone screen inside .gds-table-scroll, with a visually
+         hidden header label in the last column, plus a loading table with skeletons.
+         Regression fixture for the first product pilot (Nov 2026). -->
+    <div class="gds-table-scroll" data-testid="scroll">
+      <div class="gds-table" data-testid="wide">
+        <table class="gds-table__table" aria-label="Entries">
+          <thead class="gds-table__head">
+            <tr class="gds-table__row">
+              <th scope="col" class="gds-table__cell">Entry</th>
+              <th scope="col" class="gds-table__cell">Status</th>
+              <th scope="col" class="gds-table__cell">Created by</th>
+              <th scope="col" class="gds-table__cell">Created</th>
+              <th scope="col" class="gds-table__cell">Last updated</th>
+              <th scope="col" class="gds-table__cell">Published</th>
+              <th scope="col" class="gds-table__cell"><span class="gds-visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody class="gds-table__body">
+            <tr class="gds-table__row">
+              <td class="gds-table__cell">Football club speed up a rent cap in Sarajevo</td>
+              <td class="gds-table__cell">Published</td>
+              <td class="gds-table__cell">Codex Importer</td>
+              <td class="gds-table__cell">13/11/2026 08:47</td>
+              <td class="gds-table__cell">13/11/2026 09:31</td>
+              <td class="gds-table__cell">13/11/2026 09:31</td>
+              <td class="gds-table__cell" data-testid="last-cell">…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="gds-table gds-table--loading" data-testid="loading" style="margin-top: 16px">
+      <table class="gds-table__table" aria-label="Loading entries" aria-busy="true">
+        <tbody class="gds-table__body">
+          <tr class="gds-table__row">
+            <td class="gds-table__cell"><span class="gds-table__skeleton gds-table__skeleton--wide" data-testid="skeleton"></span></td>
+            <td class="gds-table__cell"><span class="gds-table__skeleton gds-table__skeleton--short"></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
