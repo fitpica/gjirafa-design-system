@@ -5,16 +5,22 @@ All notable changes to GDS. Versions follow [Semantic Versioning](https://semver
 To update, change the version in your CDN link:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.7.0/docs/gjirafa-ds.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.8.0/docs/gjirafa-ds.css" />
 ```
 
 Full notes for each version are on the [Releases page](https://github.com/fitpica/gjirafa-design-system/releases).
 
 ## Unreleased
 
+_Nothing yet._
+
+## 2.8.0 (2026-11-13)
+
+No class or token was renamed or removed. Three text colours get slightly darker.
+
 - **Added** foundation colour `neutral-200` (`#6c6c7c`), with `--gds-color-neutral-200` and the `.gds-bg-` / `.gds-text-` / `.gds-border-neutral-200` utilities.
-- **Changed (accessibility):** `text-tertiary`, `text-placeholder` and `text-helper` now use `neutral-200` and pass WCAG AA as text: 5.16:1 on white (were 2.96 / 2.96 / 3.59:1). They look slightly darker; table sort and row-action icons too. No class or token was renamed or removed.
-- **Tokens:** every semantic token in `tokens/semantic.tokens.json` (and `dist/tokens.json`) now has a `$description` saying when to use it, with its contrast on white. Three text tokens are marked as failing WCAG AA as text: `text-tertiary`, `text-placeholder`, `text-helper`.
+- **Changed (accessibility):** `text-tertiary`, `text-placeholder` and `text-helper` now use `neutral-200` and pass WCAG AA as text: 5.16:1 on white (were 2.96 / 2.96 / 3.59:1). They look slightly darker, and so do table sort and row-action icons.
+- **Tokens:** every semantic token in `tokens/semantic.tokens.json` (and `dist/tokens.json`) now has a `$description` saying when to use it, with its contrast on white. `npm run test:tokens` fails if a semantic token has none.
 - **Plugin README:** a 1-minute check that the Claude Code plugin is loaded (three questions with expected answers).
 - **CI:** the workflow can be started by hand (`workflow_dispatch`).
 
