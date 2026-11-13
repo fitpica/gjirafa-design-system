@@ -40,6 +40,8 @@ A list screen is these GDS parts, in this order. Load their contract skills for 
 
 ## Rules for this screen
 - No product CSS for layout: `gds-page`, `gds-page-header`, `gds-filter-bar`, `gds-page__section` cover it.
+- Inside an app shell that already has a `<main>` (most Vue/React apps), use `<div class="gds-page">` and set `--page-padding: 0` if the shell already pads its content.
+- Long menus and dropdowns (e.g. a list of models) scroll on their own; give the trigger a search field when there are more than about 10 options.
 - One `<h1>` (the page title) and at most one primary button in the header.
 - Sortable headers: `<button class="gds-table__sort-btn">` inside the `<th>`; the sorted one has `--sorted` (+ `--sorted-desc`) and `aria-sort`.
 - Status cells: Published positive, Draft neutral, Scheduled warning, Archived neutral; dot + label.

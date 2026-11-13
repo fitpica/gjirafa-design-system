@@ -24,7 +24,7 @@
       "tag": "div",
       "required": true,
       "parent": null,
-      "description": "The menu surface: background, border, shadow, column of items. Has no open state and no positioning: the product shows / hides it (hidden attribute) and places it next to its trigger.",
+      "description": "The menu surface: background, border, shadow, column of items. Has no open state and no positioning: the product shows / hides it (hidden attribute) and places it next to its trigger. Long menus scroll inside the panel past 360px (or 60% of the screen height): --menu-max-height.",
       "attributes": {
         "role": "menu",
         "id": "Referenced by aria-controls on the trigger",

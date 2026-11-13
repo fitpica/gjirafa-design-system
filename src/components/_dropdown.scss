@@ -23,6 +23,7 @@
   font-weight: $font-weight-regular;
   line-height: $line-height-normal;
   color: var(--dd-item-text);
+  text-align: left; // a <button> centres its text by default; the label must start on the left
   cursor: pointer;
   min-width: var(--dd-trigger-min-width);
   transition:
