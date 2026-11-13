@@ -19,7 +19,7 @@ Or in a global stylesheet (Vue, React, any bundler):
 @import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.7.0/docs/gjirafa-ds.css');
 ```
 
-Always pin the version (`@v2.7.0`). The Inter font loads automatically.
+Always pin the version (`@v2.7.0`). The Inter font loads automatically. What changed in each version: [CHANGELOG.md](CHANGELOG.md).
 
 > **NPM:** `@gjirafa/design-system` is not published yet — use the CDN link above.
 
