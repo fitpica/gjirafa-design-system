@@ -42,7 +42,7 @@
     "The dot and icon are decorative; the label carries the meaning."
   ],
   "rules": [
-    { "id": "badge-content-status", "rule": "Content status mapping: Published → positive, Draft → neutral, Scheduled → warning, Archived → neutral.", "why": "Design decision (11 Nov 2026). Scheduled changes state on its own, so it draws attention; Draft and Archived need no action.", "principle": 2, "autoCheck": true },
+    { "id": "badge-content-status", "rule": "Content status mapping: Published → positive, Draft → neutral, Scheduled → warning, Archived → neutral, Edited → info, Unpublished → neutral, Deleted → critical.", "why": "Design decisions (11 and 13 Nov 2026). Scheduled changes state on its own and Edited has unpublished changes, so both draw attention; Draft, Archived and Unpublished need no action; Deleted is a loss.", "principle": 2, "autoCheck": true },
     { "id": "badge-status-dot-label", "rule": "Status badges use the dot + label form.", "why": "Status is not shown by colour alone.", "principle": 1, "autoCheck": true },
     { "id": "badge-one-variant", "rule": "A badge has exactly one colour variant.", "why": "Two variants on one badge produce an undefined colour.", "principle": 3, "autoCheck": true },
     { "id": "badge-not-interactive", "rule": "A badge is never a button or link.", "why": "Badges have no hover or focus styles.", "principle": 1, "autoCheck": true }

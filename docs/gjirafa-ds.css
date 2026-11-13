@@ -809,6 +809,7 @@
   --table-header-font-weight: 600;
   --table-header-line-height: 1.5;
   --table-row-height: 40px;
+  --table-row-height-comfortable: 48px;
   --table-row-bg: var(--gds-color-bg-primary);
   --table-row-color: var(--gds-color-text-primary);
   --table-row-font-size: 14px;
@@ -5412,6 +5413,10 @@
 .gds-table--borderless {
   border: none;
   border-radius: 0px;
+}
+
+.gds-table--comfortable {
+  --table-row-height: var(--table-row-height-comfortable);
 }
 
 .gds-table--compact .gds-table__head .gds-table__row {

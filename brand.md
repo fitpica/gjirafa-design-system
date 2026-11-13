@@ -768,7 +768,7 @@ Lets people turn one option on or off, or pick several options from a list.
 |---|---|---|---|---|
 | `gds-checkbox` | label | yes | top level | Wrapper. A <label>, so clicking the text toggles the box. |
 | `gds-checkbox__input` | input | yes | `gds-checkbox` | Native checkbox, visually hidden but focusable. Its :checked state drives the visual. Attributes: `type` (checkbox), `aria-label` (Required when there is no visible label (e.g. in table cells)). |
-| `gds-checkbox__control` | span | yes | `gds-checkbox` | The visible box. Must come after the input (CSS uses the ~ sibling selector). Contains the icon: <i data-lucide="check"></i>, or "minus" for mixed. |
+| `gds-checkbox__control` | span | yes | `gds-checkbox` or `gds-dropdown__item` | The visible box. Must come after the input (CSS uses the ~ sibling selector). Contains the icon: <i data-lucide="check"></i>, or "minus" for mixed. Inside a multi-select .gds-dropdown__item it is used on its own, without .gds-checkbox or an <input> (an input is not allowed inside the item button): add aria-hidden="true"; the item carries the state with aria-selected. |
 | `gds-checkbox__label` | span | no | `gds-checkbox` | Visible label text. |
 | `gds-checkbox__helper` | span | no | `gds-checkbox` | Helper text under the label. |
 
@@ -1198,7 +1198,7 @@ A small label that shows the status or category of something.
 - The dot and icon are decorative; the label carries the meaning.
 
 **Rules:**
-- Content status mapping: Published → positive, Draft → neutral, Scheduled → warning, Archived → neutral. *Why:* Design decision (11 Nov 2026). Scheduled changes state on its own, so it draws attention; Draft and Archived need no action. (Reuse before you create · auto-checkable)
+- Content status mapping: Published → positive, Draft → neutral, Scheduled → warning, Archived → neutral, Edited → info, Unpublished → neutral, Deleted → critical. *Why:* Design decisions (11 and 13 Nov 2026). Scheduled changes state on its own and Edited has unpublished changes, so both draw attention; Draft, Archived and Unpublished need no action; Deleted is a loss. (Reuse before you create · auto-checkable)
 - Status badges use the dot + label form. *Why:* Status is not shown by colour alone. (Accessible by default · auto-checkable)
 - A badge has exactly one colour variant. *Why:* Two variants on one badge produce an undefined colour. (Obvious over documented · auto-checkable)
 - A badge is never a button or link. *Why:* Badges have no hover or focus styles. (Accessible by default · auto-checkable)
@@ -1718,7 +1718,7 @@ A trigger that opens a panel of options: single select, multi-select, searchable
 | `gds-dropdown__trigger--sm` | `__trigger` | size | Small trigger. |
 | `gds-dropdown__trigger--lg` | `__trigger` | size | Large trigger. |
 | `gds-dropdown__item--selected` | `__item` | state | Selected (single select). Shows __check. |
-| `gds-dropdown__item--checked` | `__item` | state | Checked (multi-select, with a .gds-checkbox__control inside). |
+| `gds-dropdown__item--checked` | `__item` | state | Checked (multi-select). The item holds a decorative <span class="gds-checkbox__control" aria-hidden="true"> with the Lucide check icon (no .gds-checkbox wrapper, no <input>), and has role="option" with aria-selected="true". |
 | `gds-dropdown__item--disabled` | `__item` | state | Not selectable. Also set disabled. |
 | `gds-dropdown__item--rich` | `__item` | layout | Icon/avatar + label + description layout. |
 
@@ -2097,6 +2097,7 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 | Class | On | Group | Effect |
 |---|---|---|---|
 | `gds-table--compact` | `gds-table` | layout | Denser rows. |
+| `gds-table--comfortable` | `gds-table` | layout | 48px body rows instead of 40px, for cells with two lines (title + subtitle, e.g. an entry and its author). |
 | `gds-table--striped` | `gds-table` | style | Alternating row background. |
 | `gds-table--borderless` | `gds-table` | style | No container border. |
 | `gds-table--cards` | `gds-table` | layout | Each row is a separate card with shadow and gap. |

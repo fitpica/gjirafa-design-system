@@ -12,7 +12,11 @@ Full notes for each version are on the [Releases page](https://github.com/fitpic
 
 ## Unreleased
 
-_Nothing yet._
+More gaps from the first product pilot.
+
+- **Added** `gds-table--comfortable`: 48px body rows (instead of 40px) for cells with two lines, such as an entry title and its author.
+- **Changed** content-status badges cover three more statuses: Edited → `info`, Unpublished → `neutral`, Deleted → `critical`. The lint checks them.
+- **Fixed (contracts)** a multi-select dropdown could not pass the lint: the dropdown contract put a `.gds-checkbox__control` in the item, the checkbox contract required it inside `.gds-checkbox` with an `<input>`. The control may now sit directly in a `.gds-dropdown__item` as a decorative element (`aria-hidden="true"`, state on `aria-selected`).
 
 ## 2.8.1 (2026-11-13)
 
