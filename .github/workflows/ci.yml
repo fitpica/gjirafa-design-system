@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # Manual "Run workflow" button (Actions tab), for re-running main when a run gets stuck.
+  workflow_dispatch:
 
 permissions:
   contents: read
