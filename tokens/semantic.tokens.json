@@ -4,6 +4,7 @@
   "color": {
     "brand": {
       "primary": {
+        "$description": "Brand colour of the current product theme (blue in codex, orange in vpplayer). Use for brand marks and accents, not for interactive controls: use action-primary for those.",
         "$type": "color",
         "$value": "{color.blue.500}",
         "$extensions": {
@@ -16,6 +17,7 @@
     },
     "action": {
       "primary": {
+        "$description": "Fill or text of the main interactive element: primary button, link, selected item, active tab indicator. 4.94:1 on white. One primary action per view.",
         "$type": "color",
         "$value": "{color.blue.500}",
         "$extensions": {
@@ -26,6 +28,7 @@
         }
       },
       "primary-hover": {
+        "$description": "action-primary on pointer hover. Use only as the :hover state of an element that uses action-primary.",
         "$type": "color",
         "$value": "{color.blue.600}",
         "$extensions": {
@@ -36,6 +39,7 @@
         }
       },
       "primary-active": {
+        "$description": "action-primary while pressed (:active) or toggled on. Use only as a state of an element that uses action-primary.",
         "$type": "color",
         "$value": "{color.blue.700}",
         "$extensions": {
@@ -46,6 +50,7 @@
         }
       },
       "on-primary": {
+        "$description": "Text and icons placed on an action-primary fill, such as the label of a primary button. 4.94:1 on action-primary.",
         "$type": "color",
         "$value": "{color.neutral.0}",
         "$extensions": {
@@ -58,6 +63,7 @@
     },
     "text": {
       "primary": {
+        "$description": "Default text: body copy, headings, table cell values, input values. 16.2:1 on white.",
         "$type": "color",
         "$value": "{color.neutral.700}",
         "$extensions": {
@@ -68,6 +74,7 @@
         }
       },
       "secondary": {
+        "$description": "Supporting text that must stay readable: descriptions, subtitles, metadata, secondary table columns, and placeholders inside components. 6.96:1 on white (passes AA).",
         "$type": "color",
         "$value": "{color.neutral.300}",
         "$extensions": {
@@ -78,6 +85,7 @@
         }
       },
       "tertiary": {
+        "$description": "Decorative or repeated text that is not needed to understand the screen. 2.96:1 on white: FAILS WCAG AA as text. Prefer text-secondary for anything a user must read.",
         "$type": "color",
         "$value": "{color.neutral.80}",
         "$extensions": {
@@ -88,6 +96,7 @@
         }
       },
       "disabled": {
+        "$description": "Text and icons of disabled controls only. 2.13:1 on white, allowed by WCAG because disabled controls are exempt. Never use it to make active text look quieter.",
         "$type": "color",
         "$value": "{color.neutral.60}",
         "$extensions": {
@@ -98,6 +107,7 @@
         }
       },
       "placeholder": {
+        "$description": "Legacy placeholder colour, kept for .gds-text-placeholder and as a chip fallback. 2.96:1 on white: FAILS WCAG AA. Components use text-secondary for placeholders since v2.6.2; do not use this for new work.",
         "$type": "color",
         "$value": "{color.neutral.80}",
         "$extensions": {
@@ -108,6 +118,7 @@
         }
       },
       "label": {
+        "$description": "Form labels, table column headers, group titles in menus and panels. 8.5:1 on white.",
         "$type": "color",
         "$value": "{color.neutral.400}",
         "$extensions": {
@@ -118,6 +129,7 @@
         }
       },
       "helper": {
+        "$description": "Secondary icons in components: table sort and row-action icons, tab close icon. 3.59:1 on white: passes the 3:1 minimum for icons, FAILS WCAG AA for text. For helper text under a field use text-secondary.",
         "$type": "color",
         "$value": "{color.neutral.90}",
         "$extensions": {
@@ -128,6 +140,7 @@
         }
       },
       "inverse": {
+        "$description": "Text and icons on dark fills, such as a toast or a dark tooltip. Do not use on white.",
         "$type": "color",
         "$value": "{color.neutral.0}",
         "$extensions": {
@@ -140,6 +153,7 @@
     },
     "bg": {
       "primary": {
+        "$description": "Default surface: cards, inputs, modals, menus, table rows. White in the default theme.",
         "$type": "color",
         "$value": "{color.neutral.0}",
         "$extensions": {
@@ -150,6 +164,7 @@
         }
       },
       "secondary": {
+        "$description": "Page background behind cards (gds-page) and hover fill of secondary buttons and calendar days. Text colours keep AA on it except warning-text (4.36:1).",
         "$type": "color",
         "$value": "{color.neutral.20}",
         "$extensions": {
@@ -160,6 +175,7 @@
         }
       },
       "tertiary": {
+        "$description": "Pressed (:active) fill of secondary and ghost buttons, table header and striped rows, current page in pagination, skeleton blocks.",
         "$type": "color",
         "$value": "{color.neutral.25}",
         "$extensions": {
@@ -170,6 +186,7 @@
         }
       },
       "disabled": {
+        "$description": "Fill of disabled inputs and buttons. Pair with text-disabled.",
         "$type": "color",
         "$value": "{color.neutral.30}",
         "$extensions": {
@@ -182,6 +199,7 @@
     },
     "border": {
       "default": {
+        "$description": "Default border of inputs, cards, buttons and dividers. Decorative (1.34:1): never the only cue for a control's edge or state.",
         "$type": "color",
         "$value": "{color.neutral.40}",
         "$extensions": {
@@ -192,6 +210,7 @@
         }
       },
       "strong": {
+        "$description": "Hover border of inputs, secondary buttons, checkboxes and radios (.gds-border-hover). 2.96:1 on white, slightly under the 3:1 non-text minimum, so it must not be the only hover cue.",
         "$type": "color",
         "$value": "{color.neutral.80}",
         "$extensions": {
@@ -202,6 +221,7 @@
         }
       },
       "focus": {
+        "$description": "Keyboard focus ring and focused input border. Every focusable element must show it on :focus-visible. 4.94:1 on white.",
         "$type": "color",
         "$value": "{color.blue.500}",
         "$extensions": {
@@ -212,6 +232,7 @@
         }
       },
       "subtle": {
+        "$description": "Light separators inside a surface: table row lines, menu and panel dividers, calendar grid.",
         "$type": "color",
         "$value": "{color.neutral.30}",
         "$extensions": {
@@ -224,6 +245,7 @@
     },
     "feedback": {
       "error": {
+        "$description": "Error fills, icons, dots and borders (input error border, error badge dot). 3.56:1 on white: never use as text colour, use error-text.",
         "$type": "color",
         "$value": "{color.red.500}",
         "$extensions": {
@@ -234,6 +256,7 @@
         }
       },
       "error-text": {
+        "$description": "Error messages and error text. 6.31:1 on white.",
         "$type": "color",
         "$value": "{color.red.700}",
         "$extensions": {
@@ -244,6 +267,7 @@
         }
       },
       "success": {
+        "$description": "Success fills, icons, dots and borders. 3.97:1 on white: never use as text colour, use success-text.",
         "$type": "color",
         "$value": "{color.green.500}",
         "$extensions": {
@@ -254,6 +278,7 @@
         }
       },
       "success-text": {
+        "$description": "Success messages and success text. 6.86:1 on white.",
         "$type": "color",
         "$value": "{color.green.700}",
         "$extensions": {
@@ -264,6 +289,7 @@
         }
       },
       "warning": {
+        "$description": "Warning fills, icons, dots and borders. 3.00:1 on white: never use as text colour, use warning-text.",
         "$type": "color",
         "$value": "{color.orange.600}",
         "$extensions": {
@@ -274,6 +300,7 @@
         }
       },
       "warning-text": {
+        "$description": "Warning messages and warning text. 4.67:1 on white, 4.36:1 on bg-secondary (fails AA there: place warning text on white).",
         "$type": "color",
         "$value": "{color.orange.700}",
         "$extensions": {

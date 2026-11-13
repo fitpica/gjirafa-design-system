@@ -12,6 +12,7 @@ Full notes for each version are on the [Releases page](https://github.com/fitpic
 
 ## Unreleased
 
+- **Tokens:** every semantic token in `tokens/semantic.tokens.json` (and `dist/tokens.json`) now has a `$description` saying when to use it, with its contrast on white. Three text tokens are marked as failing WCAG AA as text: `text-tertiary`, `text-placeholder`, `text-helper`.
 - **Plugin README:** a 1-minute check that the Claude Code plugin is loaded (three questions with expected answers).
 - **CI:** the workflow can be started by hand (`workflow_dispatch`).
 

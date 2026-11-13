@@ -60,6 +60,13 @@ function scssSources() {
   };
 }
 
+// Hand-written "when to use" text for each semantic token (figma-sync never touches it).
+const DESCRIPTIONS = resolve(SRC, 'tokens', 'semantic-descriptions.json');
+function semanticDescriptions() {
+  const { $comment, ...d } = JSON.parse(readFileSync(DESCRIPTIONS, 'utf8'));
+  return d;
+}
+
 // ---------------------------------------------------------------------------
 // 3. Name → DTCG path, and path → $type
 // ---------------------------------------------------------------------------
@@ -224,7 +231,11 @@ function extract() {
     if (RAW(p)) { raw[cssVar] = css.root[cssVar]; continue; }
     setIn(foundation, ...leaf(cssVar, scssVar, css.root[cssVar], { allowAlias: false }));
   }
-  for (const [cssVar, scssVar] of Object.entries(scss.semantic)) setIn(semantic, ...leaf(cssVar, scssVar, css.root[cssVar], { allowAlias: true }));
+  const descriptions = semanticDescriptions();
+  for (const [cssVar, scssVar] of Object.entries(scss.semantic)) {
+    const [p, t] = leaf(cssVar, scssVar, css.root[cssVar], { allowAlias: true });
+    setIn(semantic, p, descriptions[cssVar] ? { $description: descriptions[cssVar], ...t } : t);
+  }
   for (const [cssVar, scssVar] of Object.entries(scss.vpplayer)) setIn(vpplayer, ...leaf(cssVar, scssVar, css.vpplayer[cssVar], { allowAlias: true }));
 
   foundation.$extensions = {
@@ -331,6 +342,15 @@ function check() {
     }
     console.log(`${ok === names.size ? '✓' : '✗'} ${theme}: ${ok}/${names.size} --gds-* values identical to compiled CSS`);
   }
+  // Every semantic token needs a description, and every description a token.
+  const semanticVars = Object.keys(scssSources().semantic);
+  const descriptions = semanticDescriptions();
+  const missing = semanticVars.filter(v => !descriptions[v]?.trim());
+  const unknown = Object.keys(descriptions).filter(v => !semanticVars.includes(v));
+  for (const v of missing) console.log(`  ✗ ${v}: no description in src/tokens/semantic-descriptions.json`);
+  for (const v of unknown) console.log(`  ✗ ${v}: described in src/tokens/semantic-descriptions.json but not a semantic token`);
+  console.log(`${missing.length + unknown.length ? '✗' : '✓'} descriptions: ${semanticVars.length - missing.length}/${semanticVars.length} semantic tokens described`);
+  failures += missing.length + unknown.length;
   if (failures) { console.error(`\n${failures} mismatch(es). Run "node scripts/tokens.mjs extract" after changing SCSS.`); process.exit(1); }
 }
 
