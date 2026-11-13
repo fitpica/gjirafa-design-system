@@ -161,7 +161,7 @@ Every GDS component will automatically adopt your brand colors.
 
 **Purple:** 50 `#f4f2fc` | 100 `#dbd6f7` | 300 `#b2a7ed` | 500 `#8c7be4` | 600 `#7f70cf` | 700 `#6357a2` | 900 `#3b3460`
 
-**Neutral:** 0 `#ffffff` | 20 `#F7F7F8` | 25 `#f1f1f3` | 30 `#ebebed` | 40 `#dedee2` | 50 `#c0c0c7` | 60 `#b1b1b9` | 80 `#9595a0` | 90 `#868693` | 100 `#767685` | 300 `#58586a` | 400 `#4b4b5f` | 700 `#1e1e36` | 900 `#02021d`
+**Neutral:** 0 `#ffffff` | 20 `#F7F7F8` | 25 `#f1f1f3` | 30 `#ebebed` | 40 `#dedee2` | 50 `#c0c0c7` | 60 `#b1b1b9` | 80 `#9595a0` | 90 `#868693` | 100 `#767685` | 200 `#6c6c7c` | 300 `#58586a` | 400 `#4b4b5f` | 700 `#1e1e36` | 900 `#02021d`
 
 CSS usage: `var(--gds-color-{hue}-{step})` e.g. `var(--gds-color-blue-500)`
 
@@ -212,8 +212,7 @@ WCAG AA needs **4.5:1** for normal text and **3:1** for large text (18px+, or 14
 | `error-text` | 6.31 | 5.89 | ✅ Error messages |
 | `success-text` | 6.86 | 6.40 | ✅ Success messages |
 | `warning-text` | 4.67 | 4.36 | ⚠️ On white only. On `bg-secondary` it fails AA |
-| `text-helper` | 3.59 | 3.36 | ❌ Not for text. Large text or icons only |
-| `text-tertiary` / `text-placeholder` | 2.96 | 2.77 | ❌ Placeholders and decorative only, never for information |
+| `text-tertiary` / `text-placeholder` / `text-helper` | 5.16 | 4.81 | ✅ Metadata, placeholders, hints, secondary icons (lighter than `text-secondary`) |
 | `text-disabled` | 2.13 | 1.99 | Disabled state only (exempt from WCAG) |
 | `error` / `success` / `warning` | 3.56 / 3.97 / 3.00 | — | ❌ Never as text. Fills, dots, icons, borders only |
 

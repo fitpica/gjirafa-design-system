@@ -85,13 +85,13 @@
         }
       },
       "tertiary": {
-        "$description": "Decorative or repeated text that is not needed to understand the screen. 2.96:1 on white: FAILS WCAG AA as text. Prefer text-secondary for anything a user must read.",
+        "$description": "Third level of text: metadata, dates and counts under a title, quiet captions. 5.16:1 on white, 4.81:1 on bg-secondary (passes AA). Lighter than text-secondary, so use it where hierarchy needs a third step.",
         "$type": "color",
-        "$value": "{color.neutral.80}",
+        "$value": "{color.neutral.200}",
         "$extensions": {
           "com.gjirafa.gds": {
             "cssVar": "--gds-color-text-tertiary",
-            "scss": "$color-neutral-80"
+            "scss": "$color-neutral-200"
           }
         }
       },
@@ -107,13 +107,13 @@
         }
       },
       "placeholder": {
-        "$description": "Legacy placeholder colour, kept for .gds-text-placeholder and as a chip fallback. 2.96:1 on white: FAILS WCAG AA. Components use text-secondary for placeholders since v2.6.2; do not use this for new work.",
+        "$description": "Placeholder text in inputs and search fields. 5.16:1 on white (passes AA) and still clearly lighter than the typed value (text-primary). Components use text-secondary today; both pass.",
         "$type": "color",
-        "$value": "{color.neutral.80}",
+        "$value": "{color.neutral.200}",
         "$extensions": {
           "com.gjirafa.gds": {
             "cssVar": "--gds-color-text-placeholder",
-            "scss": "$color-neutral-80"
+            "scss": "$color-neutral-200"
           }
         }
       },
@@ -129,13 +129,13 @@
         }
       },
       "helper": {
-        "$description": "Secondary icons in components: table sort and row-action icons, tab close icon. 3.59:1 on white: passes the 3:1 minimum for icons, FAILS WCAG AA for text. For helper text under a field use text-secondary.",
+        "$description": "Secondary icons in components (table sort and row-action icons, tab close icon) and short hints. 5.16:1 on white: passes AA for text and the 3:1 minimum for icons. For helper text under a form field, components use text-secondary.",
         "$type": "color",
-        "$value": "{color.neutral.90}",
+        "$value": "{color.neutral.200}",
         "$extensions": {
           "com.gjirafa.gds": {
             "cssVar": "--gds-color-text-helper",
-            "scss": "$color-neutral-90"
+            "scss": "$color-neutral-200"
           }
         }
       },
@@ -164,7 +164,7 @@
         }
       },
       "secondary": {
-        "$description": "Page background behind cards (gds-page) and hover fill of secondary buttons and calendar days. Text colours keep AA on it except warning-text (4.36:1).",
+        "$description": "Page background behind cards (gds-page) and hover fill of secondary buttons and calendar days. All text tokens keep AA on it except warning-text (4.36:1).",
         "$type": "color",
         "$value": "{color.neutral.20}",
         "$extensions": {

@@ -121,8 +121,7 @@ borders only; text must use the `*-text` tokens.
 
 Neither theme overrides these tokens.
 
-### Not fixed here
-`--gds-color-text-tertiary` (#9595a0, 2.96:1 on white) still fails as text.
-Components no longer use it for readable text, but the docs site does (section
-labels, nav labels, tags). Needs a separate decision: darken the token, or keep
-it decorative only.
+### Fixed in v2.8.0
+`--gds-color-text-tertiary`, `--gds-color-text-placeholder` and `--gds-color-text-helper`
+now use the new `neutral-200` (#6c6c7c): 5.16:1 on white, 4.81:1 on `bg-secondary`.
+They were 2.96 / 2.96 / 3.59:1.
