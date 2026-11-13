@@ -12,7 +12,11 @@ Full notes for each version are on the [Releases page](https://github.com/fitpic
 
 ## Unreleased
 
-_Nothing yet._
+Fixes from the first product pilot (an All Entries page built with GDS inside an existing app).
+
+- **Fixed** dropdown trigger text was centred; it now starts on the left.
+- **Fixed** long `.gds-menu` lists ran off the screen; they now scroll past 360px (or 60% of the screen height). Override with `--menu-max-height`.
+- **Docs (page contract):** inside an app shell that already has a `<main>`, use `<div class="gds-page">`, and remove the frame padding with `--page-padding: 0`.
 
 ## 2.8.0 (2026-11-13)
 

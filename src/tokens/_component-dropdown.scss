@@ -16,6 +16,7 @@
   --dd-panel-min-width:      calc(#{$space-80} * 2);
   --dd-panel-max-width:      calc(#{$space-80} * 4);
   --dd-list-max-height:      calc(#{$space-80} * 3 + #{$space-40});
+  --menu-max-height:         min(#{$space-80} * 4 + #{$space-40}, 60vh); // 360px or 60% of the screen; .gds-menu scrolls past this
   --dd-tag-max-width:        calc(#{$space-80} + #{$space-40});
   --dd-tag-remove-size:      #{$space-12};
 

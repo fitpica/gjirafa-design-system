@@ -26,10 +26,10 @@
   "anatomy": [
     {
       "class": "gds-page",
-      "tag": "main",
+      "tag": "main | div",
       "required": true,
       "parent": null,
-      "description": "The page frame: light grey background, padding, vertical gap between its children. White surfaces (table, cards) sit on it."
+      "description": "The page frame: light grey background, padding, vertical gap between its children. White surfaces (table, cards) sit on it. Use <main> when the page is the whole app; use <div> inside an app shell that already has a <main>. The shell can remove the frame padding with --page-padding: 0 (and --page-padding-mobile: 0)."
     },
     {
       "class": "gds-page-header",
@@ -95,7 +95,7 @@
   ],
   "states": [],
   "a11y": [
-    "Use <main> for gds-page and exactly one <h1> (the page title).",
+    "Exactly one <main> per document: gds-page is the <main>, unless an app shell already provides one (then gds-page is a <div> inside it). Exactly one <h1> (the page title).",
     "Give a breadcrumb <nav> an aria-label.",
     "If a section has no visible heading, give it aria-label."
   ],
@@ -141,6 +141,10 @@
     {
       "issue": "gds-page uses min-height: 100%, so the grey background only fills the viewport when html and body have height: 100% (or the app shell gives the page a height).",
       "fix": "Document html, body { height: 100% } in Setup, or use min-height: 100dvh when the page is the whole viewport."
+    },
+    {
+      "issue": "Inside an app shell that has its own padding, gds-page adds its padding on top.",
+      "fix": "Set --page-padding: 0 and --page-padding-mobile: 0 on the shell or on the page. Reported in the first product pilot (Nov 2026)."
     }
   ],
   "examples": [

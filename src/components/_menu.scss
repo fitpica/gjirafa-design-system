@@ -20,6 +20,10 @@
   box-shadow: var(--dd-shadow);
   min-width: var(--dd-panel-min-width);
   max-width: var(--dd-panel-max-width);
+  // Long menus (e.g. a list of models) scroll inside the panel instead of running off the screen.
+  max-height: var(--menu-max-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 // --- Menu item ---

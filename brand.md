@@ -379,7 +379,7 @@ The frame of a product screen: page background, padding and spacing, and the hea
 
 | Element | Tag | Required | Inside | Notes |
 |---|---|---|---|---|
-| `gds-page` | main | yes | top level | The page frame: light grey background, padding, vertical gap between its children. White surfaces (table, cards) sit on it. |
+| `gds-page` | main \| div | yes | top level | The page frame: light grey background, padding, vertical gap between its children. White surfaces (table, cards) sit on it. Use <main> when the page is the whole app; use <div> inside an app shell that already has a <main>. The shell can remove the frame padding with --page-padding: 0 (and --page-padding-mobile: 0). |
 | `gds-page-header` | header | no | `gds-page` | Title on the left, actions on the right. Wraps on narrow screens. |
 | `gds-page-header__text` | div | yes | `gds-page-header` | Stacks breadcrumb, title and description. |
 | `gds-page-header__breadcrumb` | nav | no | `gds-page-header__text` | Optional breadcrumb above the title. Attributes: `aria-label` (Breadcrumb). |
@@ -395,7 +395,7 @@ The frame of a product screen: page background, padding and spacing, and the hea
 | `gds-page--narrow` | `gds-page` | width | Centres the page at 640px max. Use for forms and settings. |
 
 **Accessibility:**
-- Use <main> for gds-page and exactly one <h1> (the page title).
+- Exactly one <main> per document: gds-page is the <main>, unless an app shell already provides one (then gds-page is a <div> inside it). Exactly one <h1> (the page title).
 - Give a breadcrumb <nav> an aria-label.
 - If a section has no visible heading, give it aria-label.
 
@@ -408,6 +408,7 @@ The frame of a product screen: page background, padding and spacing, and the hea
 **Known issues** (flag them; work around one only where it says how, using GDS tokens):
 - No docs page yet; only this contract and the AI guide describe it. *Planned fix:* Add a Page patterns page to the docs site.
 - gds-page uses min-height: 100%, so the grey background only fills the viewport when html and body have height: 100% (or the app shell gives the page a height). *Planned fix:* Document html, body { height: 100% } in Setup, or use min-height: 100dvh when the page is the whole viewport.
+- Inside an app shell that has its own padding, gds-page adds its padding on top. *Planned fix:* Set --page-padding: 0 and --page-padding-mobile: 0 on the shell or on the page. Reported in the first product pilot (Nov 2026).
 
 *Generated from `components/page.json`. Edit that file, then run `npm run brand`.*
 <!-- gds:component:page:end -->
@@ -1822,7 +1823,7 @@ A list of actions on demand: overflow ("more") menus, context menus, row actions
 
 | Element | Tag | Required | Inside | Notes |
 |---|---|---|---|---|
-| `gds-menu` | div | yes | top level | The menu surface: background, border, shadow, column of items. Has no open state and no positioning: the product shows / hides it (hidden attribute) and places it next to its trigger. Attributes: `role` (menu), `id` (Referenced by aria-controls on the trigger), `aria-label` (e.g. "Article actions" (or aria-labelledby the trigger)). |
+| `gds-menu` | div | yes | top level | The menu surface: background, border, shadow, column of items. Has no open state and no positioning: the product shows / hides it (hidden attribute) and places it next to its trigger. Long menus scroll inside the panel past 360px (or 60% of the screen height): --menu-max-height. Attributes: `role` (menu), `id` (Referenced by aria-controls on the trigger), `aria-label` (e.g. "Article actions" (or aria-labelledby the trigger)). |
 | `gds-menu__group` | div | no | `gds-menu` | Small uppercase heading above a set of items. A sibling of the items, not a wrapper. Attributes: `role` (presentation). |
 | `gds-menu__item` | button | yes, repeats | `gds-menu` | One action. Full-width <button>. Attributes: `type` (button), `role` (menuitem), `tabindex` (-1 (roving: the focused item gets focus via JS)), `aria-disabled` ("true" with --disabled), `aria-haspopup` ("menu" when it opens a submenu (with __trailing)), `aria-keyshortcuts` (When __shortcut is shown, e.g. "Control+D"). |
 | `gds-menu__icon` | span | no | `gds-menu__item` | Leading icon (16px; 20px in --rich). Decorative. |

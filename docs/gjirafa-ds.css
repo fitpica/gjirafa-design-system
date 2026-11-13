@@ -305,6 +305,7 @@
   --dd-panel-min-width: calc(80px * 2);
   --dd-panel-max-width: calc(80px * 4);
   --dd-list-max-height: calc(80px * 3 + 40px);
+  --menu-max-height: min(80px * 4 + 40px, 60vh);
   --dd-tag-max-width: calc(80px + 40px);
   --dd-tag-remove-size: 12px;
   --dd-bg: var(--gds-color-bg-primary);
@@ -2278,6 +2279,9 @@
   box-shadow: var(--dd-shadow);
   min-width: var(--dd-panel-min-width);
   max-width: var(--dd-panel-max-width);
+  max-height: var(--menu-max-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .gds-menu__item {
@@ -2408,6 +2412,7 @@
   font-weight: 400;
   line-height: 1.5;
   color: var(--dd-item-text);
+  text-align: left;
   cursor: pointer;
   min-width: var(--dd-trigger-min-width);
   transition: border-color 0.1s cubic-bezier(0.2, 0, 0.38, 0.9), box-shadow 0.1s cubic-bezier(0.2, 0, 0.38, 0.9);
