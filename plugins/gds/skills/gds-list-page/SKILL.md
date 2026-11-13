@@ -3,7 +3,7 @@ name: gds-list-page
 description: GDS recipe for a full list screen (entries, assets, users, orders): page frame, page header, filter bar, bulk-action bar, data table and pagination, assembled exactly as GDS expects. Load when building a screen that lists records.
 ---
 
-# List page recipe (GDS v2.9.0)
+# List page recipe (GDS v2.9.1)
 
 A list screen is these GDS parts, in this order. Load their contract skills for details (`gds-page`, `gds-filter-bar`, `gds-table`, `gds-pagination`, plus `gds-badge`, `gds-checkbox`, `gds-avatar`, `gds-button`, `gds-dropdown`, `gds-input` for the cells and controls).
 
