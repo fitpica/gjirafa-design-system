@@ -3,23 +3,23 @@
 > Foundation tokens, components, and utilities for CODEX and VP Player.
 > Class-based SCSS/CSS — no framework lock-in. Two themes, one source of truth.
 
-**[Live docs →](https://docs-phi-black.vercel.app)** · **[Install →](https://docs-phi-black.vercel.app/?page=install&lang=html)** · Current version: **v2.8.1**
+**[Live docs →](https://docs-phi-black.vercel.app)** · **[Install →](https://docs-phi-black.vercel.app/?page=install&lang=html)** · Current version: **v2.9.0**
 
 ---
 
 ## Install (CDN)
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.8.1/docs/gjirafa-ds.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.9.0/docs/gjirafa-ds.css">
 ```
 
 Or in a global stylesheet (Vue, React, any bundler):
 
 ```css
-@import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.8.1/docs/gjirafa-ds.css');
+@import url('https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.9.0/docs/gjirafa-ds.css');
 ```
 
-Always pin the version (`@v2.8.1`). The Inter font loads automatically. What changed in each version: [CHANGELOG.md](CHANGELOG.md).
+Always pin the version (`@v2.9.0`). The Inter font loads automatically. What changed in each version: [CHANGELOG.md](CHANGELOG.md).
 
 > **NPM:** `@gjirafa/design-system` is not published yet — use the CDN link above.
 
