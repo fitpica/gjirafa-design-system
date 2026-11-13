@@ -24,6 +24,25 @@ claude plugin install gds@gjirafa
 
 Update later with `/plugin update gds@gjirafa` (or turn on auto-update for the `gjirafa` marketplace in `/plugin`). The plugin version matches the GDS version.
 
+## Check that it works (1 minute)
+
+After installing, start a new Claude Code session in your project and paste this:
+
+```
+Answer from the GDS skills, in one line each, without writing code:
+1. Which classes does pagination under a table use, and is it a <nav> or a <ul>?
+2. How do you show an entry whose status is "Scheduled"?
+3. GDS has no component for something your screen needs. What do you do?
+```
+
+If Claude loaded GDS, it answers like this:
+
+1. `gds-pagination-bar gds-pagination-bar--full`, with the buttons inside a `<nav>`, never `<ul>/<li>`.
+2. `gds-badge gds-badge--warning`, with a dot and the label (never colour alone).
+3. It says the component is missing (a GDS gap) and does not invent a `gds-` class. Any layout CSS uses the product prefix and is marked `/* GDS gap */`.
+
+If an answer is vague or invents a class, run `/plugin` and check that `gds@gjirafa` is installed and enabled, then start a new session.
+
 ## Lint without Claude
 
 ```bash
@@ -34,7 +53,7 @@ Needs Node 18+. No dependencies.
 
 ## What it checks today
 
-All 26 GDS components have contracts. Their structure (classes exist, correct nesting, required children, required modifiers, one size/variant) and 19 design rules for table, pagination, checkbox, badge, input and dropdown (accessible names, sort state, status colours, input size, pagination markup…). The other rules in the contracts guide Claude through the skills but are not linted yet.
+All 26 GDS components and 3 page patterns/utilities (page, filter bar, visually hidden) have contracts. The hook checks their structure (classes exist, correct nesting, required children, required modifiers, one size/variant) and 25 design rules for table, pagination, checkbox, badge, input, dropdown, page, filter bar and visually hidden (accessible names, sort state and keyboard sorting, status colours, input size, pagination markup, one h1 per page…). The other rules in the contracts guide Claude through the skills but are not linted yet.
 
 Only static `class="…"` attributes are checked; classes bound with `:class` are skipped.
 
