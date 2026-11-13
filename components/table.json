@@ -269,7 +269,7 @@
       "class": "gds-table__cell--secondary",
       "on": "gds-table__cell",
       "group": "content",
-      "description": "Lighter, smaller text for dates and metadata columns."
+      "description": "Lighter, smaller text for dates and metadata columns. Stays on one line (white-space: nowrap); put long free text in a normal cell."
     },
     {
       "class": "gds-table__cell--header-action",
@@ -317,7 +317,7 @@
       "class": "gds-table__skeleton--xs",
       "on": "gds-table__skeleton",
       "group": "width",
-      "description": "20% width placeholder."
+      "description": "20% width placeholder, at least 16px (--table-skeleton-min-width) so it stays visible in checkbox and action cells."
     },
     {
       "class": "gds-table__skeleton--short",
