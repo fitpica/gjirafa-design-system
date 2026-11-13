@@ -5,12 +5,18 @@ All notable changes to GDS. Versions follow [Semantic Versioning](https://semver
 To update, change the version in your CDN link:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.9.1/docs/gjirafa-ds.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.9.2/docs/gjirafa-ds.css" />
 ```
 
 Full notes for each version are on the [Releases page](https://github.com/fitpica/gjirafa-design-system/releases).
 
 ## Unreleased
+
+_Nothing yet._
+
+## 2.9.2 (2026-11-13)
+
+No class or token was renamed or removed.
 
 - **Fixed** dates in `.gds-table__cell--secondary` broke onto two lines when the table was tight; secondary cells now stay on one line (`white-space: nowrap`).
 - **Fixed** `.gds-table__skeleton--xs` bars were 3px wide in checkbox and action cells; skeletons are now at least 16px wide (`--table-skeleton-min-width`).

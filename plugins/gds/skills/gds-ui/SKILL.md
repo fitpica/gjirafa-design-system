@@ -4,14 +4,14 @@ description: Build UI with the Gjirafa Design System (GDS), a CSS-only system of
 when_to_use: The user mentions GDS or the Gjirafa design system, a file contains gds- classes, or you are building UI in a Gjirafa Vue app.
 ---
 
-# Building UI with GDS v2.9.1
+# Building UI with GDS v2.9.2
 
 GDS is CSS only: you write semantic HTML with `gds-*` classes. There are no GDS Vue components to import yet.
 
 ## Setup (once per app)
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.9.1/docs/gjirafa-ds.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fitpica/gjirafa-design-system@v2.9.2/docs/gjirafa-ds.css" />
 ```
 
 GDS has no reset, so set the base font yourself:
