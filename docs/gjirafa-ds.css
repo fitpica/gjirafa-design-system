@@ -5039,18 +5039,25 @@
 }
 
 .gds-table {
+  position: relative;
   width: 100%;
   border: var(--table-border-width) solid var(--table-border-color);
   border-radius: var(--table-border-radius);
   background: var(--table-bg);
   font-family: var(--table-font-family);
   overflow: hidden;
+  overflow: clip;
 }
 
 .gds-table-scroll {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.gds-table-scroll > .gds-table {
+  width: fit-content;
+  min-width: 100%;
 }
 
 .gds-table__table {
@@ -5491,6 +5498,7 @@
 }
 
 .gds-table__skeleton {
+  display: block;
   height: var(--table-skeleton-height);
   background: var(--table-skeleton-color);
   border-radius: var(--table-skeleton-radius);
