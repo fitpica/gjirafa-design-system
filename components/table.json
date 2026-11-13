@@ -212,6 +212,12 @@
       "description": "Denser rows."
     },
     {
+      "class": "gds-table--comfortable",
+      "on": "gds-table",
+      "group": "layout",
+      "description": "48px body rows instead of 40px, for cells with two lines (title + subtitle, e.g. an entry and its author)."
+    },
+    {
       "class": "gds-table--striped",
       "on": "gds-table",
       "group": "style",

@@ -55,7 +55,7 @@ A small label that shows the status or category of something.
 - The dot and icon are decorative; the label carries the meaning.
 
 **Rules:**
-- Content status mapping: Published → positive, Draft → neutral, Scheduled → warning, Archived → neutral. *Why:* Design decision (11 Nov 2026). Scheduled changes state on its own, so it draws attention; Draft and Archived need no action. (Reuse before you create · auto-checkable)
+- Content status mapping: Published → positive, Draft → neutral, Scheduled → warning, Archived → neutral, Edited → info, Unpublished → neutral, Deleted → critical. *Why:* Design decisions (11 and 13 Nov 2026). Scheduled changes state on its own and Edited has unpublished changes, so both draw attention; Draft, Archived and Unpublished need no action; Deleted is a loss. (Reuse before you create · auto-checkable)
 - Status badges use the dot + label form. *Why:* Status is not shown by colour alone. (Accessible by default · auto-checkable)
 - A badge has exactly one colour variant. *Why:* Two variants on one badge produce an undefined colour. (Obvious over documented · auto-checkable)
 - A badge is never a button or link. *Why:* Badges have no hover or focus styles. (Accessible by default · auto-checkable)

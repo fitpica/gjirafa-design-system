@@ -19,7 +19,7 @@
   "anatomy": [
     { "class": "gds-checkbox", "tag": "label", "required": true, "parent": null, "description": "Wrapper. A <label>, so clicking the text toggles the box." },
     { "class": "gds-checkbox__input", "tag": "input", "required": true, "parent": "gds-checkbox", "description": "Native checkbox, visually hidden but focusable. Its :checked state drives the visual.", "attributes": { "type": "checkbox", "aria-label": "Required when there is no visible label (e.g. in table cells)" } },
-    { "class": "gds-checkbox__control", "tag": "span", "required": true, "parent": "gds-checkbox", "description": "The visible box. Must come after the input (CSS uses the ~ sibling selector). Contains the icon: <i data-lucide=\"check\"></i>, or \"minus\" for mixed." },
+    { "class": "gds-checkbox__control", "tag": "span", "required": true, "parent": "gds-checkbox | gds-dropdown__item", "description": "The visible box. Must come after the input (CSS uses the ~ sibling selector). Contains the icon: <i data-lucide=\"check\"></i>, or \"minus\" for mixed. Inside a multi-select .gds-dropdown__item it is used on its own, without .gds-checkbox or an <input> (an input is not allowed inside the item button): add aria-hidden=\"true\"; the item carries the state with aria-selected." },
     { "class": "gds-checkbox__label", "tag": "span", "required": false, "parent": "gds-checkbox", "description": "Visible label text." },
     { "class": "gds-checkbox__helper", "tag": "span", "required": false, "parent": "gds-checkbox", "description": "Helper text under the label." }
   ],

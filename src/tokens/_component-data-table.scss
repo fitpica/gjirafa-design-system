@@ -37,6 +37,7 @@ $table-bp-mobile: 640px;
   // Body row
   // ---------------------------------------------------------------------------
   --table-row-height:          #{$space-40};
+  --table-row-height-comfortable: #{$space-48}; // .gds-table--comfortable: two-line cells (title + subtitle)
   --table-row-bg:              var(--gds-color-bg-primary);
   --table-row-color:           var(--gds-color-text-primary);
   --table-row-font-size:       #{$font-size-14};

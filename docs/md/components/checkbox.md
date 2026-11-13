@@ -42,7 +42,7 @@ Lets people turn one option on or off, or pick several options from a list.
 |---|---|---|---|---|
 | `gds-checkbox` | label | yes | top level | Wrapper. A <label>, so clicking the text toggles the box. |
 | `gds-checkbox__input` | input | yes | `gds-checkbox` | Native checkbox, visually hidden but focusable. Its :checked state drives the visual. Attributes: `type` (checkbox), `aria-label` (Required when there is no visible label (e.g. in table cells)). |
-| `gds-checkbox__control` | span | yes | `gds-checkbox` | The visible box. Must come after the input (CSS uses the ~ sibling selector). Contains the icon: <i data-lucide="check"></i>, or "minus" for mixed. |
+| `gds-checkbox__control` | span | yes | `gds-checkbox` or `gds-dropdown__item` | The visible box. Must come after the input (CSS uses the ~ sibling selector). Contains the icon: <i data-lucide="check"></i>, or "minus" for mixed. Inside a multi-select .gds-dropdown__item it is used on its own, without .gds-checkbox or an <input> (an input is not allowed inside the item button): add aria-hidden="true"; the item carries the state with aria-selected. |
 | `gds-checkbox__label` | span | no | `gds-checkbox` | Visible label text. |
 | `gds-checkbox__helper` | span | no | `gds-checkbox` | Helper text under the label. |
 

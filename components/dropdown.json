@@ -259,7 +259,7 @@
       "class": "gds-dropdown__item--checked",
       "on": "gds-dropdown__item",
       "group": "state",
-      "description": "Checked (multi-select, with a .gds-checkbox__control inside)."
+      "description": "Checked (multi-select). The item holds a decorative <span class=\"gds-checkbox__control\" aria-hidden=\"true\"> with the Lucide check icon (no .gds-checkbox wrapper, no <input>), and has role=\"option\" with aria-selected=\"true\"."
     },
     {
       "class": "gds-dropdown__item--disabled",

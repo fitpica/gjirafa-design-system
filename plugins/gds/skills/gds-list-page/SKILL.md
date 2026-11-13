@@ -44,6 +44,7 @@ A list screen is these GDS parts, in this order. Load their contract skills for 
 - Long menus and dropdowns (e.g. a list of models) scroll on their own; give the trigger a search field when there are more than about 10 options.
 - One `<h1>` (the page title) and at most one primary button in the header.
 - Sortable headers: `<button class="gds-table__sort-btn">` inside the `<th>`; the sorted one has `--sorted` (+ `--sorted-desc`) and `aria-sort`.
-- Status cells: Published positive, Draft neutral, Scheduled warning, Archived neutral; dot + label.
+- Status cells: Published positive, Draft neutral, Scheduled warning, Archived neutral, Edited info, Unpublished neutral, Deleted critical; dot + label.
 - Dates and metadata columns: `gds-table__cell--secondary`.
+- Entry cells with a title and a second line (author, slug): add `gds-table--comfortable` (48px rows).
 - Empty state: one row, one cell with `colspan` and `gds-table__empty`. Loading: `gds-table--loading` + `aria-busy="true"`.

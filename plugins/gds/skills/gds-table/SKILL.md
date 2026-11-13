@@ -110,6 +110,7 @@ Rows of records with optional selection, sorting, bulk actions and pagination.
 | Class | On | Group | Effect |
 |---|---|---|---|
 | `gds-table--compact` | `gds-table` | layout | Denser rows. |
+| `gds-table--comfortable` | `gds-table` | layout | 48px body rows instead of 40px, for cells with two lines (title + subtitle, e.g. an entry and its author). |
 | `gds-table--striped` | `gds-table` | style | Alternating row background. |
 | `gds-table--borderless` | `gds-table` | style | No container border. |
 | `gds-table--cards` | `gds-table` | layout | Each row is a separate card with shadow and gap. |

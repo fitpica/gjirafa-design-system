@@ -12,7 +12,7 @@
 const VOID = new Set(['input', 'img', 'br', 'hr', 'meta', 'link', 'source', 'col', 'area', 'base', 'wbr']);
 const EXCLUSIVE = ['size', 'variant'];
 const KNOWN_WRONG = { 'gds-data-table': 'gds-table', 'gds-datatable': 'gds-table', 'gds-button': 'gds-btn', 'gds-select': 'gds-dropdown' };
-const STATUS_BADGE = { Published: 'gds-badge--positive', Draft: 'gds-badge--neutral', Scheduled: 'gds-badge--warning', Archived: 'gds-badge--neutral' };
+const STATUS_BADGE = { Published: 'gds-badge--positive', Draft: 'gds-badge--neutral', Scheduled: 'gds-badge--warning', Archived: 'gds-badge--neutral', Edited: 'gds-badge--info', Unpublished: 'gds-badge--neutral', Deleted: 'gds-badge--critical' };
 
 // --- parser -----------------------------------------------------------------------
 // Handles HTML documents and Vue templates. Bound attributes (:attr, v-bind:attr) count

@@ -88,7 +88,7 @@ A trigger that opens a panel of options: single select, multi-select, searchable
 | `gds-dropdown__trigger--sm` | `__trigger` | size | Small trigger. |
 | `gds-dropdown__trigger--lg` | `__trigger` | size | Large trigger. |
 | `gds-dropdown__item--selected` | `__item` | state | Selected (single select). Shows __check. |
-| `gds-dropdown__item--checked` | `__item` | state | Checked (multi-select, with a .gds-checkbox__control inside). |
+| `gds-dropdown__item--checked` | `__item` | state | Checked (multi-select). The item holds a decorative <span class="gds-checkbox__control" aria-hidden="true"> with the Lucide check icon (no .gds-checkbox wrapper, no <input>), and has role="option" with aria-selected="true". |
 | `gds-dropdown__item--disabled` | `__item` | state | Not selectable. Also set disabled. |
 | `gds-dropdown__item--rich` | `__item` | layout | Icon/avatar + label + description layout. |
 
